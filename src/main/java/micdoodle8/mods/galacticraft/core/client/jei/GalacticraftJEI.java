@@ -1,8 +1,8 @@
 package micdoodle8.mods.galacticraft.core.client.jei;
 
-import mezz.jei.api.BlankModPlugin;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.IJeiRuntime;
+import mezz.jei.api.IModPlugin;
 import mezz.jei.api.IModRegistry;
 import mezz.jei.api.IRecipeRegistry;
 import mezz.jei.api.JEIPlugin;
@@ -48,7 +48,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 @JEIPlugin
-public class GalacticraftJEI extends BlankModPlugin
+public class GalacticraftJEI implements IModPlugin
 {
     private static IModRegistry registryCached = null;
     private static IRecipeRegistry recipesCached = null;
@@ -68,9 +68,7 @@ public class GalacticraftJEI extends BlankModPlugin
         registry.handleRecipes(INasaWorkbenchRecipe.class, BuggyRecipeWrapper::new, RecipeCategories.BUGGY_ID);
         registry.handleRecipes(CircuitFabricatorRecipeWrapper.class, recipe -> recipe, RecipeCategories.CIRCUIT_FABRICATOR_ID);
         registry.handleRecipes(ShapedRecipesGC.class, IngotCompressorShapedRecipeWrapper::new, RecipeCategories.INGOT_COMPRESSOR_ID);
-        registry.handleRecipes(ShapelessOreRecipeGC.class, new IRecipeWrapperFactory<ShapelessOreRecipeGC>() {
-        	@Override public IRecipeWrapper getRecipeWrapper(ShapelessOreRecipeGC recipe) { return new IngotCompressorShapelessRecipeWrapper(stackHelper, recipe); }
-        		}, RecipeCategories.INGOT_COMPRESSOR_ID);
+        registry.handleRecipes(ShapelessOreRecipeGC.class, recipe -> new IngotCompressorShapelessRecipeWrapper(stackHelper, recipe), RecipeCategories.INGOT_COMPRESSOR_ID);
         registry.handleRecipes(RefineryRecipeWrapper.class, recipe -> recipe, RecipeCategories.REFINERY_ID);
         registry.handleRecipes(OxygenCompressorRecipeWrapper.class, recipe -> recipe, RecipeCategories.OXYGEN_COMPRESSOR_ID);
         registry.handleRecipes(ShapedRecipeNBT.class, NBTSensitiveShapedRecipeWrapper::new, VanillaRecipeCategoryUid.CRAFTING);
