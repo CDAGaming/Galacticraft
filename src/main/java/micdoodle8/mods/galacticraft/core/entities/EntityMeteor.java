@@ -21,7 +21,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.translation.I18n;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 
@@ -178,7 +178,7 @@ public class EntityMeteor extends Entity
     {
         if (par1Entity != null && par1Entity instanceof EntityPlayer)
         {
-            I18n.translateToLocalFormatted("death." + "meteor", PlayerUtil.getName(((EntityPlayer) par1Entity)) + " was hit by a meteor! That's gotta hurt!");
+            new TextComponentTranslation("death." + "meteor", PlayerUtil.getName(((EntityPlayer) par1Entity)) + " was hit by a meteor! That's gotta hurt!").getFormattedText();
         }
         return new EntityDamageSourceIndirect("explosion", par0EntityMeteor, par1Entity).setProjectile();
     }

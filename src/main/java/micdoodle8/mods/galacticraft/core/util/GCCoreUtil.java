@@ -23,7 +23,7 @@ import net.minecraft.launchwrapper.Launch;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.text.translation.I18n;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.translation.LanguageMap;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -168,7 +168,7 @@ public class GCCoreUtil
 
     public static String translate(String key)
     {
-        String result = I18n.translateToLocal(key);
+        String result = new TextComponentTranslation(key).getFormattedText();
         int comment = result.indexOf('#');
         String ret = (comment > 0) ? result.substring(0, comment).trim() : result;
         for (int i = 0; i < key.length(); ++i)
@@ -192,7 +192,7 @@ public class GCCoreUtil
 
     public static String translateWithFormat(String key, Object... values)
     {
-        String result = I18n.translateToLocalFormatted(key, values);
+        String result = new TextComponentTranslation(key, values).getFormattedText();
         int comment = result.indexOf('#');
         String ret = (comment > 0) ? result.substring(0, comment).trim() : result;
         for (int i = 0; i < key.length(); ++i)

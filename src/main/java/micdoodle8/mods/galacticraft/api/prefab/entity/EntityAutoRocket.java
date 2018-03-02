@@ -37,7 +37,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.translation.I18n;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
@@ -124,13 +124,13 @@ public abstract class EntityAutoRocket extends EntitySpaceshipBase implements IL
                 if (!this.setFrequency())
                 {
                     this.destinationFrequency = -1;
-                    this.statusMessage = I18n.translateToLocal("gui.message.frequency.name") + "#" + I18n.translateToLocal("gui.message.not_set.name");
+                    this.statusMessage = new TextComponentTranslation("gui.message.frequency.name").getFormattedText() + "#" + new TextComponentTranslation("gui.message.not_set.name").getFormattedText();
                     this.statusColour = "\u00a7c";
                     return false;
                 }
                 else
                 {
-                    this.statusMessage = I18n.translateToLocal("gui.message.success.name");
+                    this.statusMessage = new TextComponentTranslation("gui.message.success.name").getFormattedText();
                     this.statusColour = "\u00a7a";
                     return true;
                 }
@@ -139,7 +139,7 @@ public abstract class EntityAutoRocket extends EntitySpaceshipBase implements IL
         else
         {
             this.destinationFrequency = -1;
-            this.statusMessage = I18n.translateToLocal("gui.message.not_enough.name") + "#" + I18n.translateToLocal("gui.message.fuel.name");
+            this.statusMessage = new TextComponentTranslation("gui.message.not_enough.name").getFormattedText() + "#" + new TextComponentTranslation("gui.message.fuel.name").getFormattedText();
             this.statusColour = "\u00a7c";
             return false;
         }
