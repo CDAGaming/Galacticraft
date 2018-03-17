@@ -2,6 +2,7 @@ def mcVersion = "1.12.2"
 def versionMajor = 4
 def versionMinor = 0
 def versionRev = 1
+def versionBuild = 158
 
 // For those who want the bleeding edge
 buildscript {
@@ -26,10 +27,6 @@ sourceSets.main {
         srcDirs = ['src/main/resources', 'dependencies/main/resources']
     }
 }
-
-def versionBuild = 0
-if (System.getenv("BUILD_NUMBER") != null)
-    versionBuild = System.getenv("BUILD_NUMBER")
 	
 version = "${mcVersion}-${versionMajor}.${versionMinor}.${versionRev}.${versionBuild}" // Set the version number
 group= "micdoodle8.mods.galacticraft"
