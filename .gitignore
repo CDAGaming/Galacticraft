@@ -15,6 +15,7 @@
 /run/*
 /runtime/*
 /temp/*
+/classes/*
 /temporary/*
 LICENSE.txt
 CHANGELOG
