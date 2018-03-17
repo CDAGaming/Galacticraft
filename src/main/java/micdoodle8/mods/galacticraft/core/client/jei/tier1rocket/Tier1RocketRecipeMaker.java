@@ -9,16 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
-public class Tier1RocketRecipeMaker
-{
-     public static List<INasaWorkbenchRecipe> getRecipesList()
-    {
+public class Tier1RocketRecipeMaker {
+    public static List<INasaWorkbenchRecipe> getRecipesList() {
         List<INasaWorkbenchRecipe> recipes = new ArrayList<>();
 
         int chestCount = -1;
-        for (INasaWorkbenchRecipe recipe : GalacticraftRegistry.getRocketT1Recipes())
-        {
-            int chests = Tier1RocketRecipeMaker.countChests(recipe); 
+        for (INasaWorkbenchRecipe recipe : GalacticraftRegistry.getRocketT1Recipes()) {
+            int chests = Tier1RocketRecipeMaker.countChests(recipe);
             if (chests == chestCount)
                 continue;
             chestCount = chests;
@@ -28,12 +25,10 @@ public class Tier1RocketRecipeMaker
         return recipes;
     }
 
-    public static int countChests(INasaWorkbenchRecipe recipe)
-    {
+    public static int countChests(INasaWorkbenchRecipe recipe) {
         int count = 0;
         ItemStack chest = new ItemStack(Blocks.CHEST);
-        for (Entry<Integer, ItemStack> e : recipe.getRecipeInput().entrySet())
-        {
+        for (Entry<Integer, ItemStack> e : recipe.getRecipeInput().entrySet()) {
             if (ItemStack.areItemsEqual(chest, e.getValue()))
                 count++;
         }

@@ -4,8 +4,7 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.model.ModelWitch;
 import net.minecraft.entity.Entity;
 
-public class ModelEvolvedWitch extends ModelWitch
-{
+public class ModelEvolvedWitch extends ModelWitch {
     ModelRenderer tank1;
     ModelRenderer tank2;
     ModelRenderer oxygenMask;
@@ -28,8 +27,7 @@ public class ModelEvolvedWitch extends ModelWitch
     ModelRenderer tube17;
     ModelRenderer tube18;
 
-    public ModelEvolvedWitch()
-    {
+    public ModelEvolvedWitch() {
         super(0.0F);
         this.textureWidth = 64;
         this.textureHeight = 128;
@@ -120,8 +118,7 @@ public class ModelEvolvedWitch extends ModelWitch
     }
 
     @Override
-    public void render(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale)
-    {
+    public void render(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         super.render(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
         this.tank1.render(scale);
         this.tank2.render(scale);
@@ -147,8 +144,7 @@ public class ModelEvolvedWitch extends ModelWitch
     }
 
     @Override
-    public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale, Entity entity)
-    {
+    public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale, Entity entity) {
         super.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, entity);
         this.oxygenMask.rotateAngleY = this.villagerHead.rotateAngleY;
         this.oxygenMask.rotateAngleX = this.villagerHead.rotateAngleX;

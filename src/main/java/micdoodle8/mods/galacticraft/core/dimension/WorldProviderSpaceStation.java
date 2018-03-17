@@ -1,10 +1,10 @@
 package micdoodle8.mods.galacticraft.core.dimension;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import micdoodle8.mods.galacticraft.api.prefab.world.gen.WorldProviderSpace;
 import micdoodle8.mods.galacticraft.core.world.gen.ChunkProviderOrbit;
 import net.minecraft.world.gen.IChunkGenerator;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /***
  * Properties of a WorldProviderSpaceStation
@@ -15,18 +15,15 @@ import net.minecraft.world.gen.IChunkGenerator;
  *     4.  The player on arrival into this dimension (after rocket flight) will be in 1st person view
  *
  */
-public abstract class WorldProviderSpaceStation extends WorldProviderSpace
-{
+public abstract class WorldProviderSpaceStation extends WorldProviderSpace {
     private SpinManager spinManager = new SpinManager(this);
 
-    public SpinManager getSpinManager()
-    {
+    public SpinManager getSpinManager() {
         return spinManager;
     }
-    
+
     @Override
-    public void setDimension(int var1)
-    {
+    public void setDimension(int var1) {
         super.setDimension(var1);
     }
 
@@ -35,31 +32,28 @@ public abstract class WorldProviderSpaceStation extends WorldProviderSpace
      * so this provides a handy initialisation method
      */
     @Override
-    protected void init()
-    {
+    protected void init() {
         super.init();
         this.getSpinManager().registerServerSide();
     }
 
     @Override
-    public Class<? extends IChunkGenerator> getChunkProviderClass()
-    {
+    public Class<? extends IChunkGenerator> getChunkProviderClass() {
         return ChunkProviderOrbit.class;
     }
 
     @Override
-    public void updateWeather()
-    {
+    public void updateWeather() {
         super.updateWeather();
         spinManager.updateSpin();
     }
-	
-	@SideOnly(Side.CLIENT)
-	public abstract void setSpinDeltaPerTick(float angle);
-	
+
+    @SideOnly(Side.CLIENT)
+    public abstract void setSpinDeltaPerTick(float angle);
+
     @SideOnly(Side.CLIENT)
     public abstract float getSkyRotation();
 
     @SideOnly(Side.CLIENT)
-	public abstract void createSkyProvider();
+    public abstract void createSkyProvider();
 }

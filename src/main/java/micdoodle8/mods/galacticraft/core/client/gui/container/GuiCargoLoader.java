@@ -18,8 +18,7 @@ import org.lwjgl.opengl.GL11;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GuiCargoLoader extends GuiContainerGC
-{
+public class GuiCargoLoader extends GuiContainerGC {
     public static final ResourceLocation loaderTexture = new ResourceLocation(Constants.ASSET_PREFIX, "textures/gui/cargo_loader.png");
 
     private final TileEntityCargoLoader cargoLoader;
@@ -27,27 +26,23 @@ public class GuiCargoLoader extends GuiContainerGC
     private GuiButton buttonLoadItems;
     private GuiElementInfoRegion electricInfoRegion = new GuiElementInfoRegion((this.width - this.xSize) / 2 + 107, (this.height - this.ySize) / 2 + 101, 56, 9, new ArrayList<String>(), this.width, this.height, this);
 
-    public GuiCargoLoader(InventoryPlayer par1InventoryPlayer, TileEntityCargoLoader par2TileEntityAirDistributor)
-    {
+    public GuiCargoLoader(InventoryPlayer par1InventoryPlayer, TileEntityCargoLoader par2TileEntityAirDistributor) {
         super(new ContainerCargoLoader(par1InventoryPlayer, par2TileEntityAirDistributor));
         this.cargoLoader = par2TileEntityAirDistributor;
         this.ySize = 201;
     }
 
     @Override
-    protected void actionPerformed(GuiButton par1GuiButton)
-    {
-        switch (par1GuiButton.id)
-        {
-        case 0:
-            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_UPDATE_DISABLEABLE_BUTTON, GCCoreUtil.getDimensionID(this.cargoLoader.getWorld()), new Object[] { this.cargoLoader.getPos(), 0 }));
-            break;
+    protected void actionPerformed(GuiButton par1GuiButton) {
+        switch (par1GuiButton.id) {
+            case 0:
+                GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_UPDATE_DISABLEABLE_BUTTON, GCCoreUtil.getDimensionID(this.cargoLoader.getWorld()), new Object[]{this.cargoLoader.getPos(), 0}));
+                break;
         }
     }
 
     @Override
-    public void initGui()
-    {
+    public void initGui() {
         super.initGui();
         List<String> electricityDesc = new ArrayList<String>();
         electricityDesc.add(GCCoreUtil.translate("gui.energy_storage.desc.0"));
@@ -66,8 +61,7 @@ public class GuiCargoLoader extends GuiContainerGC
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int par1, int par2)
-    {
+    protected void drawGuiContainerForegroundLayer(int par1, int par2) {
         int offsetX = -17;
         int offsetY = 45;
         this.fontRenderer.drawString(this.cargoLoader.getName(), 60, 12, 4210752);
@@ -78,25 +72,20 @@ public class GuiCargoLoader extends GuiContainerGC
         this.fontRenderer.drawString(GCCoreUtil.translate("container.inventory"), 8, this.ySize - 90, 4210752);
     }
 
-    private String getStatus()
-    {
-        if (this.cargoLoader.outOfItems)
-        {
+    private String getStatus() {
+        if (this.cargoLoader.outOfItems) {
             return EnumColor.DARK_RED + GCCoreUtil.translate("gui.status.noitems.name");
         }
 
-        if (this.cargoLoader.noTarget)
-        {
+        if (this.cargoLoader.noTarget) {
             return EnumColor.DARK_RED + GCCoreUtil.translate("gui.status.notargetload.name");
         }
 
-        if (this.cargoLoader.targetNoInventory)
-        {
+        if (this.cargoLoader.targetNoInventory) {
             return EnumColor.DARK_RED + GCCoreUtil.translate("gui.status.noinvtarget.name");
         }
 
-        if (this.cargoLoader.targetFull)
-        {
+        if (this.cargoLoader.targetFull) {
             return EnumColor.DARK_RED + GCCoreUtil.translate("gui.status.targetfull.name");
         }
 
@@ -104,8 +93,7 @@ public class GuiCargoLoader extends GuiContainerGC
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3)
-    {
+    protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3) {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.mc.getTextureManager().bindTexture(GuiCargoLoader.loaderTexture);
         final int var5 = (this.width - this.xSize) / 2;
@@ -118,8 +106,7 @@ public class GuiCargoLoader extends GuiContainerGC
 //		electricityDesc.add(EnumColor.YELLOW + GCCoreUtil.translate("gui.energy_storage.desc.1") + ((int) Math.floor(this.cargoLoader.getEnergyStoredGC()) + " / " + (int) Math.floor(this.cargoLoader.getMaxEnergyStoredGC())));
         this.electricInfoRegion.tooltipStrings = electricityDesc;
 
-        if (this.cargoLoader.getEnergyStoredGC() > 0)
-        {
+        if (this.cargoLoader.getEnergyStoredGC() > 0) {
             this.drawTexturedModalRect(var5 + 94, var6 + 101, 176, 0, 11, 10);
         }
 

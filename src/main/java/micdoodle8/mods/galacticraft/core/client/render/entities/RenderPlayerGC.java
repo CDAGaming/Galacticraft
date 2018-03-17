@@ -1,8 +1,5 @@
 package micdoodle8.mods.galacticraft.core.client.render.entities;
 
-import java.lang.reflect.Field;
-import java.util.List;
-
 import micdoodle8.mods.galacticraft.api.entity.ICameraZoomEntity;
 import micdoodle8.mods.galacticraft.core.GCBlocks;
 import micdoodle8.mods.galacticraft.core.GalacticraftCore;
@@ -31,8 +28,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.client.FMLClientHandler;
-
 import org.lwjgl.opengl.GL11;
+
+import java.lang.reflect.Field;
+import java.util.List;
 
 /**
  * This renders the thermal armor (unless RenderPlayerAPI is installed).
@@ -43,8 +42,7 @@ import org.lwjgl.opengl.GL11;
  *
  * @author User
  */
-public class RenderPlayerGC extends RenderPlayer
-{
+public class RenderPlayerGC extends RenderPlayer {
     public static ResourceLocation thermalPaddingTexture0;
     public static ResourceLocation thermalPaddingTexture1;
     public static ResourceLocation thermalPaddingTexture1_T2;
@@ -52,58 +50,79 @@ public class RenderPlayerGC extends RenderPlayer
     public static boolean flagThermalOverride = false;
     private static Boolean isSmartRenderLoaded = null;
 
-    public RenderPlayerGC()
-    {
+    public RenderPlayerGC() {
         this(false);
     }
 
-    public RenderPlayerGC(boolean smallArms)
-    {
+    public RenderPlayerGC(boolean smallArms) {
         super(FMLClientHandler.instance().getClient().getRenderManager(), smallArms);
         this.mainModel = new ModelPlayerGC(0.0F, smallArms);
         this.addGCLayers();
     }
-    
-    private void addGCLayers()
-    {
+
+    public RenderPlayerGC(RenderPlayer old, boolean smallArms) {
+        super(FMLClientHandler.instance().getClient().getRenderManager(), smallArms);
+        this.mainModel = new ModelPlayerGC(0.0F, smallArms);
+
+        //Preserve any layers added by other mods, for example WearableBackpacks
+        try {
+            Field f = old.getClass().getSuperclass().getDeclaredField(GCCoreUtil.isDeobfuscated() ? "layerRenderers" : "field_177097_h");
+            f.setAccessible(true);
+            List<LayerRenderer<?>> layers = (List<LayerRenderer<?>>) f.get(old);
+            if (layers.size() > 0) {
+                for (LayerRenderer<?> oldLayer : layers) {
+                    if (this.hasNoLayer(oldLayer.getClass())) {
+                        LayerRenderer newInstance = null;
+                        try {
+                            newInstance = oldLayer.getClass().getConstructor(RenderLivingBase.class).newInstance(this);
+                        } catch (Exception ignore) {
+                        }
+                        if (newInstance != null) {
+                            oldLayer = newInstance;
+                        }
+                        this.addLayer(oldLayer);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        this.addGCLayers();
+    }
+
+    private void addGCLayers() {
         Field f1 = null;
         Field f2 = null;
         Field f3 = null;
         try {
             f1 = LayerArmorBase.class.getDeclaredField(GCCoreUtil.isDeobfuscated() ? "renderer" : "field_177190_a");
             f1.setAccessible(true);
-        } catch (Exception ignore) {}
+        } catch (Exception ignore) {
+        }
         // The following code removes the vanilla skull and item layer renderers and replaces them with the Galacticraft ones
         // Also updates all armor layers (including layers added by other mods) to reflect GC model limb positioning
         int itemLayerIndex = -1;
         int skullLayerIndex = -1;
-        for (int i = 0; i < this.layerRenderers.size(); i++)
-        {
-            LayerRenderer layer = this.layerRenderers.get(i); 
-            if (layer instanceof LayerHeldItem)
-            {
+        for (int i = 0; i < this.layerRenderers.size(); i++) {
+            LayerRenderer layer = this.layerRenderers.get(i);
+            if (layer instanceof LayerHeldItem) {
                 itemLayerIndex = i;
-            }
-            else if (layer instanceof LayerArmorBase)
-            {
-                if (f1 != null)
-                {
+            } else if (layer instanceof LayerArmorBase) {
+                if (f1 != null) {
                     try {
                         f1.set(layer, this);
-                    } catch (Exception ignore) {}
+                    } catch (Exception ignore) {
+                    }
                 }
-            }
-            else if (layer instanceof LayerCustomHead)
-            {
+            } else if (layer instanceof LayerCustomHead) {
                 skullLayerIndex = i;
             }
         }
-        if (skullLayerIndex >= 0)
-        {
+        if (skullLayerIndex >= 0) {
             this.setLayer(skullLayerIndex, new LayerCustomHead(this.getMainModel().bipedHead));
         }
-        if (itemLayerIndex >= 0 && !ConfigManagerCore.disableVehicleCameraChanges)
-        {
+        if (itemLayerIndex >= 0 && !ConfigManagerCore.disableVehicleCameraChanges) {
             this.setLayer(itemLayerIndex, new LayerHeldItemGC(this));
         }
 
@@ -113,8 +132,7 @@ public class RenderPlayerGC extends RenderPlayer
         this.addLayer(new LayerOxygenParachute(this));
         this.addLayer(new LayerFrequencyModule(this));
 
-        if (GalacticraftCore.isPlanetsLoaded)
-        {
+        if (GalacticraftCore.isPlanetsLoaded) {
             this.addLayer(new LayerThermalPadding(this));
 
             RenderPlayerGC.thermalPaddingTexture0 = new ResourceLocation("galacticraftplanets", "textures/misc/thermal_padding_0.png");
@@ -126,74 +144,28 @@ public class RenderPlayerGC extends RenderPlayer
         }
     }
 
-    private <V extends EntityLivingBase, U extends LayerRenderer<V>> void setLayer(int index, U layer)
-    {
-        this.layerRenderers.set(index, (LayerRenderer<AbstractClientPlayer>)layer);
+    private <V extends EntityLivingBase, U extends LayerRenderer<V>> void setLayer(int index, U layer) {
+        this.layerRenderers.set(index, (LayerRenderer<AbstractClientPlayer>) layer);
     }
 
-    public RenderPlayerGC(RenderPlayer old, boolean smallArms)
-    {
-        super(FMLClientHandler.instance().getClient().getRenderManager(), smallArms);
-        this.mainModel = new ModelPlayerGC(0.0F, smallArms);
-        
-        //Preserve any layers added by other mods, for example WearableBackpacks
-        try
-        {
-            Field f = old.getClass().getSuperclass().getDeclaredField(GCCoreUtil.isDeobfuscated() ? "layerRenderers" : "field_177097_h");
-            f.setAccessible(true);
-            List<LayerRenderer<?>> layers = (List<LayerRenderer<?>>) f.get(old);
-            if (layers.size() > 0)
-            {
-                for (LayerRenderer<?> oldLayer : layers)
-                {
-                    if (this.hasNoLayer(oldLayer.getClass()))
-                    {
-                        LayerRenderer newInstance = null;
-                        try {
-                            newInstance = oldLayer.getClass().getConstructor(RenderLivingBase.class).newInstance(this);
-                        }
-                        catch (Exception ignore) { }
-                        if (newInstance != null)
-                        {
-                            oldLayer = newInstance;
-                        }
-                        this.addLayer(oldLayer);
-                    }
-                }
-            }
-        } catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        
-        this.addGCLayers();
-    }
-
-    private boolean hasNoLayer(Class<? extends LayerRenderer> test)
-    {
-        for (LayerRenderer<?> oldLayer : this.layerRenderers)
-        {
+    private boolean hasNoLayer(Class<? extends LayerRenderer> test) {
+        for (LayerRenderer<?> oldLayer : this.layerRenderers) {
             if (oldLayer.getClass() == test) return false;
         }
         return true;
     }
 
     @Override
-    protected void preRenderCallback(AbstractClientPlayer entitylivingbaseIn, float partialTickTime)
-    {
+    protected void preRenderCallback(AbstractClientPlayer entitylivingbaseIn, float partialTickTime) {
         super.preRenderCallback(entitylivingbaseIn, partialTickTime);
 
-        if (entitylivingbaseIn.isEntityAlive() && entitylivingbaseIn.isPlayerSleeping())
-        {
+        if (entitylivingbaseIn.isEntityAlive() && entitylivingbaseIn.isPlayerSleeping()) {
             RotatePlayerEvent event = new RotatePlayerEvent(entitylivingbaseIn);
             MinecraftForge.EVENT_BUS.post(event);
 
-            if (!event.vanillaOverride)
-            {
+            if (!event.vanillaOverride) {
                 super.preRenderCallback(entitylivingbaseIn, partialTickTime);
-            }
-            else if (event.shouldRotate == null || event.shouldRotate)
-            {
+            } else if (event.shouldRotate == null || event.shouldRotate) {
                 entitylivingbaseIn.rotationYawHead = 0;
                 entitylivingbaseIn.prevRotationYawHead = 0;
                 GL11.glTranslatef(0.0F, 0.3F, 0.0F);
@@ -202,56 +174,43 @@ public class RenderPlayerGC extends RenderPlayer
     }
 
     @Override
-    protected void applyRotations(AbstractClientPlayer abstractClientPlayer, float par2, float par3, float par4)
-    {
-        if (abstractClientPlayer.isEntityAlive() && abstractClientPlayer.isPlayerSleeping())
-        {
+    protected void applyRotations(AbstractClientPlayer abstractClientPlayer, float par2, float par3, float par4) {
+        if (abstractClientPlayer.isEntityAlive() && abstractClientPlayer.isPlayerSleeping()) {
             RotatePlayerEvent event = new RotatePlayerEvent(abstractClientPlayer);
             MinecraftForge.EVENT_BUS.post(event);
 
-            if (!event.vanillaOverride)
-            {
+            if (!event.vanillaOverride) {
                 super.applyRotations(abstractClientPlayer, par2, par3, par4);
-            }
-            else if (event.shouldRotate == null)
-            {
+            } else if (event.shouldRotate == null) {
                 GL11.glRotatef(abstractClientPlayer.getBedOrientationInDegrees(), 0.0F, 1.0F, 0.0F);
-            }
-            else if (event.shouldRotate)
-            {
+            } else if (event.shouldRotate) {
                 float rotation = 0.0F;
 
-                if (abstractClientPlayer.bedLocation != null)
-                {
+                if (abstractClientPlayer.bedLocation != null) {
                     IBlockState bed = abstractClientPlayer.world.getBlockState(abstractClientPlayer.bedLocation);
 
-                    if (bed.getBlock().isBed(bed, abstractClientPlayer.world, abstractClientPlayer.bedLocation, abstractClientPlayer))
-                    {
-                        if (bed.getBlock() == GCBlocks.fakeBlock && bed.getValue(BlockMulti.MULTI_TYPE) == BlockMulti.EnumBlockMultiType.CRYO_CHAMBER)
-                        {
+                    if (bed.getBlock().isBed(bed, abstractClientPlayer.world, abstractClientPlayer.bedLocation, abstractClientPlayer)) {
+                        if (bed.getBlock() == GCBlocks.fakeBlock && bed.getValue(BlockMulti.MULTI_TYPE) == BlockMulti.EnumBlockMultiType.CRYO_CHAMBER) {
                             TileEntity tile = event.getEntityPlayer().world.getTileEntity(abstractClientPlayer.bedLocation);
-                            if (tile instanceof TileEntityMulti)
-                            {
+                            if (tile instanceof TileEntityMulti) {
                                 bed = event.getEntityPlayer().world.getBlockState(((TileEntityMulti) tile).mainBlockPosition);
                             }
                         }
 
-                        if (bed.getBlock() == MarsBlocks.machine && bed.getValue(BlockMachineMars.TYPE) == BlockMachineMars.EnumMachineType.CRYOGENIC_CHAMBER)
-                        {
-                            switch (bed.getValue(BlockMachineMars.FACING))
-                            {
-                            case NORTH:
-                                rotation = 0.0F;
-                                break;
-                            case EAST:
-                                rotation = 270.0F;
-                                break;
-                            case SOUTH:
-                                rotation = 180.0F;
-                                break;
-                            case WEST:
-                                rotation = 90.0F;
-                                break;
+                        if (bed.getBlock() == MarsBlocks.machine && bed.getValue(BlockMachineMars.TYPE) == BlockMachineMars.EnumMachineType.CRYOGENIC_CHAMBER) {
+                            switch (bed.getValue(BlockMachineMars.FACING)) {
+                                case NORTH:
+                                    rotation = 0.0F;
+                                    break;
+                                case EAST:
+                                    rotation = 270.0F;
+                                    break;
+                                case SOUTH:
+                                    rotation = 180.0F;
+                                    break;
+                                case WEST:
+                                    rotation = 90.0F;
+                                    break;
                             }
                         }
                     }
@@ -259,19 +218,14 @@ public class RenderPlayerGC extends RenderPlayer
 
                 GL11.glRotatef(rotation, 0.0F, 1.0F, 0.0F);
             }
-        }
-        else
-        {
-            if (Minecraft.getMinecraft().gameSettings.thirdPersonView != 0)
-            {
+        } else {
+            if (Minecraft.getMinecraft().gameSettings.thirdPersonView != 0) {
                 final EntityPlayer player = (EntityPlayer) abstractClientPlayer;
 
-                if (player.getRidingEntity() instanceof ICameraZoomEntity)
-                {
+                if (player.getRidingEntity() instanceof ICameraZoomEntity) {
                     Entity rocket = player.getRidingEntity();
-                    float rotateOffset = ((ICameraZoomEntity)rocket).getRotateOffset();
-                    if (rotateOffset > -10F)
-                    {
+                    float rotateOffset = ((ICameraZoomEntity) rocket).getRotateOffset();
+                    if (rotateOffset > -10F) {
                         GL11.glTranslatef(0, -rotateOffset, 0);
                         float anglePitch = rocket.prevRotationPitch;
                         float angleYaw = rocket.prevRotationYaw;
@@ -285,13 +239,11 @@ public class RenderPlayerGC extends RenderPlayer
         }
     }
 
-    public static class RotatePlayerEvent extends PlayerEvent
-    {
+    public static class RotatePlayerEvent extends PlayerEvent {
         public Boolean shouldRotate = null;
         public boolean vanillaOverride = false;
 
-        public RotatePlayerEvent(AbstractClientPlayer player)
-        {
+        public RotatePlayerEvent(AbstractClientPlayer player) {
             super(player);
         }
     }

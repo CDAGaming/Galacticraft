@@ -11,8 +11,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-public class SpaceStationRecipe
-{
+public class SpaceStationRecipe {
     private final HashMap<Object, Integer> input = new HashMap<Object, Integer>(4, 1.0F);
 
     /**
@@ -20,79 +19,59 @@ public class SpaceStationRecipe
      *               ItemStack, Item/Block or String(OreDict) and the amount of
      *               that item required
      */
-    public SpaceStationRecipe(HashMap<Object, Integer> objMap)
-    {
-        for (final Object obj : objMap.keySet())
-        {
+    public SpaceStationRecipe(HashMap<Object, Integer> objMap) {
+        for (final Object obj : objMap.keySet()) {
             final Integer amount = objMap.get(obj);
 
-            if (obj instanceof ItemStack)
-            {
+            if (obj instanceof ItemStack) {
                 this.input.put(((ItemStack) obj).copy(), amount);
-            }
-            else if (obj instanceof Item)
-            {
+            } else if (obj instanceof Item) {
                 this.input.put(new ItemStack((Item) obj), amount);
-            }
-            else if (obj instanceof Block)
-            {
+            } else if (obj instanceof Block) {
                 this.input.put(new ItemStack((Block) obj), amount);
-            }
-            else if (obj instanceof String)
-            {
+            } else if (obj instanceof String) {
                 List<ItemStack> stacks = OreDictionary.getOres((String) obj);
                 this.input.put(stacks, amount);
-            }
-            else if (obj instanceof ArrayList)
-            {
+            } else if (obj instanceof ArrayList) {
                 this.input.put(obj, amount);
-            }
-            else
-            {
+            } else {
                 throw new RuntimeException("INVALID SPACE STATION RECIPE");
             }
         }
     }
 
-    public int getRecipeSize()
-    {
+    public static boolean checkItemEquals(ItemStack target, ItemStack input) {
+        return target.getItem() == input.getItem() && (target.getItemDamage() == OreDictionary.WILDCARD_VALUE || target.getItemDamage() == input.getItemDamage());
+    }
+
+    public int getRecipeSize() {
         return this.input.size();
     }
 
     @SuppressWarnings("unchecked")
-    public boolean matches(EntityPlayer player, boolean remove)
-    {
+    public boolean matches(EntityPlayer player, boolean remove) {
         final HashMap<Object, Integer> required = new HashMap<Object, Integer>();
         required.putAll(this.input);
 
         final Iterator<Object> req = this.input.keySet().iterator();
 
-        while (req.hasNext())
-        {
+        while (req.hasNext()) {
             final Object next = req.next();
 
             final int amountRequired = required.get(next);
             int amountInInv = 0;
 
-            for (int x = 0; x < player.inventory.getSizeInventory(); x++)
-            {
+            for (int x = 0; x < player.inventory.getSizeInventory(); x++) {
                 final ItemStack slot = player.inventory.getStackInSlot(x);
 
-                if (slot != null)
-                {
-                    if (next instanceof ItemStack)
-                    {
-                        if (SpaceStationRecipe.checkItemEquals((ItemStack) next, slot))
-                        {
+                if (slot != null) {
+                    if (next instanceof ItemStack) {
+                        if (SpaceStationRecipe.checkItemEquals((ItemStack) next, slot)) {
                             amountInInv += slot.getCount();
                         }
-                    }
-                    else if (next instanceof List)
-                    {
-                        for (final ItemStack item : (List<ItemStack>) next)
-                        {
-                            if (SpaceStationRecipe.checkItemEquals(item, slot))
-                            {
+                    } else if (next instanceof List) {
+                        for (final ItemStack item : (List<ItemStack>) next) {
+                            if (SpaceStationRecipe.checkItemEquals(item, slot)) {
                                 amountInInv += slot.getCount();
                             }
                         }
@@ -100,14 +79,12 @@ public class SpaceStationRecipe
                 }
             }
 
-            if (amountInInv >= amountRequired)
-            {
+            if (amountInInv >= amountRequired) {
                 required.remove(next);
             }
         }
 
-        if (required.isEmpty() && remove)
-        {
+        if (required.isEmpty() && remove) {
             this.removeItems(player);
         }
 
@@ -115,38 +92,31 @@ public class SpaceStationRecipe
     }
 
     @SuppressWarnings("unchecked")
-    public void removeItems(EntityPlayer player)
-    {
+    public void removeItems(EntityPlayer player) {
         final HashMap<Object, Integer> required = new HashMap<Object, Integer>(this.input);
 
         final Iterator<Object> req = required.keySet().iterator();
 
-        while (req.hasNext())
-        {
+        while (req.hasNext()) {
             final Object next = req.next();
 
             final int amountRequired = required.get(next);
             int amountRemoved = 0;
 
             InventoryLoop:
-            for (int x = 0; x < player.inventory.getSizeInventory(); x++)
-            {
+            for (int x = 0; x < player.inventory.getSizeInventory(); x++) {
                 final ItemStack slot = player.inventory.getStackInSlot(x);
 
-                if (slot != null)
-                {
+                if (slot != null) {
                     final int amountRemaining = amountRequired - amountRemoved;
 
-                    if (next instanceof ItemStack)
-                    {
-                        if (SpaceStationRecipe.checkItemEquals((ItemStack) next, slot))
-                        {
+                    if (next instanceof ItemStack) {
+                        if (SpaceStationRecipe.checkItemEquals((ItemStack) next, slot)) {
                             final int amountToRemove = Math.min(slot.getCount(), amountRemaining);
                             ItemStack newStack = slot.copy();
                             newStack.shrink(amountToRemove);
 
-                            if (newStack.getCount() <= 0)
-                            {
+                            if (newStack.getCount() <= 0) {
                                 newStack = ItemStack.EMPTY;
                             }
 
@@ -154,19 +124,14 @@ public class SpaceStationRecipe
                             amountRemoved += amountToRemove;
                             if (amountRemoved == amountRequired) break;
                         }
-                    }
-                    else if (next instanceof List)
-                    {
-                        for (final ItemStack item : (List<ItemStack>) next)
-                        {
-                            if (SpaceStationRecipe.checkItemEquals(item, slot))
-                            {
+                    } else if (next instanceof List) {
+                        for (final ItemStack item : (List<ItemStack>) next) {
+                            if (SpaceStationRecipe.checkItemEquals(item, slot)) {
                                 final int amountToRemove = Math.min(slot.getCount(), amountRemaining);
                                 ItemStack newStack = slot.copy();
                                 newStack.shrink(amountToRemove);
 
-                                if (newStack.getCount() <= 0)
-                                {
+                                if (newStack.getCount() <= 0) {
                                     newStack = ItemStack.EMPTY;
                                 }
 
@@ -181,11 +146,6 @@ public class SpaceStationRecipe
         }
     }
 
-    public static boolean checkItemEquals(ItemStack target, ItemStack input)
-    {
-        return target.getItem() == input.getItem() && (target.getItemDamage() == OreDictionary.WILDCARD_VALUE || target.getItemDamage() == input.getItemDamage());
-    }
-
     /**
      * Returns the input for this recipe, any mod accessing this value should
      * never manipulate the values in this array as it will effect the recipe
@@ -193,8 +153,7 @@ public class SpaceStationRecipe
      *
      * @return The recipes input vales.
      */
-    public HashMap<Object, Integer> getInput()
-    {
+    public HashMap<Object, Integer> getInput() {
         return this.input;
     }
 }

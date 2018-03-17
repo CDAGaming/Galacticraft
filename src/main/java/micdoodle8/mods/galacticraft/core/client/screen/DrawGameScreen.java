@@ -18,80 +18,65 @@ import org.lwjgl.opengl.GL11;
 
 import java.nio.FloatBuffer;
 
-public class DrawGameScreen implements IScreenManager
-{
-    private TextureManager renderEngine = FMLClientHandler.instance().getClient().renderEngine;
+public class DrawGameScreen implements IScreenManager {
+    public static DynamicTexture reusableMap;  //This will be set up in MapUtil.resetClientBody()
     private static FloatBuffer colorBuffer = GLAllocation.createDirectFloatBuffer(16);
     private static int texCount = 1;
-
-    private float tickDrawn = -1F;
     public boolean initialise = true;
     public boolean initialiseLast = false;
-    private boolean readyToInitialise = false;
-    private int tileCount = 0;
-    private int callCount = 0;
-    private int tickMapDone = -1;
-
-    private float scaleX;
-    private float scaleZ;
-
     public TileEntity driver;
     public Class telemetryLastClass;
     public String telemetryLastName;
     public Entity telemetryLastEntity;
     public Render telemetryLastRender;
-    public static DynamicTexture reusableMap;  //This will be set up in MapUtil.resetClientBody()
     public int[] localMap = null;
     public boolean mapDone = false;
     public boolean mapFirstTick = false;
+    private TextureManager renderEngine = FMLClientHandler.instance().getClient().renderEngine;
+    private float tickDrawn = -1F;
+    private boolean readyToInitialise = false;
+    private int tileCount = 0;
+    private int callCount = 0;
+    private int tickMapDone = -1;
+    private float scaleX;
+    private float scaleZ;
 
-    public DrawGameScreen(float scaleXparam, float scaleZparam, TileEntity te)
-    {
+    public DrawGameScreen(float scaleXparam, float scaleZparam, TileEntity te) {
         this.scaleX = scaleXparam;
         this.scaleZ = scaleZparam;
         this.driver = te;
         this.mapFirstTick = true;
     }
 
-    public boolean check(float scaleXparam, float scaleZparam)
-    {
-        if (this.mapDone)
-        {
+    public boolean check(float scaleXparam, float scaleZparam) {
+        if (this.mapDone) {
             return this.scaleX == scaleXparam && this.scaleZ == scaleZparam;
         }
 
         return false;
     }
 
-    private void makeMap()
-    {
-        if (this.mapDone || reusableMap == null || GCCoreUtil.getDimensionID(this.driver.getWorld()) != 0)
-        {
+    private void makeMap() {
+        if (this.mapDone || reusableMap == null || GCCoreUtil.getDimensionID(this.driver.getWorld()) != 0) {
             return;
         }
         this.localMap = new int[MapUtil.SIZE_STD2 * MapUtil.SIZE_STD2];
         boolean result = MapUtil.getMap(this.localMap, this.driver.getWorld(), this.driver.getPos());
-        if (result)
-        {
+        if (result) {
             TextureUtil.uploadTexture(reusableMap.getGlTextureId(), this.localMap, MapUtil.SIZE_STD2, MapUtil.SIZE_STD2);
             mapDone = true;
         }
     }
 
-    public void drawScreen(int type, float ticks, boolean cornerBlock)
-    {
-        if (type >= GalacticraftRegistry.getMaxScreenTypes())
-        {
+    public void drawScreen(int type, float ticks, boolean cornerBlock) {
+        if (type >= GalacticraftRegistry.getMaxScreenTypes()) {
             System.out.println("Wrong gamescreen type detected - this is a bug." + type);
             return;
         }
 
-        if (cornerBlock)
-        {
-            if ((this.mapFirstTick || ((int) ticks) % 99 == 0) && !mapDone)
-            {
-                if (this.tickMapDone != (int) ticks)
-                {
+        if (cornerBlock) {
+            if ((this.mapFirstTick || ((int) ticks) % 99 == 0) && !mapDone) {
+                if (this.tickMapDone != (int) ticks) {
                     this.tickMapDone = (int) ticks;
                     this.makeMap();
                     this.mapFirstTick = false;
@@ -107,38 +92,29 @@ public class DrawGameScreen implements IScreenManager
         //to draw the screen once per tick, for multi-screens
 
         //Spend the first tick just initialising the counter
-        if (initialise)
-        {
-            if (!initialiseLast)
-            {
+        if (initialise) {
+            if (!initialiseLast) {
                 tickDrawn = ticks;
                 readyToInitialise = false;
                 initialiseLast = true;
                 return;
             }
 
-            if (!readyToInitialise)
-            {
-                if (ticks == tickDrawn)
-                {
+            if (!readyToInitialise) {
+                if (ticks == tickDrawn) {
                     return;
                 }
             }
 
-            if (!readyToInitialise)
-            {
+            if (!readyToInitialise) {
                 readyToInitialise = true;
                 tickDrawn = ticks;
                 tileCount = 1;
                 return;
-            }
-            else if (ticks == tickDrawn)
-            {
+            } else if (ticks == tickDrawn) {
                 tileCount++;
                 return;
-            }
-            else
-            {
+            } else {
                 //Start normal operations
                 initialise = false;
                 initialiseLast = false;
@@ -146,15 +122,12 @@ public class DrawGameScreen implements IScreenManager
             }
         }
 
-        if (++callCount < tileCount)
-        {
+        if (++callCount < tileCount) {
             //Normal situation, everything OK
-            if (callCount == 1 || tickDrawn == ticks)
-            {
+            if (callCount == 1 || tickDrawn == ticks) {
                 tickDrawn = ticks;
                 return;
-            }
-            else
+            } else
             //The callCount last tick was less than the tileCount, reinitialise
             {
                 initialise = true;
@@ -162,12 +135,10 @@ public class DrawGameScreen implements IScreenManager
             }
         }
 
-        if (callCount == tileCount)
-        {
+        if (callCount == tileCount) {
             callCount = 0;
             //Again if this is not the tickDrawn then something is wrong, reinitialise
-            if (tileCount > 1 && ticks != tickDrawn)
-            {
+            if (tileCount > 1 && ticks != tickDrawn) {
                 initialise = true;
             }
         }
@@ -177,21 +148,18 @@ public class DrawGameScreen implements IScreenManager
         this.doDraw(type, ticks);
     }
 
-    private void doDraw(int type, float ticks)
-    {
+    private void doDraw(int type, float ticks) {
         float lightMapSaveX = OpenGlHelper.lastBrightnessX;
         float lightMapSaveY = OpenGlHelper.lastBrightnessY;
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
 
-        if (type > 0)
-        {
+        if (type > 0) {
             GL11.glDisable(GL11.GL_LIGHTING);
         }
 
         GalacticraftRegistry.getGameScreen(type).render(type, ticks, scaleX, scaleZ, this);
 
-        if (type > 0)
-        {
+        if (type > 0) {
             GL11.glEnable(GL11.GL_LIGHTING);
         }
 
@@ -199,23 +167,19 @@ public class DrawGameScreen implements IScreenManager
     }
 
     @Override
-    public WorldProvider getWorldProvider()
-    {
-        if (this.driver != null)
-        {
+    public WorldProvider getWorldProvider() {
+        if (this.driver != null) {
             return driver.getWorld().provider;
         }
 
         return null;
     }
 
-    public float getScaleZ()
-    {
+    public float getScaleZ() {
         return scaleZ;
     }
 
-    public float getScaleX()
-    {
+    public float getScaleX() {
         return scaleX;
     }
 }

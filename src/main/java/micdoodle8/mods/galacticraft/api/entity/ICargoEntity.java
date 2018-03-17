@@ -7,10 +7,12 @@ import javax.annotation.Nonnull;
 /**
  * Implement into entities that can be loaded with cargo
  */
-public interface ICargoEntity
-{
-    enum EnumCargoLoadingState
-    {
+public interface ICargoEntity {
+    EnumCargoLoadingState addCargo(ItemStack stack, boolean doAdd);
+
+    RemovalResult removeCargo(boolean doRemove);
+
+    enum EnumCargoLoadingState {
         FULL,
         EMPTY,
         NOTARGET,
@@ -18,20 +20,14 @@ public interface ICargoEntity
         SUCCESS
     }
 
-    class RemovalResult
-    {
+    class RemovalResult {
         public final EnumCargoLoadingState resultState;
         @Nonnull
         public final ItemStack resultStack;
 
-        public RemovalResult(EnumCargoLoadingState resultState, @Nonnull ItemStack resultStack)
-        {
+        public RemovalResult(EnumCargoLoadingState resultState, @Nonnull ItemStack resultStack) {
             this.resultState = resultState;
             this.resultStack = resultStack;
         }
     }
-
-    EnumCargoLoadingState addCargo(ItemStack stack, boolean doAdd);
-
-    RemovalResult removeCargo(boolean doRemove);
 }

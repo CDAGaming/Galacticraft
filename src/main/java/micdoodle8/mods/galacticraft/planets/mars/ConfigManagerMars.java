@@ -5,51 +5,39 @@ import micdoodle8.mods.galacticraft.planets.GalacticraftPlanets;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.common.FMLLog;
-
 import org.apache.logging.log4j.Level;
 
 import java.io.File;
 
-public class ConfigManagerMars
-{
+public class ConfigManagerMars {
     public static boolean loaded;
 
     public static Configuration config;
-
-    public ConfigManagerMars(File file, boolean update)
-    {
-        if (!ConfigManagerMars.loaded)
-        {
-            ConfigManagerMars.config = new Configuration(file);
-            ConfigManagerMars.syncConfig(true, update);
-        }
-    }
-
     // DIMENSIONS
     public static int dimensionIDMars;
-
     // SCHEMATIC
     public static int idSchematicRocketT2;
     public static int idSchematicCargoRocket;
-
     // GENERAL
     public static boolean launchControllerChunkLoad;
     public static boolean launchControllerAllDims;
-
     // WGEN
     public static boolean disableDeshGen;
     public static boolean disableTinGen;
     public static boolean disableCopperGen;
     public static boolean disableIronGen;
+    public ConfigManagerMars(File file, boolean update) {
+        if (!ConfigManagerMars.loaded) {
+            ConfigManagerMars.config = new Configuration(file);
+            ConfigManagerMars.syncConfig(true, update);
+        }
+    }
 
-    public static void syncConfig(boolean load, boolean update)
-    {
-        try
-        {
+    public static void syncConfig(boolean load, boolean update) {
+        try {
             Property prop;
 
-            if (!config.isChild && load)
-            {
+            if (!config.isChild && load) {
                 config.load();
             }
 
@@ -90,8 +78,7 @@ public class ConfigManagerMars
             prop = config.get(update ? Constants.CONFIG_CATEGORY_GENERAL : Constants.CONFIG_CATEGORY_WORLDGEN, "Disable Iron Ore Gen on Mars", false);
             prop.setComment("Disable Iron Ore Gen on Mars.");
             prop.setLanguageKey("gc.configgui.disable_iron_gen_mars");
-            if (update)
-            {
+            if (update) {
                 prop = config.get(Constants.CONFIG_CATEGORY_WORLDGEN, prop.getName(), prop.getBoolean(), prop.getComment());
                 prop.setLanguageKey(prop.getLanguageKey());
                 config.getCategory(Constants.CONFIG_CATEGORY_GENERAL).remove(prop.getName());
@@ -102,8 +89,7 @@ public class ConfigManagerMars
             prop = config.get(update ? Constants.CONFIG_CATEGORY_GENERAL : Constants.CONFIG_CATEGORY_WORLDGEN, "Disable Copper Ore Gen on Mars", false);
             prop.setComment("Disable Copper Ore Gen on Mars.");
             prop.setLanguageKey("gc.configgui.disable_copper_gen_mars");
-            if (update)
-            {
+            if (update) {
                 prop = config.get(Constants.CONFIG_CATEGORY_WORLDGEN, prop.getName(), prop.getBoolean(), prop.getComment());
                 prop.setLanguageKey(prop.getLanguageKey());
                 config.getCategory(Constants.CONFIG_CATEGORY_GENERAL).remove(prop.getName());
@@ -114,8 +100,7 @@ public class ConfigManagerMars
             prop = config.get(update ? Constants.CONFIG_CATEGORY_GENERAL : Constants.CONFIG_CATEGORY_WORLDGEN, "Disable Tin Ore Gen on Mars", false);
             prop.setComment("Disable Tin Ore Gen on Mars.");
             prop.setLanguageKey("gc.configgui.disable_tin_gen_mars");
-            if (update)
-            {
+            if (update) {
                 prop = config.get(Constants.CONFIG_CATEGORY_WORLDGEN, prop.getName(), prop.getBoolean(), prop.getComment());
                 prop.setLanguageKey(prop.getLanguageKey());
                 config.getCategory(Constants.CONFIG_CATEGORY_GENERAL).remove(prop.getName());
@@ -126,17 +111,14 @@ public class ConfigManagerMars
             prop = config.get(update ? Constants.CONFIG_CATEGORY_GENERAL : Constants.CONFIG_CATEGORY_WORLDGEN, "Disable Desh Ore Gen on Mars", false);
             prop.setComment("Disable Desh Ore Gen on Mars.");
             prop.setLanguageKey("gc.configgui.disable_desh_gen_mars");
-            if (update)
-            {
+            if (update) {
                 prop = config.get(Constants.CONFIG_CATEGORY_WORLDGEN, prop.getName(), prop.getBoolean(), prop.getComment());
                 prop.setLanguageKey(prop.getLanguageKey());
                 config.getCategory(Constants.CONFIG_CATEGORY_GENERAL).remove(prop.getName());
             }
             disableDeshGen = prop.getBoolean(false);
             GalacticraftPlanets.finishProp(prop, Constants.CONFIG_CATEGORY_WORLDGEN);
-        }
-        catch (final Exception e)
-        {
+        } catch (final Exception e) {
             FMLLog.log(Level.ERROR, e, "Galacticraft Mars (Planets) has a problem loading its config");
         }
     }

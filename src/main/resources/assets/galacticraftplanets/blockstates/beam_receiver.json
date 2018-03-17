@@ -2,15 +2,24 @@
   "forge_marker": 1,
   "defaults": {
     "model": "galacticraftplanets:receiver.obj",
-    "textures": { "particle": "galacticraftcore:blocks/buggy_pad_full" },
+    "textures": {
+      "particle": "galacticraftcore:blocks/buggy_pad_full"
+    },
     "custom": {
       "flip-v": true
     }
   },
   "variants": {
-    "normal": [{}],
+    "normal": [
+      {}
+    ],
     "facing": {
-       "up":{}, "down":{}, "east":{}, "west":{}, "north":{}, "south": {}
+      "up": {},
+      "down": {},
+      "east": {},
+      "west": {},
+      "north": {},
+      "south": {}
     }
   }
 }

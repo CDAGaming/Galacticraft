@@ -13,36 +13,30 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class SchematicAdd extends SchematicPage
-{
+public class SchematicAdd extends SchematicPage {
     @Override
-    public int getPageID()
-    {
+    public int getPageID() {
         return ConfigManagerCore.idSchematicAddSchematic;
     }
 
     @Override
-    public int getGuiID()
-    {
+    public int getGuiID() {
         return GuiIdsCore.NASA_WORKBENCH_NEW_SCHEMATIC;
     }
 
     @Override
-    public ItemStack getRequiredItem()
-    {
+    public ItemStack getRequiredItem() {
         return null;  //This null is OK, it's used only as a flag by SchematicRegistry calling code
     }
 
     @SideOnly(Side.CLIENT)
     @Override
-    public GuiScreen getResultScreen(EntityPlayer player, BlockPos pos)
-    {
+    public GuiScreen getResultScreen(EntityPlayer player, BlockPos pos) {
         return new GuiSchematicInput(player.inventory, pos);
     }
 
     @Override
-    public Container getResultContainer(EntityPlayer player, BlockPos pos)
-    {
+    public Container getResultContainer(EntityPlayer player, BlockPos pos) {
         return new ContainerSchematic(player.inventory, pos);
     }
 }

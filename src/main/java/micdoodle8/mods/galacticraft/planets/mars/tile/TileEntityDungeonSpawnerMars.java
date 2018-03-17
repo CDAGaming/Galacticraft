@@ -13,16 +13,13 @@ import net.minecraft.util.SoundCategory;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TileEntityDungeonSpawnerMars extends TileEntityDungeonSpawner<EntityCreeperBoss>
-{
-    public TileEntityDungeonSpawnerMars()
-    {
+public class TileEntityDungeonSpawnerMars extends TileEntityDungeonSpawner<EntityCreeperBoss> {
+    public TileEntityDungeonSpawnerMars() {
         super(EntityCreeperBoss.class);
     }
 
     @Override
-    public List<Class<? extends EntityLiving>> getDisabledCreatures()
-    {
+    public List<Class<? extends EntityLiving>> getDisabledCreatures() {
         List<Class<? extends EntityLiving>> list = new ArrayList<Class<? extends EntityLiving>>();
         list.add(EntityEvolvedSkeleton.class);
         list.add(EntityEvolvedZombie.class);
@@ -31,8 +28,7 @@ public class TileEntityDungeonSpawnerMars extends TileEntityDungeonSpawner<Entit
     }
 
     @Override
-    public void playSpawnSound(Entity entity)
-    {
+    public void playSpawnSound(Entity entity) {
         this.world.playSound(null, entity.posX, entity.posY, entity.posZ, GCSounds.scaryScape, SoundCategory.AMBIENT, 9.0F, 1.4F);
     }
 }

@@ -14,43 +14,32 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemArmorAsteroids extends ItemArmor implements ISortableItem
-{
-    public ItemArmorAsteroids(EntityEquipmentSlot armorIndex, String assetSuffix)
-    {
+public class ItemArmorAsteroids extends ItemArmor implements ISortableItem {
+    public ItemArmorAsteroids(EntityEquipmentSlot armorIndex, String assetSuffix) {
         super(AsteroidsItems.ARMOR_TITANIUM, 0, armorIndex);
         this.setUnlocalizedName("titanium_" + assetSuffix);
         //this.setTextureName(GalacticraftPlanets.TEXTURE_PREFIX + "titanium_" + assetSuffix);
     }
 
     @Override
-    public CreativeTabs getCreativeTab()
-    {
+    public CreativeTabs getCreativeTab() {
         return GalacticraftCore.galacticraftItemsTab;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public EnumRarity getRarity(ItemStack par1ItemStack)
-    {
+    public EnumRarity getRarity(ItemStack par1ItemStack) {
         return ClientProxyCore.galacticraftItem;
     }
 
     @Override
-    public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type)
-    {
-        if (this.getArmorMaterial() == AsteroidsItems.ARMOR_TITANIUM)
-        {
-            if (stack.getItem() == AsteroidsItems.titaniumHelmet)
-            {
+    public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
+        if (this.getArmorMaterial() == AsteroidsItems.ARMOR_TITANIUM) {
+            if (stack.getItem() == AsteroidsItems.titaniumHelmet) {
                 return GalacticraftPlanets.TEXTURE_PREFIX + "textures/model/armor/titanium_1.png";
-            }
-            else if (stack.getItem() == AsteroidsItems.titaniumChestplate || stack.getItem() == AsteroidsItems.titaniumBoots)
-            {
+            } else if (stack.getItem() == AsteroidsItems.titaniumChestplate || stack.getItem() == AsteroidsItems.titaniumBoots) {
                 return GalacticraftPlanets.TEXTURE_PREFIX + "textures/model/armor/titanium_2.png";
-            }
-            else if (stack.getItem() == AsteroidsItems.titaniumLeggings)
-            {
+            } else if (stack.getItem() == AsteroidsItems.titaniumLeggings) {
                 return GalacticraftPlanets.TEXTURE_PREFIX + "textures/model/armor/titanium_3.png";
             }
         }
@@ -59,14 +48,12 @@ public class ItemArmorAsteroids extends ItemArmor implements ISortableItem
     }
 
     @Override
-    public EnumSortCategoryItem getCategory(int meta)
-    {
+    public EnumSortCategoryItem getCategory(int meta) {
         return EnumSortCategoryItem.ARMOR;
     }
-    
+
     @Override
-    public boolean getIsRepairable(ItemStack toRepair, ItemStack repair)
-    {
+    public boolean getIsRepairable(ItemStack toRepair, ItemStack repair) {
         return repair.getItem() == AsteroidsItems.basicItem && repair.getItemDamage() == 6;
     }
 }

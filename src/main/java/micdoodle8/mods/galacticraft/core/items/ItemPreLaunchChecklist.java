@@ -19,14 +19,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
-import javax.annotation.Nullable;
-
-public class ItemPreLaunchChecklist extends Item implements ISortableItem
-{
-    public ItemPreLaunchChecklist(String assetName)
-    {
+public class ItemPreLaunchChecklist extends Item implements ISortableItem {
+    public ItemPreLaunchChecklist(String assetName) {
         super();
         this.setUnlocalizedName(assetName);
         this.setMaxStackSize(1);
@@ -34,41 +31,34 @@ public class ItemPreLaunchChecklist extends Item implements ISortableItem
     }
 
     @Override
-    public boolean isEnchantable(ItemStack stack)
-    {
+    public boolean isEnchantable(ItemStack stack) {
         return false;
     }
 
     @Override
-    public CreativeTabs getCreativeTab()
-    {
+    public CreativeTabs getCreativeTab() {
         return GalacticraftCore.galacticraftItemsTab;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public EnumRarity getRarity(ItemStack par1ItemStack)
-    {
+    public EnumRarity getRarity(ItemStack par1ItemStack) {
         return ClientProxyCore.galacticraftItem;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack par1ItemStack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
-    {
-        if (par1ItemStack != null && this == GCItems.heavyPlatingTier1)
-        {
+    public void addInformation(ItemStack par1ItemStack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+        if (par1ItemStack != null && this == GCItems.heavyPlatingTier1) {
             tooltip.add(GCCoreUtil.translate("item.tier1.desc"));
         }
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand hand)
-    {
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand hand) {
         ItemStack itemStack = playerIn.getHeldItem(hand);
 
-        if (worldIn.isRemote)
-        {
+        if (worldIn.isRemote) {
             playerIn.openGui(GalacticraftCore.instance, GuiIdsCore.PRE_LAUNCH_CHECKLIST, playerIn.world, (int) playerIn.posX, (int) playerIn.posY, (int) playerIn.posZ);
             return new ActionResult<>(EnumActionResult.SUCCESS, itemStack);
         }
@@ -77,8 +67,7 @@ public class ItemPreLaunchChecklist extends Item implements ISortableItem
     }
 
     @Override
-    public EnumSortCategoryItem getCategory(int meta)
-    {
+    public EnumSortCategoryItem getCategory(int meta) {
         return EnumSortCategoryItem.GENERAL;
     }
 }

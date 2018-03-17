@@ -8,16 +8,13 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-public class RenderSmallAsteroid extends Render<EntitySmallAsteroid>
-{
-    public RenderSmallAsteroid(RenderManager manager)
-    {
+public class RenderSmallAsteroid extends Render<EntitySmallAsteroid> {
+    public RenderSmallAsteroid(RenderManager manager) {
         super(manager);
     }
 
     @Override
-    public void doRender(EntitySmallAsteroid asteroid, double x, double y, double z, float f, float partialTickTime)
-    {
+    public void doRender(EntitySmallAsteroid asteroid, double x, double y, double z, float f, float partialTickTime) {
         GL11.glDisable(GL12.GL_RESCALE_NORMAL);
 
         GL11.glPushMatrix();
@@ -32,8 +29,7 @@ public class RenderSmallAsteroid extends Render<EntitySmallAsteroid>
     }
 
     @Override
-    protected ResourceLocation getEntityTexture(EntitySmallAsteroid entity)
-    {
+    protected ResourceLocation getEntityTexture(EntitySmallAsteroid entity) {
         return TextureMap.LOCATION_BLOCKS_TEXTURE;
     }
 }

@@ -19,33 +19,35 @@ import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
 
-import javax.annotation.Nullable;
-
-public class BlockSludge extends BlockFluidClassic
-{
+public class BlockSludge extends BlockFluidClassic {
 //    @SideOnly(Side.CLIENT)
 //    IIcon stillIcon;
 //    @SideOnly(Side.CLIENT)
 //    IIcon flowingIcon;
 
+    public BlockSludge(String assetName) {
+        super(MarsModule.sludge, MarsModule.sludgeMaterial);
+        this.setQuantaPerBlock(9);
+        this.setLightLevel(1.0F);
+        this.needsRandomTick = true;
+        this.setUnlocalizedName(assetName);
+    }
+
     @Override
-    public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn)
-    {
-        if (!worldIn.isRemote)
-        {
-            if (entityIn instanceof EntityPlayer && ((EntityPlayer) entityIn).capabilities.isFlying || entityIn instanceof EntitySludgeling)
-            {
+    public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn) {
+        if (!worldIn.isRemote) {
+            if (entityIn instanceof EntityPlayer && ((EntityPlayer) entityIn).capabilities.isFlying || entityIn instanceof EntitySludgeling) {
                 return;
             }
 
             int range = 5;
             List<?> l = worldIn.getEntitiesWithinAABB(EntitySludgeling.class, new AxisAlignedBB(pos.getX() - range, pos.getY() - range, pos.getZ() - range, pos.getX() + range, pos.getY() + range, pos.getZ() + range));
 
-            if (l.size() < 3)
-            {
+            if (l.size() < 3) {
                 EntitySludgeling sludgeling = new EntitySludgeling(worldIn);
                 sludgeling.setPosition(pos.getX() + worldIn.rand.nextInt(5) - 2, pos.getY(), pos.getZ() + worldIn.rand.nextInt(5) - 2);
                 worldIn.spawnEntity(sludgeling);
@@ -57,18 +59,8 @@ public class BlockSludge extends BlockFluidClassic
 
     @Override
     @Nullable
-    public Boolean isEntityInsideMaterial(IBlockAccess world, BlockPos pos, IBlockState state, Entity entity, double yToTest, Material material, boolean testingHead)
-    {
+    public Boolean isEntityInsideMaterial(IBlockAccess world, BlockPos pos, IBlockState state, Entity entity, double yToTest, Material material, boolean testingHead) {
         return true;
-    }
-
-    public BlockSludge(String assetName)
-    {
-        super(MarsModule.sludge, MarsModule.sludgeMaterial);
-        this.setQuantaPerBlock(9);
-        this.setLightLevel(1.0F);
-        this.needsRandomTick = true;
-        this.setUnlocalizedName(assetName);
     }
 
     /*@Override
@@ -89,20 +81,16 @@ public class BlockSludge extends BlockFluidClassic
     }*/
 
     @Override
-    public boolean canDisplace(IBlockAccess world, BlockPos pos)
-    {
-        if (world.getBlockState(pos).getMaterial().isLiquid())
-        {
+    public boolean canDisplace(IBlockAccess world, BlockPos pos) {
+        if (world.getBlockState(pos).getMaterial().isLiquid()) {
             return false;
         }
         return super.canDisplace(world, pos);
     }
 
     @Override
-    public boolean displaceIfPossible(World world, BlockPos pos)
-    {
-        if (world.getBlockState(pos).getMaterial().isLiquid())
-        {
+    public boolean displaceIfPossible(World world, BlockPos pos) {
+        if (world.getBlockState(pos).getMaterial().isLiquid()) {
             return false;
         }
         return super.displaceIfPossible(world, pos);
@@ -110,20 +98,16 @@ public class BlockSludge extends BlockFluidClassic
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand)
-    {
+    public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand) {
         super.randomDisplayTick(stateIn, worldIn, pos, rand);
 
-        if (rand.nextInt(1200) == 0)
-        {
+        if (rand.nextInt(1200) == 0) {
             worldIn.playSound(null, pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, SoundEvents.BLOCK_LAVA_AMBIENT, SoundCategory.BLOCKS, rand.nextFloat() * 0.25F + 0.75F, 0.00001F + rand.nextFloat() * 0.5F);
         }
-        if (rand.nextInt(10) == 0)
-        {
+        if (rand.nextInt(10) == 0) {
             BlockPos below = pos.down();
             IBlockState state = worldIn.getBlockState(below);
-            if (state.getBlock().isSideSolid(state, worldIn, below, EnumFacing.UP) && !worldIn.getBlockState(pos.down(2)).getMaterial().blocksMovement())
-            {
+            if (state.getBlock().isSideSolid(state, worldIn, below, EnumFacing.UP) && !worldIn.getBlockState(pos.down(2)).getMaterial().blocksMovement()) {
                 GalacticraftPlanets.spawnParticle("bacterialDrip", new Vector3(pos.getX() + rand.nextFloat(), pos.getY() - 1.05D, pos.getZ() + rand.nextFloat()), new Vector3(0, 0, 0));
             }
         }

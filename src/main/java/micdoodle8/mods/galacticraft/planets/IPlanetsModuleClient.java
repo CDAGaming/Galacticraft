@@ -10,8 +10,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.List;
 
-public interface IPlanetsModuleClient
-{
+public interface IPlanetsModuleClient {
     public void preInit(FMLPreInitializationEvent event);
 
     public void registerVariants();

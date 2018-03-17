@@ -13,8 +13,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public interface IStatsCapability
-{
+public interface IStatsCapability {
     void saveNBTData(NBTTagCompound nbt);
 
     void loadNBTData(NBTTagCompound nbt);

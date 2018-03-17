@@ -11,10 +11,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemCarbonFragments extends Item implements ISortableItem
-{
-    public ItemCarbonFragments()
-    {
+public class ItemCarbonFragments extends Item implements ISortableItem {
+    public ItemCarbonFragments() {
         super();
         this.setMaxStackSize(64);
         this.setMaxDamage(0);
@@ -22,21 +20,18 @@ public class ItemCarbonFragments extends Item implements ISortableItem
 
     @SideOnly(Side.CLIENT)
     @Override
-    public CreativeTabs getCreativeTab()
-    {
+    public CreativeTabs getCreativeTab() {
         return GalacticraftCore.galacticraftItemsTab;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public EnumRarity getRarity(ItemStack par1ItemStack)
-    {
+    public EnumRarity getRarity(ItemStack par1ItemStack) {
         return ClientProxyCore.galacticraftItem;
     }
 
     @Override
-    public EnumSortCategoryItem getCategory(int meta)
-    {
+    public EnumSortCategoryItem getCategory(int meta) {
         return EnumSortCategoryItem.GENERAL;
     }
 }

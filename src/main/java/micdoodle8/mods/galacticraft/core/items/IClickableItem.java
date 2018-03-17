@@ -4,8 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-public interface IClickableItem
-{
+public interface IClickableItem {
     /**
      * Use to replicate ItemStack version of onItemRightClick as in MC1.10
      */

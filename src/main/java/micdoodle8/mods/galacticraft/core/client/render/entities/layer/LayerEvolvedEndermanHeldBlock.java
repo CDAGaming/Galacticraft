@@ -13,28 +13,23 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class LayerEvolvedEndermanHeldBlock implements LayerRenderer<EntityEvolvedEnderman>
-{
+public class LayerEvolvedEndermanHeldBlock implements LayerRenderer<EntityEvolvedEnderman> {
     private RenderEvolvedEnderman render;
 
-    public LayerEvolvedEndermanHeldBlock(RenderEvolvedEnderman render)
-    {
+    public LayerEvolvedEndermanHeldBlock(RenderEvolvedEnderman render) {
         this.render = render;
     }
 
     @Override
-    public boolean shouldCombineTextures()
-    {
+    public boolean shouldCombineTextures() {
         return false;
     }
 
     @Override
-    public void doRenderLayer(EntityEvolvedEnderman entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale)
-    {
+    public void doRenderLayer(EntityEvolvedEnderman entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         IBlockState iblockstate = entity.getHeldBlockState();
 
-        if (iblockstate != null)
-        {
+        if (iblockstate != null) {
             BlockRendererDispatcher blockrendererdispatcher = Minecraft.getMinecraft().getBlockRendererDispatcher();
             GlStateManager.enableRescaleNormal();
             GlStateManager.pushMatrix();

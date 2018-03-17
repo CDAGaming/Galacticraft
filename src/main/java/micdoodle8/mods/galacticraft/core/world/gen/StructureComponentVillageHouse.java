@@ -13,38 +13,32 @@ import net.minecraft.world.gen.structure.template.TemplateManager;
 import java.util.List;
 import java.util.Random;
 
-public class StructureComponentVillageHouse extends StructureComponentVillage
-{
+public class StructureComponentVillageHouse extends StructureComponentVillage {
     private int averageGroundLevel = -1;
 
-    public StructureComponentVillageHouse()
-    {
+    public StructureComponentVillageHouse() {
     }
 
-    public StructureComponentVillageHouse(StructureComponentVillageStartPiece par1ComponentVillageStartPiece, int par2, Random par3Random, StructureBoundingBox par4StructureBoundingBox, EnumFacing par5)
-    {
+    public StructureComponentVillageHouse(StructureComponentVillageStartPiece par1ComponentVillageStartPiece, int par2, Random par3Random, StructureBoundingBox par4StructureBoundingBox, EnumFacing par5) {
         super(par1ComponentVillageStartPiece, par2);
         this.setCoordBaseMode(par5);
         this.boundingBox = par4StructureBoundingBox;
     }
 
-    public static StructureComponentVillageHouse func_74921_a(StructureComponentVillageStartPiece par0ComponentVillageStartPiece, List<StructureComponent> par1List, Random par2Random, int par3, int par4, int par5, EnumFacing par6, int par7)
-    {
+    public static StructureComponentVillageHouse func_74921_a(StructureComponentVillageStartPiece par0ComponentVillageStartPiece, List<StructureComponent> par1List, Random par2Random, int par3, int par4, int par5, EnumFacing par6, int par7) {
         final StructureBoundingBox var8 = StructureBoundingBox.getComponentToAddBoundingBox(par3, par4, par5, 0, 0, 0, 17, 9, 17, par6);
         return StructureComponent.findIntersecting(par1List, var8) == null ? new StructureComponentVillageHouse(par0ComponentVillageStartPiece, par7, par2Random, var8, par6) : null;
     }
 
     @Override
-    protected void writeStructureToNBT(NBTTagCompound nbt)
-    {
+    protected void writeStructureToNBT(NBTTagCompound nbt) {
         super.writeStructureToNBT(nbt);
 
         nbt.setInteger("AvgGroundLevel", this.averageGroundLevel);
     }
 
     @Override
-    protected void readStructureFromNBT(NBTTagCompound nbt, TemplateManager manager)
-    {
+    protected void readStructureFromNBT(NBTTagCompound nbt, TemplateManager manager) {
         super.readStructureFromNBT(nbt, manager);
 
         this.averageGroundLevel = nbt.getInteger("AvgGroundLevel");
@@ -55,14 +49,11 @@ public class StructureComponentVillageHouse extends StructureComponentVillage
      * Mob Spawners, it closes Mineshafts at the end, it adds Fences...
      */
     @Override
-    public boolean addComponentParts(World par1World, Random par2Random, StructureBoundingBox par3StructureBoundingBox)
-    {
-        if (this.averageGroundLevel < 0)
-        {
+    public boolean addComponentParts(World par1World, Random par2Random, StructureBoundingBox par3StructureBoundingBox) {
+        if (this.averageGroundLevel < 0) {
             this.averageGroundLevel = this.getAverageGroundLevel(par1World, par3StructureBoundingBox);
 
-            if (this.averageGroundLevel < 0)
-            {
+            if (this.averageGroundLevel < 0) {
                 return true;
             }
 
@@ -73,34 +64,27 @@ public class StructureComponentVillageHouse extends StructureComponentVillage
         this.fillWithAir(par1World, par3StructureBoundingBox, 5, 0, 2, 11, 9, 14);
         this.fillWithAir(par1World, par3StructureBoundingBox, 2, 0, 5, 14, 9, 11);
 
-        for (int i = 3; i <= 13; i++)
-        {
-            for (int j = 3; j <= 13; j++)
-            {
+        for (int i = 3; i <= 13; i++) {
+            for (int j = 3; j <= 13; j++) {
                 this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(3), i, 0, j, par3StructureBoundingBox);
             }
         }
 
-        for (int i = 5; i <= 11; i++)
-        {
-            for (int j = 2; j <= 14; j++)
-            {
+        for (int i = 5; i <= 11; i++) {
+            for (int j = 2; j <= 14; j++) {
                 this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(3), i, 0, j, par3StructureBoundingBox);
             }
         }
 
-        for (int i = 2; i <= 14; i++)
-        {
-            for (int j = 5; j <= 11; j++)
-            {
+        for (int i = 2; i <= 14; i++) {
+            for (int j = 5; j <= 11; j++) {
                 this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(3), i, 0, j, par3StructureBoundingBox);
             }
         }
 
         int yLevel = 0;
 
-        for (yLevel = -8; yLevel < 4; yLevel++)
-        {
+        for (yLevel = -8; yLevel < 4; yLevel++) {
             this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 4, yLevel, 2, par3StructureBoundingBox);
             this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 3, yLevel, 2, par3StructureBoundingBox);
             this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), 2, yLevel, 3, par3StructureBoundingBox);
@@ -441,18 +425,12 @@ public class StructureComponentVillageHouse extends StructureComponentVillage
 
         yLevel = 9;
 
-        for (int i = 5; i <= 11; i++)
-        {
-            for (int j = 5; j <= 11; j++)
-            {
-                if (!(j == 5 && i == 5 || j == 5 && i == 11 || j == 11 && i == 5 || j == 11 && i == 11))
-                {
-                    if (i >= 7 && i <= 9 && j >= 7 && j <= 9)
-                    {
+        for (int i = 5; i <= 11; i++) {
+            for (int j = 5; j <= 11; j++) {
+                if (!(j == 5 && i == 5 || j == 5 && i == 11 || j == 11 && i == 5 || j == 11 && i == 11)) {
+                    if (i >= 7 && i <= 9 && j >= 7 && j <= 9) {
                         this.setBlockState(par1World, Blocks.GLASS.getDefaultState(), i, yLevel, j, par3StructureBoundingBox);
-                    }
-                    else
-                    {
+                    } else {
                         this.setBlockState(par1World, GCBlocks.basicBlock.getStateFromMeta(4), i, yLevel, j, par3StructureBoundingBox);
                     }
                 }

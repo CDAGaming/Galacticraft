@@ -12,13 +12,11 @@ import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemIC2Compat extends Item implements ISortableItem
-{
-    public static final String[] types = { "dust", "ore_purified", "ore_crushed", "dust_small" };
-    public static final String[] names = { "alu", "titanium" };
+public class ItemIC2Compat extends Item implements ISortableItem {
+    public static final String[] types = {"dust", "ore_purified", "ore_crushed", "dust_small"};
+    public static final String[] names = {"alu", "titanium"};
 
-    public ItemIC2Compat(String assetName)
-    {
+    public ItemIC2Compat(String assetName) {
         super();
         this.setMaxDamage(0);
         this.setHasSubtypes(CompatibilityManager.isIc2Loaded());
@@ -26,34 +24,28 @@ public class ItemIC2Compat extends Item implements ISortableItem
     }
 
     @Override
-    public CreativeTabs getCreativeTab()
-    {
+    public CreativeTabs getCreativeTab() {
         return GalacticraftCore.galacticraftItemsTab;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public EnumRarity getRarity(ItemStack par1ItemStack)
-    {
+    public EnumRarity getRarity(ItemStack par1ItemStack) {
         return ClientProxyCore.galacticraftItem;
     }
 
     @Override
-    public String getUnlocalizedName(ItemStack itemStack)
-    {
+    public String getUnlocalizedName(ItemStack itemStack) {
         int meta = itemStack.getItemDamage();
         if (!CompatibilityManager.isIc2Loaded()) meta = 0;
         return this.getUnlocalizedName() + "." + ItemIC2Compat.types[meta % 4] + "_" + ItemIC2Compat.names[meta / 4];
     }
 
     @Override
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> par3List)
-    {
-        if (tab == GalacticraftCore.galacticraftItemsTab || tab == CreativeTabs.SEARCH)
-        {
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> par3List) {
+        if (tab == GalacticraftCore.galacticraftItemsTab || tab == CreativeTabs.SEARCH) {
             par3List.add(new ItemStack(this, 1, 0));
-            if (CompatibilityManager.isIc2Loaded())
-            {
+            if (CompatibilityManager.isIc2Loaded()) {
                 par3List.add(new ItemStack(this, 1, 1));
                 par3List.add(new ItemStack(this, 1, 2));
                 par3List.add(new ItemStack(this, 1, 7));
@@ -62,14 +54,12 @@ public class ItemIC2Compat extends Item implements ISortableItem
     }
 
     @Override
-    public int getMetadata(int par1)
-    {
+    public int getMetadata(int par1) {
         return par1;
     }
 
     @Override
-    public EnumSortCategoryItem getCategory(int meta)
-    {
+    public EnumSortCategoryItem getCategory(int meta) {
         return EnumSortCategoryItem.GENERAL;
     }
 }

@@ -24,90 +24,69 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-public class CommonProxyCore
-{
+public class CommonProxyCore {
     public IPlayerServer player = new PlayerServer();
 
-    public void preInit(FMLPreInitializationEvent event)
-    {
+    public void preInit(FMLPreInitializationEvent event) {
     }
 
-    public void registerVariants()
-    {
+    public void registerVariants() {
 
     }
 
-    public void init(FMLInitializationEvent event)
-    {
+    public void init(FMLInitializationEvent event) {
     }
 
-    public void postInit(FMLPostInitializationEvent event)
-    {
+    public void postInit(FMLPostInitializationEvent event) {
     }
 
-    public void registerCanister(PartialCanister container)
-    {
+    public void registerCanister(PartialCanister container) {
     }
 
-    public void registerFluidTexture(Fluid fluid, ResourceLocation submergedTexture)
-    {
+    public void registerFluidTexture(Fluid fluid, ResourceLocation submergedTexture) {
     }
 
-    public World getClientWorld()
-    {
+    public World getClientWorld() {
         return null;
     }
 
-    public void spawnParticle(String particleID, Vector3 position, Vector3 motion, Object[] otherInfo)
-    {
+    public void spawnParticle(String particleID, Vector3 position, Vector3 motion, Object[] otherInfo) {
     }
 
-    public World getWorldForID(int dimensionID)
-    {
+    public World getWorldForID(int dimensionID) {
         return WorldUtil.getWorldForDimensionServer(dimensionID);
     }
 
-    public EntityPlayer getPlayerFromNetHandler(INetHandler handler)
-    {
-        if (handler instanceof NetHandlerPlayServer)
-        {
+    public EntityPlayer getPlayerFromNetHandler(INetHandler handler) {
+        if (handler instanceof NetHandlerPlayServer) {
             return ((NetHandlerPlayServer) handler).player;
-        }
-        else
-        {
+        } else {
             return null;
         }
     }
 
-    public void postRegisterItem(Item item)
-    {
+    public void postRegisterItem(Item item) {
     }
 
-    public void unregisterNetwork(FluidNetwork fluidNetwork)
-    {
-        if (GCCoreUtil.getEffectiveSide().isServer())
-        {
+    public void unregisterNetwork(FluidNetwork fluidNetwork) {
+        if (GCCoreUtil.getEffectiveSide().isServer()) {
             TickHandlerServer.removeFluidNetwork(fluidNetwork);
         }
     }
 
-    public void registerNetwork(FluidNetwork fluidNetwork)
-    {
-        if (GCCoreUtil.getEffectiveSide().isServer())
-        {
+    public void registerNetwork(FluidNetwork fluidNetwork) {
+        if (GCCoreUtil.getEffectiveSide().isServer()) {
             TickHandlerServer.addFluidNetwork(fluidNetwork);
         }
     }
 
-    public boolean isPaused()
-    {
+    public boolean isPaused() {
         return false;
     }
-    
-    public PlayerGearData getGearData(EntityPlayer player)
-    {
+
+    public PlayerGearData getGearData(EntityPlayer player) {
         GCPlayerStats stats = GCPlayerStats.get(player);
-        
+
         int mask = stats.getMaskInSlot() == null ? GCPlayerHandler.GEAR_NOT_PRESENT : GalacticraftRegistry.findMatchingGearID(stats.getMaskInSlot(), EnumExtendedInventorySlot.MASK);
         int gear = stats.getGearInSlot() == null ? GCPlayerHandler.GEAR_NOT_PRESENT : GalacticraftRegistry.findMatchingGearID(stats.getGearInSlot(), EnumExtendedInventorySlot.GEAR);
         int leftTank = stats.getTankInSlot1() == null ? GCPlayerHandler.GEAR_NOT_PRESENT : GalacticraftRegistry.findMatchingGearID(stats.getTankInSlot1(), EnumExtendedInventorySlot.LEFT_TANK);

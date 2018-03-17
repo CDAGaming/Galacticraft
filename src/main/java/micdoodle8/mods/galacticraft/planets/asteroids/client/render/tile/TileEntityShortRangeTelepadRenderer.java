@@ -18,47 +18,36 @@ import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.obj.OBJModel;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class TileEntityShortRangeTelepadRenderer extends TileEntitySpecialRenderer<TileEntityShortRangeTelepad>
-{
+public class TileEntityShortRangeTelepadRenderer extends TileEntitySpecialRenderer<TileEntityShortRangeTelepad> {
     private static OBJModel.OBJBakedModel teleporterTop;
     private static OBJModel.OBJBakedModel teleporterBottom;
 
-    private void updateModels()
-    {
-        if (teleporterTop == null)
-        {
-            try
-            {
+    private void updateModels() {
+        if (teleporterTop == null) {
+            try {
                 IModel model = OBJLoaderGC.instance.loadModel(new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "block/telepad_short.obj"));
                 Function<ResourceLocation, TextureAtlasSprite> spriteFunction = location -> Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(location.toString());
 
                 teleporterTop = (OBJModel.OBJBakedModel) model.bake(new OBJModel.OBJState(ImmutableList.of("Top", "Connector"), false), DefaultVertexFormats.ITEM, spriteFunction);
                 teleporterBottom = (OBJModel.OBJBakedModel) model.bake(new OBJModel.OBJState(ImmutableList.of("Bottom"), false), DefaultVertexFormats.ITEM, spriteFunction);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }
     }
 
     @Override
-    public void render(TileEntityShortRangeTelepad te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
-    {
+    public void render(TileEntityShortRangeTelepad te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         GL11.glPushMatrix();
 
         RenderHelper.disableStandardItemLighting();
         this.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-        if (Minecraft.isAmbientOcclusionEnabled())
-        {
+        if (Minecraft.isAmbientOcclusionEnabled()) {
             GlStateManager.shadeModel(GL11.GL_SMOOTH);
-        }
-        else
-        {
+        } else {
             GlStateManager.shadeModel(GL11.GL_FLAT);
         }
 

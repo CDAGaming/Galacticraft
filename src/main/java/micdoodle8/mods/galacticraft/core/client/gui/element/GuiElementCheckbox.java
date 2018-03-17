@@ -3,15 +3,14 @@ package micdoodle8.mods.galacticraft.core.client.gui.element;
 import micdoodle8.mods.galacticraft.core.Constants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
-public class GuiElementCheckbox extends GuiButton
-{
+public class GuiElementCheckbox extends GuiButton {
     protected static final ResourceLocation texture = new ResourceLocation(Constants.ASSET_PREFIX, "textures/gui/gui.png");
     public Boolean isSelected;
     private ICheckBoxCallback parentGui;
@@ -22,23 +21,19 @@ public class GuiElementCheckbox extends GuiButton
     private int texY;
     private boolean shiftOnHover;
 
-    public GuiElementCheckbox(int id, ICheckBoxCallback parentGui, int x, int y, String text)
-    {
+    public GuiElementCheckbox(int id, ICheckBoxCallback parentGui, int x, int y, String text) {
         this(id, parentGui, x, y, text, 4210752);
     }
 
-    public GuiElementCheckbox(int id, ICheckBoxCallback parentGui, int x, int y, String text, int textColor)
-    {
+    public GuiElementCheckbox(int id, ICheckBoxCallback parentGui, int x, int y, String text, int textColor) {
         this(id, parentGui, x, y, 13, 13, 20, 24, text, textColor);
     }
 
-    private GuiElementCheckbox(int id, ICheckBoxCallback parentGui, int x, int y, int width, int height, int texX, int texY, String text, int textColor)
-    {
+    private GuiElementCheckbox(int id, ICheckBoxCallback parentGui, int x, int y, int width, int height, int texX, int texY, String text, int textColor) {
         this(id, parentGui, x, y, width, height, width, height, texX, texY, text, textColor, true);
     }
 
-    public GuiElementCheckbox(int id, ICheckBoxCallback parentGui, int x, int y, int width, int height, int texWidth, int texHeight, int texX, int texY, String text, int textColor, boolean shiftOnHover)
-    {
+    public GuiElementCheckbox(int id, ICheckBoxCallback parentGui, int x, int y, int width, int height, int texWidth, int texHeight, int texX, int texY, String text, int textColor, boolean shiftOnHover) {
         super(id, x, y, width, height, text);
         this.parentGui = parentGui;
         this.textColor = textColor;
@@ -50,15 +45,12 @@ public class GuiElementCheckbox extends GuiButton
     }
 
     @Override
-    public void drawButton(Minecraft par1Minecraft, int par2, int par3, float partial)
-    {
-        if (this.isSelected == null)
-        {
+    public void drawButton(Minecraft par1Minecraft, int par2, int par3, float partial) {
+        if (this.isSelected == null) {
             this.isSelected = this.parentGui.getInitiallySelected(this);
         }
 
-        if (this.visible)
-        {
+        if (this.visible) {
             par1Minecraft.getTextureManager().bindTexture(GuiElementCheckbox.texture);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             this.hovered = par2 >= this.x && par3 >= this.y && par2 < this.x + this.width && par3 < this.y + this.height;
@@ -69,8 +61,7 @@ public class GuiElementCheckbox extends GuiButton
     }
 
     @Override
-    public void drawTexturedModalRect(int par1, int par2, int par3, int par4, int par5, int par6)
-    {
+    public void drawTexturedModalRect(int par1, int par2, int par3, int par4, int par5, int par6) {
         float f = 0.00390625F;
         float f1 = 0.00390625F;
         Tessellator tessellator = Tessellator.getInstance();
@@ -84,18 +75,13 @@ public class GuiElementCheckbox extends GuiButton
     }
 
     @Override
-    public boolean mousePressed(Minecraft par1Minecraft, int par2, int par3)
-    {
-        if (this.enabled && this.visible && par2 >= this.x && par3 >= this.y && par2 < this.x + this.width && par3 < this.y + this.height)
-        {
-            if (this.parentGui.canPlayerEdit(this, par1Minecraft.player))
-            {
+    public boolean mousePressed(Minecraft par1Minecraft, int par2, int par3) {
+        if (this.enabled && this.visible && par2 >= this.x && par3 >= this.y && par2 < this.x + this.width && par3 < this.y + this.height) {
+            if (this.parentGui.canPlayerEdit(this, par1Minecraft.player)) {
                 this.isSelected = !this.isSelected;
                 this.parentGui.onSelectionChanged(this, this.isSelected);
                 return true;
-            }
-            else
-            {
+            } else {
                 this.parentGui.onIntruderInteraction();
             }
         }
@@ -103,8 +89,7 @@ public class GuiElementCheckbox extends GuiButton
         return false;
     }
 
-    public interface ICheckBoxCallback
-    {
+    public interface ICheckBoxCallback {
         void onSelectionChanged(GuiElementCheckbox checkbox, boolean newSelected);
 
         boolean canPlayerEdit(GuiElementCheckbox checkbox, EntityPlayer player);

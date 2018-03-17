@@ -9,31 +9,26 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class RenderSlimeling extends RenderLiving<EntitySlimeling>
-{
+public class RenderSlimeling extends RenderLiving<EntitySlimeling> {
     private static final ResourceLocation landerTexture = new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "textures/model/slimeling/green.png");
     private boolean texSwitch;
 
-    public RenderSlimeling(RenderManager renderManager)
-    {
+    public RenderSlimeling(RenderManager renderManager) {
         super(renderManager, new ModelSlimeling(16), 0.5F);
 
 //        this.renderPassModel = new ModelSlimeling(0.0F);
     }
 
     @Override
-    protected ResourceLocation getEntityTexture(EntitySlimeling par1EntityArrow)
-    {
+    protected ResourceLocation getEntityTexture(EntitySlimeling par1EntityArrow) {
         return texSwitch ? OverlaySensorGlasses.altTexture : RenderSlimeling.landerTexture;
     }
 
     @Override
-    protected void preRenderCallback(EntitySlimeling slimeling, float par2)
-    {
+    protected void preRenderCallback(EntitySlimeling slimeling, float par2) {
         super.preRenderCallback(slimeling, par2);
 
         GL11.glRotatef(180.0F, 0F, 1F, 0F);
@@ -41,18 +36,15 @@ public class RenderSlimeling extends RenderLiving<EntitySlimeling>
         GL11.glColor3f(slimeling.getColorRed(), slimeling.getColorGreen(), slimeling.getColorBlue());
         GL11.glScalef(slimeling.getScale(), slimeling.getScale(), slimeling.getScale());
         GL11.glTranslatef(0.0F, 1.10F, 0.0F);
-        if (texSwitch)
-        {
+        if (texSwitch) {
             OverlaySensorGlasses.preRenderMobs();
         }
     }
 
     @Override
-    public void doRender(EntitySlimeling entity, double par2, double par4, double par6, float par8, float par9)
-    {
+    public void doRender(EntitySlimeling entity, double par2, double par4, double par6, float par8, float par9) {
         super.doRender(entity, par2, par4, par6, par8, par9);
-        if (OverlaySensorGlasses.overrideMobTexture())
-        {
+        if (OverlaySensorGlasses.overrideMobTexture()) {
             texSwitch = true;
             super.doRender(entity, par2, par4, par6, par8, par9);
             texSwitch = false;
@@ -60,8 +52,7 @@ public class RenderSlimeling extends RenderLiving<EntitySlimeling>
     }
 
     @Override
-    protected void renderLayers(EntitySlimeling slimeling, float p_177093_2_, float p_177093_3_, float partialTicks, float p_177093_5_, float p_177093_6_, float p_177093_7_, float p_177093_8_)
-    {
+    protected void renderLayers(EntitySlimeling slimeling, float p_177093_2_, float p_177093_3_, float partialTicks, float p_177093_5_, float p_177093_6_, float p_177093_7_, float p_177093_8_) {
         super.renderLayers(slimeling, p_177093_2_, p_177093_3_, partialTicks, p_177093_5_, p_177093_6_, p_177093_7_, p_177093_8_);
 
         //After rendering the slimeling, reset the color tint to none

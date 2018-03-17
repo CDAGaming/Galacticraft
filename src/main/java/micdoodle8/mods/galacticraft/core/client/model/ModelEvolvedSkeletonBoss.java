@@ -8,8 +8,7 @@ import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 
-public class ModelEvolvedSkeletonBoss extends ModelBase
-{
+public class ModelEvolvedSkeletonBoss extends ModelBase {
     private ModelRenderer upperHead;
     private ModelRenderer pelvis;
     private ModelRenderer sternum;
@@ -43,8 +42,7 @@ public class ModelEvolvedSkeletonBoss extends ModelBase
     private ModelRenderer rightBack2ndRib;
     private ModelRenderer rightBackTopRib;
 
-    public ModelEvolvedSkeletonBoss()
-    {
+    public ModelEvolvedSkeletonBoss() {
         this.textureWidth = 128;
         this.textureHeight = 128;
 
@@ -247,8 +245,7 @@ public class ModelEvolvedSkeletonBoss extends ModelBase
     }
 
     @Override
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
-    {
+    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
         super.render(entity, f, f1, f2, f3, f4, f5);
         this.setRotationAngles(f, f1, f2, f3, f4, f5, entity);
         this.upperHead.render(f5);
@@ -285,16 +282,14 @@ public class ModelEvolvedSkeletonBoss extends ModelBase
         this.rightBackTopRib.render(f5);
     }
 
-    private void setRotation(ModelRenderer model, float x, float y, float z)
-    {
+    private void setRotation(ModelRenderer model, float x, float y, float z) {
         model.rotateAngleX = x;
         model.rotateAngleY = y;
         model.rotateAngleZ = z;
     }
 
     @Override
-    public void setRotationAngles(float par1, float par2, float par3, float par4, float par5, float par6, Entity e)
-    {
+    public void setRotationAngles(float par1, float par2, float par3, float par4, float par5, float par6, Entity e) {
         final float floatPI = 3.1415927F;
 
         final EntitySkeletonBoss boss = (EntitySkeletonBoss) e;
@@ -310,8 +305,7 @@ public class ModelEvolvedSkeletonBoss extends ModelBase
         this.rightLeg.rotateAngleY = 0.0F;
         this.leftLeg.rotateAngleY = 0.0F;
 
-        if (this.isRiding)
-        {
+        if (this.isRiding) {
             this.rightArm.rotateAngleX += -(floatPI / 5F);
             this.leftArm.rotateAngleX += -(floatPI / 5F);
             this.rightLeg.rotateAngleX = -(floatPI * 2F / 5F);
@@ -325,8 +319,7 @@ public class ModelEvolvedSkeletonBoss extends ModelBase
         float var7;
         float var8;
 
-        if (this.swingProgress > -9990.0F)
-        {
+        if (this.swingProgress > -9990.0F) {
             var7 = this.swingProgress;
             this.spine.rotateAngleY = MathHelper.sin(MathHelper.sqrt(var7) * Constants.twoPI) * 0.2F;
 
@@ -363,27 +356,21 @@ public class ModelEvolvedSkeletonBoss extends ModelBase
         this.rightArm.rotateAngleX += MathHelper.sin(par3 * 0.067F) * 0.05F;
         this.leftArm.rotateAngleX -= MathHelper.sin(par3 * 0.067F) * 0.05F;
 
-        if (((EntitySkeletonBoss) e).deathTicks > 0)
-        {
+        if (((EntitySkeletonBoss) e).deathTicks > 0) {
             this.leftArm.rotateAngleX = -(floatPI / 2F) + (float) (Math.pow(((EntitySkeletonBoss) e).deathTicks, 2) / 5.0F) / 3.0F / Constants.RADIANS_TO_DEGREES;
             this.rightArm.rotateAngleX = -(floatPI / 2F) + (float) (Math.pow(((EntitySkeletonBoss) e).deathTicks, 2) / 5.0F) / 2.0F / Constants.RADIANS_TO_DEGREES;
         }
 
-        if (boss.throwTimer + boss.postThrowDelay > 0)
-        {
+        if (boss.throwTimer + boss.postThrowDelay > 0) {
             this.rightArm.rotateAngleX -= MathHelper.cos((boss.throwTimer + boss.postThrowDelay) * 0.05F) * 1.2F + 0.05F;
             this.leftArm.rotateAngleX -= MathHelper.cos((boss.throwTimer + boss.postThrowDelay) * 0.05F) * 1.2F + 0.05F;
         }
     }
 
-    public void postRenderArm(float scale, ItemCameraTransforms.TransformType type)
-    {
-        if (type == ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND)
-        {
+    public void postRenderArm(float scale, ItemCameraTransforms.TransformType type) {
+        if (type == ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND) {
             this.rightArm.postRender(scale);
-        }
-        else
-        {
+        } else {
             this.leftArm.postRender(scale);
         }
     }

@@ -14,8 +14,7 @@ import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class AstroMinerRecipeCategory implements IRecipeCategory
-{
+public class AstroMinerRecipeCategory implements IRecipeCategory {
     private static final ResourceLocation astroMinerGuiTexture = new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "textures/gui/schematic_astro_miner.png");
 
     @Nonnull
@@ -23,8 +22,7 @@ public class AstroMinerRecipeCategory implements IRecipeCategory
     @Nonnull
     private final String localizedName;
 
-    public AstroMinerRecipeCategory(IGuiHelper guiHelper)
-    {
+    public AstroMinerRecipeCategory(IGuiHelper guiHelper) {
         this.background = guiHelper.createDrawable(astroMinerGuiTexture, 3, 39, 168, 91);
         this.localizedName = GCCoreUtil.translate("tile.rocket_workbench.name");
 
@@ -32,28 +30,24 @@ public class AstroMinerRecipeCategory implements IRecipeCategory
 
     @Nonnull
     @Override
-    public String getUid()
-    {
+    public String getUid() {
         return RecipeCategories.ASTRO_MINER_ID;
     }
 
     @Nonnull
     @Override
-    public String getTitle()
-    {
+    public String getTitle() {
         return this.localizedName;
     }
 
     @Nonnull
     @Override
-    public IDrawable getBackground()
-    {
+    public IDrawable getBackground() {
         return this.background;
     }
 
     @Override
-    public void setRecipe(IRecipeLayout recipeLayout, IRecipeWrapper recipeWrapper, IIngredients ingredients)
-    {
+    public void setRecipe(IRecipeLayout recipeLayout, IRecipeWrapper recipeWrapper, IIngredients ingredients) {
         IGuiItemStackGroup itemstacks = recipeLayout.getItemStacks();
 
         itemstacks.init(0, true, 23, 21);
@@ -76,8 +70,7 @@ public class AstroMinerRecipeCategory implements IRecipeCategory
     }
 
     @Override
-    public String getModName()
-    {
+    public String getModName() {
         return GalacticraftPlanets.NAME;
     }
 }

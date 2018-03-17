@@ -13,44 +13,36 @@ import net.minecraft.world.WorldServer;
 
 import java.util.Random;
 
-public class TeleportTypeSpaceStation implements ITeleportType
-{
+public class TeleportTypeSpaceStation implements ITeleportType {
     @Override
-    public boolean useParachute()
-    {
+    public boolean useParachute() {
         return false;
     }
 
     @Override
-    public Vector3 getPlayerSpawnLocation(WorldServer world, EntityPlayerMP player)
-    {
+    public Vector3 getPlayerSpawnLocation(WorldServer world, EntityPlayerMP player) {
         return new Vector3(0.5, 65.0, 0.5);
     }
 
     @Override
-    public Vector3 getEntitySpawnLocation(WorldServer world, Entity player)
-    {
+    public Vector3 getEntitySpawnLocation(WorldServer world, Entity player) {
         return new Vector3(0.5, 65.0, 0.5);
     }
 
     @Override
-    public Vector3 getParaChestSpawnLocation(WorldServer world, EntityPlayerMP player, Random rand)
-    {
+    public Vector3 getParaChestSpawnLocation(WorldServer world, EntityPlayerMP player, Random rand) {
         return null;
     }
 
     @Override
-    public void onSpaceDimensionChanged(World newWorld, EntityPlayerMP player, boolean ridingAutoRocket)
-    {
-        if (ConfigManagerCore.spaceStationsRequirePermission && !newWorld.isRemote)
-        {
+    public void onSpaceDimensionChanged(World newWorld, EntityPlayerMP player, boolean ridingAutoRocket) {
+        if (ConfigManagerCore.spaceStationsRequirePermission && !newWorld.isRemote) {
             player.sendMessage(new TextComponentString(EnumColor.YELLOW + GCCoreUtil.translate("gui.spacestation.type_command") + " " + EnumColor.AQUA + "/ssinvite " + GCCoreUtil.translate("gui.spacestation.playername") + " " + EnumColor.YELLOW + GCCoreUtil.translate("gui.spacestation.to_allow_entry")));
         }
     }
 
     @Override
-    public void setupAdventureSpawn(EntityPlayerMP player)
-    {
+    public void setupAdventureSpawn(EntityPlayerMP player) {
         // TODO Auto-generated method stub
 
     }

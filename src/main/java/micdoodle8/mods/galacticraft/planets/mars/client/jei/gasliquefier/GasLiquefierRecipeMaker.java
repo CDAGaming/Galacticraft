@@ -7,10 +7,8 @@ import net.minecraft.item.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GasLiquefierRecipeMaker
-{
-    public static List<GasLiquefierRecipeWrapper> getRecipesList()
-    {
+public class GasLiquefierRecipeMaker {
+    public static List<GasLiquefierRecipeWrapper> getRecipesList() {
         List<GasLiquefierRecipeWrapper> recipes = new ArrayList<>();
 
         recipes.add(new GasLiquefierRecipeWrapper(new ItemStack(AsteroidsItems.methaneCanister, 1, 1), new ItemStack(GCItems.fuelCanister, 1, 1)));

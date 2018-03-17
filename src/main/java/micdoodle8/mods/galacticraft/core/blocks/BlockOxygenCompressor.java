@@ -26,47 +26,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
-public class BlockOxygenCompressor extends BlockAdvancedTile implements IShiftDescription, ISortableBlock
-{
+public class BlockOxygenCompressor extends BlockAdvancedTile implements IShiftDescription, ISortableBlock {
     public static final int OXYGEN_COMPRESSOR_METADATA = 0;
     public static final int OXYGEN_DECOMPRESSOR_METADATA = 4;
 
     public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
     public static final PropertyEnum<EnumCompressorType> TYPE = PropertyEnum.create("type", EnumCompressorType.class);
 
-    public enum EnumCompressorType implements IStringSerializable
-    {
-        COMPRESSOR(0, "compressor"),
-        DECOMPRESSOR(1, "decompressor");
-
-        private final int meta;
-        private final String name;
-
-        EnumCompressorType(int meta, String name)
-        {
-            this.meta = meta;
-            this.name = name;
-        }
-
-        public int getMeta()
-        {
-            return this.meta;
-        }
-
-        public static EnumCompressorType byMetadata(int meta)
-        {
-            return values()[meta];
-        }
-
-        @Override
-        public String getName()
-        {
-            return this.name;
-        }
-    }
-
-    public BlockOxygenCompressor(boolean isActive, String assetName)
-    {
+    public BlockOxygenCompressor(boolean isActive, String assetName) {
         super(Material.ROCK);
         this.setHardness(1.0F);
         this.setSoundType(SoundType.METAL);
@@ -74,56 +41,43 @@ public class BlockOxygenCompressor extends BlockAdvancedTile implements IShiftDe
     }
 
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
-    {
+    public CreativeTabs getCreativeTabToDisplayOn() {
         return GalacticraftCore.galacticraftBlocksTab;
     }
 
     @Override
-    public boolean onUseWrench(World world, BlockPos pos, EntityPlayer entityPlayer, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
-    {
+    public boolean onUseWrench(World world, BlockPos pos, EntityPlayer entityPlayer, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
         IBlockState state = world.getBlockState(pos);
         TileBaseUniversalElectrical.onUseWrenchBlock(state, world, pos, state.getValue(FACING));
         return true;
     }
 
     @Override
-    public boolean onMachineActivated(World world, BlockPos pos, IBlockState state, EntityPlayer entityPlayer, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
-    {
+    public boolean onMachineActivated(World world, BlockPos pos, IBlockState state, EntityPlayer entityPlayer, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
         entityPlayer.openGui(GalacticraftCore.instance, -1, world, pos.getX(), pos.getY(), pos.getZ());
         return true;
     }
 
     @Override
-    public TileEntity createTileEntity(World world, IBlockState state)
-    {
+    public TileEntity createTileEntity(World world, IBlockState state) {
         int metadata = getMetaFromState(state);
-        if (metadata >= BlockOxygenCompressor.OXYGEN_DECOMPRESSOR_METADATA)
-        {
+        if (metadata >= BlockOxygenCompressor.OXYGEN_DECOMPRESSOR_METADATA) {
             return new TileEntityOxygenDecompressor();
-        }
-        else if (metadata >= BlockOxygenCompressor.OXYGEN_COMPRESSOR_METADATA)
-        {
+        } else if (metadata >= BlockOxygenCompressor.OXYGEN_COMPRESSOR_METADATA) {
             return new TileEntityOxygenCompressor();
-        }
-        else
-        {
+        } else {
             return null;
         }
     }
 
     @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
-    {
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
         final int angle = MathHelper.floor(placer.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
         int change = EnumFacing.getHorizontal(angle).getOpposite().getHorizontalIndex();
 
-        if (stack.getItemDamage() >= BlockOxygenCompressor.OXYGEN_DECOMPRESSOR_METADATA)
-        {
+        if (stack.getItemDamage() >= BlockOxygenCompressor.OXYGEN_DECOMPRESSOR_METADATA) {
             change += BlockOxygenCompressor.OXYGEN_DECOMPRESSOR_METADATA;
-        }
-        else if (stack.getItemDamage() >= BlockOxygenCompressor.OXYGEN_COMPRESSOR_METADATA)
-        {
+        } else if (stack.getItemDamage() >= BlockOxygenCompressor.OXYGEN_COMPRESSOR_METADATA) {
             change += BlockOxygenCompressor.OXYGEN_COMPRESSOR_METADATA;
         }
 
@@ -131,72 +85,84 @@ public class BlockOxygenCompressor extends BlockAdvancedTile implements IShiftDe
     }
 
     @Override
-    public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list)
-    {
+    public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list) {
         list.add(new ItemStack(this, 1, BlockOxygenCompressor.OXYGEN_COMPRESSOR_METADATA));
         list.add(new ItemStack(this, 1, BlockOxygenCompressor.OXYGEN_DECOMPRESSOR_METADATA));
     }
 
     @Override
-    public int damageDropped(IBlockState state)
-    {
+    public int damageDropped(IBlockState state) {
         int metadata = getMetaFromState(state);
-        if (metadata >= BlockOxygenCompressor.OXYGEN_DECOMPRESSOR_METADATA)
-        {
+        if (metadata >= BlockOxygenCompressor.OXYGEN_DECOMPRESSOR_METADATA) {
             return BlockOxygenCompressor.OXYGEN_DECOMPRESSOR_METADATA;
-        }
-        else if (metadata >= BlockOxygenCompressor.OXYGEN_COMPRESSOR_METADATA)
-        {
+        } else if (metadata >= BlockOxygenCompressor.OXYGEN_COMPRESSOR_METADATA) {
             return BlockOxygenCompressor.OXYGEN_COMPRESSOR_METADATA;
-        }
-        else
-        {
+        } else {
             return 0;
         }
     }
 
     @Override
-    public String getShiftDescription(int meta)
-    {
-        switch (meta)
-        {
-        case OXYGEN_COMPRESSOR_METADATA:
-            return GCCoreUtil.translate("tile.oxygen_compressor.description");
-        case OXYGEN_DECOMPRESSOR_METADATA:
-            return GCCoreUtil.translate("tile.oxygen_decompressor.description");
+    public String getShiftDescription(int meta) {
+        switch (meta) {
+            case OXYGEN_COMPRESSOR_METADATA:
+                return GCCoreUtil.translate("tile.oxygen_compressor.description");
+            case OXYGEN_DECOMPRESSOR_METADATA:
+                return GCCoreUtil.translate("tile.oxygen_decompressor.description");
         }
         return "";
     }
 
     @Override
-    public boolean showDescription(int meta)
-    {
+    public boolean showDescription(int meta) {
         return true;
     }
 
     @Override
-    public IBlockState getStateFromMeta(int meta)
-    {
+    public IBlockState getStateFromMeta(int meta) {
         EnumFacing enumfacing = EnumFacing.getHorizontal(meta % 4);
         EnumCompressorType type = EnumCompressorType.byMetadata((int) Math.floor(meta / 4.0));
         return this.getDefaultState().withProperty(FACING, enumfacing).withProperty(TYPE, type);
     }
 
     @Override
-    public int getMetaFromState(IBlockState state)
-    {
+    public int getMetaFromState(IBlockState state) {
         return ((EnumFacing) state.getValue(FACING)).getHorizontalIndex() + ((EnumCompressorType) state.getValue(TYPE)).getMeta() * 4;
     }
 
     @Override
-    protected BlockStateContainer createBlockState()
-    {
+    protected BlockStateContainer createBlockState() {
         return new BlockStateContainer(this, FACING, TYPE);
     }
 
     @Override
-    public EnumSortCategoryBlock getCategory(int meta)
-    {
+    public EnumSortCategoryBlock getCategory(int meta) {
         return EnumSortCategoryBlock.MACHINE;
+    }
+
+    public enum EnumCompressorType implements IStringSerializable {
+        COMPRESSOR(0, "compressor"),
+        DECOMPRESSOR(1, "decompressor");
+
+        private final int meta;
+        private final String name;
+
+        EnumCompressorType(int meta, String name) {
+            this.meta = meta;
+            this.name = name;
+        }
+
+        public static EnumCompressorType byMetadata(int meta) {
+            return values()[meta];
+        }
+
+        public int getMeta() {
+            return this.meta;
+        }
+
+        @Override
+        public String getName() {
+            return this.name;
+        }
     }
 }

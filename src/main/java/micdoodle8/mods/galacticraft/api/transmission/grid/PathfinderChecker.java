@@ -17,27 +17,20 @@ import java.util.Set;
  *
  * @author Calclavia
  */
-public class PathfinderChecker extends Pathfinder
-{
-    public PathfinderChecker(final World world, final INetworkConnection targetConnector, final NetworkType networkType, final INetworkConnection... ignoreConnector)
-    {
-        super(new IPathCallBack()
-        {
+public class PathfinderChecker extends Pathfinder {
+    public PathfinderChecker(final World world, final INetworkConnection targetConnector, final NetworkType networkType, final INetworkConnection... ignoreConnector) {
+        super(new IPathCallBack() {
             @Override
-            public Set<BlockVec3> getConnectedNodes(Pathfinder finder, BlockVec3 currentNode)
-            {
+            public Set<BlockVec3> getConnectedNodes(Pathfinder finder, BlockVec3 currentNode) {
                 Set<BlockVec3> neighbors = new HashSet<BlockVec3>();
 
-                for (int i = 0; i < 6; i++)
-                {
+                for (int i = 0; i < 6; i++) {
                     EnumFacing direction = EnumFacing.getFront(i);
                     BlockVec3 position = currentNode.clone().modifyPositionFromSide(direction);
                     TileEntity connectedBlock = position.getTileEntity(world);
 
-                    if (connectedBlock instanceof ITransmitter && !Arrays.asList(ignoreConnector).contains(connectedBlock))
-                    {
-                        if (((ITransmitter) connectedBlock).canConnect(direction.getOpposite(), networkType))
-                        {
+                    if (connectedBlock instanceof ITransmitter && !Arrays.asList(ignoreConnector).contains(connectedBlock)) {
+                        if (((ITransmitter) connectedBlock).canConnect(direction.getOpposite(), networkType)) {
                             neighbors.add(position);
                         }
                     }
@@ -47,10 +40,8 @@ public class PathfinderChecker extends Pathfinder
             }
 
             @Override
-            public boolean onSearch(Pathfinder finder, BlockVec3 node)
-            {
-                if (node.getTileEntity(world) == targetConnector)
-                {
+            public boolean onSearch(Pathfinder finder, BlockVec3 node) {
+                if (node.getTileEntity(world) == targetConnector) {
                     finder.results.add(node);
                     return true;
                 }

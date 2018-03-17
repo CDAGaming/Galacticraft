@@ -8,8 +8,7 @@ import net.minecraft.util.EnumFacing;
  *
  * @author Calclavia, micdoodle8
  */
-public interface IConnector
-{
+public interface IConnector {
 
     /**
      * @return If the connection is possible.

@@ -13,8 +13,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 @SideOnly(Side.CLIENT)
-public class TileEntityTreasureChestRenderer extends TileEntitySpecialRenderer<TileEntityTreasureChest>
-{
+public class TileEntityTreasureChestRenderer extends TileEntitySpecialRenderer<TileEntityTreasureChest> {
     private static final ResourceLocation treasureChestTexture = new ResourceLocation(Constants.ASSET_PREFIX, "textures/model/treasure.png");
 
     private final ModelTreasureChest chestModel = new ModelTreasureChest();
@@ -23,21 +22,16 @@ public class TileEntityTreasureChestRenderer extends TileEntitySpecialRenderer<T
      * Renders the TileEntity for the chest at a position.
      */
     @Override
-    public void render(TileEntityTreasureChest chest, double par2, double par4, double par6, float partialTickTime, int par9, float alpha)
-    {
+    public void render(TileEntityTreasureChest chest, double par2, double par4, double par6, float partialTickTime, int par9, float alpha) {
         int var9;
 
-        if (!chest.hasWorld())
-        {
+        if (!chest.hasWorld()) {
             var9 = 0;
-        }
-        else
-        {
+        } else {
             final Block var10 = chest.getBlockType();
             var9 = chest.getBlockMetadata();
 
-            if (var10 != null && var9 == 0)
-            {
+            if (var10 != null && var9 == 0) {
                 var9 = chest.getBlockMetadata();
             }
         }
@@ -56,23 +50,19 @@ public class TileEntityTreasureChestRenderer extends TileEntitySpecialRenderer<T
         GL11.glTranslatef(0.5F, 0.5F, 0.5F);
         short var11 = 0;
 
-        if (var9 == 2)
-        {
+        if (var9 == 2) {
             var11 = 180;
         }
 
-        if (var9 == 3)
-        {
+        if (var9 == 3) {
             var11 = 0;
         }
 
-        if (var9 == 4)
-        {
+        if (var9 == 4) {
             var11 = 90;
         }
 
-        if (var9 == 5)
-        {
+        if (var9 == 5) {
             var11 = -90;
         }
 
@@ -85,13 +75,12 @@ public class TileEntityTreasureChestRenderer extends TileEntitySpecialRenderer<T
         var12 = 1.0F - var12;
         var12 = 1.0F - var12 * var12 * var12;
 
-        if (var14 != null)
-        {
+        if (var14 != null) {
             var14.chestLid.rotateAngleX = -(var12 * (float) Math.PI / 4.0F);
             var14.renderAll(!chest.locked);
         }
 
-        
+
         //Note: currently var14b is always null - no large Treasure Chest model
 //        if (var14b != null)
 //        {

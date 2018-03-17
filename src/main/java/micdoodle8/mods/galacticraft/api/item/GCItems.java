@@ -5,8 +5,7 @@ import net.minecraft.item.ItemStack;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 
-public class GCItems
-{
+public class GCItems {
     // GALACTICRAFT CORE BLOCKS:
     // "rocketLaunchPad"
     // "buggyFuelingPad"
@@ -169,6 +168,9 @@ public class GCItems
     // "meteorThrowableHot"
     // "frequencyModule"
 
+    private static HashMap<String, ItemStack> blocksList;
+    private static HashMap<String, ItemStack> itemsList;
+
     /**
      * Request an itemstack from Galacticraft.
      * <p/>
@@ -182,25 +184,19 @@ public class GCItems
      * @param amount Stack size
      * @return A stack of Galacticraft items with the passed key.
      */
-    public static ItemStack requestItem(String key, int amount)
-    {
-        try
-        {
-            if (GCItems.itemsList == null)
-            {
+    public static ItemStack requestItem(String key, int amount) {
+        try {
+            if (GCItems.itemsList == null) {
                 Class<?> clazz = Class.forName(GCItems.getItemListClass());
                 Field f = clazz.getDeclaredField("itemList");
                 GCItems.itemsList = (HashMap<String, ItemStack>) f.get(null);
             }
 
-            if (GCItems.itemsList != null)
-            {
+            if (GCItems.itemsList != null) {
                 ItemStack stack = GCItems.itemsList.get(key);
                 return new ItemStack(stack.getItem(), amount, stack.getItemDamage());
             }
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
 
@@ -220,36 +216,26 @@ public class GCItems
      * @param amount Stack size
      * @return A stack of Galacticraft items with the passed key.
      */
-    public static ItemStack requestBlock(String key, int amount)
-    {
-        try
-        {
-            if (GCItems.blocksList == null)
-            {
+    public static ItemStack requestBlock(String key, int amount) {
+        try {
+            if (GCItems.blocksList == null) {
                 Class<?> clazz = Class.forName(GCItems.getItemListClass());
                 Field f = clazz.getDeclaredField("blocksList");
                 GCItems.blocksList = (HashMap<String, ItemStack>) f.get(null);
             }
 
-            if (GCItems.blocksList != null)
-            {
+            if (GCItems.blocksList != null) {
                 ItemStack stack = GCItems.blocksList.get(key);
                 return new ItemStack(stack.getItem(), amount, stack.getItemDamage());
             }
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
 
         return null;
     }
 
-    private static String getItemListClass()
-    {
+    private static String getItemListClass() {
         return "micdoodle8.mods.galacticraft.core.GalacticraftCore";
     }
-
-    private static HashMap<String, ItemStack> blocksList;
-    private static HashMap<String, ItemStack> itemsList;
 }

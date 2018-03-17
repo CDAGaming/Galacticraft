@@ -57,48 +57,44 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.List;
 
-public class VenusModule implements IPlanetsModule
-{
+public class VenusModule implements IPlanetsModule {
     public static Planet planetVenus;
     public static Fluid sulphuricAcid;
     public static Fluid sulphuricAcidGC;
     public static Material acidMaterial = new MaterialLiquid(MapColor.EMERALD);
 
+    public static void registerGalacticraftNonMobEntity(Class<? extends Entity> var0, String var1, int trackingDistance, int updateFreq, boolean sendVel) {
+        ResourceLocation registryName = new ResourceLocation(Constants.MOD_ID_PLANETS, var1);
+        EntityRegistry.registerModEntity(registryName, var0, var1, GCCoreUtil.nextInternalID(), GalacticraftPlanets.instance, trackingDistance, updateFreq, sendVel);
+    }
+
     @Override
-    public void preInit(FMLPreInitializationEvent event)
-    {
+    public void preInit(FMLPreInitializationEvent event) {
         VenusModule.planetVenus = (Planet) new Planet("venus").setParentSolarSystem(GalacticraftCore.solarSystemSol).setRingColorRGB(0.1F, 0.9F, 0.6F).setPhaseShift(2.0F).setRelativeDistanceFromCenter(new CelestialBody.ScalableDistance(0.75F, 0.75F)).setRelativeOrbitTime(0.61527929901423877327491785323111F);
         MinecraftForge.EVENT_BUS.register(new EventHandlerVenus());
 
-        if (!FluidRegistry.isFluidRegistered("sulphuricacid"))
-        {
+        if (!FluidRegistry.isFluidRegistered("sulphuricacid")) {
             ResourceLocation stillIcon = new ResourceLocation(GalacticraftPlanets.TEXTURE_PREFIX + "blocks/fluids/sulphuric_acid_still");
             ResourceLocation flowingIcon = new ResourceLocation(GalacticraftPlanets.TEXTURE_PREFIX + "blocks/fluids/sulphuric_acid_flow");
             sulphuricAcidGC = new Fluid("sulphuricacid", stillIcon, flowingIcon).setDensity(6229).setViscosity(1400);
             FluidRegistry.registerFluid(sulphuricAcidGC);
-        }
-        else
-        {
+        } else {
             GCLog.info("Galacticraft sulphuric acid is not default, issues may occur.");
         }
 
         sulphuricAcid = FluidRegistry.getFluid("sulphuricacid");
 
-        if (sulphuricAcid.getBlock() == null)
-        {
+        if (sulphuricAcid.getBlock() == null) {
             VenusBlocks.sulphuricAcid = new BlockSulphuricAcid("sulphuric_acid");
             ((BlockSulphuricAcid) VenusBlocks.sulphuricAcid).setQuantaPerBlock(5);
             VenusBlocks.registerBlock(VenusBlocks.sulphuricAcid, ItemBlockDesc.class);
             sulphuricAcid.setBlock(VenusBlocks.sulphuricAcid);
-        }
-        else
-        {
+        } else {
             VenusBlocks.sulphuricAcid = sulphuricAcid.getBlock();
         }
 
-        if (VenusBlocks.sulphuricAcid != null)
-        {
-        	FluidRegistry.addBucketForFluid(sulphuricAcid);  //Create a Universal Bucket AS WELL AS our type, this is needed to pull fluids out of other mods tanks
+        if (VenusBlocks.sulphuricAcid != null) {
+            FluidRegistry.addBucketForFluid(sulphuricAcid);  //Create a Universal Bucket AS WELL AS our type, this is needed to pull fluids out of other mods tanks
             VenusItems.bucketSulphuricAcid = new ItemBucketGC(VenusBlocks.sulphuricAcid, VenusModule.sulphuricAcid).setUnlocalizedName("bucket_sulphuric_acid");
             VenusItems.registerItem(VenusItems.bucketSulphuricAcid);
             EventHandlerGC.bucketList.put(VenusBlocks.sulphuricAcid, VenusItems.bucketSulphuricAcid);
@@ -106,13 +102,12 @@ public class VenusModule implements IPlanetsModule
 
         VenusBlocks.initBlocks();
         VenusItems.initItems();
-        
+
         VenusModule.planetVenus.setBiomeInfo(BiomeVenus.venusFlat, BiomeVenus.venusMountain, BiomeVenus.venusValley);
     }
 
     @Override
-    public void init(FMLInitializationEvent event)
-    {
+    public void init(FMLInitializationEvent event) {
         VenusBlocks.oreDictRegistration();
         this.registerMicroBlocks();
 
@@ -149,30 +144,25 @@ public class VenusModule implements IPlanetsModule
     }
 
     @Override
-    public void postInit(FMLPostInitializationEvent event)
-    {
+    public void postInit(FMLPostInitializationEvent event) {
         RecipeManagerVenus.loadRecipes();
 
         GCPlanetDimensions.VENUS = WorldUtil.getDimensionTypeById(ConfigManagerVenus.dimensionIDVenus);
     }
 
     @Override
-    public void serverStarting(FMLServerStartingEvent event)
-    {
+    public void serverStarting(FMLServerStartingEvent event) {
     }
 
     @Override
-    public void serverInit(FMLServerStartedEvent event)
-    {
+    public void serverInit(FMLServerStartedEvent event) {
 
     }
 
-    private void registerMicroBlocks()
-    {
+    private void registerMicroBlocks() {
     }
 
-    public void registerTileEntities()
-    {
+    public void registerTileEntities() {
         GameRegistry.registerTileEntity(TileEntitySpout.class, "GC Venus Spout");
         GameRegistry.registerTileEntity(TileEntityDungeonSpawnerVenus.class, "GC Venus Dungeon Spawner");
         GameRegistry.registerTileEntity(TileEntityTreasureChestVenus.class, "GC Tier 3 Treasure Chest");
@@ -180,38 +170,30 @@ public class VenusModule implements IPlanetsModule
         GameRegistry.registerTileEntity(TileEntityCrashedProbe.class, "GC Crashed Probe");
     }
 
-    public void registerCreatures()
-    {
+    public void registerCreatures() {
         this.registerGalacticraftCreature(EntityJuicer.class, "juicer", ColorUtil.to32BitColor(180, 180, 50, 0), ColorUtil.to32BitColor(255, 0, 2, 0));
         this.registerGalacticraftCreature(EntitySpiderQueen.class, "spider_queen", ColorUtil.to32BitColor(180, 180, 50, 0), ColorUtil.to32BitColor(255, 0, 2, 0));
     }
 
-    public void registerOtherEntities()
-    {
+    public void registerOtherEntities() {
         VenusModule.registerGalacticraftNonMobEntity(EntityEntryPodVenus.class, "entry_pod_venus", 150, 1, true);
         VenusModule.registerGalacticraftNonMobEntity(EntityWebShot.class, "web_shot", 150, 1, true);
     }
 
     @Override
-    public void getGuiIDs(List<Integer> idList)
-    {
+    public void getGuiIDs(List<Integer> idList) {
         idList.add(GuiIdsPlanets.MACHINE_VENUS);
     }
 
     @Override
-    public Object getGuiElement(Side side, int ID, EntityPlayer player, World world, int x, int y, int z)
-    {
+    public Object getGuiElement(Side side, int ID, EntityPlayer player, World world, int x, int y, int z) {
         BlockPos pos = new BlockPos(x, y, z);
         TileEntity tile = world.getTileEntity(pos);
 
-        if (ID == GuiIdsPlanets.MACHINE_VENUS)
-        {
-            if (tile instanceof TileEntityGeothermalGenerator)
-            {
+        if (ID == GuiIdsPlanets.MACHINE_VENUS) {
+            if (tile instanceof TileEntityGeothermalGenerator) {
                 return new ContainerGeothermal(player.inventory, (TileEntityGeothermalGenerator) tile);
-            }
-            else if (tile instanceof TileEntityCrashedProbe)
-            {
+            } else if (tile instanceof TileEntityCrashedProbe) {
                 return new ContainerCrashedProbe(player.inventory, (TileEntityCrashedProbe) tile);
             }
         }
@@ -220,34 +202,24 @@ public class VenusModule implements IPlanetsModule
     }
 
     @Override
-    public Configuration getConfiguration()
-    {
+    public Configuration getConfiguration() {
         return ConfigManagerVenus.config;
     }
 
     @Override
-    public void syncConfig()
-    {
+    public void syncConfig() {
         ConfigManagerVenus.syncConfig(false, false);
     }
 
-    public void registerGalacticraftCreature(Class<? extends Entity> clazz, String name, int back, int fore)
-    {
+    public void registerGalacticraftCreature(Class<? extends Entity> clazz, String name, int back, int fore) {
         VenusModule.registerGalacticraftNonMobEntity(clazz, name, 80, 3, true);
         int nextEggID = GCCoreUtil.getNextValidID();
-        if (nextEggID < 65536)
-        {
+        if (nextEggID < 65536) {
             ResourceLocation resourcelocation = new ResourceLocation(Constants.MOD_ID_PLANETS, name);
 //            name = Constants.MOD_ID_PLANETS + "." + name;
 //            net.minecraftforge.fml.common.registry.EntityEntry entry = new net.minecraftforge.fml.common.registry.EntityEntry(clazz, name);
 //            net.minecraftforge.fml.common.registry.GameData.getEntityRegistry().register(nextEggID, resourcelocation, entry);
             EntityList.ENTITY_EGGS.put(resourcelocation, new EntityList.EntityEggInfo(resourcelocation, back, fore));
         }
-    }
-
-    public static void registerGalacticraftNonMobEntity(Class<? extends Entity> var0, String var1, int trackingDistance, int updateFreq, boolean sendVel)
-    {
-        ResourceLocation registryName = new ResourceLocation(Constants.MOD_ID_PLANETS, var1);
-        EntityRegistry.registerModEntity(registryName, var0, var1, GCCoreUtil.nextInternalID(), GalacticraftPlanets.instance, trackingDistance, updateFreq, sendVel);
     }
 }

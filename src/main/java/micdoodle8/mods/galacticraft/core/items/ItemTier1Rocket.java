@@ -32,14 +32,11 @@ import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
-import javax.annotation.Nullable;
-
-public class ItemTier1Rocket extends Item implements IHoldableItem, ISortableItem
-{
-    public ItemTier1Rocket(String assetName)
-    {
+public class ItemTier1Rocket extends Item implements IHoldableItem, ISortableItem {
+    public ItemTier1Rocket(String assetName) {
         super();
         this.setMaxDamage(0);
         this.setHasSubtypes(true);
@@ -48,41 +45,57 @@ public class ItemTier1Rocket extends Item implements IHoldableItem, ISortableIte
         this.setUnlocalizedName(assetName);
     }
 
+    public static boolean placeRocketOnPad(ItemStack stack, World worldIn, TileEntity tile, float centerX, float centerY, float centerZ) {
+        //Check whether there is already a rocket on the pad
+        if (tile instanceof TileEntityLandingPad) {
+            if (((TileEntityLandingPad) tile).getDockedEntity() != null) {
+                return false;
+            }
+        } else {
+            return false;
+        }
+
+        final EntityTier1Rocket spaceship = new EntityTier1Rocket(worldIn, centerX, centerY, centerZ, EnumRocketType.values()[stack.getItemDamage()]);
+
+        spaceship.setPosition(spaceship.posX, spaceship.posY + spaceship.getOnPadYOffset(), spaceship.posZ);
+        worldIn.spawnEntity(spaceship);
+
+        if (spaceship.rocketType.getPreFueled()) {
+            spaceship.fuelTank.fill(new FluidStack(GCFluids.fluidFuel, spaceship.getMaxFuel()), true);
+        } else if (stack.hasTagCompound() && stack.getTagCompound().hasKey("RocketFuel")) {
+            spaceship.fuelTank.fill(new FluidStack(GCFluids.fluidFuel, stack.getTagCompound().getInteger("RocketFuel")), true);
+        }
+
+        return true;
+    }
+
     @Override
-    public CreativeTabs getCreativeTab()
-    {
+    public CreativeTabs getCreativeTab() {
         return GalacticraftCore.galacticraftItemsTab;
     }
 
     @Override
-    public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
-    {
+    public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         ItemStack stack = playerIn.getHeldItem(hand);
         boolean padFound = false;
         TileEntity tile = null;
 
-        if (worldIn.isRemote && playerIn instanceof EntityPlayerSP)
-        {
+        if (worldIn.isRemote && playerIn instanceof EntityPlayerSP) {
             ClientProxyCore.playerClientHandler.onBuild(8, (EntityPlayerSP) playerIn);
             return EnumActionResult.PASS;
-        }
-        else
-        {
+        } else {
             float centerX = -1;
             float centerY = -1;
             float centerZ = -1;
 
-            for (int i = -1; i < 2; i++)
-            {
-                for (int j = -1; j < 2; j++)
-                {
+            for (int i = -1; i < 2; i++) {
+                for (int j = -1; j < 2; j++) {
                     BlockPos pos1 = pos.add(i, 0, j);
                     IBlockState state = worldIn.getBlockState(pos1);
                     final Block id = state.getBlock();
                     int meta = id.getMetaFromState(state);
 
-                    if (id == GCBlocks.landingPadFull && meta == 0)
-                    {
+                    if (id == GCBlocks.landingPadFull && meta == 0) {
                         padFound = true;
                         tile = worldIn.getTileEntity(pos.add(i, 0, j));
 
@@ -94,71 +107,30 @@ public class ItemTier1Rocket extends Item implements IHoldableItem, ISortableIte
                     }
                 }
 
-                if (padFound)
-                {
+                if (padFound) {
                     break;
                 }
             }
 
-            if (padFound)
-            {
-                if (!placeRocketOnPad(stack, worldIn, tile, centerX, centerY, centerZ))
-                {
+            if (padFound) {
+                if (!placeRocketOnPad(stack, worldIn, tile, centerX, centerY, centerZ)) {
                     return EnumActionResult.FAIL;
                 }
 
-                if (!playerIn.capabilities.isCreativeMode)
-                {
+                if (!playerIn.capabilities.isCreativeMode) {
                     stack.shrink(1);
                 }
                 return EnumActionResult.SUCCESS;
-            }
-            else
-            {
+            } else {
                 return EnumActionResult.PASS;
             }
         }
     }
 
-    public static boolean placeRocketOnPad(ItemStack stack, World worldIn, TileEntity tile, float centerX, float centerY, float centerZ)
-    {
-        //Check whether there is already a rocket on the pad
-        if (tile instanceof TileEntityLandingPad)
-        {
-            if (((TileEntityLandingPad) tile).getDockedEntity() != null)
-            {
-                return false;
-            }
-        }
-        else
-        {
-            return false;
-        }
-
-        final EntityTier1Rocket spaceship = new EntityTier1Rocket(worldIn, centerX, centerY, centerZ, EnumRocketType.values()[stack.getItemDamage()]);
-
-        spaceship.setPosition(spaceship.posX, spaceship.posY + spaceship.getOnPadYOffset(), spaceship.posZ);
-        worldIn.spawnEntity(spaceship);
-
-        if (spaceship.rocketType.getPreFueled())
-        {
-            spaceship.fuelTank.fill(new FluidStack(GCFluids.fluidFuel, spaceship.getMaxFuel()), true);
-        }
-        else if (stack.hasTagCompound() && stack.getTagCompound().hasKey("RocketFuel"))
-        {
-            spaceship.fuelTank.fill(new FluidStack(GCFluids.fluidFuel, stack.getTagCompound().getInteger("RocketFuel")), true);
-        }
-
-        return true;
-    }
-
     @Override
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list)
-    {
-        if (tab == GalacticraftCore.galacticraftItemsTab || tab == CreativeTabs.SEARCH)
-        {
-            for (int i = 0; i < EnumRocketType.values().length; i++)
-            {
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list) {
+        if (tab == GalacticraftCore.galacticraftItemsTab || tab == CreativeTabs.SEARCH) {
+            for (int i = 0; i < EnumRocketType.values().length; i++) {
                 list.add(new ItemStack(this, 1, i));
             }
         }
@@ -166,55 +138,46 @@ public class ItemTier1Rocket extends Item implements IHoldableItem, ISortableIte
 
     @Override
     @SideOnly(Side.CLIENT)
-    public EnumRarity getRarity(ItemStack par1ItemStack)
-    {
+    public EnumRarity getRarity(ItemStack par1ItemStack) {
         return ClientProxyCore.galacticraftItem;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack par1ItemStack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
-    {
+    public void addInformation(ItemStack par1ItemStack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
         EnumRocketType type = EnumRocketType.values()[par1ItemStack.getItemDamage()];
 
-        if (!type.getTooltip().isEmpty())
-        {
+        if (!type.getTooltip().isEmpty()) {
             tooltip.add(type.getTooltip());
         }
 
-        if (type.getPreFueled())
-        {
+        if (type.getPreFueled()) {
             tooltip.add(EnumColor.RED + "\u00a7o" + GCCoreUtil.translate("gui.creative_only.desc"));
         }
 
-        if (par1ItemStack.hasTagCompound() && par1ItemStack.getTagCompound().hasKey("RocketFuel"))
-        {
+        if (par1ItemStack.hasTagCompound() && par1ItemStack.getTagCompound().hasKey("RocketFuel")) {
             EntityTier1Rocket rocket = new EntityTier1Rocket(FMLClientHandler.instance().getWorldClient(), 0, 0, 0, EnumRocketType.values()[par1ItemStack.getItemDamage()]);
             tooltip.add(GCCoreUtil.translate("gui.message.fuel.name") + ": " + par1ItemStack.getTagCompound().getInteger("RocketFuel") + " / " + rocket.fuelTank.getCapacity());
         }
     }
 
     @Override
-    public boolean shouldHoldLeftHandUp(EntityPlayer player)
-    {
+    public boolean shouldHoldLeftHandUp(EntityPlayer player) {
         return true;
     }
 
     @Override
-    public boolean shouldHoldRightHandUp(EntityPlayer player)
-    {
+    public boolean shouldHoldRightHandUp(EntityPlayer player) {
         return true;
     }
 
     @Override
-    public boolean shouldCrouch(EntityPlayer player)
-    {
+    public boolean shouldCrouch(EntityPlayer player) {
         return true;
     }
 
     @Override
-    public EnumSortCategoryItem getCategory(int meta)
-    {
+    public EnumSortCategoryItem getCategory(int meta) {
         return EnumSortCategoryItem.ROCKET;
     }
 }

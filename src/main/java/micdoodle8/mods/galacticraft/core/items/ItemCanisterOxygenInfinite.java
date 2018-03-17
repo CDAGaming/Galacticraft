@@ -22,14 +22,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
-import javax.annotation.Nullable;
-
-public class ItemCanisterOxygenInfinite extends Item implements IItemOxygenSupply, ISortableItem
-{
-    public ItemCanisterOxygenInfinite(String assetName)
-    {
+public class ItemCanisterOxygenInfinite extends Item implements IItemOxygenSupply, ISortableItem {
+    public ItemCanisterOxygenInfinite(String assetName) {
         super();
         this.setMaxDamage(ItemCanisterGeneric.EMPTY);
         this.setMaxStackSize(1);
@@ -39,20 +36,17 @@ public class ItemCanisterOxygenInfinite extends Item implements IItemOxygenSuppl
     }
 
     @Override
-    public boolean isEnchantable(ItemStack stack)
-    {
+    public boolean isEnchantable(ItemStack stack) {
         return false;
     }
 
     @Override
-    public boolean hasEffect(ItemStack stack)
-    {
+    public boolean hasEffect(ItemStack stack) {
         return true;
     }
 
     @Override
-    public void addInformation(ItemStack par1ItemStack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
-    {
+    public void addInformation(ItemStack par1ItemStack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
         tooltip.add(EnumColor.DARK_GREEN + GCCoreUtil.translate("gui.infinite_item.desc"));
         tooltip.add(EnumColor.RED + GCCoreUtil.translate("gui.creative_only.desc"));
     }
@@ -65,63 +59,51 @@ public class ItemCanisterOxygenInfinite extends Item implements IItemOxygenSuppl
     }*/
 
     @Override
-    public CreativeTabs getCreativeTab()
-    {
+    public CreativeTabs getCreativeTab() {
         return GalacticraftCore.galacticraftItemsTab;
     }
 
     @Override
-    public ItemStack getContainerItem(ItemStack itemstack)
-    {
-        if (super.getContainerItem(itemstack).isEmpty())
-        {
+    public ItemStack getContainerItem(ItemStack itemstack) {
+        if (super.getContainerItem(itemstack).isEmpty()) {
             return ItemStack.EMPTY;
         }
         return itemstack;
     }
 
     @Override
-    public int discharge(ItemStack itemStack, int amount)
-    {
+    public int discharge(ItemStack itemStack, int amount) {
         return amount;
     }
 
     @Override
-    public int getOxygenStored(ItemStack par1ItemStack)
-    {
+    public int getOxygenStored(ItemStack par1ItemStack) {
         return par1ItemStack.getMaxDamage();
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public EnumRarity getRarity(ItemStack par1ItemStack)
-    {
+    public EnumRarity getRarity(ItemStack par1ItemStack) {
         return ClientProxyCore.galacticraftItem;
     }
 
     @Override
-    public EnumSortCategoryItem getCategory(int meta)
-    {
+    public EnumSortCategoryItem getCategory(int meta) {
         return EnumSortCategoryItem.GEAR;
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer player, EnumHand hand)
-    {
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer player, EnumHand hand) {
         ItemStack itemStack = player.getHeldItem(hand);
-        if (player instanceof EntityPlayerMP)
-        {
+        if (player instanceof EntityPlayerMP) {
             GCPlayerStats stats = GCPlayerStats.get(player);
             ItemStack gear = stats.getExtendedInventory().getStackInSlot(2);
             ItemStack gear1 = stats.getExtendedInventory().getStackInSlot(3);
 
-            if (gear.isEmpty())
-            {
+            if (gear.isEmpty()) {
                 stats.getExtendedInventory().setInventorySlotContents(2, itemStack.copy());
                 itemStack = ItemStack.EMPTY;
-            }
-            else if (gear1.isEmpty())
-            {
+            } else if (gear1.isEmpty()) {
                 stats.getExtendedInventory().setInventorySlotContents(3, itemStack.copy());
                 itemStack = ItemStack.EMPTY;
             }

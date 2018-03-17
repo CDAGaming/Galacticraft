@@ -6,13 +6,12 @@ import net.minecraft.world.IBlockAccess;
 
 import java.util.HashSet;
 
-public interface IFuelDock
-{
+public interface IFuelDock {
     HashSet<ILandingPadAttachable> getConnectedTiles();
 
     boolean isBlockAttachable(IBlockAccess world, BlockPos pos);
 
     IDockable getDockedEntity();
 
-	void dockEntity(IDockable entity);
+    void dockEntity(IDockable entity);
 }

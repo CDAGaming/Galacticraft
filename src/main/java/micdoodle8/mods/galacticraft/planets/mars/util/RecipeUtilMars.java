@@ -10,15 +10,11 @@ import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
 
-public class RecipeUtilMars
-{
+public class RecipeUtilMars {
     @Nonnull
-    public static ItemStack findMatchingSpaceshipT2Recipe(InventorySchematicTier2Rocket inventoryRocketBench)
-    {
-        for (INasaWorkbenchRecipe recipe : GalacticraftRegistry.getRocketT2Recipes())
-        {
-            if (recipe.matches(inventoryRocketBench))
-            {
+    public static ItemStack findMatchingSpaceshipT2Recipe(InventorySchematicTier2Rocket inventoryRocketBench) {
+        for (INasaWorkbenchRecipe recipe : GalacticraftRegistry.getRocketT2Recipes()) {
+            if (recipe.matches(inventoryRocketBench)) {
                 return recipe.getRecipeOutput();
             }
         }
@@ -27,12 +23,9 @@ public class RecipeUtilMars
     }
 
     @Nonnull
-    public static ItemStack findMatchingCargoRocketRecipe(InventorySchematicCargoRocket inventoryRocketBench)
-    {
-        for (INasaWorkbenchRecipe recipe : GalacticraftRegistry.getCargoRocketRecipes())
-        {
-            if (recipe.matches(inventoryRocketBench))
-            {
+    public static ItemStack findMatchingCargoRocketRecipe(InventorySchematicCargoRocket inventoryRocketBench) {
+        for (INasaWorkbenchRecipe recipe : GalacticraftRegistry.getCargoRocketRecipes()) {
+            if (recipe.matches(inventoryRocketBench)) {
                 return recipe.getRecipeOutput();
             }
         }
@@ -41,12 +34,9 @@ public class RecipeUtilMars
     }
 
     @Nonnull
-    public static ItemStack findMatchingSpaceshipT3Recipe(InventorySchematicTier3Rocket inventoryRocketBench)
-    {
-        for (INasaWorkbenchRecipe recipe : GalacticraftRegistry.getRocketT3Recipes())
-        {
-            if (recipe.matches(inventoryRocketBench))
-            {
+    public static ItemStack findMatchingSpaceshipT3Recipe(InventorySchematicTier3Rocket inventoryRocketBench) {
+        for (INasaWorkbenchRecipe recipe : GalacticraftRegistry.getRocketT3Recipes()) {
+            if (recipe.matches(inventoryRocketBench)) {
                 return recipe.getRecipeOutput();
             }
         }
@@ -55,12 +45,9 @@ public class RecipeUtilMars
     }
 
     @Nonnull
-    public static ItemStack findMatchingAstroMinerRecipe(InventorySchematicAstroMiner craftMatrix)
-    {
-        for (INasaWorkbenchRecipe recipe : GalacticraftRegistry.getAstroMinerRecipes())
-        {
-            if (recipe.matches(craftMatrix))
-            {
+    public static ItemStack findMatchingAstroMinerRecipe(InventorySchematicAstroMiner craftMatrix) {
+        for (INasaWorkbenchRecipe recipe : GalacticraftRegistry.getAstroMinerRecipes()) {
+            if (recipe.matches(craftMatrix)) {
                 return recipe.getRecipeOutput();
             }
         }

@@ -11,31 +11,26 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemHoeGC extends ItemHoe implements ISortableItem
-{
-    public ItemHoeGC(String assetName)
-    {
+public class ItemHoeGC extends ItemHoe implements ISortableItem {
+    public ItemHoeGC(String assetName) {
         super(GCItems.TOOL_STEEL);
         this.setUnlocalizedName(assetName);
         //this.setTextureName(Constants.TEXTURE_PREFIX + assetName);
     }
 
     @Override
-    public CreativeTabs getCreativeTab()
-    {
+    public CreativeTabs getCreativeTab() {
         return GalacticraftCore.galacticraftItemsTab;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public EnumRarity getRarity(ItemStack par1ItemStack)
-    {
+    public EnumRarity getRarity(ItemStack par1ItemStack) {
         return ClientProxyCore.galacticraftItem;
     }
 
     @Override
-    public EnumSortCategoryItem getCategory(int meta)
-    {
+    public EnumSortCategoryItem getCategory(int meta) {
         return EnumSortCategoryItem.TOOLS;
     }
 }

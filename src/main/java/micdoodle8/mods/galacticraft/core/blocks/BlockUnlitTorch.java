@@ -27,18 +27,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-public class BlockUnlitTorch extends BlockTorchBase implements IOxygenReliantBlock
-{
+public class BlockUnlitTorch extends BlockTorchBase implements IOxygenReliantBlock {
     public static final PropertyDirection FACING = PropertyDirection.create("facing", facing -> facing != EnumFacing.DOWN);
-
+    public static HashMap<Block, Block> registeredTorches = new HashMap<>();
     public boolean lit;
     public Block litVersion;
     public Block unlitVersion;
     public Block fallback;
-    public static HashMap<Block, Block> registeredTorches = new HashMap<>();
 
-    public BlockUnlitTorch(boolean lit, String assetName)
-    {
+    public BlockUnlitTorch(boolean lit, String assetName) {
         super(Material.CIRCUITS);
         this.setTickRandomly(true);
         this.lit = lit;
@@ -49,8 +46,7 @@ public class BlockUnlitTorch extends BlockTorchBase implements IOxygenReliantBlo
         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.UP));
     }
 
-    public static void register(BlockUnlitTorch unlittorch, BlockUnlitTorch littorch, Block vanillatorch)
-    {
+    public static void register(BlockUnlitTorch unlittorch, BlockUnlitTorch littorch, Block vanillatorch) {
         littorch.litVersion = littorch;
         littorch.unlitVersion = unlittorch;
         littorch.fallback = vanillatorch;
@@ -62,30 +58,24 @@ public class BlockUnlitTorch extends BlockTorchBase implements IOxygenReliantBlo
     }
 
     @Override
-    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos)
-    {
+    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
         return null;
     }
 
     @Override
-    public boolean isOpaqueCube(IBlockState state)
-    {
+    public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
 
     @Override
-    public boolean isFullCube(IBlockState state)
-    {
+    public boolean isFullCube(IBlockState state) {
         return false;
     }
 
     @Override
-    public boolean canPlaceBlockAt(World worldIn, BlockPos pos)
-    {
-        for (EnumFacing enumfacing : FACING.getAllowedValues())
-        {
-            if (this.canPlaceAt(worldIn, pos, enumfacing))
-            {
+    public boolean canPlaceBlockAt(World worldIn, BlockPos pos) {
+        for (EnumFacing enumfacing : FACING.getAllowedValues()) {
+            if (this.canPlaceAt(worldIn, pos, enumfacing)) {
                 return true;
             }
         }
@@ -94,73 +84,52 @@ public class BlockUnlitTorch extends BlockTorchBase implements IOxygenReliantBlo
     }
 
     @Override
-    public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
-    {
-        if (state.getBlock().getMetaFromState(state) == 0)
-        {
+    public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand) {
+        if (state.getBlock().getMetaFromState(state) == 0) {
             this.onBlockAdded(worldIn, pos, state);
-        }
-        else
-        {
+        } else {
             this.checkOxygen(worldIn, pos, state);
         }
     }
 
     @Override
-    public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)
-    {
-        if (this.checkForDrop(worldIn, pos, state))
-        {
+    public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
+        if (this.checkForDrop(worldIn, pos, state)) {
             this.checkOxygen(worldIn, pos, state);
         }
     }
 
     @Override
-    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)
-    {
-        if (this.checkForDrop(worldIn, pos, state))
-        {
+    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
+        if (this.checkForDrop(worldIn, pos, state)) {
             EnumFacing enumfacing = state.getValue(FACING);
             EnumFacing.Axis enumfacingAxis = enumfacing.getAxis();
             EnumFacing enumfacing1 = enumfacing.getOpposite();
             boolean flag = false;
 
-            if (enumfacingAxis.isHorizontal() && !worldIn.isSideSolid(pos.offset(enumfacing1), enumfacing, true))
-            {
+            if (enumfacingAxis.isHorizontal() && !worldIn.isSideSolid(pos.offset(enumfacing1), enumfacing, true)) {
                 flag = true;
-            }
-            else if (enumfacingAxis.isVertical() && !this.canPlaceOn(worldIn, pos.offset(enumfacing1)))
-            {
+            } else if (enumfacingAxis.isVertical() && !this.canPlaceOn(worldIn, pos.offset(enumfacing1))) {
                 flag = true;
             }
 
-            if (flag)
-            {
+            if (flag) {
                 this.dropBlockAsItem(worldIn, pos, state, 0);
                 worldIn.setBlockToAir(pos);
-            }
-            else
-            {
+            } else {
                 this.checkOxygen(worldIn, pos, state);
             }
         }
     }
 
-    private void checkOxygen(World world, BlockPos pos, IBlockState state)
-    {
-        if (world.provider instanceof IGalacticraftWorldProvider)
-        {
-            if (OxygenUtil.checkTorchHasOxygen(world, pos))
-            {
+    private void checkOxygen(World world, BlockPos pos, IBlockState state) {
+        if (world.provider instanceof IGalacticraftWorldProvider) {
+            if (OxygenUtil.checkTorchHasOxygen(world, pos)) {
                 this.onOxygenAdded(world, pos, state);
-            }
-            else
-            {
+            } else {
                 this.onOxygenRemoved(world, pos, state);
             }
-        }
-        else
-        {
+        } else {
             EnumFacing enumfacing = state.getValue(FACING);
             world.setBlockState(pos, this.fallback.getDefaultState().withProperty(FACING, enumfacing), 2);
         }
@@ -168,8 +137,7 @@ public class BlockUnlitTorch extends BlockTorchBase implements IOxygenReliantBlo
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand)
-    {
+    public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand) {
         EnumFacing enumfacing = stateIn.getValue(FACING);
         double d0 = (double) pos.getX() + 0.5D;
         double d1 = (double) pos.getY() + 0.7D;
@@ -177,63 +145,51 @@ public class BlockUnlitTorch extends BlockTorchBase implements IOxygenReliantBlo
         double d3 = 0.22D;
         double d4 = 0.27D;
 
-        if (enumfacing.getAxis().isHorizontal())
-        {
+        if (enumfacing.getAxis().isHorizontal()) {
             EnumFacing enumfacing1 = enumfacing.getOpposite();
             worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 + d4 * (double) enumfacing1.getFrontOffsetX(), d1 + d3, d2 + d4 * (double) enumfacing1.getFrontOffsetZ(), 0.0D, 0.0D, 0.0D, new int[0]);
-            if (this == GCBlocks.unlitTorchLit)
-            {
+            if (this == GCBlocks.unlitTorchLit) {
                 worldIn.spawnParticle(EnumParticleTypes.FLAME, d0 + d4 * (double) enumfacing1.getFrontOffsetX(), d1 + d3, d2 + d4 * (double) enumfacing1.getFrontOffsetZ(), 0.0D, 0.0D, 0.0D, new int[0]);
             }
-        }
-        else
-        {
+        } else {
             worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0, d1, d2, 0.0D, 0.0D, 0.0D, new int[0]);
-            if (this == GCBlocks.unlitTorchLit)
-            {
+            if (this == GCBlocks.unlitTorchLit) {
                 worldIn.spawnParticle(EnumParticleTypes.FLAME, d0, d1, d2, 0.0D, 0.0D, 0.0D, new int[0]);
             }
         }
     }
 
     @Override
-    public void onOxygenRemoved(World world, BlockPos pos, IBlockState state)
-    {
-        if (world.provider instanceof IGalacticraftWorldProvider)
-        {
+    public void onOxygenRemoved(World world, BlockPos pos, IBlockState state) {
+        if (world.provider instanceof IGalacticraftWorldProvider) {
             EnumFacing enumfacing = state.getValue(FACING);
             world.setBlockState(pos, this.unlitVersion.getDefaultState().withProperty(FACING, enumfacing), 2);
         }
     }
 
     @Override
-    public void onOxygenAdded(World world, BlockPos pos, IBlockState state)
-    {
-        if (world.provider instanceof IGalacticraftWorldProvider)
-        {
+    public void onOxygenAdded(World world, BlockPos pos, IBlockState state) {
+        if (world.provider instanceof IGalacticraftWorldProvider) {
             EnumFacing enumfacing = state.getValue(FACING);
             world.setBlockState(pos, this.litVersion.getDefaultState().withProperty(FACING, enumfacing), 2);
         }
     }
 
     @Override
-    public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune)
-    {
+    public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
         ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
         ret.add(new ItemStack(this.litVersion));
         return ret;
     }
 
     @Override
-    protected BlockStateContainer createBlockState()
-    {
-        return new BlockStateContainer(this, new IProperty[] { FACING });
+    protected BlockStateContainer createBlockState() {
+        return new BlockStateContainer(this, new IProperty[]{FACING});
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public BlockRenderLayer getBlockLayer()
-    {
+    public BlockRenderLayer getBlockLayer() {
         return BlockRenderLayer.CUTOUT;
     }
 }

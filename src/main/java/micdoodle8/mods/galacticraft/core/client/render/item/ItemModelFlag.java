@@ -10,18 +10,14 @@ import net.minecraft.entity.EntityLivingBase;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
 
-public class ItemModelFlag extends ModelTransformWrapper
-{
-    public ItemModelFlag(IBakedModel modelToWrap)
-    {
+public class ItemModelFlag extends ModelTransformWrapper {
+    public ItemModelFlag(IBakedModel modelToWrap) {
         super(modelToWrap);
     }
 
     @Override
-    protected Matrix4f getTransformForPerspective(TransformType cameraTransformType)
-    {
-        if (cameraTransformType == TransformType.GUI)
-        {
+    protected Matrix4f getTransformForPerspective(TransformType cameraTransformType) {
+        if (cameraTransformType == TransformType.GUI) {
             Matrix4f ret = new Matrix4f();
             ret.setIdentity();
             Matrix4f mul = new Matrix4f();
@@ -40,8 +36,7 @@ public class ItemModelFlag extends ModelTransformWrapper
             return ret;
         }
 
-        if (cameraTransformType == TransformType.FIRST_PERSON_RIGHT_HAND || cameraTransformType == TransformType.FIRST_PERSON_LEFT_HAND)
-        {
+        if (cameraTransformType == TransformType.FIRST_PERSON_RIGHT_HAND || cameraTransformType == TransformType.FIRST_PERSON_LEFT_HAND) {
             float xTran = cameraTransformType == TransformType.FIRST_PERSON_LEFT_HAND ? 0.65F : 1.5F;
             float yTran = cameraTransformType == TransformType.FIRST_PERSON_LEFT_HAND ? -0.08F : -0.05F;
             Vector3f trans = new Vector3f(xTran, yTran, 0.0F);
@@ -59,22 +54,19 @@ public class ItemModelFlag extends ModelTransformWrapper
             ret.mul(mul);
             mul.setIdentity();
             EntityLivingBase player = Minecraft.getMinecraft().player;
-            if (player != null && player.isHandActive() && !player.getActiveItemStack().isEmpty())
-            {
+            if (player != null && player.isHandActive() && !player.getActiveItemStack().isEmpty()) {
                 final int useTime = Minecraft.getMinecraft().player.getItemInUseMaxCount();
                 float interpolate0 = useTime / 20.0F;
                 interpolate0 = (interpolate0 * interpolate0 + interpolate0 * 2.0F) / 3.0F;
 
-                if (interpolate0 > 1.0F)
-                {
+                if (interpolate0 > 1.0F) {
                     interpolate0 = 1.0F;
                 }
                 final int useTimeFuture = Minecraft.getMinecraft().player.getItemInUseMaxCount() + 1;
                 float interpolate1 = useTimeFuture / 20.0F;
                 interpolate1 = (interpolate1 * interpolate1 + interpolate1 * 2.0F) / 3.0F;
 
-                if (interpolate1 > 1.0F)
-                {
+                if (interpolate1 > 1.0F) {
                     interpolate1 = 1.0F;
                 }
                 mul.rotX(((interpolate0 + (interpolate1 - interpolate0) * Minecraft.getMinecraft().getRenderPartialTicks()) * 75.0F) / Constants.RADIANS_TO_DEGREES);
@@ -86,8 +78,7 @@ public class ItemModelFlag extends ModelTransformWrapper
             return ret;
         }
 
-        if (cameraTransformType == TransformType.THIRD_PERSON_RIGHT_HAND || cameraTransformType == TransformType.THIRD_PERSON_LEFT_HAND)
-        {
+        if (cameraTransformType == TransformType.THIRD_PERSON_RIGHT_HAND || cameraTransformType == TransformType.THIRD_PERSON_LEFT_HAND) {
             Matrix4f ret = new Matrix4f();
             ret.setIdentity();
             Matrix4f mul = new Matrix4f();
@@ -103,8 +94,7 @@ public class ItemModelFlag extends ModelTransformWrapper
             return ret;
         }
 
-        if (cameraTransformType == TransformType.GROUND)
-        {
+        if (cameraTransformType == TransformType.GROUND) {
             Matrix4f ret = new Matrix4f();
             ret.setIdentity();
             Matrix4f mul = new Matrix4f();
@@ -116,8 +106,7 @@ public class ItemModelFlag extends ModelTransformWrapper
             ret.mul(mul);
             return ret;
         }
-        if (cameraTransformType == TransformType.FIXED)
-        {
+        if (cameraTransformType == TransformType.FIXED) {
             Matrix4f ret = new Matrix4f();
             ret.setIdentity();
             Matrix4f mul = new Matrix4f();

@@ -16,46 +16,39 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TileEntityDungeonSpawner<E extends Entity> extends TileEntityAdvanced
-{
+public class TileEntityDungeonSpawner<E extends Entity> extends TileEntityAdvanced {
     public Class<E> bossClass;
     public IBoss boss;
     public boolean spawned;
     public boolean isBossDefeated;
     public boolean playerInRange;
     public boolean lastPlayerInRange;
+    public long lastKillTime;
     private Vector3 roomCoords;
     private Vector3 roomSize;
-    public long lastKillTime;
     private BlockPos chestPos;
     private AxisAlignedBB range15 = null;
     private AxisAlignedBB rangeBounds = null;
     private AxisAlignedBB rangeBoundsPlus3 = null;
     private AxisAlignedBB rangeBoundsPlus11 = null;
 
-    public TileEntityDungeonSpawner()
-    {
+    public TileEntityDungeonSpawner() {
     }
 
-    public TileEntityDungeonSpawner(Class<E> bossClass)
-    {
+    public TileEntityDungeonSpawner(Class<E> bossClass) {
         this.bossClass = bossClass;
     }
 
     @Override
-    public void update()
-    {
+    public void update() {
         super.update();
 
-        if (this.roomCoords == null)
-        {
+        if (this.roomCoords == null) {
             return;
         }
 
-        if (!this.world.isRemote)
-        {
-            if (this.range15 == null)
-            {
+        if (!this.world.isRemote) {
+            if (this.range15 == null) {
                 final Vector3 thisVec = new Vector3(this);
                 this.range15 = new AxisAlignedBB(thisVec.x - 15, thisVec.y - 15, thisVec.z - 15, thisVec.x + 15, thisVec.y + 15, thisVec.z + 15);
                 this.rangeBounds = new AxisAlignedBB(this.roomCoords.intX(), this.roomCoords.intY(), this.roomCoords.intZ(), this.roomCoords.intX() + this.roomSize.intX(), this.roomCoords.intY() + this.roomSize.intY(), this.roomCoords.intZ() + this.roomSize.intZ());
@@ -71,10 +64,8 @@ public class TileEntityDungeonSpawner<E extends Entity> extends TileEntityAdvanc
 
             final List<E> l = this.world.getEntitiesWithinAABB(bossClass, this.range15);
 
-            for (final Entity e : l)
-            {
-                if (!e.isDead)
-                {
+            for (final Entity e : l) {
+                if (!e.isDead) {
                     this.boss = (IBoss) e;
                     this.spawned = true;
                     this.isBossDefeated = false;
@@ -84,10 +75,8 @@ public class TileEntityDungeonSpawner<E extends Entity> extends TileEntityAdvanc
 
             List<EntityMob> entitiesWithin = this.world.getEntitiesWithinAABB(EntityMob.class, this.rangeBoundsPlus3);
 
-            for (Entity mob : entitiesWithin)
-            {
-                if (this.getDisabledCreatures().contains(mob.getClass()))
-                {
+            for (Entity mob : entitiesWithin) {
+                if (this.getDisabledCreatures().contains(mob.getClass())) {
                     mob.setDead();
                 }
             }
@@ -96,30 +85,22 @@ public class TileEntityDungeonSpawner<E extends Entity> extends TileEntityAdvanc
 
             this.playerInRange = !playersWithin.isEmpty();
 
-            if (this.playerInRange)
-            {
-                if (!this.lastPlayerInRange && !this.spawned)
-                {
+            if (this.playerInRange) {
+                if (!this.lastPlayerInRange && !this.spawned) {
                     //Try to create a boss entity
-                    if (this.boss == null && !this.isBossDefeated)
-                    {
-                        try
-                        {
+                    if (this.boss == null && !this.isBossDefeated) {
+                        try {
                             Constructor<?> c = this.bossClass.getConstructor(World.class);
                             this.boss = (IBoss) c.newInstance(this.world);
                             ((Entity) this.boss).setPosition(this.getPos().getX() + 0.5, this.getPos().getY() + 1.0, this.getPos().getZ() + 0.5);
-                        }
-                        catch (Exception e)
-                        {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
 
                     //Now spawn the boss
-                    if (this.boss != null)
-                    {
-                        if (this.boss instanceof EntityLiving)
-                        {
+                    if (this.boss != null) {
+                        if (this.boss instanceof EntityLiving) {
                             EntityLiving bossLiving = (EntityLiving) this.boss;
                             bossLiving.onInitialSpawn(this.world.getDifficultyForLocation(new BlockPos(bossLiving)), null);
                             this.world.spawnEntity(bossLiving);
@@ -134,13 +115,11 @@ public class TileEntityDungeonSpawner<E extends Entity> extends TileEntityAdvanc
         }
     }
 
-    public void playSpawnSound(Entity entity)
-    {
+    public void playSpawnSound(Entity entity) {
 
     }
 
-    public List<Class<? extends EntityLiving>> getDisabledCreatures()
-    {
+    public List<Class<? extends EntityLiving>> getDisabledCreatures() {
         List<Class<? extends EntityLiving>> list = new ArrayList<Class<? extends EntityLiving>>();
         list.add(EntityEvolvedSkeleton.class);
         list.add(EntityEvolvedCreeper.class);
@@ -149,30 +128,24 @@ public class TileEntityDungeonSpawner<E extends Entity> extends TileEntityAdvanc
         return list;
     }
 
-    public void setRoom(Vector3 coords, Vector3 size)
-    {
+    public void setRoom(Vector3 coords, Vector3 size) {
         this.roomCoords = coords;
         this.roomSize = size;
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt)
-    {
+    public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
 
         this.playerInRange = this.lastPlayerInRange = nbt.getBoolean("playerInRange");
         this.isBossDefeated = nbt.getBoolean("defeated");
 
-        try
-        {
+        try {
             this.bossClass = (Class<E>) Class.forName(nbt.getString("bossClass"));
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             // This exception will be thrown when read is called from TileEntity.handleUpdateTag
             // but we only care if an exception is thrown on server side read
-            if (!this.world.isRemote)
-            {
+            if (!this.world.isRemote) {
                 e.printStackTrace();
             }
         }
@@ -186,34 +159,28 @@ public class TileEntityDungeonSpawner<E extends Entity> extends TileEntityAdvanc
         this.roomSize.y = nbt.getDouble("roomSizeY");
         this.roomSize.z = nbt.getDouble("roomSizeZ");
 
-        if (nbt.hasKey("lastKillTime"))
-        {
+        if (nbt.hasKey("lastKillTime")) {
             this.lastKillTime = nbt.getLong("lastKillTime");
-        }
-        else if (nbt.hasKey("lastKillTimeNew"))
-        {
+        } else if (nbt.hasKey("lastKillTimeNew")) {
             long savedTime = nbt.getLong("lastKillTimeNew");
             this.lastKillTime = savedTime == 0 ? 0 : savedTime + MinecraftServer.getCurrentTimeMillis();
         }
 
 
-        if (nbt.hasKey("chestPosNull") && !nbt.getBoolean("chestPosNull"))
-        {
+        if (nbt.hasKey("chestPosNull") && !nbt.getBoolean("chestPosNull")) {
             this.chestPos = new BlockPos(nbt.getInteger("chestX"), nbt.getInteger("chestY"), nbt.getInteger("chestZ"));
         }
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt)
-    {
+    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
 
         nbt.setBoolean("playerInRange", this.playerInRange);
         nbt.setBoolean("defeated", this.isBossDefeated);
         nbt.setString("bossClass", this.bossClass.getCanonicalName());
 
-        if (this.roomCoords != null)
-        {
+        if (this.roomCoords != null) {
             nbt.setDouble("roomCoordsX", this.roomCoords.x);
             nbt.setDouble("roomCoordsY", this.roomCoords.y);
             nbt.setDouble("roomCoordsZ", this.roomCoords.z);
@@ -225,8 +192,7 @@ public class TileEntityDungeonSpawner<E extends Entity> extends TileEntityAdvanc
         nbt.setLong("lastKillTimeNew", this.lastKillTime == 0 ? 0 : this.lastKillTime - MinecraftServer.getCurrentTimeMillis());
 
         nbt.setBoolean("chestPosNull", this.chestPos == null);
-        if (this.chestPos != null)
-        {
+        if (this.chestPos != null) {
             nbt.setInteger("chestX", this.chestPos.getX());
             nbt.setInteger("chestY", this.chestPos.getY());
             nbt.setInteger("chestZ", this.chestPos.getZ());
@@ -235,43 +201,36 @@ public class TileEntityDungeonSpawner<E extends Entity> extends TileEntityAdvanc
     }
 
     @Override
-    public double getPacketRange()
-    {
+    public double getPacketRange() {
         return 0;
     }
 
     @Override
-    public int getPacketCooldown()
-    {
+    public int getPacketCooldown() {
         return 0;
     }
 
     @Override
-    public boolean isNetworkedTile()
-    {
+    public boolean isNetworkedTile() {
         return false;
     }
 
-    public BlockPos getChestPos()
-    {
+    public BlockPos getChestPos() {
         return chestPos;
     }
 
-    public void setChestPos(BlockPos chestPos)
-    {
+    public void setChestPos(BlockPos chestPos) {
         this.chestPos = chestPos;
     }
-    
-    public AxisAlignedBB getRangeBounds()
-    {
+
+    public AxisAlignedBB getRangeBounds() {
         if (this.rangeBounds == null)
             this.rangeBounds = new AxisAlignedBB(this.roomCoords.intX(), this.roomCoords.intY(), this.roomCoords.intZ(), this.roomCoords.intX() + this.roomSize.intX(), this.roomCoords.intY() + this.roomSize.intY(), this.roomCoords.intZ() + this.roomSize.intZ());
 
         return this.rangeBounds;
     }
 
-    public AxisAlignedBB getRangeBoundsPlus11()
-    {
+    public AxisAlignedBB getRangeBoundsPlus11() {
         if (this.rangeBoundsPlus11 == null)
             this.rangeBoundsPlus11 = this.getRangeBounds().grow(11, 11, 11);
 

@@ -6,9 +6,9 @@ import micdoodle8.mods.galacticraft.core.util.ColorUtil;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.FMLClientHandler;
@@ -17,8 +17,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class OverlayOxygenTanks extends Overlay
-{
+public class OverlayOxygenTanks extends Overlay {
     private final static ResourceLocation guiTexture = new ResourceLocation(Constants.ASSET_PREFIX, "textures/gui/gui.png");
 
     private static Minecraft minecraft = FMLClientHandler.instance().getClient();
@@ -26,8 +25,7 @@ public class OverlayOxygenTanks extends Overlay
     /**
      * Render the GUI that displays oxygen level in tanks
      */
-    public static void renderOxygenTankIndicator(int heatLevel, int oxygenInTank1, int oxygenInTank2, boolean right, boolean top, boolean invalid)
-    {
+    public static void renderOxygenTankIndicator(int heatLevel, int oxygenInTank1, int oxygenInTank2, boolean right, boolean top, boolean invalid) {
         final ScaledResolution scaledresolution = ClientUtil.getScaledRes(OverlayOxygenTanks.minecraft, OverlayOxygenTanks.minecraft.displayWidth, OverlayOxygenTanks.minecraft.displayHeight);
         final int i = scaledresolution.getScaledWidth();
         final int j = scaledresolution.getScaledHeight();
@@ -54,27 +52,21 @@ public class OverlayOxygenTanks extends Overlay
         double topY = 0;
         double zLevel = -190.0D;
 
-        if (right)
-        {
+        if (right) {
             minLeftX = i - 59;
             maxLeftX = i - 40;
             minRightX = i - 39;
             maxRightX = i - 20;
-        }
-        else
-        {
+        } else {
             minLeftX = 10;
             maxLeftX = 29;
             minRightX = 30;
             maxRightX = 49;
         }
 
-        if (top)
-        {
+        if (top) {
             topY = 10.5;
-        }
-        else
-        {
+        } else {
             topY = j - 57;
         }
 
@@ -99,8 +91,7 @@ public class OverlayOxygenTanks extends Overlay
         worldRenderer.pos(minLeftX + 1, bottomY - heatLeveLScaledMax, zLevel).tex(76 * texMod, (48 + 45 - heatLevelScaled) * texMod).endVertex();
         tessellator.draw();
 
-        if (invalid)
-        {
+        if (invalid) {
             GlStateManager.color(1, 0, 0);
             worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
             worldRenderer.pos(minLeftX - 5, bottomY - heatLevelScaledMin + 3, zLevel).tex(84 * texMod, 47 * texMod).endVertex();
@@ -130,8 +121,7 @@ public class OverlayOxygenTanks extends Overlay
         tessellator.draw();
         GlStateManager.depthMask(true);
 
-        if (oxygenInTank1 > 0)
-        {
+        if (oxygenInTank1 > 0) {
             worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
             worldRenderer.pos(minLeftX + 1, topY + 1 + oxygenInTank1 / 2, zLevel).tex(105 * 0.00390625F, oxygenInTank1 / 2 * 0.00390625F).endVertex();
             worldRenderer.pos(maxLeftX - 1, topY + 1 + oxygenInTank1 / 2, zLevel).tex((105 + 17) * 0.00390625F, oxygenInTank1 / 2 * 0.00390625F).endVertex();
@@ -147,8 +137,7 @@ public class OverlayOxygenTanks extends Overlay
             tessellator.draw();
         }
 
-        if (oxygenInTank2 > 0)
-        {
+        if (oxygenInTank2 > 0) {
             worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
             worldRenderer.pos(minRightX + 1, topY + 1 + oxygenInTank2 / 2, 0).tex(105 * 0.00390625F, oxygenInTank2 / 2 * 0.00390625F).endVertex();
             worldRenderer.pos(maxRightX - 1, topY + 1 + oxygenInTank2 / 2, 0).tex((105 + 17) * 0.00390625F, oxygenInTank2 / 2 * 0.00390625F).endVertex();
@@ -164,8 +153,7 @@ public class OverlayOxygenTanks extends Overlay
             tessellator.draw();
         }
 
-        if (invalid)
-        {
+        if (invalid) {
             String value = GCCoreUtil.translate("gui.warning.invalid_thermal");
             OverlayOxygenTanks.minecraft.fontRenderer.drawString(value, minLeftX - 18 - OverlayOxygenTanks.minecraft.fontRenderer.getStringWidth(value), (int) bottomY - heatLevelScaled - OverlayOxygenTanks.minecraft.fontRenderer.FONT_HEIGHT / 2 - 1, ColorUtil.to32BitColor(255, 255, 10, 10));
         }

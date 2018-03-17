@@ -1,7 +1,7 @@
 {
-    "parent": "block/cube_all",
-    "textures": {
-        "all": "galacticraftplanets:blocks/machineframe",
-        "particle": "galacticraftplanets:blocks/machineframe"
-    }
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "galacticraftplanets:blocks/machineframe",
+    "particle": "galacticraftplanets:blocks/machineframe"
+  }
 }

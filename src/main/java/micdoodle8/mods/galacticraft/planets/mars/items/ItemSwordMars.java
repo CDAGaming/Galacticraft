@@ -15,38 +15,31 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemSwordMars extends ItemSword implements ISortableItem
-{
-    public ItemSwordMars(ToolMaterial par2EnumToolMaterial)
-    {
+public class ItemSwordMars extends ItemSword implements ISortableItem {
+    public ItemSwordMars(ToolMaterial par2EnumToolMaterial) {
         super(par2EnumToolMaterial);
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public EnumRarity getRarity(ItemStack par1ItemStack)
-    {
+    public EnumRarity getRarity(ItemStack par1ItemStack) {
         return ClientProxyCore.galacticraftItem;
     }
 
     @SideOnly(Side.CLIENT)
     @Override
-    public CreativeTabs getCreativeTab()
-    {
+    public CreativeTabs getCreativeTab() {
         return GalacticraftCore.galacticraftItemsTab;
     }
 
     @Override
-    public EnumSortCategoryItem getCategory(int meta)
-    {
+    public EnumSortCategoryItem getCategory(int meta) {
         return EnumSortCategoryItem.TOOLS;
     }
 
     @Override
-    public boolean onBlockDestroyed(ItemStack stack, World worldIn, IBlockState state, BlockPos pos, EntityLivingBase entityLiving)
-    {
-        if (state.getBlockHardness(worldIn, pos) > 0.2001F)
-        {
+    public boolean onBlockDestroyed(ItemStack stack, World worldIn, IBlockState state, BlockPos pos, EntityLivingBase entityLiving) {
+        if (state.getBlockHardness(worldIn, pos) > 0.2001F) {
             stack.damageItem(2, entityLiving);
         }
 

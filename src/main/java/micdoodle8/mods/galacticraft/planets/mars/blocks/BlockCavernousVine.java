@@ -36,44 +36,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class BlockCavernousVine extends Block implements IShearable, IShiftDescription, ISortableBlock
-{
+public class BlockCavernousVine extends Block implements IShearable, IShiftDescription, ISortableBlock {
     public static final PropertyEnum<EnumVineType> VINE_TYPE = PropertyEnum.create("vinetype", EnumVineType.class);
 
-    public enum EnumVineType implements IStringSerializable
-    {
-        VINE_0(0, "vine_0"),
-        VINE_1(1, "vine_1"),
-        VINE_2(2, "vine_2");
-
-        private final int meta;
-        private final String name;
-
-        private EnumVineType(int meta, String name)
-        {
-            this.meta = meta;
-            this.name = name;
-        }
-
-        public int getMeta()
-        {
-            return this.meta;
-        }
-
-        public static EnumVineType byMetadata(int meta)
-        {
-            return values()[meta];
-        }
-
-        @Override
-        public String getName()
-        {
-            return this.name;
-        }
-    }
-
-    public BlockCavernousVine(String assetName)
-    {
+    public BlockCavernousVine(String assetName) {
         super(Material.VINE);
         this.setLightLevel(1.0F);
         this.setTickRandomly(true);
@@ -82,13 +48,10 @@ public class BlockCavernousVine extends Block implements IShearable, IShiftDescr
     }
 
     @Override
-    public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest)
-    {
-        if (world.setBlockToAir(pos))
-        {
+    public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest) {
+        if (world.setBlockToAir(pos)) {
             int y2 = pos.getY() - 1;
-            while (world.getBlockState(new BlockPos(pos.getX(), y2, pos.getZ())).getBlock() == this)
-            {
+            while (world.getBlockState(new BlockPos(pos.getX(), y2, pos.getZ())).getBlock() == this) {
                 world.setBlockToAir(new BlockPos(pos.getX(), y2, pos.getZ()));
                 y2--;
             }
@@ -99,30 +62,24 @@ public class BlockCavernousVine extends Block implements IShearable, IShiftDescr
         return false;
     }
 
-    public boolean canBlockStay(World worldIn, BlockPos pos)
-    {
+    public boolean canBlockStay(World worldIn, BlockPos pos) {
         IBlockState stateAbove = worldIn.getBlockState(pos.up());
         return (stateAbove.getBlock() == this || stateAbove.getMaterial().isSolid());
     }
 
     @Override
-    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)
-    {
+    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
         super.neighborChanged(state, worldIn, pos, blockIn, fromPos);
 
-        if (!this.canBlockStay(worldIn, pos))
-        {
+        if (!this.canBlockStay(worldIn, pos)) {
             worldIn.setBlockToAir(pos);
         }
     }
 
     @Override
-    public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn)
-    {
-        if (entityIn instanceof EntityLivingBase)
-        {
-            if (entityIn instanceof EntityPlayer && ((EntityPlayer) entityIn).capabilities.isFlying)
-            {
+    public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn) {
+        if (entityIn instanceof EntityLivingBase) {
+            if (entityIn instanceof EntityPlayer && ((EntityPlayer) entityIn).capabilities.isFlying) {
                 return;
             }
 
@@ -134,55 +91,46 @@ public class BlockCavernousVine extends Block implements IShearable, IShiftDescr
     }
 
     @Override
-    public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos)
-    {
+    public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos) {
         return this.getVineLight(world, pos);
     }
 
     @SideOnly(Side.CLIENT)
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
-    {
+    public CreativeTabs getCreativeTabToDisplayOn() {
         return GalacticraftCore.galacticraftBlocksTab;
     }
 
     @Override
-    public boolean isOpaqueCube(IBlockState state)
-    {
+    public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
 
     @Override
-    public boolean isFullCube(IBlockState state)
-    {
+    public boolean isFullCube(IBlockState state) {
         return false;
     }
 
     @Override
-    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face)
-    {
+    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
         return BlockFaceShape.UNDEFINED;
     }
 
     @Override
-    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos)
-    {
+    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
         return null;
     }
 
     @Override
-    public boolean canPlaceBlockOnSide(World world, BlockPos pos, EnumFacing facing)
-    {
+    public boolean canPlaceBlockOnSide(World world, BlockPos pos, EnumFacing facing) {
         return facing == EnumFacing.DOWN && world.getBlockState(pos.up()).getBlockFaceShape(world, pos.up(), facing) == BlockFaceShape.SOLID;
     }
 
-    public int getVineLength(IBlockAccess world, BlockPos pos)
-    {
+    public int getVineLength(IBlockAccess world, BlockPos pos) {
         int vineCount = 0;
         int y2 = pos.getY();
 
-        while (world.getBlockState(new BlockPos(pos.getX(), y2, pos.getZ())).getBlock() == MarsBlocks.vine)
-        {
+        while (world.getBlockState(new BlockPos(pos.getX(), y2, pos.getZ())).getBlock() == MarsBlocks.vine) {
             vineCount++;
             y2++;
         }
@@ -190,13 +138,11 @@ public class BlockCavernousVine extends Block implements IShearable, IShiftDescr
         return vineCount;
     }
 
-    public int getVineLight(IBlockAccess world, BlockPos pos)
-    {
+    public int getVineLight(IBlockAccess world, BlockPos pos) {
         int vineCount = 0;
         int y2 = pos.getY();
 
-        while (world.getBlockState(new BlockPos(pos.getX(), y2, pos.getZ())).getBlock() == MarsBlocks.vine)
-        {
+        while (world.getBlockState(new BlockPos(pos.getX(), y2, pos.getZ())).getBlock() == MarsBlocks.vine) {
             vineCount += 4;
             y2--;
         }
@@ -205,23 +151,18 @@ public class BlockCavernousVine extends Block implements IShearable, IShiftDescr
     }
 
     @Override
-    public int tickRate(World par1World)
-    {
+    public int tickRate(World par1World) {
         return 50;
     }
 
     @Override
-    public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
-    {
-        if (!worldIn.isRemote)
-        {
-            for (int y2 = pos.getY() - 1; y2 >= pos.getY() - 2; y2--)
-            {
+    public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand) {
+        if (!worldIn.isRemote) {
+            for (int y2 = pos.getY() - 1; y2 >= pos.getY() - 2; y2--) {
                 BlockPos pos1 = new BlockPos(pos.getX(), y2, pos.getZ());
                 Block blockID = worldIn.getBlockState(pos1).getBlock();
 
-                if (!blockID.isAir(worldIn.getBlockState(pos1), worldIn, pos1))
-                {
+                if (!blockID.isAir(worldIn.getBlockState(pos1), worldIn, pos1)) {
                     return;
                 }
             }
@@ -230,6 +171,11 @@ public class BlockCavernousVine extends Block implements IShearable, IShiftDescr
             worldIn.checkLight(pos);
         }
 
+    }
+
+    @Override
+    public Item getItemDropped(IBlockState state, Random rand, int fortune) {
+        return Item.getItemFromBlock(Blocks.AIR);
     }
 
 //    @Override
@@ -243,77 +189,87 @@ public class BlockCavernousVine extends Block implements IShearable, IShiftDescr
 //    }
 
     @Override
-    public Item getItemDropped(IBlockState state, Random rand, int fortune)
-    {
-        return Item.getItemFromBlock(Blocks.AIR);
-    }
-
-    @Override
-    public int quantityDropped(Random par1Random)
-    {
+    public int quantityDropped(Random par1Random) {
         return 0;
     }
 
     @Override
-    public boolean isShearable(ItemStack item, IBlockAccess world, BlockPos pos)
-    {
+    public boolean isShearable(ItemStack item, IBlockAccess world, BlockPos pos) {
         return true;
     }
 
     @Override
-    public List<ItemStack> onSheared(ItemStack item, IBlockAccess world, BlockPos pos, int fortune)
-    {
+    public List<ItemStack> onSheared(ItemStack item, IBlockAccess world, BlockPos pos, int fortune) {
         ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
         ret.add(new ItemStack(this, 1, 0));
         return ret;
     }
 
     @Override
-    public boolean isLadder(IBlockState state, IBlockAccess world, BlockPos pos, EntityLivingBase entity)
-    {
+    public boolean isLadder(IBlockState state, IBlockAccess world, BlockPos pos, EntityLivingBase entity) {
         return true;
     }
 
     @Override
-    public String getShiftDescription(int meta)
-    {
+    public String getShiftDescription(int meta) {
         return GCCoreUtil.translate(this.getUnlocalizedName() + ".description");
     }
 
     @Override
-    public boolean showDescription(int meta)
-    {
+    public boolean showDescription(int meta) {
         return true;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public BlockRenderLayer getBlockLayer()
-    {
+    public BlockRenderLayer getBlockLayer() {
         return BlockRenderLayer.CUTOUT;
     }
 
     @Override
-    public IBlockState getStateFromMeta(int meta)
-    {
+    public IBlockState getStateFromMeta(int meta) {
         return this.getDefaultState().withProperty(VINE_TYPE, EnumVineType.byMetadata(meta));
     }
 
     @Override
-    public int getMetaFromState(IBlockState state)
-    {
+    public int getMetaFromState(IBlockState state) {
         return ((EnumVineType) state.getValue(VINE_TYPE)).getMeta();
     }
 
     @Override
-    protected BlockStateContainer createBlockState()
-    {
+    protected BlockStateContainer createBlockState() {
         return new BlockStateContainer(this, VINE_TYPE);
     }
 
     @Override
-    public EnumSortCategoryBlock getCategory(int meta)
-    {
+    public EnumSortCategoryBlock getCategory(int meta) {
         return EnumSortCategoryBlock.GENERAL;
+    }
+
+    public enum EnumVineType implements IStringSerializable {
+        VINE_0(0, "vine_0"),
+        VINE_1(1, "vine_1"),
+        VINE_2(2, "vine_2");
+
+        private final int meta;
+        private final String name;
+
+        private EnumVineType(int meta, String name) {
+            this.meta = meta;
+            this.name = name;
+        }
+
+        public static EnumVineType byMetadata(int meta) {
+            return values()[meta];
+        }
+
+        public int getMeta() {
+            return this.meta;
+        }
+
+        @Override
+        public String getName() {
+            return this.name;
+        }
     }
 }

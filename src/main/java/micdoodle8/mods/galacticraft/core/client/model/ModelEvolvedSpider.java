@@ -6,8 +6,7 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 
-public class ModelEvolvedSpider extends ModelBase
-{
+public class ModelEvolvedSpider extends ModelBase {
     ModelRenderer body;
     ModelRenderer rearEnd;
     ModelRenderer leg8;
@@ -42,13 +41,11 @@ public class ModelEvolvedSpider extends ModelBase
     ModelRenderer tube17;
     ModelRenderer tube18;
 
-    public ModelEvolvedSpider()
-    {
+    public ModelEvolvedSpider() {
         this(0.0F);
     }
 
-    public ModelEvolvedSpider(float par1)
-    {
+    public ModelEvolvedSpider(float par1) {
         this.textureWidth = 128;
         this.textureHeight = 64;
 
@@ -248,8 +245,7 @@ public class ModelEvolvedSpider extends ModelBase
     }
 
     @Override
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
-    {
+    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
         super.render(entity, f, f1, f2, f3, f4, f5);
         this.setRotationAngles(f, f1, f2, f3, f4, f5);
         this.body.render(f5);
@@ -286,15 +282,13 @@ public class ModelEvolvedSpider extends ModelBase
         this.tube18.render(f5);
     }
 
-    private void setRotation(ModelRenderer model, float x, float y, float z)
-    {
+    private void setRotation(ModelRenderer model, float x, float y, float z) {
         model.rotateAngleX = x;
         model.rotateAngleY = y;
         model.rotateAngleZ = z;
     }
 
-    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5)
-    {
+    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5) {
         this.head.rotateAngleY = f3 / Constants.RADIANS_TO_DEGREES;
         this.head.rotateAngleX = f4 / Constants.RADIANS_TO_DEGREES;
         this.oxygenMask.rotateAngleY = f3 / Constants.RADIANS_TO_DEGREES;

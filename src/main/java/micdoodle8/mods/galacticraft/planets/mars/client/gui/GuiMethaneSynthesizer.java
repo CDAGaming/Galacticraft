@@ -26,8 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
-public class GuiMethaneSynthesizer extends GuiContainerGC
-{
+public class GuiMethaneSynthesizer extends GuiContainerGC {
     private static final ResourceLocation refineryTexture = new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "textures/gui/methane_synthesizer.png");
 
     private static final ResourceLocation gasTextures = new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "textures/gui/gases_methane_oxygen_nitrogen.png");
@@ -41,16 +40,14 @@ public class GuiMethaneSynthesizer extends GuiContainerGC
     private GuiElementInfoRegion gasTank2Region = new GuiElementInfoRegion((this.width - this.xSize) / 2 + 7, (this.height - this.ySize) / 2 + 28, 16, 20, new ArrayList<String>(), this.width, this.height, this);
     private GuiElementInfoRegion electricInfoRegion = new GuiElementInfoRegion((this.width - this.xSize) / 2 + 62, (this.height - this.ySize) / 2 + 16, 56, 9, new ArrayList<String>(), this.width, this.height, this);
 
-    public GuiMethaneSynthesizer(InventoryPlayer par1InventoryPlayer, TileEntityMethaneSynthesizer tileEntity)
-    {
+    public GuiMethaneSynthesizer(InventoryPlayer par1InventoryPlayer, TileEntityMethaneSynthesizer tileEntity) {
         super(new ContainerMethaneSynthesizer(par1InventoryPlayer, tileEntity, FMLClientHandler.instance().getClient().player));
         this.tileEntity = tileEntity;
         this.ySize = 168;
     }
 
     @Override
-    public void initGui()
-    {
+    public void initGui() {
         super.initGui();
 
         int edgeLeft = (this.width - this.xSize) / 2;
@@ -117,49 +114,33 @@ public class GuiMethaneSynthesizer extends GuiContainerGC
     }
 
     @Override
-    protected void actionPerformed(GuiButton par1GuiButton)
-    {
-        switch (par1GuiButton.id)
-        {
-        case 0:
-            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_UPDATE_DISABLEABLE_BUTTON, GCCoreUtil.getDimensionID(this.tileEntity.getWorld()), new Object[] { this.tileEntity.getPos(), 0 }));
-            break;
+    protected void actionPerformed(GuiButton par1GuiButton) {
+        switch (par1GuiButton.id) {
+            case 0:
+                GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_UPDATE_DISABLEABLE_BUTTON, GCCoreUtil.getDimensionID(this.tileEntity.getWorld()), new Object[]{this.tileEntity.getPos(), 0}));
+                break;
         }
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int par1, int par2)
-    {
+    protected void drawGuiContainerForegroundLayer(int par1, int par2) {
         this.fontRenderer.drawString(this.tileEntity.getName(), 47, 5, 4210752);
         String displayText = "";
         int yOffset = -18;
 
-        if (RedstoneUtil.isBlockReceivingRedstone(this.tileEntity.getWorld(), this.tileEntity.getPos()))
-        {
-        	displayText = EnumColor.RED + GCCoreUtil.translate("gui.status.off.name");
-        }
-        else if (!this.tileEntity.hasEnoughEnergyToRun)
-        {
+        if (RedstoneUtil.isBlockReceivingRedstone(this.tileEntity.getWorld(), this.tileEntity.getPos())) {
+            displayText = EnumColor.RED + GCCoreUtil.translate("gui.status.off.name");
+        } else if (!this.tileEntity.hasEnoughEnergyToRun) {
             displayText = EnumColor.RED + GCCoreUtil.translate("gui.message.low_energy.name");
-        }
-        else if ((this.tileEntity.processTicks > -8 || this.tileEntity.canProcess()))
-        {
+        } else if ((this.tileEntity.processTicks > -8 || this.tileEntity.canProcess())) {
             displayText = EnumColor.BRIGHT_GREEN + GCCoreUtil.translate("gui.status.processing.name");
-        }
-        else if (this.tileEntity.gasTank.getFluid() == null || this.tileEntity.gasTank.getFluidAmount() == 0)
-        {
+        } else if (this.tileEntity.gasTank.getFluid() == null || this.tileEntity.gasTank.getFluidAmount() == 0) {
             displayText = EnumColor.RED + GCCoreUtil.translate("gui.status.nogas.name");
-        }
-        else if (this.tileEntity.gasTank.getFluidAmount() > 0 && this.tileEntity.disabled)
-        {
+        } else if (this.tileEntity.gasTank.getFluidAmount() > 0 && this.tileEntity.disabled) {
             displayText = EnumColor.ORANGE + GCCoreUtil.translate("gui.status.ready.name");
-        }
-        else if (this.tileEntity.liquidTank.getFluidAmount() == this.tileEntity.liquidTank.getCapacity())
-        {
+        } else if (this.tileEntity.liquidTank.getFluidAmount() == this.tileEntity.liquidTank.getCapacity()) {
             displayText = EnumColor.RED + GCCoreUtil.translate("gui.status.tankfull.name");
-        }
-        else
-        {
+        } else {
             displayText = EnumColor.RED + GCCoreUtil.translate("gui.status.needs_carbon.name");
         }
 
@@ -173,8 +154,7 @@ public class GuiMethaneSynthesizer extends GuiContainerGC
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3)
-    {
+    protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3) {
         this.mc.renderEngine.bindTexture(GuiMethaneSynthesizer.refineryTexture);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
@@ -194,30 +174,24 @@ public class GuiMethaneSynthesizer extends GuiContainerGC
 
         this.mc.renderEngine.bindTexture(GuiMethaneSynthesizer.refineryTexture);
 
-        if (this.tileEntity.getEnergyStoredGC() > 0)
-        {
+        if (this.tileEntity.getEnergyStoredGC() > 0) {
             this.drawTexturedModalRect(edgeLeft + 52, edgeTop + 16, 208, 0, 11, 10);
         }
 
         this.drawTexturedModalRect(edgeLeft + 66, edgeTop + 17, 176, 38, Math.min(this.tileEntity.getScaledElecticalLevel(54), 54), 7);
     }
 
-    private void addToolTips()
-    {
+    private void addToolTips() {
         List<String> gasTankDesc = new ArrayList<String>();
         gasTankDesc.add(GCCoreUtil.translate("gui.gas_tank.desc.0"));
         FluidStack gasTankContents = this.tileEntity.gasTank != null ? this.tileEntity.gasTank.getFluid() : null;
-        if (gasTankContents != null)
-        {
+        if (gasTankContents != null) {
             String gasname = FluidRegistry.getFluid("hydrogen").getUnlocalizedName();
-            if (gasname == null || gasname.equals("fluid.hydrogen"))
-            {
+            if (gasname == null || gasname.equals("fluid.hydrogen")) {
                 gasname = GCCoreUtil.translate(gasTankContents.getFluid().getUnlocalizedName());
             }
             gasTankDesc.add("(" + gasname + ")");
-        }
-        else
-        {
+        } else {
             gasTankDesc.add(" ");
         }
         int gasLevel = gasTankContents != null ? gasTankContents.amount : 0;
@@ -229,17 +203,13 @@ public class GuiMethaneSynthesizer extends GuiContainerGC
         gasTankDesc.add(GCCoreUtil.translate("gas.carbondioxide.name"));
         gasTankDesc.add(GCCoreUtil.translate("gui.gas_tank.desc.0"));
         gasTankContents = this.tileEntity.gasTank2 != null ? this.tileEntity.gasTank2.getFluid() : null;
-        if (gasTankContents != null)
-        {
+        if (gasTankContents != null) {
             String gasname = FluidRegistry.getFluid("carbondioxide").getUnlocalizedName();
-            if (gasname == null || gasname.equals("fluid.carbondioxide"))
-            {
+            if (gasname == null || gasname.equals("fluid.carbondioxide")) {
                 gasname = GCCoreUtil.translate(gasTankContents.getFluid().getUnlocalizedName());
             }
             gasTankDesc.add("(" + gasname + ")");
-        }
-        else
-        {
+        } else {
             gasTankDesc.add(" ");
         }
         gasLevel = gasTankContents != null ? gasTankContents.amount : 0;
@@ -250,17 +220,13 @@ public class GuiMethaneSynthesizer extends GuiContainerGC
         List<String> fuelTankDesc = new ArrayList<String>();
         fuelTankDesc.add(GCCoreUtil.translate("gui.gas_tank.desc.0"));
         gasTankContents = this.tileEntity.liquidTank != null ? this.tileEntity.liquidTank.getFluid() : null;
-        if (gasTankContents != null)
-        {
+        if (gasTankContents != null) {
             String gasname = FluidRegistry.getFluid("methane").getUnlocalizedName();
-            if (gasname == null || gasname.equals("fluid.methane"))
-            {
+            if (gasname == null || gasname.equals("fluid.methane")) {
                 gasname = GCCoreUtil.translate(gasTankContents.getFluid().getUnlocalizedName());
             }
             fuelTankDesc.add("(" + gasname + ")");
-        }
-        else
-        {
+        } else {
             fuelTankDesc.add(" ");
         }
         int fuelLevel = gasTankContents != null ? gasTankContents.amount : 0;

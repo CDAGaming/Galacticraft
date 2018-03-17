@@ -17,8 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
-public class GuiElectricFurnace extends GuiContainerGC
-{
+public class GuiElectricFurnace extends GuiContainerGC {
     private static final ResourceLocation electricFurnaceTexture = new ResourceLocation(Constants.ASSET_PREFIX, "textures/gui/electric_furnace.png");
     private static final ResourceLocation arcFurnaceTexture = new ResourceLocation(Constants.ASSET_PREFIX, "textures/gui/electric_arc_furnace.png");
     private GuiElementInfoRegion electricInfoRegion = new GuiElementInfoRegion(0, 0, 56, 9, null, 0, 0, this);
@@ -26,16 +25,14 @@ public class GuiElectricFurnace extends GuiContainerGC
     private TileEntityElectricFurnace tileEntity;
     private ResourceLocation texture;
 
-    public GuiElectricFurnace(InventoryPlayer par1InventoryPlayer, TileEntityElectricFurnace tileEntity)
-    {
+    public GuiElectricFurnace(InventoryPlayer par1InventoryPlayer, TileEntityElectricFurnace tileEntity) {
         super(new ContainerElectricFurnace(par1InventoryPlayer, tileEntity));
         this.tileEntity = tileEntity;
         texture = tileEntity.tierGC == 2 ? arcFurnaceTexture : electricFurnaceTexture;
     }
 
     @Override
-    public void initGui()
-    {
+    public void initGui() {
         super.initGui();
         this.electricInfoRegion.tooltipStrings = new ArrayList<String>();
         this.electricInfoRegion.xPosition = (this.width - this.xSize) / 2 + 39;
@@ -54,17 +51,13 @@ public class GuiElectricFurnace extends GuiContainerGC
      * the items)
      */
     @Override
-    protected void drawGuiContainerForegroundLayer(int par1, int par2)
-    {
+    protected void drawGuiContainerForegroundLayer(int par1, int par2) {
         this.fontRenderer.drawString(this.tileEntity.getName(), 45, 6, 4210752);
         String displayText = "";
 
-        if (this.tileEntity.processTicks > 0)
-        {
+        if (this.tileEntity.processTicks > 0) {
             displayText = EnumColor.BRIGHT_GREEN + GCCoreUtil.translate("gui.status.running.name");
-        }
-        else
-        {
+        } else {
             displayText = EnumColor.ORANGE + GCCoreUtil.translate("gui.status.idle.name");
         }
 
@@ -80,8 +73,7 @@ public class GuiElectricFurnace extends GuiContainerGC
      * items)
      */
     @Override
-    protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3)
-    {
+    protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3) {
         this.mc.renderEngine.bindTexture(this.texture);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
@@ -95,14 +87,12 @@ public class GuiElectricFurnace extends GuiContainerGC
         EnergyDisplayHelper.getEnergyDisplayTooltip(this.tileEntity.getEnergyStoredGC(), this.tileEntity.getMaxEnergyStoredGC(), electricityDesc);
         this.electricInfoRegion.tooltipStrings = electricityDesc;
 
-        if (this.tileEntity.processTicks > 0)
-        {
+        if (this.tileEntity.processTicks > 0) {
             scale = (int) ((double) this.tileEntity.processTicks / (double) this.tileEntity.processTimeRequired * 23);
             this.drawTexturedModalRect(containerWidth + 78, containerHeight + 24, 176, 0, 23 - scale, 15);
         }
 
-        if (this.tileEntity.getEnergyStoredGC() > 0)
-        {
+        if (this.tileEntity.getEnergyStoredGC() > 0) {
             scale = this.tileEntity.getScaledElecticalLevel(54);
             this.drawTexturedModalRect(containerWidth + 40, containerHeight + 53, 176, 15, scale, 7);
             this.drawTexturedModalRect(containerWidth + 26, containerHeight + 52, 176, 22, 11, 10);

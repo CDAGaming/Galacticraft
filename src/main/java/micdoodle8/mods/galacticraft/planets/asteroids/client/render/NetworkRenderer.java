@@ -14,22 +14,17 @@ import org.lwjgl.opengl.GL11;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NetworkRenderer
-{
-    public static void renderNetworks(World world, float partialTicks)
-    {
+public class NetworkRenderer {
+    public static void renderNetworks(World world, float partialTicks) {
         List<TileEntityBeamOutput> nodes = new ArrayList<TileEntityBeamOutput>();
 
-        for (Object o : new ArrayList<TileEntity>(world.loadedTileEntityList))
-        {
-            if (o instanceof TileEntityBeamOutput)
-            {
+        for (Object o : new ArrayList<TileEntity>(world.loadedTileEntityList)) {
+            if (o instanceof TileEntityBeamOutput) {
                 nodes.add((TileEntityBeamOutput) o);
             }
         }
 
-        if (nodes.isEmpty())
-        {
+        if (nodes.isEmpty()) {
             return;
         }
 
@@ -41,10 +36,8 @@ public class NetworkRenderer
 
         GL11.glDisable(GL11.GL_TEXTURE_2D);
 
-        for (TileEntityBeamOutput tileEntity : nodes)
-        {
-            if (tileEntity.getTarget() == null)
-            {
+        for (TileEntityBeamOutput tileEntity : nodes) {
+            if (tileEntity.getTarget() == null) {
                 continue;
             }
 
@@ -68,8 +61,7 @@ public class NetworkRenderer
 
             tess.getBuffer().begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
 
-            for (EnumFacing dir : EnumFacing.VALUES)
-            {
+            for (EnumFacing dir : EnumFacing.VALUES) {
                 tess.getBuffer().pos(dir.getFrontOffsetX() / 40.0F, dir.getFrontOffsetY() / 40.0F, dir.getFrontOffsetZ() / 40.0F).color(tileEntity.getColor().floatX(), tileEntity.getColor().floatY(), tileEntity.getColor().floatZ(), 1.0F).endVertex();
                 tess.getBuffer().pos(dir.getFrontOffsetX() / 40.0F, dir.getFrontOffsetY() / 40.0F, directionLength + dir.getFrontOffsetZ() / 40.0F).color(tileEntity.getColor().floatX(), tileEntity.getColor().floatY(), tileEntity.getColor().floatZ(), 1.0F).endVertex();
             }

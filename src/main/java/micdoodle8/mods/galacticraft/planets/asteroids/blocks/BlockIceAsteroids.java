@@ -33,10 +33,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class BlockIceAsteroids extends BlockBreakable implements ISortableBlock
-{
-    public BlockIceAsteroids(String assetName)
-    {
+public class BlockIceAsteroids extends BlockBreakable implements ISortableBlock {
+    public BlockIceAsteroids(String assetName) {
         super(Material.ICE, false);
         this.slipperiness = 0.98F;
         this.setTickRandomly(true);
@@ -47,44 +45,35 @@ public class BlockIceAsteroids extends BlockBreakable implements ISortableBlock
 
     @Override
     @SideOnly(Side.CLIENT)
-    public BlockRenderLayer getBlockLayer()
-    {
+    public BlockRenderLayer getBlockLayer() {
         return BlockRenderLayer.TRANSLUCENT;
     }
 
     @SideOnly(Side.CLIENT)
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
-    {
+    public CreativeTabs getCreativeTabToDisplayOn() {
         return GalacticraftCore.galacticraftBlocksTab;
     }
 
     @Override
-    public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te, ItemStack tool)
-    {
+    public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te, ItemStack tool) {
         player.addStat(StatList.getBlockStats(this));
         player.addExhaustion(0.025F);
 
-        if (this.canSilkHarvest(worldIn, pos, worldIn.getBlockState(pos), player) && EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, tool) > 0)
-        {
+        if (this.canSilkHarvest(worldIn, pos, worldIn.getBlockState(pos), player) && EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, tool) > 0) {
             ArrayList<ItemStack> items = new ArrayList<ItemStack>();
             ItemStack itemstack = this.getSilkTouchDrop(state);
 
-            if (itemstack != null)
-            {
+            if (itemstack != null) {
                 items.add(itemstack);
             }
 
             ForgeEventFactory.fireBlockHarvesting(items, worldIn, pos, state, 0, 1.0f, true, player);
-            for (ItemStack is : items)
-            {
+            for (ItemStack is : items) {
                 Block.spawnAsEntity(worldIn, pos, is);
             }
-        }
-        else
-        {
-            if (worldIn.provider.getDimension() == -1 || worldIn.provider instanceof IGalacticraftWorldProvider)
-            {
+        } else {
+            if (worldIn.provider.getDimension() == -1 || worldIn.provider instanceof IGalacticraftWorldProvider) {
                 worldIn.setBlockToAir(pos);
                 return;
             }
@@ -96,26 +85,21 @@ public class BlockIceAsteroids extends BlockBreakable implements ISortableBlock
             IBlockState state1 = worldIn.getBlockState(pos.down());
             Material material = state1.getMaterial();
 
-            if (material.blocksMovement() || material.isLiquid())
-            {
+            if (material.blocksMovement() || material.isLiquid()) {
                 worldIn.setBlockState(pos, Blocks.FLOWING_WATER.getDefaultState());
             }
         }
     }
 
     @Override
-    public int quantityDropped(Random rand)
-    {
+    public int quantityDropped(Random rand) {
         return 0;
     }
 
     @Override
-    public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
-    {
-        if (worldIn.getLightFor(EnumSkyBlock.BLOCK, pos) > 13 - this.getLightOpacity(state))
-        {
-            if (GCCoreUtil.getDimensionID(worldIn) == -1 || worldIn.provider instanceof IGalacticraftWorldProvider)
-            {
+    public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand) {
+        if (worldIn.getLightFor(EnumSkyBlock.BLOCK, pos) > 13 - this.getLightOpacity(state)) {
+            if (GCCoreUtil.getDimensionID(worldIn) == -1 || worldIn.provider instanceof IGalacticraftWorldProvider) {
                 worldIn.setBlockToAir(pos);
                 return;
             }
@@ -126,20 +110,17 @@ public class BlockIceAsteroids extends BlockBreakable implements ISortableBlock
     }
 
     @Override
-    public EnumPushReaction getMobilityFlag(IBlockState state)
-    {
+    public EnumPushReaction getMobilityFlag(IBlockState state) {
         return EnumPushReaction.NORMAL;
     }
 
     @Override
-    public EnumSortCategoryBlock getCategory(int meta)
-    {
+    public EnumSortCategoryBlock getCategory(int meta) {
         return EnumSortCategoryBlock.GENERAL;
     }
 
     @Override
-    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face)
-    {
+    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
         return BlockFaceShape.UNDEFINED;
     }
 }

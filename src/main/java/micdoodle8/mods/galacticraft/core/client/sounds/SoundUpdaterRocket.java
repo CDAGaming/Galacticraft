@@ -14,15 +14,13 @@ import net.minecraft.util.SoundCategory;
  *
  * @author micdoodle8
  */
-public class SoundUpdaterRocket extends MovingSound
-{
+public class SoundUpdaterRocket extends MovingSound {
     private final EntityPlayerSP thePlayer;
     private final EntityAutoRocket theRocket;
     private boolean soundStopped;
     private boolean ignition = false;
 
-    public SoundUpdaterRocket(EntityPlayerSP par1EntityPlayerSP, EntityAutoRocket par2Entity)
-    {
+    public SoundUpdaterRocket(EntityPlayerSP par1EntityPlayerSP, EntityAutoRocket par2Entity) {
         super(GCSounds.shuttle, SoundCategory.NEUTRAL);
         this.theRocket = par2Entity;
         this.thePlayer = par1EntityPlayerSP;
@@ -38,71 +36,51 @@ public class SoundUpdaterRocket extends MovingSound
      * Updates the JList with a new model.
      */
     @Override
-    public void update()
-    {
-        if (!this.theRocket.isDead)
-        {
-            if (this.theRocket.launchPhase == EnumLaunchPhase.IGNITED.ordinal())
-            {
-                if (!ignition)
-                {
+    public void update() {
+        if (!this.theRocket.isDead) {
+            if (this.theRocket.launchPhase == EnumLaunchPhase.IGNITED.ordinal()) {
+                if (!ignition) {
                     this.pitch = 0.0F;
                     ignition = true;
                 }
-                if (this.theRocket.timeUntilLaunch < this.theRocket.getPreLaunchWait())
-                {
-                    if (this.pitch < 1.0F)
-                    {
+                if (this.theRocket.timeUntilLaunch < this.theRocket.getPreLaunchWait()) {
+                    if (this.pitch < 1.0F) {
                         this.pitch += 0.0025F;
                     }
 
-                    if (this.pitch > 1.0F)
-                    {
+                    if (this.pitch > 1.0F) {
                         this.pitch = 1.0F;
                     }
                 }
-            }
-            else
-            {
+            } else {
                 this.pitch = 1.0F;
             }
 
-            if (this.theRocket.launchPhase >= EnumLaunchPhase.IGNITED.ordinal())
-            {
-                if (this.theRocket.posY > 1000)
-                {
+            if (this.theRocket.launchPhase >= EnumLaunchPhase.IGNITED.ordinal()) {
+                if (this.theRocket.posY > 1000) {
                     this.volume = 0F;
-                    if (this.theRocket.launchPhase != EnumLaunchPhase.LANDING.ordinal())
-                    {
+                    if (this.theRocket.launchPhase != EnumLaunchPhase.LANDING.ordinal()) {
                         this.donePlaying = true;
                     }
-                }
-                else if (this.theRocket.posY > Constants.OVERWORLD_SKYPROVIDER_STARTHEIGHT)
-                {
+                } else if (this.theRocket.posY > Constants.OVERWORLD_SKYPROVIDER_STARTHEIGHT) {
                     this.volume = 1.0F - (float) ((this.theRocket.posY - Constants.OVERWORLD_SKYPROVIDER_STARTHEIGHT) / (1000.0 - Constants.OVERWORLD_SKYPROVIDER_STARTHEIGHT));
-                }
-                else
-                {
+                } else {
                     this.volume = 1.0F;
                 }
             }
 
             this.updateSoundLocation(this.theRocket);
-        }
-        else
-        {
+        } else {
             this.donePlaying = true;
         }
     }
 
-    public void stopRocketSound()
-    {
+    public void stopRocketSound() {
         this.donePlaying = true;
         this.soundStopped = true;
     }
 
-    public void updateSoundLocation(Entity e)
-    {
+    public void updateSoundLocation(Entity e) {
         this.xPosF = (float) e.posX;
         this.yPosF = (float) e.posY;
         this.zPosF = (float) e.posZ;

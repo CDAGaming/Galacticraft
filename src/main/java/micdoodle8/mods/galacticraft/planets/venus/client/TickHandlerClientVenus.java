@@ -25,32 +25,26 @@ import java.util.Iterator;
 import java.util.Map;
 
 @SideOnly(Side.CLIENT)
-public class TickHandlerClientVenus
-{
+public class TickHandlerClientVenus {
     private Map<BlockPos, Integer> lightning = Maps.newHashMap();
 
     @SubscribeEvent
-    public void onRenderTick(RenderTickEvent event)
-    {
+    public void onRenderTick(RenderTickEvent event) {
         final Minecraft minecraft = FMLClientHandler.instance().getClient();
         final EntityPlayerSP player = minecraft.player;
         final EntityPlayerSP playerBaseClient = PlayerUtil.getPlayerBaseClientFromPlayer(player, false);
 
-        if (event.phase == Phase.END)
-        {
+        if (event.phase == Phase.END) {
         }
     }
 
     @SubscribeEvent
-    public void renderLightning(ClientProxyCore.EventSpecialRender event)
-    {
+    public void renderLightning(ClientProxyCore.EventSpecialRender event) {
         final Minecraft minecraft = FMLClientHandler.instance().getClient();
         final EntityPlayerSP player = minecraft.player;
-        if (player != null && !ConfigManagerVenus.disableAmbientLightning)
-        {
+        if (player != null && !ConfigManagerVenus.disableAmbientLightning) {
             Iterator<Map.Entry<BlockPos, Integer>> it = lightning.entrySet().iterator();
-            while (it.hasNext())
-            {
+            while (it.hasNext()) {
                 Map.Entry<BlockPos, Integer> entry = it.next();
                 long seed = entry.getValue() / 10 + entry.getKey().getX() + entry.getKey().getZ();
                 FakeLightningBoltRenderer.renderBolt(seed, entry.getKey().getX() - ClientProxyCore.playerPosX, entry.getKey().getY() - ClientProxyCore.playerPosY, entry.getKey().getZ() - ClientProxyCore.playerPosZ);
@@ -60,23 +54,18 @@ public class TickHandlerClientVenus
 
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
-    public void onClientTick(TickEvent.ClientTickEvent event)
-    {
+    public void onClientTick(TickEvent.ClientTickEvent event) {
         final Minecraft minecraft = FMLClientHandler.instance().getClient();
 
         final WorldClient world = minecraft.world;
 
-        if (world != null)
-        {
-            if (world.provider instanceof WorldProviderVenus)
-            {
-                if (world.provider.getSkyRenderer() == null)
-                {
+        if (world != null) {
+            if (world.provider instanceof WorldProviderVenus) {
+                if (world.provider.getSkyRenderer() == null) {
                     world.provider.setSkyRenderer(new SkyProviderVenus((IGalacticraftWorldProvider) world.provider));
                 }
 
-                if (world.provider.getCloudRenderer() == null)
-                {
+                if (world.provider.getCloudRenderer() == null) {
                     world.provider.setCloudRenderer(new CloudRenderer());
                 }
             }
@@ -85,32 +74,24 @@ public class TickHandlerClientVenus
 
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
-    public void onPlayerTick(TickEvent.PlayerTickEvent event)
-    {
+    public void onPlayerTick(TickEvent.PlayerTickEvent event) {
         final Minecraft minecraft = FMLClientHandler.instance().getClient();
         final EntityPlayerSP player = minecraft.player;
 
-        if (player == event.player)
-        {
-            if (!ConfigManagerVenus.disableAmbientLightning)
-            {
+        if (player == event.player) {
+            if (!ConfigManagerVenus.disableAmbientLightning) {
                 Iterator<Map.Entry<BlockPos, Integer>> it = lightning.entrySet().iterator();
-                while (it.hasNext())
-                {
+                while (it.hasNext()) {
                     Map.Entry<BlockPos, Integer> entry = it.next();
                     int val = entry.getValue();
-                    if (val - 1 <= 0)
-                    {
+                    if (val - 1 <= 0) {
                         it.remove();
-                    }
-                    else
-                    {
+                    } else {
                         entry.setValue(val - 1);
                     }
                 }
 
-                if (player.getRNG().nextInt(500) == 0 && minecraft.world.provider instanceof WorldProviderVenus)
-                {
+                if (player.getRNG().nextInt(500) == 0 && minecraft.world.provider instanceof WorldProviderVenus) {
                     double freq = player.getRNG().nextDouble() * Math.PI * 2.0F;
                     double dist = 180.0F;
                     double dX = dist * Math.cos(freq);

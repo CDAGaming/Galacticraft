@@ -10,18 +10,15 @@ import net.minecraft.world.gen.feature.WorldGenerator;
 
 import java.util.Random;
 
-public class WorldGenEggs extends WorldGenerator
-{
+public class WorldGenEggs extends WorldGenerator {
     private Block eggBlock;
 
-    public WorldGenEggs(Block egg)
-    {
+    public WorldGenEggs(Block egg) {
         this.eggBlock = egg;
     }
 
     @Override
-    public boolean generate(World par1World, Random par2Random, BlockPos pos)
-    {
+    public boolean generate(World par1World, Random par2Random, BlockPos pos) {
         int i1 = pos.getX() + par2Random.nextInt(8) - par2Random.nextInt(8);
         int j1 = pos.getY() + par2Random.nextInt(4) - par2Random.nextInt(4);
         int k1 = pos.getZ() + par2Random.nextInt(8) - par2Random.nextInt(8);
@@ -29,11 +26,9 @@ public class WorldGenEggs extends WorldGenerator
 
         if (!par1World.isBlockLoaded(newPos.add(1, 0, 1))) return false;
 
-        if (par1World.isAirBlock(newPos) && (j1 < 127 || !par1World.provider.isNether()))
-        {
-            IBlockState below = par1World.getBlockState(newPos.down()); 
-            if (below.getBlock() == MarsBlocks.marsBlock && below.getValue(BlockBasicMars.BASIC_TYPE) == BlockBasicMars.EnumBlockBasic.SURFACE)
-            {
+        if (par1World.isAirBlock(newPos) && (j1 < 127 || !par1World.provider.isNether())) {
+            IBlockState below = par1World.getBlockState(newPos.down());
+            if (below.getBlock() == MarsBlocks.marsBlock && below.getValue(BlockBasicMars.BASIC_TYPE) == BlockBasicMars.EnumBlockBasic.SURFACE) {
                 par1World.setBlockState(newPos, this.eggBlock.getStateFromMeta(par2Random.nextInt(3)), 2);
             }
         }

@@ -26,10 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class BlockMinerBaseFull extends BlockTileGC
-{
-    public BlockMinerBaseFull(String assetName)
-    {
+public class BlockMinerBaseFull extends BlockTileGC {
+    public BlockMinerBaseFull(String assetName) {
         super(Material.ROCK);
         this.blockHardness = 3.0F;
         this.setResistance(35F);
@@ -38,52 +36,44 @@ public class BlockMinerBaseFull extends BlockTileGC
     }
 
     @Override
-    public EnumBlockRenderType getRenderType(IBlockState state)
-    {
+    public EnumBlockRenderType getRenderType(IBlockState state) {
         return EnumBlockRenderType.INVISIBLE;
     }
 
     @Override
-    public int damageDropped(IBlockState state)
-    {
+    public int damageDropped(IBlockState state) {
         return 0;
     }
 
     @Override
-    public int quantityDropped(IBlockState state, int fortune, Random random)
-    {
+    public int quantityDropped(IBlockState state, int fortune, Random random) {
         return 1;
     }
 
     @Override
-    public boolean isOpaqueCube(IBlockState state)
-    {
+    public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
 
     @Override
-    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face)
-    {
+    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
         return BlockFaceShape.UNDEFINED;
     }
 
     @Override
-    public TileEntity createTileEntity(World world, IBlockState state)
-    {
+    public TileEntity createTileEntity(World world, IBlockState state) {
         return new TileEntityMinerBase();
     }
 
     @Override
-    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand)
-    {
+    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
         return this.getStateFromMeta(0);
         //TODO
         //return this.getMetadataFromAngle(world, x, y, z, side);
     }
 
     @Override
-    public boolean canPlaceBlockOnSide(World worldIn, BlockPos pos, EnumFacing side)
-    {
+    public boolean canPlaceBlockOnSide(World worldIn, BlockPos pos, EnumFacing side) {
         //TODO
         /*
     	if (this.getMetadataFromAngle(world, x, y, z, side) != -1)
@@ -96,12 +86,10 @@ public class BlockMinerBaseFull extends BlockTileGC
     }
 
     @Override
-    public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
-    {
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
         TileEntity tileEntity = worldIn.getTileEntity(pos);
 
-        if (tileEntity instanceof TileEntityMinerBase)
-        {
+        if (tileEntity instanceof TileEntityMinerBase) {
             ((TileEntityMinerBase) tileEntity).onBlockRemoval();
         }
 
@@ -109,45 +97,36 @@ public class BlockMinerBaseFull extends BlockTileGC
     }
 
     @Override
-    public boolean onMachineActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
-    {
+    public boolean onMachineActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
         TileEntity tileEntity = worldIn.getTileEntity(pos);
-        if (tileEntity instanceof TileEntityMinerBase)
-        {
+        if (tileEntity instanceof TileEntityMinerBase) {
             return ((TileEntityMinerBase) tileEntity).onActivated(playerIn);
-        }
-        else
-        {
+        } else {
             return false;
         }
     }
 
     @Override
-    public Item getItemDropped(IBlockState state, Random rand, int fortune)
-    {
+    public Item getItemDropped(IBlockState state, Random rand, int fortune) {
         return Item.getItemFromBlock(AsteroidBlocks.blockMinerBase);
     }
 
     @Override
-    public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune)
-    {
+    public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
         ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
         ret.add(new ItemStack(Item.getItemFromBlock(AsteroidBlocks.blockMinerBase), 8, 0));
         return ret;
     }
 
     @Override
-    public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player)
-    {
+    public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
         return new ItemStack(Item.getItemFromBlock(AsteroidBlocks.blockMinerBase), 1, 0);
     }
 
     @Override
-    public boolean onUseWrench(World world, BlockPos pos, EntityPlayer entityPlayer, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
-    {
+    public boolean onUseWrench(World world, BlockPos pos, EntityPlayer entityPlayer, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
         TileEntity te = world.getTileEntity(pos);
-        if (te instanceof TileEntityMinerBase)
-        {
+        if (te instanceof TileEntityMinerBase) {
             ((TileEntityMinerBase) te).updateFacing();
         }
         return true;
@@ -155,8 +134,7 @@ public class BlockMinerBaseFull extends BlockTileGC
 
     @Override
     @SideOnly(Side.CLIENT)
-    public BlockRenderLayer getBlockLayer()
-    {
+    public BlockRenderLayer getBlockLayer() {
         return BlockRenderLayer.CUTOUT;
     }
 }

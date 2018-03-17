@@ -5,73 +5,61 @@ import net.minecraft.util.text.TextComponentTranslation;
 
 import java.util.Locale;
 
-public class SolarSystem
-{
+public class SolarSystem {
     protected final String systemName;
     protected String unlocalizedName;
     protected Vector3 mapPosition = null;
     protected Star mainStar = null;
     protected String unlocalizedGalaxyName;
 
-    public SolarSystem(String solarSystem, String parentGalaxy)
-    {
+    public SolarSystem(String solarSystem, String parentGalaxy) {
         this.systemName = solarSystem.toLowerCase(Locale.ENGLISH);
         this.unlocalizedName = solarSystem;
         this.unlocalizedGalaxyName = parentGalaxy;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return this.systemName;
     }
 
-    public final int getID()
-    {
+    public final int getID() {
         return GalaxyRegistry.getSolarSystemID(this.systemName);
     }
 
-    public String getLocalizedName()
-    {
+    public String getLocalizedName() {
         String s = this.getUnlocalizedName();
         return s == null ? "" : new TextComponentTranslation(s).getFormattedText();
     }
 
-    public String getUnlocalizedName()
-    {
+    public String getUnlocalizedName() {
         return "solarsystem." + this.unlocalizedName;
     }
 
-    public Vector3 getMapPosition()
-    {
+    public Vector3 getMapPosition() {
         return this.mapPosition;
     }
 
-    public SolarSystem setMapPosition(Vector3 mapPosition)
-    {
-    	mapPosition.scale(500D);
+    public SolarSystem setMapPosition(Vector3 mapPosition) {
+        mapPosition.scale(500D);
         this.mapPosition = mapPosition;
         return this;
     }
 
-    public Star getMainStar()
-    {
+    public Star getMainStar() {
         return this.mainStar;
     }
 
-    public SolarSystem setMainStar(Star star)
-    {
+    public SolarSystem setMainStar(Star star) {
         this.mainStar = star;
         return this;
     }
 
-    public String getLocalizedParentGalaxyName()
-    {
+    public String getLocalizedParentGalaxyName() {
         String s = this.getUnlocalizedParentGalaxyName();
         return s == null ? "" : new TextComponentTranslation(s).getFormattedText();
     }
 
-    public String getUnlocalizedParentGalaxyName()
-    {
+    public String getUnlocalizedParentGalaxyName() {
         return "galaxy." + this.unlocalizedGalaxyName;
     }
 }

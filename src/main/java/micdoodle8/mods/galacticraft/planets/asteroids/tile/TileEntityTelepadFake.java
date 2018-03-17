@@ -14,8 +14,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-public class TileEntityTelepadFake extends TileBaseElectricBlock
-{
+public class TileEntityTelepadFake extends TileBaseElectricBlock {
     // The the position of the main block
     @NetworkedField(targetSide = Side.CLIENT)
     public BlockPos mainBlockPosition;
@@ -23,48 +22,40 @@ public class TileEntityTelepadFake extends TileBaseElectricBlock
     @NetworkedField(targetSide = Side.CLIENT)
     private boolean canConnect = false;
 
-    public void setMainBlock(BlockPos mainBlock)
-    {
+    public void setMainBlock(BlockPos mainBlock) {
         this.setMainBlockInternal(mainBlock);
 
-        if (!this.world.isRemote)
-        {
+        if (!this.world.isRemote) {
             IBlockState state = this.world.getBlockState(this.getPos());
             this.world.notifyBlockUpdate(this.getPos(), state, state, 3);
         }
     }
 
-    private void setMainBlockInternal(BlockPos mainBlock)
-    {
+    private void setMainBlockInternal(BlockPos mainBlock) {
         this.mainBlockPosition = mainBlock;
         this.updateConnectable();
     }
 
-    public void onBlockRemoval()
-    {
+    public void onBlockRemoval() {
         TileEntityShortRangeTelepad telepad = this.getBaseTelepad();
 
-        if (telepad != null)
-        {
+        if (telepad != null) {
             telepad.onDestroy(this);
         }
     }
 
-    public boolean onActivated(EntityPlayer par5EntityPlayer)
-    {
+    public boolean onActivated(EntityPlayer par5EntityPlayer) {
         TileEntityShortRangeTelepad telepad = this.getBaseTelepad();
         return telepad != null && telepad.onActivated(par5EntityPlayer);
     }
 
     @Override
-    public void update()
-    {
+    public void update() {
         super.update();
 
         TileEntityShortRangeTelepad telepad = this.getBaseTelepad();
 
-        if (telepad != null)
-        {
+        if (telepad != null) {
             this.storage.setCapacity(telepad.storage.getCapacityGC());
             this.storage.setMaxExtract(telepad.storage.getMaxExtract());
             this.storage.setMaxReceive(telepad.storage.getMaxReceive());
@@ -72,40 +63,29 @@ public class TileEntityTelepadFake extends TileBaseElectricBlock
         }
     }
 
-    private TileEntityShortRangeTelepad getBaseTelepad()
-    {
-        if (this.mainBlockPosition == null)
-        {
+    private TileEntityShortRangeTelepad getBaseTelepad() {
+        if (this.mainBlockPosition == null) {
             return null;
         }
 
-        if (mainTelepad == null)
-        {
+        if (mainTelepad == null) {
             TileEntity tileEntity = this.world.getTileEntity(this.mainBlockPosition);
 
-            if (tileEntity != null)
-            {
-                if (tileEntity instanceof TileEntityShortRangeTelepad)
-                {
+            if (tileEntity != null) {
+                if (tileEntity instanceof TileEntityShortRangeTelepad) {
                     mainTelepad = new WeakReference<TileEntityShortRangeTelepad>(((TileEntityShortRangeTelepad) tileEntity));
                 }
             }
         }
 
-        if (mainTelepad == null)
-        {
+        if (mainTelepad == null) {
             this.world.setBlockToAir(this.mainBlockPosition);
-        }
-        else
-        {
+        } else {
             TileEntityShortRangeTelepad telepad = this.mainTelepad.get();
 
-            if (telepad != null)
-            {
+            if (telepad != null) {
                 return telepad;
-            }
-            else
-            {
+            } else {
                 this.world.removeTileEntity(this.getPos());
             }
         }
@@ -114,20 +94,17 @@ public class TileEntityTelepadFake extends TileBaseElectricBlock
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt)
-    {
+    public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
         NBTTagCompound tagCompound = nbt.getCompoundTag("mainBlockPosition");
         this.setMainBlockInternal(new BlockPos(tagCompound.getInteger("x"), tagCompound.getInteger("y"), tagCompound.getInteger("z")));
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt)
-    {
+    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
 
-        if (this.mainBlockPosition != null)
-        {
+        if (this.mainBlockPosition != null) {
             NBTTagCompound tagCompound = new NBTTagCompound();
             tagCompound.setInteger("x", this.mainBlockPosition.getX());
             tagCompound.setInteger("y", this.mainBlockPosition.getY());
@@ -139,47 +116,36 @@ public class TileEntityTelepadFake extends TileBaseElectricBlock
     }
 
     @Override
-    public double getPacketRange()
-    {
+    public double getPacketRange() {
         return 30.0D;
     }
 
     @Override
-    public int getPacketCooldown()
-    {
+    public int getPacketCooldown() {
         return 50;
     }
 
     @Override
-    public boolean isNetworkedTile()
-    {
-            return true;
-        }
-    
+    public boolean isNetworkedTile() {
+        return true;
+    }
+
     @Override
-    public void getNetworkedData(ArrayList<Object> sendData)
-        {
-    	if (this.mainBlockPosition == null)
-    	{
-    		if (this.world.isRemote || !this.resetMainBlockPosition())
-    		{
-    			return;
-    		}
-    	}
+    public void getNetworkedData(ArrayList<Object> sendData) {
+        if (this.mainBlockPosition == null) {
+            if (this.world.isRemote || !this.resetMainBlockPosition()) {
+                return;
+            }
+        }
         super.getNetworkedData(sendData);
     }
 
-    private boolean resetMainBlockPosition()
-        {
-            for (int x = -1; x <= 1; x++)
-            {
-                for (int z = -1; z <= 1; z++)
-                {
-                for (int y = -2; y < 1; y += 2)
-                {
+    private boolean resetMainBlockPosition() {
+        for (int x = -1; x <= 1; x++) {
+            for (int z = -1; z <= 1; z++) {
+                for (int y = -2; y < 1; y += 2) {
                     final BlockPos vecToCheck = this.getPos().add(x, y, z);
-                    if (this.world.getTileEntity(vecToCheck) instanceof TileEntityShortRangeTelepad)
-                    {
+                    if (this.world.getTileEntity(vecToCheck) instanceof TileEntityShortRangeTelepad) {
                         this.setMainBlock(vecToCheck);
                         return true;
                     }
@@ -190,16 +156,13 @@ public class TileEntityTelepadFake extends TileBaseElectricBlock
     }
 
     @Override
-    public boolean shouldUseEnergy()
-    {
+    public boolean shouldUseEnergy() {
         return false;
     }
 
     @Override
-    public EnumFacing getElectricInputDirection()
-    {
-        if (!this.canConnect)
-        {
+    public EnumFacing getElectricInputDirection() {
+        if (!this.canConnect) {
             return null;
         }
 
@@ -207,25 +170,19 @@ public class TileEntityTelepadFake extends TileBaseElectricBlock
     }
 
     @Override
-    public EnumFacing getFront()
-    {
+    public EnumFacing getFront() {
         return EnumFacing.NORTH;
     }
 
     @Override
-    public ItemStack getBatteryInSlot()
-    {
+    public ItemStack getBatteryInSlot() {
         return ItemStack.EMPTY;
     }
 
-    private void updateConnectable()
-    {
-        if (this.mainBlockPosition != null)
-        {
-            if (this.getPos().getX() == mainBlockPosition.getX() && this.getPos().getZ() == mainBlockPosition.getZ())
-            {
-                if (this.getPos().getY() > mainBlockPosition.getY())
-                {
+    private void updateConnectable() {
+        if (this.mainBlockPosition != null) {
+            if (this.getPos().getX() == mainBlockPosition.getX() && this.getPos().getZ() == mainBlockPosition.getZ()) {
+                if (this.getPos().getY() > mainBlockPosition.getY()) {
                     // If the block has the same x- and y- coordinates, but is above the base block, this is the
                     //      connectable tile
                     this.canConnect = true;

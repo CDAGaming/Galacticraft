@@ -17,14 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
-public class GuiBuggy extends GuiContainerGC
-{
+public class GuiBuggy extends GuiContainerGC {
     private static ResourceLocation[] sealerTexture = new ResourceLocation[4];
 
-    static
-    {
-        for (int i = 0; i < 4; i++)
-        {
+    static {
+        for (int i = 0; i < 4; i++) {
             GuiBuggy.sealerTexture[i] = new ResourceLocation(Constants.ASSET_PREFIX, "textures/gui/buggy_" + i * 18 + ".png");
         }
     }
@@ -32,8 +29,7 @@ public class GuiBuggy extends GuiContainerGC
     private final IInventory upperChestInventory;
     private final int type;
 
-    public GuiBuggy(IInventory par1IInventory, IInventory par2IInventory, int type)
-    {
+    public GuiBuggy(IInventory par1IInventory, IInventory par2IInventory, int type) {
         super(new ContainerBuggy(par1IInventory, par2IInventory, type, FMLClientHandler.instance().getClient().player));
         this.upperChestInventory = par1IInventory;
         this.allowUserInput = false;
@@ -42,8 +38,7 @@ public class GuiBuggy extends GuiContainerGC
     }
 
     @Override
-    public void initGui()
-    {
+    public void initGui() {
         super.initGui();
         List<String> oxygenDesc = new ArrayList<String>();
         oxygenDesc.add(GCCoreUtil.translate("gui.fuel_tank.desc.0"));
@@ -52,14 +47,12 @@ public class GuiBuggy extends GuiContainerGC
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int par1, int par2)
-    {
+    protected void drawGuiContainerForegroundLayer(int par1, int par2) {
         this.fontRenderer.drawString(GCCoreUtil.translate("gui.message.fuel.name"), 8, 2 + 3, 4210752);
 
         this.fontRenderer.drawString(GCCoreUtil.translate(this.upperChestInventory.getName()), 8, this.type == 0 ? 50 : 39, 4210752);
 
-        if (this.mc.player != null && this.mc.player.getRidingEntity() != null && this.mc.player.getRidingEntity() instanceof EntityBuggy)
-        {
+        if (this.mc.player != null && this.mc.player.getRidingEntity() != null && this.mc.player.getRidingEntity() instanceof EntityBuggy) {
             this.fontRenderer.drawString(GCCoreUtil.translate("gui.message.fuel.name") + ":", 125, 15 + 3, 4210752);
             final double percentage = ((EntityBuggy) this.mc.player.getRidingEntity()).getScaledFuelLevel(100);
             final String color = percentage > 80.0D ? EnumColor.BRIGHT_GREEN.getCode() : percentage > 40.0D ? EnumColor.ORANGE.getCode() : EnumColor.RED.getCode();
@@ -69,8 +62,7 @@ public class GuiBuggy extends GuiContainerGC
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3)
-    {
+    protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3) {
         this.mc.getTextureManager().bindTexture(GuiBuggy.sealerTexture[this.type]);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
@@ -78,8 +70,7 @@ public class GuiBuggy extends GuiContainerGC
         final int var6 = (this.height - this.ySize) / 2;
         this.drawTexturedModalRect(var5, var6, 0, 0, 176, this.ySize);
 
-        if (this.mc.player != null && this.mc.player.getRidingEntity() != null && this.mc.player.getRidingEntity() instanceof EntityBuggy)
-        {
+        if (this.mc.player != null && this.mc.player.getRidingEntity() != null && this.mc.player.getRidingEntity() instanceof EntityBuggy) {
             final int fuelLevel = ((EntityBuggy) this.mc.player.getRidingEntity()).getScaledFuelLevel(38);
 
             this.drawTexturedModalRect((this.width - this.xSize) / 2 + 72, (this.height - this.ySize) / 2 + 45 - fuelLevel, 176, 38 - fuelLevel, 42, fuelLevel);

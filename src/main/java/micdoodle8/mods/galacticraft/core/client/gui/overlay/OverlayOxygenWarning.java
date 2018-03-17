@@ -10,15 +10,13 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class OverlayOxygenWarning extends Overlay
-{
+public class OverlayOxygenWarning extends Overlay {
     private static long screenTicks;
 
     /**
      * Render the GUI when player is in inventory
      */
-    public static void renderOxygenWarningOverlay()
-    {
+    public static void renderOxygenWarningOverlay() {
         OverlayOxygenWarning.screenTicks++;
         final Minecraft mc = Minecraft.getMinecraft();
         final ScaledResolution scaledresolution = ClientUtil.getScaledRes(mc, mc.displayWidth, mc.displayHeight);

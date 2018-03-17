@@ -7,20 +7,17 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.FMLClientHandler;
 
-public class ModelParaChest extends ModelChest
-{
+public class ModelParaChest extends ModelChest {
     private static final ResourceLocation grayParachuteTexture = new ResourceLocation(Constants.ASSET_PREFIX, "textures/model/parachute/gray.png");
 
     public ModelRenderer[] parachute = new ModelRenderer[3];
     public ModelRenderer[] parachuteStrings = new ModelRenderer[4];
 
-    public ModelParaChest()
-    {
+    public ModelParaChest() {
         this(0.0F);
     }
 
-    public ModelParaChest(float par1)
-    {
+    public ModelParaChest(float par1) {
         super();
 
         this.parachute[0] = new ModelRenderer(this, 0, 0).setTextureSize(256, 256);
@@ -48,8 +45,7 @@ public class ModelParaChest extends ModelChest
     }
 
     @Override
-    public void renderAll()
-    {
+    public void renderAll() {
         this.chestLid.rotateAngleX = (float) Math.PI;
         this.chestBelow.rotateAngleX = (float) Math.PI;
         this.chestKnob.rotateAngleX = (float) Math.PI;
@@ -66,13 +62,11 @@ public class ModelParaChest extends ModelChest
 
         int i;
 
-        for (i = 0; i < this.parachute.length; i++)
-        {
+        for (i = 0; i < this.parachute.length; i++) {
             this.parachute[i].render(0.0625F);
         }
 
-        for (i = 0; i < this.parachuteStrings.length; i++)
-        {
+        for (i = 0; i < this.parachuteStrings.length; i++) {
             this.parachuteStrings[i].render(0.0625F);
         }
 

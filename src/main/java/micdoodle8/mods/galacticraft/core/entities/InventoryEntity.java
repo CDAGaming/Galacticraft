@@ -8,40 +8,33 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 
-public abstract class InventoryEntity extends NetworkedEntity implements IInventoryDefaults
-{
+public abstract class InventoryEntity extends NetworkedEntity implements IInventoryDefaults {
     protected NonNullList<ItemStack> stacks = NonNullList.withSize(0, ItemStack.EMPTY);
 
-    public InventoryEntity(World par1World)
-    {
+    public InventoryEntity(World par1World) {
         super(par1World);
     }
 
     @Override
-    protected void readEntityFromNBT(NBTTagCompound nbt)
-    {
+    protected void readEntityFromNBT(NBTTagCompound nbt) {
         ItemStackHelper.loadAllItems(nbt, this.stacks);
     }
 
     @Override
-    protected void writeEntityToNBT(NBTTagCompound nbt)
-    {
+    protected void writeEntityToNBT(NBTTagCompound nbt) {
         ItemStackHelper.saveAllItems(nbt, this.stacks);
     }
 
     @Override
-    public ItemStack getStackInSlot(int var1)
-    {
+    public ItemStack getStackInSlot(int var1) {
         return this.stacks.get(var1);
     }
 
     @Override
-    public ItemStack decrStackSize(int index, int count)
-    {
+    public ItemStack decrStackSize(int index, int count) {
         ItemStack itemstack = ItemStackHelper.getAndSplit(this.stacks, index, count);
 
-        if (!itemstack.isEmpty())
-        {
+        if (!itemstack.isEmpty()) {
             this.markDirty();
         }
 
@@ -49,18 +42,15 @@ public abstract class InventoryEntity extends NetworkedEntity implements IInvent
     }
 
     @Override
-    public ItemStack removeStackFromSlot(int index)
-    {
+    public ItemStack removeStackFromSlot(int index) {
         return ItemStackHelper.getAndRemove(this.stacks, index);
     }
 
     @Override
-    public void setInventorySlotContents(int index, ItemStack stack)
-    {
+    public void setInventorySlotContents(int index, ItemStack stack) {
         this.stacks.set(index, stack);
 
-        if (stack.getCount() > this.getInventoryStackLimit())
-        {
+        if (stack.getCount() > this.getInventoryStackLimit()) {
             stack.setCount(this.getInventoryStackLimit());
         }
 
@@ -68,12 +58,9 @@ public abstract class InventoryEntity extends NetworkedEntity implements IInvent
     }
 
     @Override
-    public boolean isEmpty()
-    {
-        for (ItemStack itemstack : this.stacks)
-        {
-            if (!itemstack.isEmpty())
-            {
+    public boolean isEmpty() {
+        for (ItemStack itemstack : this.stacks) {
+            if (!itemstack.isEmpty()) {
                 return false;
             }
         }
@@ -82,20 +69,17 @@ public abstract class InventoryEntity extends NetworkedEntity implements IInvent
     }
 
     @Override
-    public int getInventoryStackLimit()
-    {
+    public int getInventoryStackLimit() {
         return 64;
     }
 
     @Override
-    public void markDirty()
-    {
+    public void markDirty() {
 
     }
 
     @Override
-    public boolean isUsableByPlayer(EntityPlayer entityplayer)
-    {
+    public boolean isUsableByPlayer(EntityPlayer entityplayer) {
         return true;
     }
 }

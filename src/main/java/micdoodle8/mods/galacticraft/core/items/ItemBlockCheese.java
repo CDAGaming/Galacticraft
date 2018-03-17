@@ -9,30 +9,25 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemBlockCheese extends ItemBlockDesc
-{
-    public ItemBlockCheese(Block par2Block)
-    {
+public class ItemBlockCheese extends ItemBlockDesc {
+    public ItemBlockCheese(Block par2Block) {
         super(par2Block);
         this.setMaxStackSize(1);
     }
 
     @Override
-    public boolean isEnchantable(ItemStack stack)
-    {
+    public boolean isEnchantable(ItemStack stack) {
         return false;
     }
 
     @Override
-    public CreativeTabs getCreativeTab()
-    {
+    public CreativeTabs getCreativeTab() {
         return GalacticraftCore.galacticraftBlocksTab;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public EnumRarity getRarity(ItemStack par1ItemStack)
-    {
+    public EnumRarity getRarity(ItemStack par1ItemStack) {
         return ClientProxyCore.galacticraftItem;
     }
 }

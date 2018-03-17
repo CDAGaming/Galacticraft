@@ -1,7 +1,6 @@
 package micdoodle8.mods.galacticraft.core.client.render.tile;
 
 import com.google.common.collect.ImmutableList;
-
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.entities.IBubbleProvider;
 import micdoodle8.mods.galacticraft.core.util.ClientUtil;
@@ -15,41 +14,32 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-public class TileEntityBubbleProviderRenderer<E extends TileEntity & IBubbleProvider> extends TileEntitySpecialRenderer<E>
-{
+public class TileEntityBubbleProviderRenderer<E extends TileEntity & IBubbleProvider> extends TileEntitySpecialRenderer<E> {
     private static IBakedModel sphere;
 
     private final float colorRed;
     private final float colorGreen;
     private final float colorBlue;
 
-    public TileEntityBubbleProviderRenderer(float colorRed, float colorGreen, float colorBlue)
-    {
+    public TileEntityBubbleProviderRenderer(float colorRed, float colorGreen, float colorBlue) {
         this.colorRed = colorRed;
         this.colorGreen = colorGreen;
         this.colorBlue = colorBlue;
     }
 
-    private static void updateModels()
-    {
-        if (sphere == null)
-        {
-            try
-            {
+    private static void updateModels() {
+        if (sphere == null) {
+            try {
                 sphere = ClientUtil.modelFromOBJ(new ResourceLocation(Constants.ASSET_PREFIX, "sphere.obj"), ImmutableList.of("Sphere"));
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }
     }
 
     @Override
-    public void render(E provider, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
-    {
-        if (!provider.getBubbleVisible())
-        {
+    public void render(E provider, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+        if (!provider.getBubbleVisible()) {
             return;
         }
 
@@ -77,7 +67,7 @@ public class TileEntityBubbleProviderRenderer<E extends TileEntity & IBubbleProv
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
         GL11.glScalef(provider.getBubbleSize(), provider.getBubbleSize(), provider.getBubbleSize());
 
-        int color = ColorUtil.to32BitColor(30, (int)(this.colorBlue / 2.0F * 255), (int)(this.colorGreen / 2.0F * 255), (int)(this.colorRed / 2.0F * 255));
+        int color = ColorUtil.to32BitColor(30, (int) (this.colorBlue / 2.0F * 255), (int) (this.colorGreen / 2.0F * 255), (int) (this.colorRed / 2.0F * 255));
         ClientUtil.drawBakedModelColored(sphere, color);
 
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);

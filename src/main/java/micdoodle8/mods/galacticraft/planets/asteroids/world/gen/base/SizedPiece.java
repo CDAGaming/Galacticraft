@@ -7,19 +7,16 @@ import net.minecraft.world.gen.structure.template.TemplateManager;
 
 import java.util.Random;
 
-public abstract class SizedPiece extends Piece
-{
+public abstract class SizedPiece extends Piece {
     protected EnumFacing direction;
     protected int sizeX;
     protected int sizeY;
     protected int sizeZ;
 
-    public SizedPiece()
-    {
+    public SizedPiece() {
     }
 
-    public SizedPiece(BaseConfiguration configuration, int sizeX, int sizeY, int sizeZ, EnumFacing direction)
-    {
+    public SizedPiece(BaseConfiguration configuration, int sizeX, int sizeY, int sizeZ, EnumFacing direction) {
         super(configuration);
         this.direction = direction;
         this.sizeX = sizeX;
@@ -27,19 +24,16 @@ public abstract class SizedPiece extends Piece
         this.sizeZ = sizeZ;
     }
 
-    public EnumFacing getDirection()
-    {
+    public EnumFacing getDirection() {
         return direction;
     }
 
-    public void setDirection(EnumFacing direction)
-    {
+    public void setDirection(EnumFacing direction) {
         this.direction = direction;
     }
 
     @Override
-    protected void writeStructureToNBT(NBTTagCompound tagCompound)
-    {
+    protected void writeStructureToNBT(NBTTagCompound tagCompound) {
         super.writeStructureToNBT(tagCompound);
 
         tagCompound.setInteger("dir", this.direction.ordinal());
@@ -49,50 +43,38 @@ public abstract class SizedPiece extends Piece
     }
 
     @Override
-    protected void readStructureFromNBT(NBTTagCompound tagCompound, TemplateManager manager)
-    {
+    protected void readStructureFromNBT(NBTTagCompound tagCompound, TemplateManager manager) {
         super.readStructureFromNBT(tagCompound, manager);
 
         this.sizeX = tagCompound.getInteger("sX");
         this.sizeY = tagCompound.getInteger("sY");
         this.sizeZ = tagCompound.getInteger("sZ");
 
-        if (tagCompound.hasKey("dir"))
-        {
+        if (tagCompound.hasKey("dir")) {
             this.direction = EnumFacing.getFront(tagCompound.getInteger("dir"));
-        }
-        else
-        {
+        } else {
             this.direction = EnumFacing.NORTH;
         }
     }
 
-    public int getSizeX()
-    {
+    public int getSizeX() {
         return sizeX;
     }
 
-    public int getSizeY()
-    {
+    public int getSizeY() {
         return sizeY;
     }
 
-    public int getSizeZ()
-    {
+    public int getSizeZ() {
         return sizeZ;
     }
 
     @Override
-    protected int getXWithOffset(int x, int z)
-    {
-        if (this.getCoordBaseMode() == null)
-        {
+    protected int getXWithOffset(int x, int z) {
+        if (this.getCoordBaseMode() == null) {
             return x;
-        }
-        else
-        {
-            switch (this.getCoordBaseMode())
-            {
+        } else {
+            switch (this.getCoordBaseMode()) {
                 case NORTH:
                     return this.boundingBox.minX + x;
                 case SOUTH:
@@ -108,16 +90,11 @@ public abstract class SizedPiece extends Piece
     }
 
     @Override
-    protected int getZWithOffset(int x, int z)
-    {
-        if (this.getCoordBaseMode() == null)
-        {
+    protected int getZWithOffset(int x, int z) {
+        if (this.getCoordBaseMode() == null) {
             return z;
-        }
-        else
-        {
-            switch (this.getCoordBaseMode())
-            {
+        } else {
+            switch (this.getCoordBaseMode()) {
                 case NORTH:
                     return this.boundingBox.minZ + z;
                 case SOUTH:
@@ -133,8 +110,7 @@ public abstract class SizedPiece extends Piece
     }
 
     //Unused currently
-    public Piece getDoorway(Random rand, BaseStart startPiece, int maxAttempts, boolean small)
-    {
+    public Piece getDoorway(Random rand, BaseStart startPiece, int maxAttempts, boolean small) {
         EnumFacing randomDir;
         int blockX;
         int blockZ;
@@ -142,8 +118,7 @@ public abstract class SizedPiece extends Piece
         int sizeZ;
         boolean valid;
         int attempts = maxAttempts;
-        do
-        {
+        do {
             int randDir = rand.nextInt(4);
             randomDir = EnumFacing.getHorizontal((randDir == getDirection().getOpposite().getHorizontalIndex() ? randDir + 1 : randDir) % 4);
             StructureBoundingBox extension = getExtension(randomDir, 1, 3);
@@ -156,8 +131,7 @@ public abstract class SizedPiece extends Piece
         }
         while (!valid && attempts > 0);
 
-        if (!valid)
-        {
+        if (!valid) {
             return null;
         }
 

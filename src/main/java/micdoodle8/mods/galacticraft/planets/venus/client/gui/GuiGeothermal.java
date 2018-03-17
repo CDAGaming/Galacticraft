@@ -19,8 +19,7 @@ import org.lwjgl.opengl.GL11;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GuiGeothermal extends GuiContainerGC
-{
+public class GuiGeothermal extends GuiContainerGC {
     private static final ResourceLocation backgroundTexture = new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "textures/gui/geothermal.png");
 
     private final TileEntityGeothermalGenerator geothermalGenerator;
@@ -28,8 +27,7 @@ public class GuiGeothermal extends GuiContainerGC
     private GuiButton buttonEnableSolar;
     private GuiElementInfoRegion electricInfoRegion = new GuiElementInfoRegion((this.width - this.xSize) / 2 + 107, (this.height - this.ySize) / 2 + 101, 56, 9, new ArrayList<String>(), this.width, this.height, this);
 
-    public GuiGeothermal(InventoryPlayer par1InventoryPlayer, TileEntityGeothermalGenerator geothermalGenerator)
-    {
+    public GuiGeothermal(InventoryPlayer par1InventoryPlayer, TileEntityGeothermalGenerator geothermalGenerator) {
         super(new ContainerGeothermal(par1InventoryPlayer, geothermalGenerator));
         this.geothermalGenerator = geothermalGenerator;
         this.ySize = 201;
@@ -37,19 +35,16 @@ public class GuiGeothermal extends GuiContainerGC
     }
 
     @Override
-    protected void actionPerformed(GuiButton par1GuiButton)
-    {
-        switch (par1GuiButton.id)
-        {
-        case 0:
-            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_UPDATE_DISABLEABLE_BUTTON, GCCoreUtil.getDimensionID(this.mc.world), new Object[] { this.geothermalGenerator.getPos(), 0 }));
-            break;
+    protected void actionPerformed(GuiButton par1GuiButton) {
+        switch (par1GuiButton.id) {
+            case 0:
+                GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_UPDATE_DISABLEABLE_BUTTON, GCCoreUtil.getDimensionID(this.mc.world), new Object[]{this.geothermalGenerator.getPos(), 0}));
+                break;
         }
     }
 
     @Override
-    public void initGui()
-    {
+    public void initGui() {
         super.initGui();
         List<String> electricityDesc = new ArrayList<String>();
         electricityDesc.add(GCCoreUtil.translate("gui.energy_storage.desc.0"));
@@ -72,8 +67,7 @@ public class GuiGeothermal extends GuiContainerGC
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int par1, int par2)
-    {
+    protected void drawGuiContainerForegroundLayer(int par1, int par2) {
         int offsetY = 35;
         this.buttonEnableSolar.enabled = this.geothermalGenerator.disableCooldown == 0;
         this.buttonEnableSolar.displayString = !this.geothermalGenerator.getDisabled(0) ? GCCoreUtil.translate("gui.button.disable.name") : GCCoreUtil.translate("gui.button.enable.name");
@@ -93,35 +87,28 @@ public class GuiGeothermal extends GuiContainerGC
         this.fontRenderer.drawString(GCCoreUtil.translate("container.inventory"), 8, this.ySize - 94, 4210752);
     }
 
-    private String getStatus()
-    {
-        if (this.geothermalGenerator.getDisabled(0))
-        {
+    private String getStatus() {
+        if (this.geothermalGenerator.getDisabled(0)) {
             return EnumColor.ORANGE + GCCoreUtil.translate("gui.status.disabled.name");
         }
 
-        if (this.geothermalGenerator.generateWatts > 0)
-        {
+        if (this.geothermalGenerator.generateWatts > 0) {
             return EnumColor.DARK_GREEN + GCCoreUtil.translate("gui.status.collectingenergy.name");
         }
 
-        if (!this.geothermalGenerator.hasValidSpout())
-        {
+        if (!this.geothermalGenerator.hasValidSpout()) {
             return EnumColor.RED + GCCoreUtil.translate("gui.status.invalid_spout_1.name");
         }
 
         return EnumColor.ORANGE + GCCoreUtil.translate("gui.status.unknown.name");
     }
 
-    private String getStatus2()
-    {
-        if (this.geothermalGenerator.getDisabled(0) || this.geothermalGenerator.generateWatts > 0)
-        {
+    private String getStatus2() {
+        if (this.geothermalGenerator.getDisabled(0) || this.geothermalGenerator.generateWatts > 0) {
             return "";
         }
 
-        if (!this.geothermalGenerator.hasValidSpout())
-        {
+        if (!this.geothermalGenerator.hasValidSpout()) {
             return EnumColor.RED + GCCoreUtil.translate("gui.status.invalid_spout_2.name");
         }
 
@@ -129,8 +116,7 @@ public class GuiGeothermal extends GuiContainerGC
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3)
-    {
+    protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3) {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.mc.getTextureManager().bindTexture(GuiGeothermal.backgroundTexture);
         final int var5 = (this.width - this.xSize) / 2;
@@ -141,13 +127,11 @@ public class GuiGeothermal extends GuiContainerGC
         EnergyDisplayHelper.getEnergyDisplayTooltip(this.geothermalGenerator.getEnergyStoredGC(), this.geothermalGenerator.getMaxEnergyStoredGC(), electricityDesc);
         this.electricInfoRegion.tooltipStrings = electricityDesc;
 
-        if (this.geothermalGenerator.getEnergyStoredGC() > 0)
-        {
+        if (this.geothermalGenerator.getEnergyStoredGC() > 0) {
             this.drawTexturedModalRect(var5 + 83, var6 + 24, 176, 0, 11, 10);
         }
 
-        if (this.geothermalGenerator.hasValidSpout())
-        {
+        if (this.geothermalGenerator.hasValidSpout()) {
             int ySize = 16 * this.geothermalGenerator.generateWatts / (TileEntityGeothermalGenerator.MAX_GENERATE_GJ_PER_TICK - 1);
             this.drawTexturedModalRect(var5 + 33, var6 + 21 + (16 - ySize), 176, (int) (10 + ((this.geothermalGenerator.ticks / 3) % 7) * 16) + (16 - ySize), 46, ySize);
         }

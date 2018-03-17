@@ -5,30 +5,28 @@ import micdoodle8.mods.galacticraft.core.util.ClientUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.renderer.*;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraftforge.fml.client.FMLClientHandler;
-
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import java.util.Collections;
 
-public class GuiElementSlider extends GuiButton
-{
+public class GuiElementSlider extends GuiButton {
+    private final boolean isVertical;
     private Vector3 firstColor;
     private Vector3 lastColor;
-    private final boolean isVertical;
     private int sliderPos;
 
-    public GuiElementSlider(int id, int x, int y, int width, int height, boolean vertical, Vector3 firstColor, Vector3 lastColor)
-    {
+    public GuiElementSlider(int id, int x, int y, int width, int height, boolean vertical, Vector3 firstColor, Vector3 lastColor) {
         this(id, x, y, width, height, vertical, firstColor, lastColor, "");
     }
 
-    public GuiElementSlider(int id, int x, int y, int width, int height, boolean vertical, Vector3 firstColor, Vector3 lastColor, String displayString)
-    {
+    public GuiElementSlider(int id, int x, int y, int width, int height, boolean vertical, Vector3 firstColor, Vector3 lastColor, String displayString) {
         super(id, x, y, width, height, displayString);
         this.isVertical = vertical;
         this.firstColor = firstColor;
@@ -36,20 +34,14 @@ public class GuiElementSlider extends GuiButton
     }
 
     @Override
-    public void drawButton(Minecraft par1Minecraft, int par2, int par3, float partial)
-    {
-        if (this.visible)
-        {
+    public void drawButton(Minecraft par1Minecraft, int par2, int par3, float partial) {
+        if (this.visible) {
             this.hovered = par2 >= this.x && par3 >= this.y && par2 < this.x + this.width && par3 < this.y + this.height;
 
-            if (Mouse.isButtonDown(0) && this.hovered)
-            {
-                if (this.isVertical)
-                {
+            if (Mouse.isButtonDown(0) && this.hovered) {
+                if (this.isVertical) {
                     this.sliderPos = par3 - this.y;
-                }
-                else
-                {
+                } else {
                     this.sliderPos = par2 - this.x;
                 }
             }
@@ -63,8 +55,7 @@ public class GuiElementSlider extends GuiButton
             Tessellator tessellator = Tessellator.getInstance();
             BufferBuilder worldRenderer = tessellator.getBuffer();
 
-            if (this.isVertical)
-            {
+            if (this.isVertical) {
                 worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
                 worldRenderer.pos((double) this.x + this.width, this.y, this.zLevel).color(0, 0, 0, 1.0F).endVertex();
                 worldRenderer.pos(this.x, this.y, this.zLevel).color(0, 0, 0, 1.0F).endVertex();
@@ -85,9 +76,7 @@ public class GuiElementSlider extends GuiButton
                 worldRenderer.pos(this.x, (double) this.y + this.sliderPos + 1, this.zLevel).color(1, 1, 1, 1.0F).endVertex();
                 worldRenderer.pos((double) this.x + this.width, (double) this.y + this.sliderPos + 1, this.zLevel).color(1, 1, 1, 1.0F).endVertex();
                 tessellator.draw();
-            }
-            else
-            {
+            } else {
                 worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
                 worldRenderer.pos((double) this.x + this.width, this.y, this.zLevel).color(0, 0, 0, 1.0F).endVertex();
                 worldRenderer.pos(this.x, this.y, this.zLevel).color(0, 0, 0, 1.0F).endVertex();
@@ -129,10 +118,8 @@ public class GuiElementSlider extends GuiButton
         }
     }
 
-    public void drawHoveringText()
-    {
-        if (this.hovered)
-        {
+    public void drawHoveringText() {
+        if (this.hovered) {
             FontRenderer font = FMLClientHandler.instance().getClient().fontRenderer;
             Minecraft mc = FMLClientHandler.instance().getClient();
             ScaledResolution scaledresolution = ClientUtil.getScaledRes(mc, mc.displayWidth, mc.displayHeight);
@@ -143,29 +130,24 @@ public class GuiElementSlider extends GuiButton
             net.minecraftforge.fml.client.config.GuiUtils.drawHoveringText(Collections.singletonList(this.displayString), x, y, width, height, -1, font);
         }
     }
-    
-    public void setSliderPos(float pos)
-    {
-        this.sliderPos = (int) Math.floor(this.height * pos);
-    }
 
-    public int getSliderPos()
-    {
+    public int getSliderPos() {
         return this.sliderPos;
     }
 
-    public float getNormalizedValue()
-    {
+    public void setSliderPos(float pos) {
+        this.sliderPos = (int) Math.floor(this.height * pos);
+    }
+
+    public float getNormalizedValue() {
         return this.sliderPos / (float) this.height;
     }
 
-    public double getColorValueD()
-    {
+    public double getColorValueD() {
         return (this.sliderPos * 255.0D) / (this.height - 1);
     }
 
-    public int getButtonHeight()
-    {
+    public int getButtonHeight() {
         return this.height;
     }
 }

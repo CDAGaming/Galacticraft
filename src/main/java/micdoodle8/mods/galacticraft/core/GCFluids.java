@@ -16,11 +16,7 @@ import net.minecraft.block.BlockDispenser;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.dispenser.BehaviorDefaultDispenseItem;
-import net.minecraft.dispenser.BehaviorProjectileDispense;
-import net.minecraft.dispenser.IBehaviorDispenseItem;
-import net.minecraft.dispenser.IBlockSource;
-import net.minecraft.dispenser.IPosition;
+import net.minecraft.dispenser.*;
 import net.minecraft.entity.IProjectile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -32,22 +28,19 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 
-public class GCFluids
-{
+public class GCFluids {
     public static Fluid fluidOil;
     public static Fluid fluidFuel;
     public static Fluid fluidOxygenGas;
     public static Fluid fluidHydrogenGas;
     public static Material materialOil = new MaterialOleaginous(MapColor.BROWN);
 
-    public static void registerFluids()
-    {
+    public static void registerFluids() {
         fluidOxygenGas = registerFluid("oxygen", 1, 13, 295, true, "oxygen_gas");
         fluidHydrogenGas = registerFluid("hydrogen", 1, 1, 295, true, "hydrogen_gas");
     }
 
-    public static void registerOilandFuel()
-    {
+    public static void registerOilandFuel() {
         //NOTE: the way this operates will depend on the order in which different mods initialize (normally alphabetical order)
         //Galacticraft can handle things OK if another mod registers oil or fuel first.  The other mod may not be so happy if GC registers oil or fuel first.
 
@@ -55,33 +48,26 @@ public class GCFluids
         String fuelID = ConfigManagerCore.useOldFuelFluidID ? "fuelgc" : "fuel";
 
         // Oil:
-        if (!FluidRegistry.isFluidRegistered(oilID))
-        {
+        if (!FluidRegistry.isFluidRegistered(oilID)) {
             ResourceLocation flowingOil = new ResourceLocation(Constants.TEXTURE_PREFIX + "blocks/fluids/oil_flow");
             ResourceLocation stillOil = new ResourceLocation(Constants.TEXTURE_PREFIX + "blocks/fluids/oil_still");
             Fluid gcFluidOil = new Fluid(oilID, stillOil, flowingOil).setDensity(800).setViscosity(1500);
             FluidRegistry.registerFluid(gcFluidOil);
-        }
-        else
-        {
+        } else {
             GCLog.info("Galacticraft oil is not default, issues may occur.");
         }
 
         fluidOil = FluidRegistry.getFluid(oilID);
 
-        if (fluidOil.getBlock() == null)
-        {
+        if (fluidOil.getBlock() == null) {
             GCBlocks.registerOil();
             fluidOil.setBlock(GCBlocks.crudeOil);
-        }
-        else
-        {
+        } else {
             GCBlocks.crudeOil = fluidOil.getBlock();
         }
 
-        if (GCBlocks.crudeOil != null && !FluidRegistry.getBucketFluids().contains(fluidOil))
-        {
-        	FluidRegistry.addBucketForFluid(GCFluids.fluidOil);  //Create a Universal Bucket AS WELL AS our type, this is needed to pull oil out of other mods tanks
+        if (GCBlocks.crudeOil != null && !FluidRegistry.getBucketFluids().contains(fluidOil)) {
+            FluidRegistry.addBucketForFluid(GCFluids.fluidOil);  //Create a Universal Bucket AS WELL AS our type, this is needed to pull oil out of other mods tanks
             GCItems.bucketOil = new ItemBucketGC(GCBlocks.crudeOil, fluidOil);
             GCItems.bucketOil.setUnlocalizedName("bucket_oil");
             GCItems.registerItem(GCItems.bucketOil);
@@ -89,33 +75,26 @@ public class GCFluids
         }
 
         // Fuel:
-        if (!FluidRegistry.isFluidRegistered(fuelID))
-        {
+        if (!FluidRegistry.isFluidRegistered(fuelID)) {
             ResourceLocation flowingFuel = new ResourceLocation(Constants.TEXTURE_PREFIX + "blocks/fluids/fuel_flow");
             ResourceLocation stillFuel = new ResourceLocation(Constants.TEXTURE_PREFIX + "blocks/fluids/fuel_still");
             Fluid gcFluidFuel = new Fluid(fuelID, stillFuel, flowingFuel).setDensity(400).setViscosity(900);
             FluidRegistry.registerFluid(gcFluidFuel);
-        }
-        else
-        {
+        } else {
             GCLog.info("Galacticraft fuel is not default, issues may occur.");
         }
 
         fluidFuel = FluidRegistry.getFluid(fuelID);
 
-        if (fluidFuel.getBlock() == null)
-        {
+        if (fluidFuel.getBlock() == null) {
             GCBlocks.registerFuel();
             GCFluids.fluidFuel.setBlock(GCBlocks.fuel);
-        }
-        else
-        {
+        } else {
             GCBlocks.fuel = fluidFuel.getBlock();
         }
 
-        if (GCBlocks.fuel != null && !FluidRegistry.getBucketFluids().contains(fluidFuel))
-        {
-        	FluidRegistry.addBucketForFluid(GCFluids.fluidFuel);  //Create a Universal Bucket AS WELL AS our type, this is needed to pull fuel out of other mods tanks
+        if (GCBlocks.fuel != null && !FluidRegistry.getBucketFluids().contains(fluidFuel)) {
+            FluidRegistry.addBucketForFluid(GCFluids.fluidFuel);  //Create a Universal Bucket AS WELL AS our type, this is needed to pull fuel out of other mods tanks
             GCItems.bucketFuel = new ItemBucketGC(GCBlocks.fuel, fluidFuel);
             GCItems.bucketFuel.setUnlocalizedName("bucket_fuel");
             GCItems.registerItem(GCItems.bucketFuel);
@@ -123,26 +102,21 @@ public class GCFluids
         }
     }
 
-    private static Fluid registerFluid(String fluidName, int density, int viscosity, int temperature, boolean gaseous, String fluidTexture)
-    {
+    private static Fluid registerFluid(String fluidName, int density, int viscosity, int temperature, boolean gaseous, String fluidTexture) {
         Fluid returnFluid = FluidRegistry.getFluid(fluidName);
 
-        if (returnFluid == null)
-        {
+        if (returnFluid == null) {
             ResourceLocation texture = new ResourceLocation(Constants.TEXTURE_PREFIX + "blocks/fluids/" + fluidTexture);
             FluidRegistry.registerFluid(new Fluid(fluidName, texture, texture).setDensity(density).setViscosity(viscosity).setTemperature(temperature).setGaseous(gaseous));
             returnFluid = FluidRegistry.getFluid(fluidName);
-        }
-        else
-        {
+        } else {
             returnFluid.setGaseous(gaseous);
         }
 
         return returnFluid;
     }
 
-    public static void registerLegacyFluids()
-    {
+    public static void registerLegacyFluids() {
         //If any other mod has registered "fuel" or "oil" and GC has not, then allow GC's appropriate canisters to be fillable with that one as well
 //        if (ConfigManagerCore.useOldFuelFluidID && FluidRegistry.isFluidRegistered("fuel"))
 //        {
@@ -151,10 +125,10 @@ public class GCFluids
 //        if (ConfigManagerCore.useOldOilFluidID && FluidRegistry.isFluidRegistered("oil"))
 //        {
 //            FluidContainerRegistry.registerFluidContainer(new FluidContainerRegistry.FluidContainerData(new FluidStack(FluidRegistry.getFluid("oil"), 1000), new ItemStack(GCItems.oilCanister, 1, 1), new ItemStack(GCItems.oilCanister, 1, ItemCanisterGeneric.EMPTY)));
-            //And allow Buildcraft oil buckets to be filled with oilgc
+        //And allow Buildcraft oil buckets to be filled with oilgc
 //            if (CompatibilityManager.isBCraftEnergyLoaded())
 //            {
-                // TODO Fix BC Oil compat
+        // TODO Fix BC Oil compat
 //        		FluidContainerRegistry.registerFluidContainer(new FluidContainerData(new FluidStack(GalacticraftCore.fluidOil, 1000), GameRegistry.findItemStack("buildcraftcore", "bucketOil", 1), new ItemStack(Items.bucket)));
 //            }
 //        }
@@ -166,159 +140,129 @@ public class GCFluids
         ResourceLocation flowingFuel = new ResourceLocation(Constants.TEXTURE_PREFIX + "blocks/fluids/fuel_flow");
         ResourceLocation stillOil = new ResourceLocation(Constants.TEXTURE_PREFIX + "blocks/fluids/oil_still");
         ResourceLocation stillFuel = new ResourceLocation(Constants.TEXTURE_PREFIX + "blocks/fluids/fuel_still");
-        if (!FluidRegistry.isFluidRegistered("oil"))
-        {
+        if (!FluidRegistry.isFluidRegistered("oil")) {
             FluidRegistry.registerFluid(new Fluid("oil", stillOil, flowingOil).setDensity(800).setViscosity(1500));
         }
-        if (!FluidRegistry.isFluidRegistered("oilgc"))
-        {
+        if (!FluidRegistry.isFluidRegistered("oilgc")) {
             FluidRegistry.registerFluid(new Fluid("oilgc", stillOil, flowingOil).setDensity(800).setViscosity(1500));
         }
-        if (!FluidRegistry.isFluidRegistered("fuel"))
-        {
+        if (!FluidRegistry.isFluidRegistered("fuel")) {
             FluidRegistry.registerFluid(new Fluid("fuel", stillFuel, flowingFuel).setDensity(400).setViscosity(900));
         }
-        if (!FluidRegistry.isFluidRegistered("fuelgc"))
-        {
+        if (!FluidRegistry.isFluidRegistered("fuelgc")) {
             FluidRegistry.registerFluid(new Fluid("fuelgc", stillFuel, flowingFuel).setDensity(400).setViscosity(900));
         }
     }
 
-    public static void registerDispenserBehaviours()
-    {
-        IBehaviorDispenseItem ibehaviordispenseitem = new BehaviorDefaultDispenseItem()
-        {
+    public static void registerDispenserBehaviours() {
+        IBehaviorDispenseItem ibehaviordispenseitem = new BehaviorDefaultDispenseItem() {
             private final BehaviorDefaultDispenseItem dispenseBehavior = new BehaviorDefaultDispenseItem();
+
             @Override
-            public ItemStack dispenseStack(IBlockSource source, ItemStack stack)
-            {
-                ItemBucketGC itembucket = (ItemBucketGC)stack.getItem();
-                BlockPos blockpos = source.getBlockPos().offset((EnumFacing)source.getBlockState().getValue(BlockDispenser.FACING));
-                if (itembucket.tryPlaceContainedLiquid((EntityPlayer)null, source.getWorld(), blockpos))
-                {
+            public ItemStack dispenseStack(IBlockSource source, ItemStack stack) {
+                ItemBucketGC itembucket = (ItemBucketGC) stack.getItem();
+                BlockPos blockpos = source.getBlockPos().offset((EnumFacing) source.getBlockState().getValue(BlockDispenser.FACING));
+                if (itembucket.tryPlaceContainedLiquid((EntityPlayer) null, source.getWorld(), blockpos)) {
                     return new ItemStack(Items.BUCKET);
-                }
-                else
-                {
+                } else {
                     return this.dispenseBehavior.dispense(source, stack);
                 }
             }
         };
-        if (GCItems.bucketFuel != null)
-        {
+        if (GCItems.bucketFuel != null) {
             BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(GCItems.bucketFuel, ibehaviordispenseitem);
         }
-        if (GCItems.bucketOil != null)
-        {
+        if (GCItems.bucketOil != null) {
             BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(GCItems.bucketOil, ibehaviordispenseitem);
         }
-        if (GalacticraftCore.isPlanetsLoaded)
-        {
-            if (MarsItems.bucketSludge != null)
-            {
+        if (GalacticraftCore.isPlanetsLoaded) {
+            if (MarsItems.bucketSludge != null) {
                 BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(MarsItems.bucketSludge, ibehaviordispenseitem);
             }
-            if (VenusItems.bucketSulphuricAcid != null)
-            {
+            if (VenusItems.bucketSulphuricAcid != null) {
                 BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(VenusItems.bucketSulphuricAcid, ibehaviordispenseitem);
             }
         }
 
         // The following code is for other objects, not liquids, but it's convenient to keep it all together
-        
-        BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(GCItems.meteorChunk, new BehaviorProjectileDispense()
-        {
+
+        BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(GCItems.meteorChunk, new BehaviorProjectileDispense() {
             @Override
-            protected IProjectile getProjectileEntity(World worldIn, IPosition position, ItemStack stack)
-            {
+            protected IProjectile getProjectileEntity(World worldIn, IPosition position, ItemStack stack) {
                 EntityMeteorChunk meteor = new EntityMeteorChunk(worldIn);
                 meteor.setPosition(position.getX(), position.getY(), position.getZ());
-                if (stack.getItemDamage() > 0)
-                {
+                if (stack.getItemDamage() > 0) {
                     meteor.setFire(20);
                     meteor.isHot = true;
                 }
                 meteor.canBePickedUp = 1;
                 return meteor;
             }
+
             @Override
-            protected float getProjectileVelocity()
-            {
+            protected float getProjectileVelocity() {
                 return 1.0F;
             }
         });
 
-        BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(GCItems.rocketTier1, new BehaviorDefaultDispenseItem()
-        {
+        BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(GCItems.rocketTier1, new BehaviorDefaultDispenseItem() {
             @Override
-            public ItemStack dispenseStack(IBlockSource source, ItemStack stack)
-            {
+            public ItemStack dispenseStack(IBlockSource source, ItemStack stack) {
                 World world = source.getWorld();
-                BlockPos pos = source.getBlockPos().offset((EnumFacing)source.getBlockState().getValue(BlockDispenser.FACING), 2);
+                BlockPos pos = source.getBlockPos().offset((EnumFacing) source.getBlockState().getValue(BlockDispenser.FACING), 2);
                 IBlockState iblockstate = world.getBlockState(pos);
                 boolean rocketPlaced = false;
-                if (iblockstate.getBlock() == GCBlocks.landingPadFull && GCBlocks.landingPadFull.getMetaFromState(iblockstate) == 0)
-                {
+                if (iblockstate.getBlock() == GCBlocks.landingPadFull && GCBlocks.landingPadFull.getMetaFromState(iblockstate) == 0) {
                     float centerX = pos.getX() + 0.5F;
                     float centerY = pos.getY() + 0.4F;
                     float centerZ = pos.getZ() + 0.5F;
                     rocketPlaced = ItemTier1Rocket.placeRocketOnPad(stack, world, world.getTileEntity(pos), centerX, centerY, centerZ);
                 }
 
-                if (rocketPlaced)
-                {
+                if (rocketPlaced) {
                     stack.splitStack(1);
                 }
                 return stack;
             }
         });
 
-        if (GalacticraftCore.isPlanetsLoaded)
-        {
-            BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(MarsItems.rocketMars, new BehaviorDefaultDispenseItem()
-            {
+        if (GalacticraftCore.isPlanetsLoaded) {
+            BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(MarsItems.rocketMars, new BehaviorDefaultDispenseItem() {
                 @Override
-                public ItemStack dispenseStack(IBlockSource source, ItemStack stack)
-                {
+                public ItemStack dispenseStack(IBlockSource source, ItemStack stack) {
                     World world = source.getWorld();
-                    BlockPos pos = source.getBlockPos().offset((EnumFacing)source.getBlockState().getValue(BlockDispenser.FACING), 2);
+                    BlockPos pos = source.getBlockPos().offset((EnumFacing) source.getBlockState().getValue(BlockDispenser.FACING), 2);
                     IBlockState iblockstate = world.getBlockState(pos);
                     boolean rocketPlaced = false;
-                    if (iblockstate.getBlock() == GCBlocks.landingPadFull && GCBlocks.landingPadFull.getMetaFromState(iblockstate) == 0)
-                    {
+                    if (iblockstate.getBlock() == GCBlocks.landingPadFull && GCBlocks.landingPadFull.getMetaFromState(iblockstate) == 0) {
                         float centerX = pos.getX() + 0.5F;
                         float centerY = pos.getY() + 0.4F;
                         float centerZ = pos.getZ() + 0.5F;
                         rocketPlaced = ItemTier2Rocket.placeRocketOnPad(stack, world, world.getTileEntity(pos), centerX, centerY, centerZ);
                     }
 
-                    if (rocketPlaced)
-                    {
+                    if (rocketPlaced) {
                         stack.splitStack(1);
                     }
                     return stack;
                 }
             });
-            
-            BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(AsteroidsItems.tier3Rocket, new BehaviorDefaultDispenseItem()
-            {
+
+            BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(AsteroidsItems.tier3Rocket, new BehaviorDefaultDispenseItem() {
                 @Override
-                public ItemStack dispenseStack(IBlockSource source, ItemStack stack)
-                {
+                public ItemStack dispenseStack(IBlockSource source, ItemStack stack) {
                     World world = source.getWorld();
-                    BlockPos pos = source.getBlockPos().offset((EnumFacing)source.getBlockState().getValue(BlockDispenser.FACING), 2);
+                    BlockPos pos = source.getBlockPos().offset((EnumFacing) source.getBlockState().getValue(BlockDispenser.FACING), 2);
                     IBlockState iblockstate = world.getBlockState(pos);
                     boolean rocketPlaced = false;
-                    if (iblockstate.getBlock() == GCBlocks.landingPadFull && GCBlocks.landingPadFull.getMetaFromState(iblockstate) == 0)
-                    {
+                    if (iblockstate.getBlock() == GCBlocks.landingPadFull && GCBlocks.landingPadFull.getMetaFromState(iblockstate) == 0) {
                         float centerX = pos.getX() + 0.5F;
                         float centerY = pos.getY() + 0.4F;
                         float centerZ = pos.getZ() + 0.5F;
                         rocketPlaced = ItemTier3Rocket.placeRocketOnPad(stack, world, world.getTileEntity(pos), centerX, centerY, centerZ);
                     }
 
-                    if (rocketPlaced)
-                    {
+                    if (rocketPlaced) {
                         stack.splitStack(1);
                     }
                     return stack;

@@ -1,8 +1,5 @@
 package micdoodle8.mods.galacticraft.planets.venus.dimension;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import micdoodle8.mods.galacticraft.api.galaxies.CelestialBody;
 import micdoodle8.mods.galacticraft.api.prefab.world.gen.BiomeAdaptive;
 import micdoodle8.mods.galacticraft.api.prefab.world.gen.WorldProviderSpace;
@@ -26,13 +23,14 @@ import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class WorldProviderVenus extends WorldProviderSpace implements IGalacticraftWorldProvider, ISolarLevel
-{
+import java.util.LinkedList;
+import java.util.List;
+
+public class WorldProviderVenus extends WorldProviderSpace implements IGalacticraftWorldProvider, ISolarLevel {
     private double solarMultiplier = -0.36D;
 
     @Override
-    public Vector3 getFogColor()
-    {
+    public Vector3 getFogColor() {
         float night = this.getStarBrightness(1.0F);
         float day = 1.0F - this.getStarBrightness(1.0F);
         float dayColR = 203.0F / 255.0F;
@@ -47,8 +45,7 @@ public class WorldProviderVenus extends WorldProviderSpace implements IGalacticr
     }
 
     @Override
-    public Vector3 getSkyColor()
-    {
+    public Vector3 getSkyColor() {
         float night = this.getStarBrightness(1.0F);
         float day = 1.0F - this.getStarBrightness(1.0F);
         float dayColR = 255.0F / 255.0F;
@@ -63,44 +60,37 @@ public class WorldProviderVenus extends WorldProviderSpace implements IGalacticr
     }
 
     @Override
-    public boolean hasSunset()
-    {
+    public boolean hasSunset() {
         return false;
     }
 
     @Override
-    public long getDayLength()
-    {
+    public long getDayLength() {
         return 720000L; // 30 times longer than earth
     }
 
     @Override
-    public Class<? extends IChunkGenerator> getChunkProviderClass()
-    {
+    public Class<? extends IChunkGenerator> getChunkProviderClass() {
         return ChunkProviderVenus.class;
     }
 
     @Override
-    public Class<? extends BiomeProvider> getBiomeProviderClass()
-    {
+    public Class<? extends BiomeProvider> getBiomeProviderClass() {
         BiomeAdaptive.setBodyMultiBiome(VenusModule.planetVenus);
         return BiomeProviderVenus.class;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public float getStarBrightness(float par1)
-    {
+    public float getStarBrightness(float par1) {
         float f1 = this.world.getCelestialAngle(par1);
         float f2 = 1.0F - (MathHelper.cos(f1 * Constants.twoPI) * 2.0F + 0.25F);
 
-        if (f2 < 0.0F)
-        {
+        if (f2 < 0.0F) {
             f2 = 0.0F;
         }
 
-        if (f2 > 1.0F)
-        {
+        if (f2 > 1.0F) {
             f2 = 1.0F;
         }
 
@@ -108,29 +98,24 @@ public class WorldProviderVenus extends WorldProviderSpace implements IGalacticr
     }
 
     @Override
-    public double getHorizon()
-    {
+    public double getHorizon() {
         return 44.0D;
     }
 
     @Override
-    public int getAverageGroundLevel()
-    {
+    public int getAverageGroundLevel() {
         return 76;
     }
 
     @Override
-    public boolean canCoordinateBeSpawn(int var1, int var2)
-    {
+    public boolean canCoordinateBeSpawn(int var1, int var2) {
         return true;
     }
 
     //Overriding so that beds do not explode on Mars
     @Override
-    public boolean canRespawnHere()
-    {
-        if (EventHandlerGC.bedActivated)
-        {
+    public boolean canRespawnHere() {
+        if (EventHandlerGC.bedActivated) {
             EventHandlerGC.bedActivated = false;
             return true;
         }
@@ -138,40 +123,33 @@ public class WorldProviderVenus extends WorldProviderSpace implements IGalacticr
     }
 
     @Override
-    public float getGravity()
-    {
+    public float getGravity() {
         return 0.0375F;
     }
 
     @Override
-    public double getFuelUsageMultiplier()
-    {
+    public double getFuelUsageMultiplier() {
         return 0.9D;
     }
 
     @Override
-    public boolean canSpaceshipTierPass(int tier)
-    {
+    public boolean canSpaceshipTierPass(int tier) {
         return tier >= 3;
     }
 
     @Override
-    public float getFallDamageModifier()
-    {
+    public float getFallDamageModifier() {
         return 0.38F;
     }
 
     @Override
-    public CelestialBody getCelestialBody()
-    {
+    public CelestialBody getCelestialBody() {
         return VenusModule.planetVenus;
     }
 
     @Override
-    public double getSolarEnergyMultiplier()
-    {
-        if (this.solarMultiplier < 0D)
-        {
+    public double getSolarEnergyMultiplier() {
+        if (this.solarMultiplier < 0D) {
             double s = this.getSolarSize();
             this.solarMultiplier = s * s * s;
         }
@@ -179,38 +157,32 @@ public class WorldProviderVenus extends WorldProviderSpace implements IGalacticr
     }
 
     @Override
-    public boolean shouldDisablePrecipitation()
-    {
+    public boolean shouldDisablePrecipitation() {
         return true;
     }
 
     @Override
-    public DimensionType getDimensionType()
-    {
+    public DimensionType getDimensionType() {
         return GCPlanetDimensions.VENUS;
     }
-    
+
     @Override
-    public int getDungeonSpacing()
-    {
+    public int getDungeonSpacing() {
         return 704;
     }
 
     @Override
-    public float getArrowGravity()
-    {
+    public float getArrowGravity() {
         return 0.0275F;
     }
 
     @Override
-    public ResourceLocation getDungeonChestType()
-    {
+    public ResourceLocation getDungeonChestType() {
         return RoomTreasureVenus.VENUSCHEST;
     }
 
     @Override
-    public List<Block> getSurfaceBlocks()
-    {
+    public List<Block> getSurfaceBlocks() {
         List<Block> list = new LinkedList<>();
         list.add(VenusBlocks.venusBlock);
         return list;

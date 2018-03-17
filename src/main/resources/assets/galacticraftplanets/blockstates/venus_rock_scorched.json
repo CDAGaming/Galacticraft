@@ -1,5 +1,7 @@
 {
-    "variants": {
-        "normal": { "model": "galacticraftplanets:venus_rock_scorched" }
+  "variants": {
+    "normal": {
+      "model": "galacticraftplanets:venus_rock_scorched"
     }
+  }
 }

@@ -1,6 +1,6 @@
 {
-    "parent": "item/generated",
-    "textures": {
-        "layer0": "galacticraftcore:items/bucket_oil"
-    }
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "galacticraftcore:items/bucket_oil"
+  }
 }

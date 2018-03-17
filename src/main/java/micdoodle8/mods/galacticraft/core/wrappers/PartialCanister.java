@@ -5,38 +5,32 @@ import net.minecraft.item.Item;
 /**
  * Used to register canisters with partially filled textures
  */
-public class PartialCanister
-{
+public class PartialCanister {
     private Item item;
     private String modID;
     private String baseName;
     private int textureCount;
 
-    public PartialCanister(Item item, String modID, String baseName, int textureCount)
-    {
+    public PartialCanister(Item item, String modID, String baseName, int textureCount) {
         this.item = item;
         this.modID = modID;
         this.baseName = baseName;
         this.textureCount = textureCount;
     }
 
-    public Item getItem()
-    {
+    public Item getItem() {
         return item;
     }
 
-    public String getModID()
-    {
+    public String getModID() {
         return modID;
     }
 
-    public String getBaseName()
-    {
+    public String getBaseName() {
         return baseName;
     }
 
-    public int getTextureCount()
-    {
+    public int getTextureCount() {
         return textureCount;
     }
 }

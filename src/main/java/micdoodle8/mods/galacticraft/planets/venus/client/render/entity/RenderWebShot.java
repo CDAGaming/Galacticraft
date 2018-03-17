@@ -14,17 +14,14 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class RenderWebShot extends Render<EntityWebShot>
-{
-    public RenderWebShot(RenderManager renderManager)
-    {
+public class RenderWebShot extends Render<EntityWebShot> {
+    public RenderWebShot(RenderManager renderManager) {
         super(renderManager);
         this.shadowSize = 0.5F;
     }
 
     @Override
-    public void doRender(EntityWebShot entity, double x, double y, double z, float par8, float partialTicks)
-    {
+    public void doRender(EntityWebShot entity, double x, double y, double z, float par8, float partialTicks) {
         BlockRendererDispatcher blockrendererdispatcher = Minecraft.getMinecraft().getBlockRendererDispatcher();
         RenderHelper.disableStandardItemLighting();
         GlStateManager.pushMatrix();
@@ -40,8 +37,7 @@ public class RenderWebShot extends Render<EntityWebShot>
     }
 
     @Override
-    protected ResourceLocation getEntityTexture(EntityWebShot entity)
-    {
+    protected ResourceLocation getEntityTexture(EntityWebShot entity) {
         return TextureMap.LOCATION_BLOCKS_TEXTURE;
     }
 }

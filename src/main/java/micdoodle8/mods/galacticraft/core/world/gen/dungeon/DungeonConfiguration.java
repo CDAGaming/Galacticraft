@@ -4,8 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class DungeonConfiguration
-{
+public class DungeonConfiguration {
     private IBlockState brickBlock;
     private int yPosition;
     private int hallwayLengthMin;
@@ -15,12 +14,10 @@ public class DungeonConfiguration
     private Class<?> bossRoom;
     private Class<?> treasureRoom;
 
-    public DungeonConfiguration()
-    {
+    public DungeonConfiguration() {
     }
 
-    public DungeonConfiguration(IBlockState brickBlock, int yPosition, int hallwayLengthMin, int hallwayLengthMax, int hallwayHeight, int roomHeight, Class<?> bossRoom, Class<?> treasureRoom)
-    {
+    public DungeonConfiguration(IBlockState brickBlock, int yPosition, int hallwayLengthMin, int hallwayLengthMax, int hallwayHeight, int roomHeight, Class<?> bossRoom, Class<?> treasureRoom) {
         this.brickBlock = brickBlock;
         this.yPosition = yPosition;
         this.hallwayLengthMin = hallwayLengthMin;
@@ -31,8 +28,7 @@ public class DungeonConfiguration
         this.treasureRoom = treasureRoom;
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound tagCompound)
-    {
+    public NBTTagCompound writeToNBT(NBTTagCompound tagCompound) {
         tagCompound.setString("brickBlock", Block.REGISTRY.getNameForObject(this.brickBlock.getBlock()).toString());
         tagCompound.setInteger("brickBlockMeta", this.brickBlock.getBlock().getMetaFromState(this.brickBlock));
         tagCompound.setInteger("yPosition", this.yPosition);
@@ -45,10 +41,8 @@ public class DungeonConfiguration
         return tagCompound;
     }
 
-    public void readFromNBT(NBTTagCompound tagCompound)
-    {
-        try
-        {
+    public void readFromNBT(NBTTagCompound tagCompound) {
+        try {
             this.brickBlock = Block.getBlockFromName(tagCompound.getString("brickBlock")).getStateFromMeta(tagCompound.getInteger("brickBlockMeta"));
             this.yPosition = tagCompound.getInteger("yPosition");
             this.hallwayLengthMin = tagCompound.getInteger("hallwayLengthMin");
@@ -57,51 +51,41 @@ public class DungeonConfiguration
             this.roomHeight = tagCompound.getInteger("roomHeight");
             this.bossRoom = Class.forName(tagCompound.getString("bossRoom"));
             this.treasureRoom = Class.forName(tagCompound.getString("treasureRoom"));
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             System.err.println("Failed to read dungeon configuration from NBT");
             e.printStackTrace();
         }
     }
 
-    public IBlockState getBrickBlock()
-    {
+    public IBlockState getBrickBlock() {
         return brickBlock;
     }
 
-    public int getYPosition()
-    {
+    public int getYPosition() {
         return yPosition;
     }
 
-    public int getHallwayLengthMin()
-    {
+    public int getHallwayLengthMin() {
         return hallwayLengthMin;
     }
 
-    public int getHallwayLengthMax()
-    {
+    public int getHallwayLengthMax() {
         return hallwayLengthMax;
     }
 
-    public int getHallwayHeight()
-    {
+    public int getHallwayHeight() {
         return hallwayHeight;
     }
 
-    public int getRoomHeight()
-    {
+    public int getRoomHeight() {
         return roomHeight;
     }
 
-    public Class<?> getBossRoom()
-    {
+    public Class<?> getBossRoom() {
         return bossRoom;
     }
 
-    public Class<?> getTreasureRoom()
-    {
+    public Class<?> getTreasureRoom() {
         return treasureRoom;
     }
 }

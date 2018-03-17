@@ -11,31 +11,26 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemPickaxeAsteroids extends ItemPickaxe implements ISortableItem
-{
-    public ItemPickaxeAsteroids(String assetName)
-    {
+public class ItemPickaxeAsteroids extends ItemPickaxe implements ISortableItem {
+    public ItemPickaxeAsteroids(String assetName) {
         super(AsteroidsItems.TOOL_TITANIUM);
         this.setUnlocalizedName(assetName);
         //this.setTextureName(GalacticraftPlanets.TEXTURE_PREFIX + assetName);
     }
 
     @Override
-    public CreativeTabs getCreativeTab()
-    {
+    public CreativeTabs getCreativeTab() {
         return GalacticraftCore.galacticraftItemsTab;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public EnumRarity getRarity(ItemStack par1ItemStack)
-    {
+    public EnumRarity getRarity(ItemStack par1ItemStack) {
         return ClientProxyCore.galacticraftItem;
     }
 
     @Override
-    public EnumSortCategoryItem getCategory(int meta)
-    {
+    public EnumSortCategoryItem getCategory(int meta) {
         return EnumSortCategoryItem.TOOLS;
     }
 }

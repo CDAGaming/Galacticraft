@@ -12,14 +12,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
-import javax.annotation.Nullable;
-
-public class ItemBlockWalkway extends ItemBlockDesc
-{
-    public ItemBlockWalkway(Block block)
-    {
+public class ItemBlockWalkway extends ItemBlockDesc {
+    public ItemBlockWalkway(Block block) {
         super(block);
         this.setMaxDamage(0);
         this.setHasSubtypes(true);
@@ -27,14 +24,10 @@ public class ItemBlockWalkway extends ItemBlockDesc
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack itemStack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
-    {
-        if (itemStack.getItemDamage() == BlockWalkway.EnumWalkwayType.WALKWAY_WIRE.getMeta())
-        {
+    public void addInformation(ItemStack itemStack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+        if (itemStack.getItemDamage() == BlockWalkway.EnumWalkwayType.WALKWAY_WIRE.getMeta()) {
             tooltip.add(EnumColor.AQUA + GCCoreUtil.translate("tile.aluminum_wire.alu_wire.name"));
-        }
-        else if (itemStack.getItemDamage() == BlockWalkway.EnumWalkwayType.WALKWAY_PIPE.getMeta())
-        {
+        } else if (itemStack.getItemDamage() == BlockWalkway.EnumWalkwayType.WALKWAY_PIPE.getMeta()) {
             tooltip.add(EnumColor.AQUA + GCCoreUtil.translate(GCBlocks.oxygenPipe.getUnlocalizedName() + ".name"));
         }
 
@@ -42,21 +35,18 @@ public class ItemBlockWalkway extends ItemBlockDesc
     }
 
     @Override
-    public int getMetadata(int meta)
-    {
+    public int getMetadata(int meta) {
         return meta;
     }
 
     @Override
-    public String getUnlocalizedName(ItemStack itemstack)
-    {
+    public String getUnlocalizedName(ItemStack itemstack) {
         String name = BlockWalkway.EnumWalkwayType.values()[itemstack.getItemDamage()].getName();
         return this.getBlock().getUnlocalizedName() + "." + name;
     }
 
     @Override
-    public String getUnlocalizedName()
-    {
+    public String getUnlocalizedName() {
         return this.getBlock().getUnlocalizedName() + ".0";
     }
 }

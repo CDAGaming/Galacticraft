@@ -7,8 +7,7 @@ import micdoodle8.mods.galacticraft.planets.venus.items.*;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.util.EnumHelper;
 
-public class VenusItems
-{
+public class VenusItems {
     public static Item thermalPaddingTier2;
     public static Item basicItem;
     public static Item volcanicPickaxe;
@@ -18,8 +17,7 @@ public class VenusItems
 
     public static Item.ToolMaterial TOOL_VOLCANIC = EnumHelper.addToolMaterial("volcanic", 3, 1561, 32.0F, 1.5F, 10);
 
-    public static void initItems()
-    {
+    public static void initItems() {
         VenusItems.thermalPaddingTier2 = new ItemThermalPaddingTier2("thermal_padding_t2");
         VenusItems.basicItem = new ItemBasicVenus("basic_item_venus");
         VenusItems.volcanicPickaxe = new ItemVolcanicPickaxe("volcanic_pickaxe");
@@ -30,12 +28,10 @@ public class VenusItems
         VenusItems.registerHarvestLevels();
     }
 
-    public static void registerHarvestLevels()
-    {
+    public static void registerHarvestLevels() {
     }
 
-    private static void registerItems()
-    {
+    private static void registerItems() {
         VenusItems.registerItem(VenusItems.thermalPaddingTier2);
         VenusItems.registerItem(VenusItems.basicItem);
         VenusItems.registerItem(VenusItems.volcanicPickaxe);
@@ -43,8 +39,7 @@ public class VenusItems
         VenusItems.registerItem(VenusItems.atomicBattery);
     }
 
-    public static void registerItem(Item item)
-    {
+    public static void registerItem(Item item) {
         String name = item.getUnlocalizedName().substring(5);
         GCCoreUtil.registerGalacticraftItem(name, item);
         GalacticraftCore.itemListTrue.add(item);

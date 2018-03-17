@@ -5,41 +5,33 @@ import net.minecraft.item.Item;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-public class StackSorted
-{
+public class StackSorted {
     private final Item item;
     private final int meta;
 
-    public StackSorted(Block block, int meta)
-    {
+    public StackSorted(Block block, int meta) {
         this(Item.getItemFromBlock(block), meta);
     }
 
-    public StackSorted(Item item, int meta)
-    {
+    public StackSorted(Item item, int meta) {
         this.item = item;
         this.meta = meta;
     }
 
-    public Item getItem()
-    {
+    public Item getItem() {
         return item;
     }
 
-    public int getMeta()
-    {
+    public int getMeta() {
         return meta;
     }
 
     @Override
-    public boolean equals(Object obj)
-    {
-        if (!(obj instanceof StackSorted))
-        {
+    public boolean equals(Object obj) {
+        if (!(obj instanceof StackSorted)) {
             return false;
         }
-        if (obj == this)
-        {
+        if (obj == this) {
             return true;
         }
 
@@ -51,8 +43,7 @@ public class StackSorted
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         return new HashCodeBuilder()
                 .append(item)
                 .append(meta)
@@ -60,8 +51,7 @@ public class StackSorted
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "Item:(" + item + "),Meta:(" + meta + ")";
     }
 }

@@ -6,8 +6,7 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 
-public class ModelJuicer extends ModelBase
-{
+public class ModelJuicer extends ModelBase {
     private ModelRenderer body1;
     private ModelRenderer body2;
     private ModelRenderer head;
@@ -34,8 +33,7 @@ public class ModelJuicer extends ModelBase
 
     private float legLength0;
 
-    public ModelJuicer()
-    {
+    public ModelJuicer() {
         textureWidth = 64;
         textureHeight = 32;
 
@@ -204,8 +202,7 @@ public class ModelJuicer extends ModelBase
         this.legLength0 = this.legLeftFront1.cubeList.get(0).posX2 - this.legLeftFront1.cubeList.get(0).posX1;
     }
 
-    private void convertToChild(ModelRenderer parent, ModelRenderer child)
-    {
+    private void convertToChild(ModelRenderer parent, ModelRenderer child) {
         // move child rotation point to be relative to parent
         child.rotationPointX -= parent.rotationPointX;
         child.rotationPointY -= parent.rotationPointY;
@@ -218,16 +215,14 @@ public class ModelJuicer extends ModelBase
         parent.addChild(child);
     }
 
-    private void setRotation(ModelRenderer model, float x, float y, float z)
-    {
+    private void setRotation(ModelRenderer model, float x, float y, float z) {
         model.rotateAngleX = x;
         model.rotateAngleY = y;
         model.rotateAngleZ = z;
     }
 
     @Override
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
-    {
+    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
         super.render(entity, f, f1, f2, f3, f4, f5);
         this.setRotationAngles(f, f1, f2, f3, f4, f5, entity);
         body1.render(f5);
@@ -245,30 +240,26 @@ public class ModelJuicer extends ModelBase
         tail0.render(f5);
     }
 
-    private void copyLegAngles(ModelRenderer parent, ModelRenderer child)
-    {
+    private void copyLegAngles(ModelRenderer parent, ModelRenderer child) {
         child.rotationPointX = this.legLength0 * (parent.rotationPointX < 0.0F ? -1.0F : 1.0F) * (MathHelper.sin(parent.rotateAngleX) + MathHelper.cos(parent.rotateAngleY));
         child.rotationPointY = 0.0F;
         child.rotationPointZ = 0.0F;
     }
 
-    private void copyLeftToRight(ModelRenderer left, ModelRenderer right)
-    {
+    private void copyLeftToRight(ModelRenderer left, ModelRenderer right) {
         right.rotateAngleX = left.rotateAngleX;
         right.rotateAngleY = -left.rotateAngleY;
         right.rotateAngleZ = left.rotateAngleZ;
     }
 
-    private void copyLeg1LeftToRight(ModelRenderer left, ModelRenderer right)
-    {
+    private void copyLeg1LeftToRight(ModelRenderer left, ModelRenderer right) {
         right.rotateAngleX = left.rotateAngleX;
         right.rotateAngleY = (float) (Math.PI - left.rotateAngleY);
         right.rotateAngleZ = -left.rotateAngleZ;
     }
 
     @Override
-    public void setRotationAngles(float f1, float f2, float f3, float f4, float f5, float f6, Entity entityIn)
-    {
+    public void setRotationAngles(float f1, float f2, float f3, float f4, float f5, float f6, Entity entityIn) {
         EntityJuicer juicer = (EntityJuicer) entityIn;
         super.setRotationAngles(f1, f2, f3, f4, f5, f6, entityIn);
         float movement = f1;

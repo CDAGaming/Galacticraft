@@ -30,14 +30,12 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class BlockFluidTank extends Block implements IShiftDescription, ISortableBlock, ITileEntityProvider
-{
+public class BlockFluidTank extends Block implements IShiftDescription, ISortableBlock, ITileEntityProvider {
     public static final PropertyBool UP = PropertyBool.create("up");
     public static final PropertyBool DOWN = PropertyBool.create("down");
     private static final AxisAlignedBB BOUNDS = new AxisAlignedBB(0.05F, 0.0F, 0.05F, 0.95F, 1.0F, 0.95F);
 
-    public BlockFluidTank(String assetName)
-    {
+    public BlockFluidTank(String assetName) {
         super(Material.GLASS);
         this.setHardness(3.0F);
         this.setResistance(8.0F);
@@ -46,17 +44,14 @@ public class BlockFluidTank extends Block implements IShiftDescription, ISortabl
     }
 
     @Override
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
-    {
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
         return BOUNDS;
     }
 
     @Override
-    public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
-    {
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
         TileEntity tile = worldIn.getTileEntity(pos);
-        if (tile instanceof TileEntityFluidTank)
-        {
+        if (tile instanceof TileEntityFluidTank) {
             TileEntityFluidTank tank = (TileEntityFluidTank) tile;
             tank.onBreak();
         }
@@ -64,83 +59,70 @@ public class BlockFluidTank extends Block implements IShiftDescription, ISortabl
     }
 
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
-    {
+    public CreativeTabs getCreativeTabToDisplayOn() {
         return GalacticraftCore.galacticraftBlocksTab;
     }
 
     @SideOnly(Side.CLIENT)
     @Override
-    public BlockRenderLayer getBlockLayer()
-    {
+    public BlockRenderLayer getBlockLayer() {
         return BlockRenderLayer.CUTOUT;
     }
 
     @Override
-    public boolean isFullCube(IBlockState state)
-    {
+    public boolean isFullCube(IBlockState state) {
         return false;
     }
 
     @Override
-    public boolean isOpaqueCube(IBlockState state)
-    {
+    public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
 
     @Override
-    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face)
-    {
+    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
         return BlockFaceShape.UNDEFINED;
     }
 
     @Override
-    public EnumSortCategoryBlock getCategory(int meta)
-    {
+    public EnumSortCategoryBlock getCategory(int meta) {
         return EnumSortCategoryBlock.GENERAL;
     }
 
     @Override
-    public String getShiftDescription(int meta)
-    {
+    public String getShiftDescription(int meta) {
         return GCCoreUtil.translate(this.getUnlocalizedName() + ".description");
     }
 
     @Override
-    public boolean showDescription(int meta)
-    {
+    public boolean showDescription(int meta) {
         return true;
     }
 
     @Override
-    protected BlockStateContainer createBlockState()
-    {
+    protected BlockStateContainer createBlockState() {
         return new BlockStateContainer(this, UP, DOWN);
     }
 
     @Override
-    public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
-    {
+    public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
         IBlockState stateAbove = worldIn.getBlockState(pos.up());
         IBlockState stateBelow = worldIn.getBlockState(pos.down());
         return state.withProperty(UP, stateAbove.getBlock() == this).withProperty(DOWN, stateBelow.getBlock() == this);
     }
 
     @Override
-    public IBlockState getStateFromMeta(int meta)
-    {
+    public IBlockState getStateFromMeta(int meta) {
         return this.getDefaultState();
     }
 
     @Override
-    public int getMetaFromState(IBlockState state)
-    {
+    public int getMetaFromState(IBlockState state) {
         return 0;
     }
 
     @Override
-    public TileEntity createNewTileEntity(World worldIn, int meta)
-    {
+    public TileEntity createNewTileEntity(World worldIn, int meta) {
         return new TileEntityFluidTank();
     }
 
@@ -172,38 +154,31 @@ public class BlockFluidTank extends Block implements IShiftDescription, ISortabl
 //    }
 
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
-    {
-        if (super.onBlockActivated(worldIn, pos, state, playerIn, hand, side, hitX, hitY, hitZ))
-        {
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+        if (super.onBlockActivated(worldIn, pos, state, playerIn, hand, side, hitX, hitY, hitZ)) {
             return true;
         }
 
-        if (hand == EnumHand.OFF_HAND)
-        {
-        	return false;
+        if (hand == EnumHand.OFF_HAND) {
+            return false;
         }
 
         ItemStack current = playerIn.inventory.getCurrentItem();
         int slot = playerIn.inventory.currentItem;
 
-        if (!current.isEmpty())
-        {
+        if (!current.isEmpty()) {
             TileEntity tile = worldIn.getTileEntity(pos);
 
-            if (tile instanceof TileEntityFluidTank)
-            {
+            if (tile instanceof TileEntityFluidTank) {
                 TileEntityFluidTank tank = (TileEntityFluidTank) tile;
 
                 FluidActionResult forgeResult = FluidUtil.interactWithFluidHandler(current, tank.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null), playerIn);
-                if (forgeResult.isSuccess())
-                {
-                	playerIn.inventory.setInventorySlotContents(slot, forgeResult.result);
-            		if (playerIn.inventoryContainer != null)
-            		{
-            			playerIn.inventoryContainer.detectAndSendChanges();
-            		}
-            		return true;
+                if (forgeResult.isSuccess()) {
+                    playerIn.inventory.setInventorySlotContents(slot, forgeResult.result);
+                    if (playerIn.inventoryContainer != null) {
+                        playerIn.inventoryContainer.detectAndSendChanges();
+                    }
+                    return true;
                 }
 
                 return false;
@@ -214,12 +189,10 @@ public class BlockFluidTank extends Block implements IShiftDescription, ISortabl
     }
 
     @Override
-    public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos)
-    {
+    public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos) {
         TileEntity tile = world.getTileEntity(pos);
 
-        if (tile instanceof TileEntityFluidTank)
-        {
+        if (tile instanceof TileEntityFluidTank) {
             TileEntityFluidTank tank = (TileEntityFluidTank) tile;
             return tank.fluidTank.getFluid() == null || tank.fluidTank.getFluid().amount == 0 ? 0 : tank.fluidTank.getFluid().getFluid().getLuminosity(tank.fluidTank.getFluid());
         }

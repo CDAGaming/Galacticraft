@@ -1,6 +1,6 @@
 {
-    "parent": "block/wall_inventory",
-    "textures": {
-        "wall": "galacticraftcore:blocks/deco_block"
-    }
+  "parent": "block/wall_inventory",
+  "textures": {
+    "wall": "galacticraftcore:blocks/deco_block"
+  }
 }

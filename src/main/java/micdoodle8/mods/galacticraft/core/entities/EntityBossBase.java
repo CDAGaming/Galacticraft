@@ -22,18 +22,15 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import java.util.List;
 import java.util.Random;
 
-public abstract class EntityBossBase extends EntityMob implements IBoss
-{
-    protected TileEntityDungeonSpawner<?> spawner;
+public abstract class EntityBossBase extends EntityMob implements IBoss {
+    private final BossInfoServer bossInfo = (BossInfoServer) (new BossInfoServer(this.getDisplayName(), getHealthBarColor(), BossInfo.Overlay.PROGRESS));
     public int deathTicks = 0;
 
     public int entitiesWithin;
     public int entitiesWithinLast;
+    protected TileEntityDungeonSpawner<?> spawner;
 
-    private final BossInfoServer bossInfo = (BossInfoServer)(new BossInfoServer(this.getDisplayName(), getHealthBarColor(), BossInfo.Overlay.PROGRESS));
-
-    public EntityBossBase(World world)
-    {
+    public EntityBossBase(World world) {
         super(world);
     }
 
@@ -46,19 +43,16 @@ public abstract class EntityBossBase extends EntityMob implements IBoss
     public abstract BossInfo.Color getHealthBarColor();
 
     @Override
-    protected void updateAITasks()
-    {
+    protected void updateAITasks() {
         this.bossInfo.setPercent(this.getHealth() / this.getMaxHealth());
         super.updateAITasks();
     }
 
     @Override
-    protected void onDeathUpdate()
-    {
+    protected void onDeathUpdate() {
         ++this.deathTicks;
 
-        if (this.deathTicks >= 180 && this.deathTicks <= 200)
-        {
+        if (this.deathTicks >= 180 && this.deathTicks <= 200) {
             final float x = (this.rand.nextFloat() - 0.5F) * this.width;
             final float y = (this.rand.nextFloat() - 0.5F) * (this.height / 2.0F);
             final float z = (this.rand.nextFloat() - 0.5F) * this.width;
@@ -68,19 +62,15 @@ public abstract class EntityBossBase extends EntityMob implements IBoss
         int i;
         int j;
 
-        if (!this.world.isRemote)
-        {
-            if (this.deathTicks >= 180 && this.deathTicks % 5 == 0)
-            {
-                GalacticraftCore.packetPipeline.sendToAllAround(new PacketSimple(PacketSimple.EnumSimplePacket.C_PLAY_SOUND_EXPLODE, GCCoreUtil.getDimensionID(this.world), new Object[] {}), new NetworkRegistry.TargetPoint(GCCoreUtil.getDimensionID(this.world), this.posX, this.posY, this.posZ, 40.0D));
+        if (!this.world.isRemote) {
+            if (this.deathTicks >= 180 && this.deathTicks % 5 == 0) {
+                GalacticraftCore.packetPipeline.sendToAllAround(new PacketSimple(PacketSimple.EnumSimplePacket.C_PLAY_SOUND_EXPLODE, GCCoreUtil.getDimensionID(this.world), new Object[]{}), new NetworkRegistry.TargetPoint(GCCoreUtil.getDimensionID(this.world), this.posX, this.posY, this.posZ, 40.0D));
             }
 
-            if (this.deathTicks > 150 && this.deathTicks % 5 == 0)
-            {
+            if (this.deathTicks > 150 && this.deathTicks % 5 == 0) {
                 i = 30;
 
-                while (i > 0)
-                {
+                while (i > 0) {
                     j = EntityXPOrb.getXPSplit(i);
                     i -= j;
                     this.world.spawnEntity(new EntityXPOrb(this.world, this.posX, this.posY, this.posZ, j));
@@ -88,12 +78,10 @@ public abstract class EntityBossBase extends EntityMob implements IBoss
             }
         }
 
-        if (this.deathTicks == 200 && !this.world.isRemote)
-        {
+        if (this.deathTicks == 200 && !this.world.isRemote) {
             i = 20;
 
-            while (i > 0)
-            {
+            while (i > 0) {
                 j = EntityXPOrb.getXPSplit(i);
                 i -= j;
                 this.world.spawnEntity(new EntityXPOrb(this.world, this.posX, this.posY, this.posZ, j));
@@ -101,34 +89,27 @@ public abstract class EntityBossBase extends EntityMob implements IBoss
 
             TileEntityTreasureChest chest = null;
 
-            if (this.spawner != null && this.spawner.getChestPos() != null)
-            {
+            if (this.spawner != null && this.spawner.getChestPos() != null) {
                 TileEntity chestTest = this.world.getTileEntity(this.spawner.getChestPos());
 
-                if (chestTest != null && chestTest instanceof TileEntityTreasureChest)
-                {
+                if (chestTest != null && chestTest instanceof TileEntityTreasureChest) {
                     chest = (TileEntityTreasureChest) chestTest;
                 }
             }
 
-            if (chest == null)
-            {
+            if (chest == null) {
                 // Fallback to finding closest chest
                 chest = TileEntityTreasureChest.findClosest(this, this.getChestTier());
             }
 
-            if (chest != null)
-            {
+            if (chest != null) {
                 double dist = this.getDistanceSq(chest.getPos().getX() + 0.5, chest.getPos().getY() + 0.5, chest.getPos().getZ() + 0.5);
-                if (dist < 1000 * 1000)
-                {
-                    if (!chest.locked)
-                    {
+                if (dist < 1000 * 1000) {
+                    if (!chest.locked) {
                         chest.locked = true;
                     }
 
-                    for (int k = 0; k < chest.getSizeInventory(); k++)
-                    {
+                    for (int k = 0; k < chest.getSizeInventory(); k++) {
                         chest.setInventorySlotContents(k, ItemStack.EMPTY);
                     }
 
@@ -150,15 +131,13 @@ public abstract class EntityBossBase extends EntityMob implements IBoss
 
             super.setDead();
 
-            if (this.spawner != null)
-            {
+            if (this.spawner != null) {
                 //Note: spawner.isBossDefeated is true, so it's properly dead
                 this.spawner.isBossDefeated = true;
                 this.spawner.boss = null;
                 this.spawner.spawned = false;
 
-                if (!this.world.isRemote)
-                {
+                if (!this.world.isRemote) {
                     this.spawner.lastKillTime = MinecraftServer.getCurrentTimeMillis();
                 }
             }
@@ -166,20 +145,16 @@ public abstract class EntityBossBase extends EntityMob implements IBoss
     }
 
     @Override
-    public void onLivingUpdate()
-    {
-        if (this.spawner != null)
-        {
+    public void onLivingUpdate() {
+        if (this.spawner != null) {
             List<EntityPlayer> playersWithin = this.world.getEntitiesWithinAABB(EntityPlayer.class, this.spawner.getRangeBounds());
 
             this.entitiesWithin = playersWithin.size();
 
-            if (this.entitiesWithin == 0 && this.entitiesWithinLast != 0)
-            {
+            if (this.entitiesWithin == 0 && this.entitiesWithinLast != 0) {
                 List<EntityPlayer> entitiesWithin2 = this.world.getEntitiesWithinAABB(EntityPlayer.class, this.spawner.getRangeBoundsPlus11());
 
-                for (EntityPlayer p : entitiesWithin2)
-                {
+                for (EntityPlayer p : entitiesWithin2) {
                     p.sendMessage(new TextComponentString(GCCoreUtil.translate("gui.skeleton_boss.message")));
                 }
 
@@ -196,10 +171,8 @@ public abstract class EntityBossBase extends EntityMob implements IBoss
     }
 
     @Override
-    public void setDead()
-    {
-        if (this.spawner != null)
-        {
+    public void setDead() {
+        if (this.spawner != null) {
             this.spawner.isBossDefeated = false;
             this.spawner.boss = null;
             this.spawner.spawned = false;
@@ -209,21 +182,18 @@ public abstract class EntityBossBase extends EntityMob implements IBoss
     }
 
     @Override
-    public void onBossSpawned(TileEntityDungeonSpawner spawner)
-    {
+    public void onBossSpawned(TileEntityDungeonSpawner spawner) {
         this.spawner = spawner;
     }
 
     @Override
-    public void addTrackingPlayer(EntityPlayerMP player)
-    {
+    public void addTrackingPlayer(EntityPlayerMP player) {
         super.addTrackingPlayer(player);
         this.bossInfo.addPlayer(player);
     }
 
     @Override
-    public void removeTrackingPlayer(EntityPlayerMP player)
-    {
+    public void removeTrackingPlayer(EntityPlayerMP player) {
         super.removeTrackingPlayer(player);
         this.bossInfo.removePlayer(player);
     }

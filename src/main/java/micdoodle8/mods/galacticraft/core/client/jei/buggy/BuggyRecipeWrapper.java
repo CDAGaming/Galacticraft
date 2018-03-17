@@ -8,19 +8,16 @@ import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
 
-public class BuggyRecipeWrapper implements IRecipeWrapper
-{
+public class BuggyRecipeWrapper implements IRecipeWrapper {
     @Nonnull
     private final INasaWorkbenchRecipe recipe;
 
-    public BuggyRecipeWrapper(@Nonnull INasaWorkbenchRecipe recipe)
-    {
+    public BuggyRecipeWrapper(@Nonnull INasaWorkbenchRecipe recipe) {
         this.recipe = recipe;
     }
 
     @Override
-    public void getIngredients(IIngredients ingredients)
-    {
+    public void getIngredients(IIngredients ingredients) {
         ingredients.setInputs(ItemStack.class, Lists.newArrayList(recipe.getRecipeInput().values()));
         ingredients.setOutput(ItemStack.class, recipe.getRecipeOutput());
     }

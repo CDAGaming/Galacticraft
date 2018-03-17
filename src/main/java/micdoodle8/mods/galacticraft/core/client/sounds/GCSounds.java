@@ -5,8 +5,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 
-public class GCSounds
-{
+public class GCSounds {
     public static SoundEvent bossDeath;
     public static SoundEvent bossLaugh;
     public static SoundEvent bossOoh;
@@ -23,8 +22,7 @@ public class GCSounds
 
     public static SoundEvent music;
 
-    public static void registerSounds(IForgeRegistry<SoundEvent> registry)
-    {
+    public static void registerSounds(IForgeRegistry<SoundEvent> registry) {
         bossDeath = registerSound("entity.bossdeath", registry);
         bossLaugh = registerSound("entity.bosslaugh", registry);
         bossOoh = registerSound("entity.ooh", registry);
@@ -41,8 +39,7 @@ public class GCSounds
         deconstructor = registerSound("block.deconstructor", registry);
     }
 
-    private static SoundEvent registerSound(String soundName, IForgeRegistry<SoundEvent> registry)
-    {
+    private static SoundEvent registerSound(String soundName, IForgeRegistry<SoundEvent> registry) {
         ResourceLocation soundID = new ResourceLocation(Constants.ASSET_PREFIX, soundName);
         SoundEvent result = new SoundEvent(soundID).setRegistryName(soundID);
         registry.register(result);

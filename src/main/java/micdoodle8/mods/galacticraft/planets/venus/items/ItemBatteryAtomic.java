@@ -16,97 +16,80 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
-import javax.annotation.Nullable;
-
-public class ItemBatteryAtomic extends ItemElectricBase implements ISortableItem
-{
-    public ItemBatteryAtomic(String assetName)
-    {
+public class ItemBatteryAtomic extends ItemElectricBase implements ISortableItem {
+    public ItemBatteryAtomic(String assetName) {
         super();
         this.setUnlocalizedName(assetName);
     }
 
     @Override
-    protected void setMaxTransfer()
-    {
+    protected void setMaxTransfer() {
         this.transferMax = 7;
     }
 
     @Override
-    public int getTierGC(ItemStack itemStack)
-    {
+    public int getTierGC(ItemStack itemStack) {
         return 2;
     }
 
     @Override
-    public CreativeTabs getCreativeTab()
-    {
+    public CreativeTabs getCreativeTab() {
         return GalacticraftCore.galacticraftItemsTab;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public EnumRarity getRarity(ItemStack par1ItemStack)
-    {
+    public EnumRarity getRarity(ItemStack par1ItemStack) {
         return ClientProxyCore.galacticraftItem;
     }
 
     @Override
-    public void addInformation(ItemStack par1ItemStack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
-    {
+    public void addInformation(ItemStack par1ItemStack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
         tooltip.add(EnumColor.DARK_GREEN + GCCoreUtil.translate("gui.infinite_item.desc"));
         tooltip.add(EnumColor.ORANGE + GCCoreUtil.translate("gui.message.low_energy_output.name"));
     }
 
     @Override
-    public float getElectricityStored(ItemStack itemStack)
-    {
+    public float getElectricityStored(ItemStack itemStack) {
         return this.getMaxElectricityStored(itemStack);
     }
 
     @Override
-    public void setElectricity(ItemStack itemStack, float joules)
-    {
+    public void setElectricity(ItemStack itemStack, float joules) {
     }
 
     @Override
-    public float getMaxElectricityStored(ItemStack itemStack)
-    {
+    public float getMaxElectricityStored(ItemStack itemStack) {
         return Float.POSITIVE_INFINITY;
     }
 
     @Override
-    public float getTransfer(ItemStack itemStack)
-    {
+    public float getTransfer(ItemStack itemStack) {
         return 0.0F;
     }
 
     @Override
-    public float recharge(ItemStack theItem, float energy, boolean doReceive)
-    {
+    public float recharge(ItemStack theItem, float energy, boolean doReceive) {
         return 0F;
     }
 
     @Override
-    public float discharge(ItemStack theItem, float energy, boolean doTransfer)
-    {
+    public float discharge(ItemStack theItem, float energy, boolean doTransfer) {
         return super.discharge(theItem, energy, doTransfer);
     }
 
     @Override
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> par3List)
-    {
-        if (tab == GalacticraftCore.galacticraftItemsTab || tab == CreativeTabs.SEARCH)
-        {
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> par3List) {
+        if (tab == GalacticraftCore.galacticraftItemsTab || tab == CreativeTabs.SEARCH) {
             par3List.add(new ItemStack(this, 1, 0));
         }
     }
 
     @Override
-    public EnumSortCategoryItem getCategory(int meta)
-    {
+    public EnumSortCategoryItem getCategory(int meta) {
         return EnumSortCategoryItem.GENERAL;
     }
 }

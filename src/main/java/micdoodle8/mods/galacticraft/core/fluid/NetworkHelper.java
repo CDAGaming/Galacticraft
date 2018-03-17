@@ -18,19 +18,14 @@ import java.util.Set;
  *
  * @author Calclavia
  */
-public class NetworkHelper
-{
-    public static EnumSet<EnumFacing> getDirections(TileEntity tileEntity, NetworkType type)
-    {
+public class NetworkHelper {
+    public static EnumSet<EnumFacing> getDirections(TileEntity tileEntity, NetworkType type) {
         EnumSet<EnumFacing> possibleSides = EnumSet.noneOf(EnumFacing.class);
 
-        if (tileEntity instanceof IConnector)
-        {
-            for (int i = 0; i < 6; i++)
-            {
+        if (tileEntity instanceof IConnector) {
+            for (int i = 0; i < 6; i++) {
                 EnumFacing direction = EnumFacing.getFront(i);
-                if (((IConnector) tileEntity).canConnect(direction, type))
-                {
+                if (((IConnector) tileEntity).canConnect(direction, type)) {
                     possibleSides.add(direction);
                 }
             }
@@ -45,20 +40,16 @@ public class NetworkHelper
      * @return A list of networks from all specified sides. There will be no
      * repeated ElectricityNetworks and it will never return null.
      */
-    public static Set<IElectricityNetwork> getNetworksFromMultipleSides(TileEntity tileEntity, EnumSet<EnumFacing> approachingDirection)
-    {
+    public static Set<IElectricityNetwork> getNetworksFromMultipleSides(TileEntity tileEntity, EnumSet<EnumFacing> approachingDirection) {
         final Set<IElectricityNetwork> connectedNetworks = new HashSet<IElectricityNetwork>();
 
         BlockVec3 tileVec = new BlockVec3(tileEntity);
-        for (EnumFacing side : EnumFacing.VALUES)
-        {
-            if (approachingDirection.contains(side))
-            {
+        for (EnumFacing side : EnumFacing.VALUES) {
+            if (approachingDirection.contains(side)) {
                 TileEntity outputConductor = tileVec.getTileEntityOnSide(tileEntity.getWorld(), side);
                 IElectricityNetwork electricityNetwork = NetworkHelper.getElectricalNetworkFromTileEntity(outputConductor, side);
 
-                if (electricityNetwork != null)
-                {
+                if (electricityNetwork != null) {
                     connectedNetworks.add(electricityNetwork);
                 }
             }
@@ -76,26 +67,17 @@ public class NetworkHelper
      * @param approachDirection - The direction you are approaching this wire from.
      * @return The ElectricityNetwork or null if not found.
      */
-    public static IElectricityNetwork getElectricalNetworkFromTileEntity(TileEntity tileEntity, EnumFacing approachDirection)
-    {
-        if (tileEntity != null)
-        {
-            if (tileEntity instanceof INetworkProvider)
-            {
-                if (tileEntity instanceof IConnector)
-                {
-                    if (((IConnector) tileEntity).canConnect(approachDirection.getOpposite(), NetworkType.POWER))
-                    {
-                        if (((INetworkProvider) tileEntity).getNetwork() instanceof IElectricityNetwork)
-                        {
+    public static IElectricityNetwork getElectricalNetworkFromTileEntity(TileEntity tileEntity, EnumFacing approachDirection) {
+        if (tileEntity != null) {
+            if (tileEntity instanceof INetworkProvider) {
+                if (tileEntity instanceof IConnector) {
+                    if (((IConnector) tileEntity).canConnect(approachDirection.getOpposite(), NetworkType.POWER)) {
+                        if (((INetworkProvider) tileEntity).getNetwork() instanceof IElectricityNetwork) {
                             return (IElectricityNetwork) ((INetworkProvider) tileEntity).getNetwork();
                         }
                     }
-                }
-                else
-                {
-                    if (((INetworkProvider) tileEntity).getNetwork() instanceof IElectricityNetwork)
-                    {
+                } else {
+                    if (((INetworkProvider) tileEntity).getNetwork() instanceof IElectricityNetwork) {
                         return (IElectricityNetwork) ((INetworkProvider) tileEntity).getNetwork();
                     }
                 }
@@ -105,26 +87,17 @@ public class NetworkHelper
         return null;
     }
 
-    public static FluidNetwork getFluidNetworkFromTile(TileEntity tileEntity, EnumFacing approachDirection)
-    {
-        if (tileEntity != null)
-        {
-            if (tileEntity instanceof INetworkProvider)
-            {
-                if (tileEntity instanceof IConnector)
-                {
-                    if (((IConnector) tileEntity).canConnect(approachDirection.getOpposite(), NetworkType.FLUID))
-                    {
-                        if (((INetworkProvider) tileEntity).getNetwork() instanceof FluidNetwork)
-                        {
+    public static FluidNetwork getFluidNetworkFromTile(TileEntity tileEntity, EnumFacing approachDirection) {
+        if (tileEntity != null) {
+            if (tileEntity instanceof INetworkProvider) {
+                if (tileEntity instanceof IConnector) {
+                    if (((IConnector) tileEntity).canConnect(approachDirection.getOpposite(), NetworkType.FLUID)) {
+                        if (((INetworkProvider) tileEntity).getNetwork() instanceof FluidNetwork) {
                             return (FluidNetwork) ((INetworkProvider) tileEntity).getNetwork();
                         }
                     }
-                }
-                else
-                {
-                    if (((INetworkProvider) tileEntity).getNetwork() instanceof FluidNetwork)
-                    {
+                } else {
+                    if (((INetworkProvider) tileEntity).getNetwork() instanceof FluidNetwork) {
                         return (FluidNetwork) ((INetworkProvider) tileEntity).getNetwork();
                     }
                 }

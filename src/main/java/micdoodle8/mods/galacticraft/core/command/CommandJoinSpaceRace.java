@@ -14,67 +14,49 @@ import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 
-public class CommandJoinSpaceRace extends CommandBase
-{
+public class CommandJoinSpaceRace extends CommandBase {
     @Override
-    public int getRequiredPermissionLevel()
-    {
+    public int getRequiredPermissionLevel() {
         return 0;
     }
 
     @Override
-    public String getUsage(ICommandSender var1)
-    {
+    public String getUsage(ICommandSender var1) {
         return "/" + this.getName();
     }
 
     @Override
-    public boolean checkPermission(MinecraftServer server, ICommandSender sender)
-    {
+    public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
         return true;
     }
 
     @Override
-    public String getName()
-    {
+    public String getName() {
         return "joinrace";
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-    {
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
         EntityPlayerMP playerBase = PlayerUtil.getPlayerBaseServerFromPlayerUsername(server, sender.getName(), true);
 
-        if (args.length == 0)
-        {
-            try
-            {
-                if (playerBase != null)
-                {
+        if (args.length == 0) {
+            try {
+                if (playerBase != null) {
                     GCPlayerStats stats = GCPlayerStats.get(playerBase);
 
-                    if (stats.getSpaceRaceInviteTeamID() > 0)
-                    {
+                    if (stats.getSpaceRaceInviteTeamID() > 0) {
                         SpaceRaceManager.sendSpaceRaceData(server, playerBase, SpaceRaceManager.getSpaceRaceFromID(stats.getSpaceRaceInviteTeamID()));
-                        GalacticraftCore.packetPipeline.sendTo(new PacketSimple(EnumSimplePacket.C_OPEN_JOIN_RACE_GUI, GCCoreUtil.getDimensionID(playerBase.world), new Object[] { stats.getSpaceRaceInviteTeamID() }), playerBase);
-                    }
-                    else
-                    {
+                        GalacticraftCore.packetPipeline.sendTo(new PacketSimple(EnumSimplePacket.C_OPEN_JOIN_RACE_GUI, GCCoreUtil.getDimensionID(playerBase.world), new Object[]{stats.getSpaceRaceInviteTeamID()}), playerBase);
+                    } else {
                         throw new Exception("You haven't been invited to a space race team!");
                     }
-                }
-                else
-                {
+                } else {
                     throw new Exception("Could not find player with name: " + args[0]);
                 }
-            }
-            catch (final Exception var6)
-            {
+            } catch (final Exception var6) {
                 throw new CommandException(var6.getMessage(), new Object[0]);
             }
-        }
-        else
-        {
+        } else {
             throw new WrongUsageException(GCCoreUtil.translateWithFormat("commands.joinrace.no_team", this.getUsage(sender)), new Object[0]);
         }
     }

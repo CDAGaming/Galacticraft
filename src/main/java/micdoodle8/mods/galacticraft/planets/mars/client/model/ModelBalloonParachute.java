@@ -6,20 +6,17 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.FMLClientHandler;
 
-public class ModelBalloonParachute extends ModelBase
-{
+public class ModelBalloonParachute extends ModelBase {
     private static final ResourceLocation grayParachuteTexture = new ResourceLocation(Constants.ASSET_PREFIX, "textures/model/parachute/gray.png");
 
     public ModelRenderer[] parachute = new ModelRenderer[3];
     public ModelRenderer[] parachuteStrings = new ModelRenderer[4];
 
-    public ModelBalloonParachute()
-    {
+    public ModelBalloonParachute() {
         this(0.0F);
     }
 
-    public ModelBalloonParachute(float par1)
-    {
+    public ModelBalloonParachute(float par1) {
         super();
 
         this.parachute[0] = new ModelRenderer(this, 0, 0).setTextureSize(512, 256);
@@ -46,19 +43,16 @@ public class ModelBalloonParachute extends ModelBase
         this.parachuteStrings[3].setRotationPoint(0.0F, 0.0F, 0.0F);
     }
 
-    public void renderAll()
-    {
+    public void renderAll() {
         FMLClientHandler.instance().getClient().renderEngine.bindTexture(ModelBalloonParachute.grayParachuteTexture);
 
         int i;
 
-        for (i = 0; i < this.parachute.length; i++)
-        {
+        for (i = 0; i < this.parachute.length; i++) {
             this.parachute[i].render(0.0625F);
         }
 
-        for (i = 0; i < this.parachuteStrings.length; i++)
-        {
+        for (i = 0; i < this.parachuteStrings.length; i++) {
             this.parachuteStrings[i].render(0.0625F);
         }
 
@@ -90,7 +84,6 @@ public class ModelBalloonParachute extends ModelBase
         this.parachuteStrings[3].setRotationPoint(9.0F, 3.0F, 2.0F);
     }
 
-    public void renderParachute()
-    {
+    public void renderParachute() {
     }
 }

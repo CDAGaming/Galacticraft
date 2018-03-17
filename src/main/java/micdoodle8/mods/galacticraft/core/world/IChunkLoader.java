@@ -4,8 +4,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
 
-public interface IChunkLoader
-{
+public interface IChunkLoader {
     void onTicketLoaded(Ticket ticket, boolean placed);
 
     Ticket getTicket();

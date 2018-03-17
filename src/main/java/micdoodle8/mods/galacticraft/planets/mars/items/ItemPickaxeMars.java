@@ -12,24 +12,20 @@ import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemPickaxeMars extends ItemPickaxe implements ISortableItem
-{
-    public ItemPickaxeMars(ToolMaterial par2EnumToolMaterial)
-    {
+public class ItemPickaxeMars extends ItemPickaxe implements ISortableItem {
+    public ItemPickaxeMars(ToolMaterial par2EnumToolMaterial) {
         super(par2EnumToolMaterial);
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public EnumRarity getRarity(ItemStack par1ItemStack)
-    {
+    public EnumRarity getRarity(ItemStack par1ItemStack) {
         return ClientProxyCore.galacticraftItem;
     }
 
     @SideOnly(Side.CLIENT)
     @Override
-    public CreativeTabs getCreativeTab()
-    {
+    public CreativeTabs getCreativeTab() {
         return GalacticraftCore.galacticraftItemsTab;
     }
 
@@ -41,23 +37,19 @@ public class ItemPickaxeMars extends ItemPickaxe implements ISortableItem
     }*/
 
     @Override
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list)
-    {
-        if (tab == GalacticraftCore.galacticraftItemsTab || tab == CreativeTabs.SEARCH)
-        {
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list) {
+        if (tab == GalacticraftCore.galacticraftItemsTab || tab == CreativeTabs.SEARCH) {
             list.add(new ItemStack(this, 1, 0));
         }
     }
 
     @Override
-    public int getMetadata(int par1)
-    {
+    public int getMetadata(int par1) {
         return par1;
     }
 
     @Override
-    public EnumSortCategoryItem getCategory(int meta)
-    {
+    public EnumSortCategoryItem getCategory(int meta) {
         return EnumSortCategoryItem.TOOLS;
     }
 }

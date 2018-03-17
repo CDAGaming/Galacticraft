@@ -13,17 +13,14 @@ import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class LayerOxygenMask implements LayerRenderer<AbstractClientPlayer>
-{
+public class LayerOxygenMask implements LayerRenderer<AbstractClientPlayer> {
     private final RenderPlayer playerRenderer;
     public ModelRenderer oxygenMask;
 
-    public LayerOxygenMask(RenderPlayer playerRendererIn)
-    {
+    public LayerOxygenMask(RenderPlayer playerRendererIn) {
         this.playerRenderer = playerRendererIn;
         float scaleFactor = 1.0F;
         ModelPlayer modelPlayer = playerRendererIn.getMainModel();
@@ -34,14 +31,11 @@ public class LayerOxygenMask implements LayerRenderer<AbstractClientPlayer>
     }
 
     @Override
-    public void doRenderLayer(AbstractClientPlayer player, float f5, float f6, float partialTicks, float f8, float f2, float f7, float scale)
-    {
-        if (!player.isInvisible())
-        {
+    public void doRenderLayer(AbstractClientPlayer player, float f5, float f6, float partialTicks, float f8, float f2, float f7, float scale) {
+        if (!player.isInvisible()) {
             PlayerGearData gearData = GalacticraftCore.proxy.getGearData(player);
 
-            if (gearData != null)
-            {
+            if (gearData != null) {
                 boolean wearingMask = gearData.getMask() != GCPlayerHandler.GEAR_NOT_PRESENT;
                 FMLClientHandler.instance().getClient().renderEngine.bindTexture(ModelPlayerGC.oxygenMaskTexture);
 
@@ -52,8 +46,7 @@ public class LayerOxygenMask implements LayerRenderer<AbstractClientPlayer>
                 GlStateManager.pushMatrix();
                 GlStateManager.scale(0.5F, 0.5F, 0.5F);
 
-                if (wearingMask)
-                {
+                if (wearingMask) {
                     GL11.glPushMatrix();
                     GL11.glScalef(1.05F, 1.05F, 1.05F);
                     this.oxygenMask.render(scale);
@@ -67,8 +60,7 @@ public class LayerOxygenMask implements LayerRenderer<AbstractClientPlayer>
     }
 
     @Override
-    public boolean shouldCombineTextures()
-    {
+    public boolean shouldCombineTextures() {
         return true;
     }
 }

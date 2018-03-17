@@ -1,7 +1,6 @@
 package micdoodle8.mods.galacticraft.planets.mars.client.render.entity;
 
 import com.google.common.collect.ImmutableList;
-
 import micdoodle8.mods.galacticraft.core.util.ClientUtil;
 import micdoodle8.mods.galacticraft.planets.GalacticraftPlanets;
 import micdoodle8.mods.galacticraft.planets.mars.client.model.ModelBalloonParachute;
@@ -18,45 +17,35 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class RenderLandingBalloons extends Render<EntityLandingBalloons>
-{
-    private IBakedModel balloonModel;
+public class RenderLandingBalloons extends Render<EntityLandingBalloons> {
     protected ModelBalloonParachute parachuteModel = new ModelBalloonParachute();
+    private IBakedModel balloonModel;
 
-    public RenderLandingBalloons(RenderManager manager)
-    {
+    public RenderLandingBalloons(RenderManager manager) {
         super(manager);
         this.shadowSize = 1.2F;
     }
 
-    private void updateModels()
-    {
-        if (this.balloonModel == null)
-        {
-            try
-            {
+    private void updateModels() {
+        if (this.balloonModel == null) {
+            try {
                 this.balloonModel = ClientUtil.modelFromOBJ(new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "landing_balloon.obj"), ImmutableList.of("Sphere"));
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }
     }
 
     @Override
-    protected ResourceLocation getEntityTexture(EntityLandingBalloons entity)
-    {
+    protected ResourceLocation getEntityTexture(EntityLandingBalloons entity) {
         return TextureMap.LOCATION_BLOCKS_TEXTURE;
     }
 
     @Override
-    public void doRender(EntityLandingBalloons entity, double x, double y, double z, float entityYaw, float partialTicks)
-    {
+    public void doRender(EntityLandingBalloons entity, double x, double y, double z, float entityYaw, float partialTicks) {
         float pitch = entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks;
         GlStateManager.disableRescaleNormal();
         GlStateManager.pushMatrix();
@@ -68,12 +57,9 @@ public class RenderLandingBalloons extends Render<EntityLandingBalloons>
         this.updateModels();
         this.bindEntityTexture(entity);
 
-        if (Minecraft.isAmbientOcclusionEnabled())
-        {
+        if (Minecraft.isAmbientOcclusionEnabled()) {
             GlStateManager.shadeModel(GL11.GL_SMOOTH);
-        }
-        else
-        {
+        } else {
             GlStateManager.shadeModel(GL11.GL_FLAT);
         }
 
@@ -82,8 +68,7 @@ public class RenderLandingBalloons extends Render<EntityLandingBalloons>
         ClientUtil.drawBakedModel(this.balloonModel);
         GlStateManager.popMatrix();
 
-        if (entity.posY >= 500.0F)
-        {
+        if (entity.posY >= 500.0F) {
             GlStateManager.pushMatrix();
             GlStateManager.translate((float) x - 1.25F, (float) y - 0.93F, (float) z - 0.3F);
             GlStateManager.scale(2.5F, 3.0F, 2.5F);
@@ -92,10 +77,9 @@ public class RenderLandingBalloons extends Render<EntityLandingBalloons>
         }
         RenderHelper.enableStandardItemLighting();
     }
-    
+
     @Override
-    public boolean shouldRender(EntityLandingBalloons lander, ICamera camera, double camX, double camY, double camZ)
-    {
+    public boolean shouldRender(EntityLandingBalloons lander, ICamera camera, double camX, double camY, double camZ) {
         AxisAlignedBB axisalignedbb = lander.getEntityBoundingBox().grow(2D, 1D, 2D);
         return lander.isInRangeToRender3d(camX, camY, camZ) && camera.isBoundingBoxInFrustum(axisalignedbb);
     }

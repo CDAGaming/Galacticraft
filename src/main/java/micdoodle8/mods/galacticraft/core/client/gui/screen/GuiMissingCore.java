@@ -13,22 +13,19 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.net.URI;
 
 @SideOnly(Side.CLIENT)
-public class GuiMissingCore extends GuiScreen
-{
+public class GuiMissingCore extends GuiScreen {
     private int urlX;
     private int urlY;
     private int urlWidth;
     private int urlHeight;
 
     @Override
-    public void initGui()
-    {
+    public void initGui() {
         super.initGui();
     }
 
     @Override
-    public void drawScreen(int par1, int par2, float par3)
-    {
+    public void drawScreen(int par1, int par2, float par3) {
         this.drawDefaultBackground();
         int offset = this.height / 2 - 50;
         this.drawCenteredString(this.fontRenderer, GCCoreUtil.translate("gui.missing_core.name.0"), this.width / 2, offset, 0xFF5555);
@@ -47,34 +44,26 @@ public class GuiMissingCore extends GuiScreen
     }
 
     @Override
-    protected void keyTyped(char par1, int par2)
-    {
+    protected void keyTyped(char par1, int par2) {
     }
 
-    public void actionPerformed()
-    {
+    public void actionPerformed() {
         this.actionPerformed(null);
     }
 
     @Override
-    protected void actionPerformed(GuiButton par1GuiButton)
-    {
+    protected void actionPerformed(GuiButton par1GuiButton) {
         FMLClientHandler.instance().getClient().displayGuiScreen((GuiScreen) null);
     }
 
     @Override
-    protected void mouseClicked(int x, int y, int which)
-    {
-        if (x > this.urlX && x < this.urlX + this.urlWidth && y > this.urlY && y < this.urlY + this.urlHeight)
-        {
-            try
-            {
+    protected void mouseClicked(int x, int y, int which) {
+        if (x > this.urlX && x < this.urlX + this.urlWidth && y > this.urlY && y < this.urlY + this.urlHeight) {
+            try {
                 Class<?> oclass = Class.forName("java.awt.Desktop");
                 Object object = oclass.getMethod("getDesktop", new Class[0]).invoke((Object) null, new Object[0]);
-                oclass.getMethod("browse", new Class[] { URI.class }).invoke(object, new Object[] { new URI("http://micdoodle8.com/mods/galacticraft/downloads") });
-            }
-            catch (Throwable throwable)
-            {
+                oclass.getMethod("browse", new Class[]{URI.class}).invoke(object, new Object[]{new URI("http://micdoodle8.com/mods/galacticraft/downloads")});
+            } catch (Throwable throwable) {
                 throwable.printStackTrace();
             }
         }

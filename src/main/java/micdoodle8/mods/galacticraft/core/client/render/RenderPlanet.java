@@ -1,17 +1,16 @@
 package micdoodle8.mods.galacticraft.core.client.render;
 
 import micdoodle8.mods.galacticraft.core.Constants;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import org.lwjgl.opengl.GL11;
 
-public class RenderPlanet
-{
+public class RenderPlanet {
     private static TextureManager renderEngine = FMLClientHandler.instance().getClient().renderEngine;
 
     private static ResourceLocation textureEuropa = new ResourceLocation(Constants.ASSET_PREFIX, "textures/misc/planets/europa.png");
@@ -21,44 +20,40 @@ public class RenderPlanet
     private static ResourceLocation textureJupiterInner = new ResourceLocation(Constants.ASSET_PREFIX, "textures/misc/planets/jupiter_inner.png");
     private static ResourceLocation textureJupiterUpper = new ResourceLocation(Constants.ASSET_PREFIX, "textures/misc/planets/jupiter_upper.png");
 
-    public static void renderPlanet(int textureId, float scale, float ticks, float relSize)
-    {
+    public static void renderPlanet(int textureId, float scale, float ticks, float relSize) {
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureId);
         float size = relSize / 70 * scale;
         ticks = ((float) System.nanoTime()) / 50000000F;
         RenderPlanet.drawTexturedRectUV(-size / 2, -size / 2, size, size, ticks);
     }
 
-    public static void renderPlanet(ResourceLocation texture, float scale, float ticks, float relSize)
-    {
+    public static void renderPlanet(ResourceLocation texture, float scale, float ticks, float relSize) {
         RenderPlanet.renderEngine.bindTexture(texture);
         float size = relSize / 70 * scale;
         ticks = ((float) System.nanoTime()) / 50000000F;
         RenderPlanet.drawTexturedRectUV(-size / 2, -size / 2, size, size, ticks);
     }
 
-    public static void renderID(int id, float scale, float ticks)
-    {
+    public static void renderID(int id, float scale, float ticks) {
         ResourceLocation texture;
-        switch (id)
-        {
-        case 0:
-            texture = textureEuropa;
-            break;
-        case 1:
-            texture = textureGanymede;
-            break;
-        case 2:
-            texture = textureIo;
-            break;
-        case 3:
-            texture = textureJupiterInner;
-            break;
-        case 4:
-            texture = textureSaturn;
-            break;
-        default:
-            texture = textureGanymede;
+        switch (id) {
+            case 0:
+                texture = textureEuropa;
+                break;
+            case 1:
+                texture = textureGanymede;
+                break;
+            case 2:
+                texture = textureIo;
+                break;
+            case 3:
+                texture = textureJupiterInner;
+                break;
+            case 4:
+                texture = textureSaturn;
+                break;
+            default:
+                texture = textureGanymede;
         }
         if (id == 3)  //Jupiter
         {
@@ -71,17 +66,13 @@ public class RenderPlanet
             RenderPlanet.renderEngine.bindTexture(textureJupiterUpper);
             size *= 1.001F;
             RenderPlanet.drawTexturedRectUV(-size / 2, -size / 2, size, size, ticks * 0.85F);
-        }
-        else
-        {
+        } else {
             RenderPlanet.renderPlanet(texture, scale, ticks, 8F);
         }
     }
 
-    public static void drawTexturedRectUV(float x, float y, float width, float height, float ticks)
-    {
-        for (int ysect = 0; ysect < 6; ysect++)
-        {
+    public static void drawTexturedRectUV(float x, float y, float width, float height, float ticks) {
+        for (int ysect = 0; ysect < 6; ysect++) {
 //    		drawTexturedRectUVSixth(x, y, width, height, (ticks / 600F) % 1F, ysect / 6F);
             // - 80F * MathHelper.sin(angle)
             float factor = 1F + MathHelper.cos((7.5F + 10F * ysect) / 62F);
@@ -89,11 +80,9 @@ public class RenderPlanet
         }
     }
 
-    public static void drawTexturedRectUVSixth(float x, float y, float width, float height, float prog, float y0, float span)
-    {
+    public static void drawTexturedRectUVSixth(float x, float y, float width, float height, float prog, float y0, float span) {
         y0 /= 2;
-        if (prog < 0F)
-        {
+        if (prog < 0F) {
             prog += 1.0F;
         }
         prog = 1.0F - prog;
@@ -106,8 +95,7 @@ public class RenderPlanet
         float ybb = y + height * y3;
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder worldRenderer = tessellator.getBuffer();
-        if (prog <= 1F - span)
-        {
+        if (prog <= 1F - span) {
             worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
             worldRenderer.pos(x, yab, 0F).tex(prog, y1).endVertex();
             worldRenderer.pos(x + width, yab, 0F).tex(prog + span, y1).endVertex();
@@ -120,9 +108,7 @@ public class RenderPlanet
             worldRenderer.pos(x + width, yba, 0F).tex(prog + span, y2).endVertex();
             worldRenderer.pos(x, yba, 0F).tex(prog, y2).endVertex();
             tessellator.draw();
-        }
-        else
-        {
+        } else {
             double xp = x + width * (1F - prog) / span;
             worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
             worldRenderer.pos(x, yab, 0F).tex(prog, y1).endVertex();

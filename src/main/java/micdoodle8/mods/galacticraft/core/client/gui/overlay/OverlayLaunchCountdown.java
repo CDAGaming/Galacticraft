@@ -12,12 +12,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class OverlayLaunchCountdown extends Overlay
-{
+public class OverlayLaunchCountdown extends Overlay {
     private static Minecraft minecraft = FMLClientHandler.instance().getClient();
 
-    public static void renderCountdownOverlay()
-    {
+    public static void renderCountdownOverlay() {
         GlStateManager.disableLighting();
         int count = ((EntitySpaceshipBase) OverlayLaunchCountdown.minecraft.player.getRidingEntity()).timeUntilLaunch / 2;
 
@@ -30,14 +28,11 @@ public class OverlayLaunchCountdown extends Overlay
 
         GL11.glPushMatrix();
 
-        if (count <= 10)
-        {
+        if (count <= 10) {
             GL11.glScalef(4.0F, 4.0F, 0.0F);
 
             OverlayLaunchCountdown.minecraft.fontRenderer.drawString(String.valueOf(count), width / 8 - OverlayLaunchCountdown.minecraft.fontRenderer.getStringWidth(String.valueOf(count)) / 2, height / 20, ColorUtil.to32BitColor(255, 255, 0, 0));
-        }
-        else
-        {
+        } else {
             GL11.glScalef(2.0F, 2.0F, 0.0F);
 
             OverlayLaunchCountdown.minecraft.fontRenderer.drawString(String.valueOf(count), width / 4 - OverlayLaunchCountdown.minecraft.fontRenderer.getStringWidth(String.valueOf(count)) / 2, height / 8, ColorUtil.to32BitColor(255, 255, 0, 0));

@@ -7,15 +7,12 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.util.DamageSource;
 
-public class GCPlayerBaseMP extends ServerPlayerBase
-{
-    public GCPlayerBaseMP(ServerPlayerAPI playerAPI)
-    {
+public class GCPlayerBaseMP extends ServerPlayerBase {
+    public GCPlayerBaseMP(ServerPlayerAPI playerAPI) {
         super(playerAPI);
     }
 
-    private IPlayerServer getClientHandler()
-    {
+    private IPlayerServer getClientHandler() {
         return GalacticraftCore.proxy.player;
     }
 
@@ -38,28 +35,23 @@ public class GCPlayerBaseMP extends ServerPlayerBase
 
 
     @Override
-    public void moveEntity(MoverType moverType, double x, double y, double z)
-    {
+    public void moveEntity(MoverType moverType, double x, double y, double z) {
         super.moveEntity(moverType, x, y, z);
         this.getClientHandler().move(this.player, moverType, x, y, z);
     }
 
     @Override
-    public void wakeUpPlayer(boolean par1, boolean par2, boolean par3)
-    {
-        if (!this.getClientHandler().wakeUpPlayer(this.player, par1, par2, par3))
-        {
+    public void wakeUpPlayer(boolean par1, boolean par2, boolean par3) {
+        if (!this.getClientHandler().wakeUpPlayer(this.player, par1, par2, par3)) {
             super.wakeUpPlayer(par1, par2, par3);
         }
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource par1DamageSource, float par2)
-    {
+    public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
         par2 = this.getClientHandler().attackEntityFrom(this.player, par1DamageSource, par2);
 
-        if (par2 == -1)
-        {
+        if (par2 == -1) {
             return false;
         }
 
@@ -67,8 +59,7 @@ public class GCPlayerBaseMP extends ServerPlayerBase
     }
 
     @Override
-    public void knockBack(Entity p_70653_1_, float p_70653_2_, double impulseX, double impulseZ)
-    {
+    public void knockBack(Entity p_70653_1_, float p_70653_2_, double impulseX, double impulseZ) {
         this.getClientHandler().knockBack(this.player, p_70653_1_, p_70653_2_, impulseX, impulseZ);
     }
 }

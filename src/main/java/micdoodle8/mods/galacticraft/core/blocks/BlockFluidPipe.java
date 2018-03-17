@@ -40,17 +40,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Random;
 
-public class BlockFluidPipe extends BlockTransmitter implements ITileEntityProvider, IShiftDescription, ISortableBlock
-{
+public class BlockFluidPipe extends BlockTransmitter implements ITileEntityProvider, IShiftDescription, ISortableBlock {
     public static final PropertyEnum<EnumDyeColor> COLOR = PropertyEnum.create("color", EnumDyeColor.class);
-
-    public static boolean ignoreDrop = false;
-
-    private EnumPipeMode mode;
-
     private static final float MIN = 0.35F;
     private static final float MAX = 0.65F;
-    protected static final AxisAlignedBB[] BOUNDING_BOXES = new AxisAlignedBB[] {
+    protected static final AxisAlignedBB[] BOUNDING_BOXES = new AxisAlignedBB[]{
 
             new AxisAlignedBB(MIN, MIN, MIN, MAX, MAX, MAX),  // No connection                                  000000
             new AxisAlignedBB(MIN, MIN, MIN, MAX, MAX, 1.0D), // South                                          000001
@@ -119,9 +113,10 @@ public class BlockFluidPipe extends BlockTransmitter implements ITileEntityProvi
             new AxisAlignedBB(MIN, 0.0D, 0.0D, 1.0D, 1.0D, 1.0D), // Up Down North South East                   111101
             new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 1.0D, MAX), // Up Down North East West                    111110
             new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 1.0D, 1.0D)}; // Up Down North South East West            111111
+    public static boolean ignoreDrop = false;
+    private EnumPipeMode mode;
 
-    public BlockFluidPipe(String assetName, EnumPipeMode mode)
-    {
+    public BlockFluidPipe(String assetName, EnumPipeMode mode) {
         super(Material.GLASS);
         this.setHardness(0.3F);
         this.setSoundType(SoundType.GLASS);
@@ -130,44 +125,30 @@ public class BlockFluidPipe extends BlockTransmitter implements ITileEntityProvi
         this.mode = mode;
     }
 
-    @Override
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
-    {
-        state = this.getActualState(state, source, pos);
-        return BOUNDING_BOXES[getBoundingBoxIdx(state)];
-    }
-
-    private static int getBoundingBoxIdx(IBlockState state)
-    {
+    private static int getBoundingBoxIdx(IBlockState state) {
         int i = 0;
 
-        if (state.getValue(NORTH).booleanValue())
-        {
+        if (state.getValue(NORTH).booleanValue()) {
             i |= 1 << EnumFacing.NORTH.getHorizontalIndex();
         }
 
-        if (state.getValue(EAST).booleanValue())
-        {
+        if (state.getValue(EAST).booleanValue()) {
             i |= 1 << EnumFacing.EAST.getHorizontalIndex();
         }
 
-        if (state.getValue(SOUTH).booleanValue())
-        {
+        if (state.getValue(SOUTH).booleanValue()) {
             i |= 1 << EnumFacing.SOUTH.getHorizontalIndex();
         }
 
-        if (state.getValue(WEST).booleanValue())
-        {
+        if (state.getValue(WEST).booleanValue()) {
             i |= 1 << EnumFacing.WEST.getHorizontalIndex();
         }
 
-        if (state.getValue(DOWN).booleanValue())
-        {
+        if (state.getValue(DOWN).booleanValue()) {
             i |= 1 << 4;
         }
 
-        if (state.getValue(UP).booleanValue())
-        {
+        if (state.getValue(UP).booleanValue()) {
             i |= 1 << 5;
         }
 
@@ -175,38 +156,38 @@ public class BlockFluidPipe extends BlockTransmitter implements ITileEntityProvi
     }
 
     @Override
-    public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
-    {
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+        state = this.getActualState(state, source, pos);
+        return BOUNDING_BOXES[getBoundingBoxIdx(state)];
+    }
+
+    @Override
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
         final TileEntityFluidPipe tile = (TileEntityFluidPipe) worldIn.getTileEntity(pos);
         int pipeColor = state.getValue(COLOR).getDyeDamage();
 
-        if (!ignoreDrop && tile != null && pipeColor != 15)
-        {
+        if (!ignoreDrop && tile != null && pipeColor != 15) {
             spawnItem(worldIn, pos, pipeColor);
         }
 
         super.breakBlock(worldIn, pos, state);
     }
-    
+
     @Override
-    public Item getItemDropped(IBlockState state, Random rand, int fortune)
-    {
+    public Item getItemDropped(IBlockState state, Random rand, int fortune) {
         return Item.getItemFromBlock(GCBlocks.oxygenPipe);
         //Never drop the 'pull' variety of pipe
     }
 
     @Override
-    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)
-    {
+    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
         super.neighborChanged(state, worldIn, pos, blockIn, fromPos);
         worldIn.notifyLightSet(pos);
     }
 
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
-    {
-        if (this.mode == EnumPipeMode.NORMAL)
-        {
+    public CreativeTabs getCreativeTabToDisplayOn() {
+        if (this.mode == EnumPipeMode.NORMAL) {
             return GalacticraftCore.galacticraftBlocksTab;
         }
 
@@ -214,10 +195,8 @@ public class BlockFluidPipe extends BlockTransmitter implements ITileEntityProvi
     }
 
     @Override
-    public boolean onUseWrench(World world, BlockPos pos, EntityPlayer entityPlayer, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
-    {
-        if (!world.isRemote)
-        {
+    public boolean onUseWrench(World world, BlockPos pos, EntityPlayer entityPlayer, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+        if (!world.isRemote) {
             TileEntityFluidPipe tile = (TileEntityFluidPipe) world.getTileEntity(pos);
             tile.switchType();
         }
@@ -226,23 +205,18 @@ public class BlockFluidPipe extends BlockTransmitter implements ITileEntityProvi
     }
 
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
-    {
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         final TileEntityFluidPipe tileEntity = (TileEntityFluidPipe) worldIn.getTileEntity(pos);
 
-        if (super.onBlockActivated(worldIn, pos, state, playerIn, hand, side, hitX, hitY, hitZ))
-        {
+        if (super.onBlockActivated(worldIn, pos, state, playerIn, hand, side, hitX, hitY, hitZ)) {
             return true;
         }
 
-        if (!worldIn.isRemote)
-        {
+        if (!worldIn.isRemote) {
             final ItemStack stack = playerIn.inventory.getCurrentItem();
 
-            if (stack != null)
-            {
-                if (stack.getItem() instanceof ItemDye)
-                {
+            if (stack != null) {
+                if (stack.getItem() instanceof ItemDye) {
                     final int dyeColor = playerIn.inventory.getCurrentItem().getItemDamage();
 
                     final byte colorBefore = tileEntity.getColor(state);
@@ -251,27 +225,23 @@ public class BlockFluidPipe extends BlockTransmitter implements ITileEntityProvi
 
                     worldIn.setBlockState(pos, state.withProperty(COLOR, EnumDyeColor.byDyeDamage(dyeColor)));
 
-                    GalacticraftCore.packetPipeline.sendToAllAround(new PacketSimple(PacketSimple.EnumSimplePacket.C_RECOLOR_PIPE, GCCoreUtil.getDimensionID(worldIn), new Object[] { pos }), new NetworkRegistry.TargetPoint(GCCoreUtil.getDimensionID(worldIn), pos.getX(), pos.getY(), pos.getZ(), 40.0));
+                    GalacticraftCore.packetPipeline.sendToAllAround(new PacketSimple(PacketSimple.EnumSimplePacket.C_RECOLOR_PIPE, GCCoreUtil.getDimensionID(worldIn), new Object[]{pos}), new NetworkRegistry.TargetPoint(GCCoreUtil.getDimensionID(worldIn), pos.getX(), pos.getY(), pos.getZ(), 40.0));
 
-                    if (colorBefore != (byte) dyeColor && !playerIn.capabilities.isCreativeMode)
-                    {
+                    if (colorBefore != (byte) dyeColor && !playerIn.capabilities.isCreativeMode) {
                         playerIn.inventory.getCurrentItem().shrink(1);
                     }
 
-                    if (colorBefore != (byte) dyeColor && colorBefore != 15)
-                    {
+                    if (colorBefore != (byte) dyeColor && colorBefore != 15) {
                         spawnItem(worldIn, pos, colorBefore);
                     }
 
                     //					GCCorePacketManager.sendPacketToClients(GCCorePacketManager.getPacket(GalacticraftCore.CHANNELENTITIES, tileEntity, tileEntity.getColor(), (byte) -1)); TODO Fix pipe color
 
                     BlockPos tileVec = tileEntity.getPos();
-                    for (final EnumFacing dir : EnumFacing.VALUES)
-                    {
+                    for (final EnumFacing dir : EnumFacing.VALUES) {
                         final TileEntity tileAt = worldIn.getTileEntity(tileVec.offset(dir));
 
-                        if (tileAt != null && tileAt instanceof IColorable)
-                        {
+                        if (tileAt != null && tileAt instanceof IColorable) {
                             ((IColorable) tileAt).onAdjacentColorChanged(dir);
                         }
                     }
@@ -285,8 +255,7 @@ public class BlockFluidPipe extends BlockTransmitter implements ITileEntityProvi
         return false;
     }
 
-    private void spawnItem(World worldIn, BlockPos pos, int colorBefore)
-    {
+    private void spawnItem(World worldIn, BlockPos pos, int colorBefore) {
         final float f = 0.7F;
         Random syncRandom = GCCoreUtil.getRandom(pos);
         final double d0 = syncRandom.nextFloat() * f + (1.0F - f) * 0.5D;
@@ -298,32 +267,27 @@ public class BlockFluidPipe extends BlockTransmitter implements ITileEntityProvi
     }
 
     @Override
-    public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
-    {
+    public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
         return true;
     }
 
     @Override
-    public boolean isOpaqueCube(IBlockState state)
-    {
+    public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
 
     @Override
-    public boolean isFullCube(IBlockState state)
-    {
+    public boolean isFullCube(IBlockState state) {
         return false;
     }
 
     @Override
-    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face)
-    {
+    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
         return BlockFaceShape.UNDEFINED;
     }
 
     @Override
-    public TileEntity createNewTileEntity(World world, int meta)
-    {
+    public TileEntity createNewTileEntity(World world, int meta) {
         return new TileEntityFluidPipe();
     }
 
@@ -335,86 +299,72 @@ public class BlockFluidPipe extends BlockTransmitter implements ITileEntityProvi
 //    }
 
     @Override
-    public NetworkType getNetworkType(IBlockState state)
-    {
+    public NetworkType getNetworkType(IBlockState state) {
         return NetworkType.FLUID;
     }
 
     @Override
-    public String getShiftDescription(int meta)
-    {
+    public String getShiftDescription(int meta) {
         return GCCoreUtil.translate(this.getUnlocalizedName() + ".description");
     }
 
     @Override
-    protected BlockStateContainer createBlockState()
-    {
+    protected BlockStateContainer createBlockState() {
         return new BlockStateContainer(this, COLOR, UP, DOWN, NORTH, EAST, SOUTH, WEST);
     }
 
     @Override
-    public boolean showDescription(int meta)
-    {
+    public boolean showDescription(int meta) {
         return true;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public BlockRenderLayer getBlockLayer()
-    {
+    public BlockRenderLayer getBlockLayer() {
         return BlockRenderLayer.CUTOUT;
     }
 
     @Override
-    public IBlockState getStateFromMeta(int meta)
-    {
+    public IBlockState getStateFromMeta(int meta) {
         return this.getDefaultState().withProperty(COLOR, EnumDyeColor.byMetadata(meta));
     }
 
     @Override
-    public int getMetaFromState(IBlockState state)
-    {
+    public int getMetaFromState(IBlockState state) {
         return state.getValue(COLOR).getMetadata();
     }
 
     @Override
-    public EnumSortCategoryBlock getCategory(int meta)
-    {
+    public EnumSortCategoryBlock getCategory(int meta) {
         return EnumSortCategoryBlock.TRANSMITTER;
     }
 
-    public EnumPipeMode getMode()
-    {
+    public EnumPipeMode getMode() {
         return mode;
     }
 
-    public enum EnumPipeMode implements IStringSerializable
-    {
+    public enum EnumPipeMode implements IStringSerializable {
         NORMAL(0, "normal"),
         PULL(1, "pull");
 
         private final int meta;
         private final String name;
 
-        EnumPipeMode(int meta, String name)
-        {
+        EnumPipeMode(int meta, String name) {
             this.meta = meta;
             this.name = name;
         }
 
-        public int getMeta()
-        {
-            return meta;
-        }
-
-        public static EnumPipeMode byMetadata(int ordinal)
-        {
+        public static EnumPipeMode byMetadata(int ordinal) {
             return EnumPipeMode.values()[ordinal];
         }
 
+        public int getMeta() {
+            return meta;
+        }
+
         @Override
-        public String getName()
-        {
+        public String getName() {
             return this.name;
         }
     }

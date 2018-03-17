@@ -11,12 +11,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class EntityCryoFX extends Particle
-{
+public class EntityCryoFX extends Particle {
     float field_70569_a;
 
-    public EntityCryoFX(World worldIn, Vector3 position, Vector3 motion)
-    {
+    public EntityCryoFX(World worldIn, Vector3 position, Vector3 motion) {
         super(worldIn, position.x, position.y, position.z, 0.0D, 0.0D, 0.0D);
         float f = 2.5F;
         this.motionX *= 0.0;
@@ -40,8 +38,7 @@ public class EntityCryoFX extends Particle
      * Renders the particle
      */
     @Override
-    public void renderParticle(BufferBuilder worldRendererIn, Entity entityIn, float partialTicks, float p_180434_4_, float p_180434_5_, float p_180434_6_, float p_180434_7_, float p_180434_8_)
-    {
+    public void renderParticle(BufferBuilder worldRendererIn, Entity entityIn, float partialTicks, float p_180434_4_, float p_180434_5_, float p_180434_6_, float p_180434_7_, float p_180434_8_) {
         float f = ((float) this.particleAge + partialTicks) / (float) this.particleMaxAge * 32.0F;
         f = MathHelper.clamp(f, 0.0F, 1.0F);
         this.particleScale = this.field_70569_a * f;
@@ -52,14 +49,12 @@ public class EntityCryoFX extends Particle
      * Called to update the entity's position/logic.
      */
     @Override
-    public void onUpdate()
-    {
+    public void onUpdate() {
         this.prevPosX = this.posX;
         this.prevPosY = this.posY;
         this.prevPosZ = this.posZ;
 
-        if (this.particleAge++ >= this.particleMaxAge)
-        {
+        if (this.particleAge++ >= this.particleMaxAge) {
             this.setExpired();
         }
 
@@ -70,15 +65,13 @@ public class EntityCryoFX extends Particle
         this.motionZ *= 0.9599999785423279D;
         EntityPlayer entityplayer = this.world.getClosestPlayer(this.posX, this.posY, this.posZ, 2.0D, false);
 
-        if (entityplayer != null && this.posY > entityplayer.getEntityBoundingBox().minY)
-        {
+        if (entityplayer != null && this.posY > entityplayer.getEntityBoundingBox().minY) {
             this.posY += (entityplayer.getEntityBoundingBox().minY - this.posY) * 0.2D;
             this.motionY += (entityplayer.motionY - this.motionY) * 0.2D;
             this.setPosition(this.posX, this.posY, this.posZ);
         }
 
-        if (this.onGround)
-        {
+        if (this.onGround) {
             this.motionX *= 0.699999988079071D;
             this.motionZ *= 0.699999988079071D;
         }

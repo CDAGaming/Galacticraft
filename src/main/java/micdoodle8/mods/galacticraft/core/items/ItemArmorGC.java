@@ -14,43 +14,32 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemArmorGC extends ItemArmor implements ISortableItem
-{
-    public ItemArmorGC(EntityEquipmentSlot armorIndex, String assetSuffix)
-    {
+public class ItemArmorGC extends ItemArmor implements ISortableItem {
+    public ItemArmorGC(EntityEquipmentSlot armorIndex, String assetSuffix) {
         super(GCItems.ARMOR_STEEL, 0, armorIndex);
         this.setUnlocalizedName("steel_" + assetSuffix);
         //this.setTextureName(Constants.TEXTURE_PREFIX + "steel_" + assetSuffix);
     }
 
     @Override
-    public CreativeTabs getCreativeTab()
-    {
+    public CreativeTabs getCreativeTab() {
         return GalacticraftCore.galacticraftItemsTab;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public EnumRarity getRarity(ItemStack par1ItemStack)
-    {
+    public EnumRarity getRarity(ItemStack par1ItemStack) {
         return ClientProxyCore.galacticraftItem;
     }
 
     @Override
-    public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type)
-    {
-        if (this.getArmorMaterial() == GCItems.ARMOR_STEEL)
-        {
-            if (stack.getItem() == GCItems.steelHelmet)
-            {
+    public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
+        if (this.getArmorMaterial() == GCItems.ARMOR_STEEL) {
+            if (stack.getItem() == GCItems.steelHelmet) {
                 return Constants.TEXTURE_PREFIX + "textures/model/armor/steel_1.png";
-            }
-            else if (stack.getItem() == GCItems.steelChestplate || stack.getItem() == GCItems.steelBoots)
-            {
+            } else if (stack.getItem() == GCItems.steelChestplate || stack.getItem() == GCItems.steelBoots) {
                 return Constants.TEXTURE_PREFIX + "textures/model/armor/steel_2.png";
-            }
-            else if (stack.getItem() == GCItems.steelLeggings)
-            {
+            } else if (stack.getItem() == GCItems.steelLeggings) {
                 return Constants.TEXTURE_PREFIX + "textures/model/armor/steel_3.png";
             }
         }
@@ -59,14 +48,12 @@ public class ItemArmorGC extends ItemArmor implements ISortableItem
     }
 
     @Override
-    public EnumSortCategoryItem getCategory(int meta)
-    {
+    public EnumSortCategoryItem getCategory(int meta) {
         return EnumSortCategoryItem.ARMOR;
     }
-    
+
     @Override
-    public boolean getIsRepairable(ItemStack toRepair, ItemStack repair)
-    {
+    public boolean getIsRepairable(ItemStack toRepair, ItemStack repair) {
         return repair.getItem() == GCItems.basicItem && repair.getItemDamage() == 9;
     }
 }

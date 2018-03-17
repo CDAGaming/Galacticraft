@@ -8,10 +8,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemBlockAluminumWire extends ItemBlockDesc
-{
-    public ItemBlockAluminumWire(Block block)
-    {
+public class ItemBlockAluminumWire extends ItemBlockDesc {
+    public ItemBlockAluminumWire(Block block) {
         super(block);
         this.setMaxDamage(0);
         this.setHasSubtypes(true);
@@ -25,22 +23,19 @@ public class ItemBlockAluminumWire extends ItemBlockDesc
     }*/
 
     @Override
-    public String getUnlocalizedName(ItemStack itemstack)
-    {
+    public String getUnlocalizedName(ItemStack itemstack) {
         String name = BlockAluminumWire.EnumWireType.values()[itemstack.getItemDamage()].getName();
         return this.getBlock().getUnlocalizedName() + "." + name;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public EnumRarity getRarity(ItemStack par1ItemStack)
-    {
+    public EnumRarity getRarity(ItemStack par1ItemStack) {
         return ClientProxyCore.galacticraftItem;
     }
 
     @Override
-    public int getMetadata(int damage)
-    {
+    public int getMetadata(int damage) {
         return damage;
     }
 }

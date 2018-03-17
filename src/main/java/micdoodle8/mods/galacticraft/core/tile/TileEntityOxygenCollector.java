@@ -26,10 +26,9 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.EnumSet;
 
-public class TileEntityOxygenCollector extends TileEntityOxygen implements IInventoryDefaults, ISidedInventory
-{
-    public boolean active;
+public class TileEntityOxygenCollector extends TileEntityOxygen implements IInventoryDefaults, ISidedInventory {
     public static final int OUTPUT_PER_TICK = 100;
+    public boolean active;
     @NetworkedField(targetSide = Side.CLIENT)
     public float lastOxygenCollected;
     private NonNullList<ItemStack> stacks = NonNullList.withSize(1, ItemStack.EMPTY);
@@ -37,25 +36,21 @@ public class TileEntityOxygenCollector extends TileEntityOxygen implements IInve
     private boolean isInitialised = false;
     private boolean producedLastTick = false;
 
-    public TileEntityOxygenCollector()
-    {
+    public TileEntityOxygenCollector() {
         super(6000, 0);
         this.noRedstoneControl = true;
     }
 
     @Override
-    public int getCappedScaledOxygenLevel(int scale)
-    {
+    public int getCappedScaledOxygenLevel(int scale) {
         return (int) Math.max(Math.min(Math.floor((double) this.getOxygenStored() / (double) this.getMaxOxygenStored() * scale), scale), 0);
     }
 
     @Override
-    public void update()
-    {
+    public void update() {
         super.update();
 
-        if (!this.world.isRemote)
-        {
+        if (!this.world.isRemote) {
             producedLastTick = this.getOxygenStored() < this.getMaxOxygenStored();
 
             this.produceOxygen();
@@ -99,62 +94,51 @@ public class TileEntityOxygenCollector extends TileEntityOxygen implements IInve
             // }
 
             //Approximately once every 40 ticks, search out oxygen producing blocks
-            if (this.world.rand.nextInt(10) == 0)
-            {
-                if (this.hasEnoughEnergyToRun)
-                {
+            if (this.world.rand.nextInt(10) == 0) {
+                if (this.hasEnoughEnergyToRun) {
                     // The later calculations are more efficient if power is a float, so
                     // there are fewer casts
                     float nearbyLeaves = 0;
 
-                    if (!this.isInitialised)
-                    {
+                    if (!this.isInitialised) {
                         this.noAtmosphericOxygen = (this.world.provider instanceof IGalacticraftWorldProvider && !((IGalacticraftWorldProvider) this.world.provider).isGasPresent(EnumAtmosphericGas.OXYGEN));
                         this.isInitialised = true;
                     }
 
-                    if (this.noAtmosphericOxygen)
-                    {
+                    if (this.noAtmosphericOxygen) {
                         // Pre-test to see if close to the map edges, so code
                         // doesn't have to continually test for map edges inside the
                         // loop
-                        if (this.getPos().getX() > -29999995 && this.getPos().getY() < 2999995 && this.getPos().getZ() > -29999995 && this.getPos().getZ() < 29999995)
-                        {
+                        if (this.getPos().getX() > -29999995 && this.getPos().getY() < 2999995 && this.getPos().getZ() > -29999995 && this.getPos().getZ() < 29999995) {
                             // Test the y coordinates, so code doesn't have to keep
                             // testing that either
                             int miny = this.getPos().getY() - 5;
                             int maxy = this.getPos().getY() + 5;
-                            if (miny < 0)
-                            {
+                            if (miny < 0) {
                                 miny = 0;
                             }
-                            if (maxy >= this.world.getHeight())
-                            {
+                            if (maxy >= this.world.getHeight()) {
                                 maxy = this.world.getHeight() - 1;
                             }
 
                             // Loop the x and the z first, so the y loop will be at
                             // fixed (x,z) coordinates meaning fixed chunk
                             // coordinates
-                            for (int x = this.getPos().getX() - 5; x <= this.getPos().getX() + 5; x++)
-                            {
+                            for (int x = this.getPos().getX() - 5; x <= this.getPos().getX() + 5; x++) {
                                 int chunkx = x >> 4;
                                 int intrachunkx = x & 15;
                                 // Preload the first chunk for the z loop - there
                                 // can be a maximum of 2 chunks in the z loop
                                 int chunkz = this.getPos().getZ() - 5 >> 4;
                                 Chunk chunk = this.world.getChunkFromChunkCoords(chunkx, chunkz);
-                                for (int z = this.getPos().getZ() - 5; z <= this.getPos().getZ() + 5; z++)
-                                {
-                                    if (z >> 4 != chunkz)
-                                    {
+                                for (int z = this.getPos().getZ() - 5; z <= this.getPos().getZ() + 5; z++) {
+                                    if (z >> 4 != chunkz) {
                                         // moved across z chunk boundary into a new
                                         // chunk, so load the new chunk
                                         chunkz = z >> 4;
                                         chunk = this.world.getChunkFromChunkCoords(chunkx, chunkz);
                                     }
-                                    for (int y = miny; y <= maxy; y++)
-                                    {
+                                    for (int y = miny; y <= maxy; y++) {
                                         // chunk.getBlockID is like world.getBlock
                                         // but faster - needs to be given
                                         // intra-chunk coordinates though
@@ -162,11 +146,9 @@ public class TileEntityOxygenCollector extends TileEntityOxygen implements IInve
                                         // Test for the two most common blocks (air
                                         // and breatheable air) without looking up
                                         // in the blocksList
-                                        if (!(state.getBlock() instanceof BlockAir))
-                                        {
+                                        if (!(state.getBlock() instanceof BlockAir)) {
                                             BlockPos pos = new BlockPos(x, y, z);
-                                            if (state.getBlock().isLeaves(state, this.world, pos) || state.getBlock() instanceof IPlantable && ((IPlantable) state.getBlock()).getPlantType(this.world, pos) == EnumPlantType.Crop)
-                                            {
+                                            if (state.getBlock().isLeaves(state, this.world, pos) || state.getBlock() instanceof IPlantable && ((IPlantable) state.getBlock()).getPlantType(this.world, pos) == EnumPlantType.Crop) {
                                                 nearbyLeaves += 0.075F * 10F;
                                             }
                                         }
@@ -174,9 +156,7 @@ public class TileEntityOxygenCollector extends TileEntityOxygen implements IInve
                                 }
                             }
                         }
-                    }
-                    else
-                    {
+                    } else {
                         nearbyLeaves = 9.3F * 10F;
                     }
 
@@ -185,9 +165,7 @@ public class TileEntityOxygenCollector extends TileEntityOxygen implements IInve
                     this.lastOxygenCollected = nearbyLeaves / 10F;
 
                     this.tank.setFluid(new FluidStack(GCFluids.fluidOxygenGas, (int) Math.max(Math.min(this.getOxygenStored() + nearbyLeaves, this.getMaxOxygenStored()), 0)));
-                }
-                else
-                {
+                } else {
                     this.lastOxygenCollected = 0;
                 }
             }
@@ -195,8 +173,7 @@ public class TileEntityOxygenCollector extends TileEntityOxygen implements IInve
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt)
-    {
+    public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
 
         this.stacks = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
@@ -204,8 +181,7 @@ public class TileEntityOxygenCollector extends TileEntityOxygen implements IInve
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt)
-    {
+    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
 
         ItemStackHelper.saveAllItems(nbt, this.stacks);
@@ -214,24 +190,20 @@ public class TileEntityOxygenCollector extends TileEntityOxygen implements IInve
     }
 
     @Override
-    public int getSizeInventory()
-    {
+    public int getSizeInventory() {
         return this.stacks.size();
     }
 
     @Override
-    public ItemStack getStackInSlot(int var1)
-    {
+    public ItemStack getStackInSlot(int var1) {
         return this.stacks.get(var1);
     }
 
     @Override
-    public ItemStack decrStackSize(int index, int count)
-    {
+    public ItemStack decrStackSize(int index, int count) {
         ItemStack itemstack = ItemStackHelper.getAndSplit(this.stacks, index, count);
 
-        if (!itemstack.isEmpty())
-        {
+        if (!itemstack.isEmpty()) {
             this.markDirty();
         }
 
@@ -239,23 +211,19 @@ public class TileEntityOxygenCollector extends TileEntityOxygen implements IInve
     }
 
     @Override
-    public ItemStack removeStackFromSlot(int index)
-    {
+    public ItemStack removeStackFromSlot(int index) {
         ItemStack oldstack = ItemStackHelper.getAndRemove(this.stacks, index);
-        if (!oldstack.isEmpty())
-        {
-        	this.markDirty();
+        if (!oldstack.isEmpty()) {
+            this.markDirty();
         }
-    	return oldstack;
+        return oldstack;
     }
 
     @Override
-    public void setInventorySlotContents(int index, ItemStack stack)
-    {
+    public void setInventorySlotContents(int index, ItemStack stack) {
         this.stacks.set(index, stack);
 
-        if (stack.getCount() > this.getInventoryStackLimit())
-        {
+        if (stack.getCount() > this.getInventoryStackLimit()) {
             stack.setCount(this.getInventoryStackLimit());
         }
 
@@ -263,12 +231,9 @@ public class TileEntityOxygenCollector extends TileEntityOxygen implements IInve
     }
 
     @Override
-    public boolean isEmpty()
-    {
-        for (ItemStack itemstack : this.stacks)
-        {
-            if (!itemstack.isEmpty())
-            {
+    public boolean isEmpty() {
+        for (ItemStack itemstack : this.stacks) {
+            if (!itemstack.isEmpty()) {
                 return false;
             }
         }
@@ -277,86 +242,72 @@ public class TileEntityOxygenCollector extends TileEntityOxygen implements IInve
     }
 
     @Override
-    public String getName()
-    {
+    public String getName() {
         return GCCoreUtil.translate("container.oxygencollector.name");
     }
 
     @Override
-    public int getInventoryStackLimit()
-    {
+    public int getInventoryStackLimit() {
         return 64;
     }
 
     @Override
-    public boolean isUsableByPlayer(EntityPlayer par1EntityPlayer)
-    {
+    public boolean isUsableByPlayer(EntityPlayer par1EntityPlayer) {
         return this.world.getTileEntity(this.getPos()) == this && par1EntityPlayer.getDistanceSq(this.getPos().getX() + 0.5D, this.getPos().getY() + 0.5D, this.getPos().getZ() + 0.5D) <= 64.0D;
     }
 
-    public boolean hasCustomName()
-    {
+    public boolean hasCustomName() {
         return true;
     }
 
     // ISidedInventory Implementation:
 
     @Override
-    public int[] getSlotsForFace(EnumFacing side)
-    {
-        return new int[] { 0 };
+    public int[] getSlotsForFace(EnumFacing side) {
+        return new int[]{0};
     }
 
     @Override
-    public boolean canInsertItem(int slotID, ItemStack itemstack, EnumFacing side)
-    {
+    public boolean canInsertItem(int slotID, ItemStack itemstack, EnumFacing side) {
         return this.isItemValidForSlot(slotID, itemstack);
     }
 
     @Override
-    public boolean canExtractItem(int slotID, ItemStack itemstack, EnumFacing side)
-    {
+    public boolean canExtractItem(int slotID, ItemStack itemstack, EnumFacing side) {
         return slotID == 0;
     }
 
     @Override
-    public boolean isItemValidForSlot(int slotID, ItemStack itemstack)
-    {
+    public boolean isItemValidForSlot(int slotID, ItemStack itemstack) {
         return slotID == 0 && ItemElectricBase.isElectricItem(itemstack.getItem());
     }
 
     @Override
-    public boolean shouldUseEnergy()
-    {
+    public boolean shouldUseEnergy() {
         return this.getOxygenStored() > 0F && producedLastTick;
     }
 
     @Override
-    public EnumFacing getFront()
-    {
-        IBlockState state = this.world.getBlockState(getPos()); 
-        if (state.getBlock() instanceof BlockOxygenCollector)
-        {
+    public EnumFacing getFront() {
+        IBlockState state = this.world.getBlockState(getPos());
+        if (state.getBlock() instanceof BlockOxygenCollector) {
             return state.getValue(BlockOxygenCollector.FACING);
         }
         return EnumFacing.NORTH;
     }
 
     @Override
-    public EnumFacing getElectricInputDirection()
-    {
+    public EnumFacing getElectricInputDirection() {
         return getFront().rotateY();
     }
 
     @Override
-    public ItemStack getBatteryInSlot()
-    {
+    public ItemStack getBatteryInSlot() {
         return this.getStackInSlot(0);
     }
 
     @Override
-    public boolean shouldPullOxygen()
-    {
+    public boolean shouldPullOxygen() {
         return false;
     }
 
@@ -379,26 +330,22 @@ public class TileEntityOxygenCollector extends TileEntityOxygen implements IInve
 //    }
 
     @Override
-    public boolean shouldUseOxygen()
-    {
+    public boolean shouldUseOxygen() {
         return false;
     }
 
     @Override
-    public EnumSet<EnumFacing> getOxygenInputDirections()
-    {
+    public EnumSet<EnumFacing> getOxygenInputDirections() {
         return EnumSet.noneOf(EnumFacing.class);
     }
 
     @Override
-    public EnumSet<EnumFacing> getOxygenOutputDirections()
-    {
+    public EnumSet<EnumFacing> getOxygenOutputDirections() {
         return EnumSet.of(this.getElectricInputDirection().getOpposite());
     }
 
     @Override
-    public int getOxygenProvide(EnumFacing direction)
-    {
+    public int getOxygenProvide(EnumFacing direction) {
         return this.getOxygenOutputDirections().contains(direction) ? Math.min(TileEntityOxygenStorageModule.OUTPUT_PER_TICK, this.getOxygenStored()) : 0;
     }
 }

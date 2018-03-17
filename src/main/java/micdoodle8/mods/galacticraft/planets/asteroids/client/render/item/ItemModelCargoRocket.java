@@ -11,18 +11,14 @@ import javax.vecmath.Matrix4f;
 import javax.vecmath.Quat4f;
 import javax.vecmath.Vector3f;
 
-public class ItemModelCargoRocket extends ModelTransformWrapper
-{
-    public ItemModelCargoRocket(IBakedModel modelToWrap)
-    {
+public class ItemModelCargoRocket extends ModelTransformWrapper {
+    public ItemModelCargoRocket(IBakedModel modelToWrap) {
         super(modelToWrap);
     }
 
     @Override
-    protected Matrix4f getTransformForPerspective(TransformType cameraTransformType)
-    {
-        if (cameraTransformType == TransformType.GUI)
-        {
+    protected Matrix4f getTransformForPerspective(TransformType cameraTransformType) {
+        if (cameraTransformType == TransformType.GUI) {
             Vector3f trans = new Vector3f(-0.08F, 0.0F, -0.08F);
             Matrix4f ret = new Matrix4f();
             ret.setIdentity();
@@ -59,8 +55,7 @@ public class ItemModelCargoRocket extends ModelTransformWrapper
             return ret;
         }
 
-        if (cameraTransformType == TransformType.FIRST_PERSON_RIGHT_HAND || cameraTransformType == TransformType.FIRST_PERSON_LEFT_HAND)
-        {
+        if (cameraTransformType == TransformType.FIRST_PERSON_RIGHT_HAND || cameraTransformType == TransformType.FIRST_PERSON_LEFT_HAND) {
             Vector3f trans = new Vector3f(-2.5F, 1.8F, -3.0F);
             Matrix4f ret = new Matrix4f();
             ret.setIdentity();
@@ -90,8 +85,7 @@ public class ItemModelCargoRocket extends ModelTransformWrapper
             return ret;
         }
 
-        if (cameraTransformType == TransformType.THIRD_PERSON_RIGHT_HAND || cameraTransformType == TransformType.THIRD_PERSON_LEFT_HAND)
-        {
+        if (cameraTransformType == TransformType.THIRD_PERSON_RIGHT_HAND || cameraTransformType == TransformType.THIRD_PERSON_LEFT_HAND) {
             Vector3f trans = new Vector3f(1.2F, -2.7F, 1.0F);
             Matrix4f ret = new Matrix4f();
             ret.setIdentity();
@@ -121,8 +115,7 @@ public class ItemModelCargoRocket extends ModelTransformWrapper
             return ret;
         }
 
-        if (cameraTransformType == TransformType.GROUND)
-        {
+        if (cameraTransformType == TransformType.GROUND) {
             Matrix4f ret = new Matrix4f();
             ret.setIdentity();
             Matrix4f mul = new Matrix4f();
@@ -134,8 +127,7 @@ public class ItemModelCargoRocket extends ModelTransformWrapper
             ret.mul(mul);
             return ret;
         }
-        if (cameraTransformType == TransformType.FIXED)
-        {
+        if (cameraTransformType == TransformType.FIXED) {
             Matrix4f ret = new Matrix4f();
             ret.setIdentity();
             Matrix4f mul = new Matrix4f();

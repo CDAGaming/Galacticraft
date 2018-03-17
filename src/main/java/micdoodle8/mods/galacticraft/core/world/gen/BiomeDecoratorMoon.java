@@ -16,8 +16,7 @@ import net.minecraftforge.common.MinecraftForge;
 
 import java.util.Random;
 
-public class BiomeDecoratorMoon extends BiomeDecorator
-{
+public class BiomeDecoratorMoon extends BiomeDecorator {
     private World world;
     private Random randomGenerator;
 
@@ -26,8 +25,7 @@ public class BiomeDecoratorMoon extends BiomeDecorator
     private WorldGenerator copperGen;
     private WorldGenerator tinGen;
 
-    public BiomeDecoratorMoon()
-    {
+    public BiomeDecoratorMoon() {
         this.copperGen = new WorldGenMinableMeta(GCBlocks.blockMoon, 4, 0, true, GCBlocks.blockMoon, 4);
         this.tinGen = new WorldGenMinableMeta(GCBlocks.blockMoon, 4, 1, true, GCBlocks.blockMoon, 4);
         this.cheeseGen = new WorldGenMinableMeta(GCBlocks.blockMoon, 3, 2, true, GCBlocks.blockMoon, 4);
@@ -35,14 +33,10 @@ public class BiomeDecoratorMoon extends BiomeDecorator
     }
 
     @Override
-    public void decorate(World worldIn, Random random, Biome p_180292_3_, BlockPos pos)
-    {
-        if (this.world != null)
-        {
+    public void decorate(World worldIn, Random random, Biome p_180292_3_, BlockPos pos) {
+        if (this.world != null) {
             throw new RuntimeException("Already decorating!!");
-        }
-        else
-        {
+        } else {
             this.world = worldIn;
             this.randomGenerator = random;
             this.chunkPos = pos;
@@ -52,43 +46,34 @@ public class BiomeDecoratorMoon extends BiomeDecorator
         }
     }
 
-    private void genStandardOre(int amountPerChunk, WorldGenerator worldGenerator, int minY, int maxY)
-    {
-        for (int var5 = 0; var5 < amountPerChunk; ++var5)
-        {
+    private void genStandardOre(int amountPerChunk, WorldGenerator worldGenerator, int minY, int maxY) {
+        for (int var5 = 0; var5 < amountPerChunk; ++var5) {
             BlockPos blockpos = this.chunkPos.add(this.randomGenerator.nextInt(16), this.randomGenerator.nextInt(maxY - minY) + minY, this.randomGenerator.nextInt(16));
             worldGenerator.generate(this.world, this.randomGenerator, blockpos);
         }
     }
 
-    private void generateMoon()
-    {
+    private void generateMoon() {
         MinecraftForge.EVENT_BUS.post(new GCCoreEventPopulate.Pre(this.world, this.randomGenerator, chunkPos));
         this.genStandardOre(20, this.dirtGen, 0, 200);
-        if (!ConfigManagerCore.disableCopperMoon)
-        {
+        if (!ConfigManagerCore.disableCopperMoon) {
             this.genStandardOre(26, this.copperGen, 0, 60);
         }
-        if (!ConfigManagerCore.disableTinMoon)
-        {
+        if (!ConfigManagerCore.disableTinMoon) {
             this.genStandardOre(23, this.tinGen, 0, 60);
         }
-        if (!ConfigManagerCore.disableCheeseMoon)
-        {
+        if (!ConfigManagerCore.disableCheeseMoon) {
             this.genStandardOre(14, this.cheeseGen, 0, 85);
         }
-        if (!ConfigManagerCore.disableSapphireMoon)
-        {
+        if (!ConfigManagerCore.disableSapphireMoon) {
             int count = 3 + this.randomGenerator.nextInt(6);
             IBlockState sapphire = GCBlocks.blockMoon.getDefaultState().withProperty(BlockBasicMoon.BASIC_TYPE_MOON, BlockBasicMoon.EnumBlockBasicMoon.ORE_SAPPHIRE);
-            for (int i = 0; i < count; i++)
-            {
+            for (int i = 0; i < count; i++) {
                 BlockPos blockpos = this.chunkPos.add(this.randomGenerator.nextInt(16) + 8, this.randomGenerator.nextInt(28) + 4, this.randomGenerator.nextInt(16) + 8);
 
                 IBlockState toReplace = this.world.getBlockState(blockpos);
 
-                if (toReplace.getBlock() == GCBlocks.blockMoon && toReplace.getBlock().isReplaceableOreGen(toReplace, this.world, blockpos, BlockMatcher.forBlock(Blocks.STONE)))
-                {
+                if (toReplace.getBlock() == GCBlocks.blockMoon && toReplace.getBlock().isReplaceableOreGen(toReplace, this.world, blockpos, BlockMatcher.forBlock(Blocks.STONE))) {
                     this.world.setBlockState(blockpos, sapphire, 2);
                 }
             }

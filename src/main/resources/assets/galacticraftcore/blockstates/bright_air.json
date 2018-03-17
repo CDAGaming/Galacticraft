@@ -1,7 +1,11 @@
 {
-    "forge_marker": 1,
-    "variants": {
-        "normal": { "model": "galacticraftcore:breatheable_air" },
-        "inventory": { "model": "galacticraftcore:breatheable_air" }
+  "forge_marker": 1,
+  "variants": {
+    "normal": {
+      "model": "galacticraftcore:breatheable_air"
+    },
+    "inventory": {
+      "model": "galacticraftcore:breatheable_air"
     }
+  }
 }

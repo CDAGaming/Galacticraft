@@ -1,7 +1,6 @@
 package micdoodle8.mods.galacticraft.core.entities.player;
 
-public enum EnumGravity
-{
+public enum EnumGravity {
     down(0, 1.0F, 0.0F, 0.0F, 1.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 0.0F, 0.0F, 0.0F, 0.0F),
     up(1, 1.0F, 0.0F, 0.0F, -1.0F, 0.0F, -1.0F, 0.0F, 0.0F, -1.0F, 0.0F, 0.0F, 1.0F, 0.0F),
     west(2, 0.0F, -1.0F, 1.0F, 0.0F, 0.0F, 0.0F, 0.5F, 1.0F, 0.0F, 0.0F, -1.0F, 1.0F, 0.0F),
@@ -9,6 +8,7 @@ public enum EnumGravity
     south(4, 1.0F, 0.0F, 0.0F, 0.0F, -1.0F, 0.5F, 0.0F, 0.0F, 0.0F, -1.0F, 0.0F, 1.0F, 1.0F),
     north(5, 1.0F, 0.0F, 0.0F, 0.0F, 1.0F, -0.5F, 0.0F, 0.0F, 0.0F, 1.0F, 0.0F, 1.0F, -1.0F);
 
+    private final static EnumGravity[] GDirections = {down, up, west, east, south, north};
     private final int intValue;
     private final float pitchGravityX;
     private final float pitchGravityY;
@@ -23,10 +23,8 @@ public enum EnumGravity
     private final float eyeVecX;
     private final float eyeVecY;
     private final float eyeVecZ;
-    private final static EnumGravity[] GDirections = { down, up, west, east, south, north };
 
-    EnumGravity(int value, float pitchX, float pitchY, float yawX, float yawY, float yawZ, float thetaX, float thetaZ, float sneakX, float sneakY, float sneakZ, float eyeX, float eyeY, float eyeZ)
-    {
+    EnumGravity(int value, float pitchX, float pitchY, float yawX, float yawY, float yawZ, float thetaX, float thetaZ, float sneakX, float sneakY, float sneakZ, float eyeX, float eyeY, float eyeZ) {
         this.intValue = value;
         this.pitchGravityX = pitchX;
         this.pitchGravityY = pitchY;
@@ -43,78 +41,63 @@ public enum EnumGravity
         this.eyeVecZ = eyeZ;
     }
 
-    public int getIntValue()
-    {
+    public static EnumGravity[] getGDirections() {
+        return GDirections;
+    }
+
+    public int getIntValue() {
         return intValue;
     }
 
-    public float getPitchGravityX()
-    {
+    public float getPitchGravityX() {
         return pitchGravityX;
     }
 
-    public float getPitchGravityY()
-    {
+    public float getPitchGravityY() {
         return pitchGravityY;
     }
 
-    public float getYawGravityX()
-    {
+    public float getYawGravityX() {
         return yawGravityX;
     }
 
-    public float getYawGravityY()
-    {
+    public float getYawGravityY() {
         return yawGravityY;
     }
 
-    public float getYawGravityZ()
-    {
+    public float getYawGravityZ() {
         return yawGravityZ;
     }
 
-    public float getThetaX()
-    {
+    public float getThetaX() {
         return thetaX;
     }
 
-    public float getThetaZ()
-    {
+    public float getThetaZ() {
         return thetaZ;
     }
 
-    public float getSneakVecX()
-    {
+    public float getSneakVecX() {
         return sneakVecX;
     }
 
-    public float getSneakVecY()
-    {
+    public float getSneakVecY() {
         return sneakVecY;
     }
 
-    public float getSneakVecZ()
-    {
+    public float getSneakVecZ() {
         return sneakVecZ;
     }
 
-    public float getEyeVecX()
-    {
+    public float getEyeVecX() {
         return eyeVecX;
     }
 
-    public float getEyeVecY()
-    {
+    public float getEyeVecY() {
         return eyeVecY;
     }
 
-    public float getEyeVecZ()
-    {
+    public float getEyeVecZ() {
         return eyeVecZ;
-    }
-
-    public static EnumGravity[] getGDirections()
-    {
-        return GDirections;
     }
 }

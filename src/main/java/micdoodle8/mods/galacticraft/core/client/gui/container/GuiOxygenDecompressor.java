@@ -16,8 +16,7 @@ import org.lwjgl.opengl.GL11;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GuiOxygenDecompressor extends GuiContainerGC
-{
+public class GuiOxygenDecompressor extends GuiContainerGC {
     private static final ResourceLocation compressorTexture = new ResourceLocation(Constants.ASSET_PREFIX, "textures/gui/decompressor.png");
 
     private final TileEntityOxygenDecompressor decompressor;
@@ -25,16 +24,14 @@ public class GuiOxygenDecompressor extends GuiContainerGC
     private GuiElementInfoRegion oxygenInfoRegion = new GuiElementInfoRegion((this.width - this.xSize) / 2 + 112, (this.height - this.ySize) / 2 + 24, 56, 9, new ArrayList<String>(), this.width, this.height, this);
     private GuiElementInfoRegion electricInfoRegion = new GuiElementInfoRegion((this.width - this.xSize) / 2 + 112, (this.height - this.ySize) / 2 + 37, 56, 9, new ArrayList<String>(), this.width, this.height, this);
 
-    public GuiOxygenDecompressor(InventoryPlayer par1InventoryPlayer, TileEntityOxygenDecompressor par2TileEntityAirDistributor)
-    {
+    public GuiOxygenDecompressor(InventoryPlayer par1InventoryPlayer, TileEntityOxygenDecompressor par2TileEntityAirDistributor) {
         super(new ContainerOxygenDecompressor(par1InventoryPlayer, par2TileEntityAirDistributor, FMLClientHandler.instance().getClient().player));
         this.decompressor = par2TileEntityAirDistributor;
         this.ySize = 180;
     }
 
     @Override
-    public void initGui()
-    {
+    public void initGui() {
         super.initGui();
         List<String> batterySlotDesc = new ArrayList<String>();
         batterySlotDesc.add(GCCoreUtil.translate("gui.battery_slot.desc.0"));
@@ -65,8 +62,7 @@ public class GuiOxygenDecompressor extends GuiContainerGC
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int par1, int par2)
-    {
+    protected void drawGuiContainerForegroundLayer(int par1, int par2) {
         this.fontRenderer.drawString(this.decompressor.getName(), 8, 10, 4210752);
         GCCoreUtil.drawStringRightAligned(GCCoreUtil.translate("gui.message.in.name") + ":", 99, 26, 4210752, this.fontRenderer);
         GCCoreUtil.drawStringRightAligned(GCCoreUtil.translate("gui.message.in.name") + ":", 99, 38, 4210752, this.fontRenderer);
@@ -81,15 +77,12 @@ public class GuiOxygenDecompressor extends GuiContainerGC
         this.fontRenderer.drawString(GCCoreUtil.translate("container.inventory"), 8, this.ySize - 104 + 17, 4210752);
     }
 
-    private String getStatus()
-    {
-        if (this.decompressor.getStackInSlot(0) == null || !(this.decompressor.getStackInSlot(0).getItem() instanceof ItemOxygenTank))
-        {
+    private String getStatus() {
+        if (this.decompressor.getStackInSlot(0) == null || !(this.decompressor.getStackInSlot(0).getItem() instanceof ItemOxygenTank)) {
             return EnumColor.DARK_RED + GCCoreUtil.translate("gui.status.missingtank.name");
         }
 
-        if (this.decompressor.getStackInSlot(0) != null && this.decompressor.getStackInSlot(0).getItemDamage() == this.decompressor.getStackInSlot(0).getMaxDamage())
-        {
+        if (this.decompressor.getStackInSlot(0) != null && this.decompressor.getStackInSlot(0).getItemDamage() == this.decompressor.getStackInSlot(0).getMaxDamage()) {
             return EnumColor.DARK_RED + GCCoreUtil.translate("gui.status.tank_empty.name");
         }
 
@@ -97,28 +90,24 @@ public class GuiOxygenDecompressor extends GuiContainerGC
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3)
-    {
+    protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3) {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.mc.getTextureManager().bindTexture(GuiOxygenDecompressor.compressorTexture);
         final int var5 = (this.width - this.xSize) / 2;
         final int var6 = (this.height - this.ySize) / 2;
         this.drawTexturedModalRect(var5, var6 + 5, 0, 0, this.xSize, 181);
 
-        if (this.decompressor != null)
-        {
+        if (this.decompressor != null) {
             int scale = this.decompressor.getCappedScaledOxygenLevel(54);
             this.drawTexturedModalRect(var5 + 113, var6 + 25, 197, 7, Math.min(scale, 54), 7);
             scale = this.decompressor.getScaledElecticalLevel(54);
             this.drawTexturedModalRect(var5 + 113, var6 + 38, 197, 0, Math.min(scale, 54), 7);
 
-            if (this.decompressor.getEnergyStoredGC() > 0)
-            {
+            if (this.decompressor.getEnergyStoredGC() > 0) {
                 this.drawTexturedModalRect(var5 + 99, var6 + 37, 176, 0, 11, 10);
             }
 
-            if (this.decompressor.getOxygenStored() > 0)
-            {
+            if (this.decompressor.getOxygenStored() > 0) {
                 this.drawTexturedModalRect(var5 + 100, var6 + 24, 187, 0, 10, 10);
             }
 

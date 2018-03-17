@@ -18,8 +18,7 @@ import org.lwjgl.opengl.GL11;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GuiFuelLoader extends GuiContainerGC
-{
+public class GuiFuelLoader extends GuiContainerGC {
     private static final ResourceLocation fuelLoaderTexture = new ResourceLocation(Constants.ASSET_PREFIX, "textures/gui/fuel_loader.png");
 
     private final TileEntityFuelLoader fuelLoader;
@@ -27,27 +26,23 @@ public class GuiFuelLoader extends GuiContainerGC
     private GuiButton buttonLoadFuel;
     private GuiElementInfoRegion electricInfoRegion = new GuiElementInfoRegion((this.width - this.xSize) / 2 + 112, (this.height - this.ySize) / 2 + 65, 56, 9, new ArrayList<String>(), this.width, this.height, this);
 
-    public GuiFuelLoader(InventoryPlayer par1InventoryPlayer, TileEntityFuelLoader par2TileEntityAirDistributor)
-    {
+    public GuiFuelLoader(InventoryPlayer par1InventoryPlayer, TileEntityFuelLoader par2TileEntityAirDistributor) {
         super(new ContainerFuelLoader(par1InventoryPlayer, par2TileEntityAirDistributor));
         this.fuelLoader = par2TileEntityAirDistributor;
         this.ySize = 180;
     }
 
     @Override
-    protected void actionPerformed(GuiButton par1GuiButton)
-    {
-        switch (par1GuiButton.id)
-        {
-        case 0:
-            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_UPDATE_DISABLEABLE_BUTTON, GCCoreUtil.getDimensionID(this.fuelLoader.getWorld()), new Object[] { this.fuelLoader.getPos(), 0 }));
-            break;
+    protected void actionPerformed(GuiButton par1GuiButton) {
+        switch (par1GuiButton.id) {
+            case 0:
+                GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_UPDATE_DISABLEABLE_BUTTON, GCCoreUtil.getDimensionID(this.fuelLoader.getWorld()), new Object[]{this.fuelLoader.getPos(), 0}));
+                break;
         }
     }
 
     @Override
-    public void initGui()
-    {
+    public void initGui() {
         super.initGui();
         List<String> fuelTankDesc = new ArrayList<String>();
         fuelTankDesc.add(GCCoreUtil.translate("gui.fuel_tank.desc.2"));
@@ -70,8 +65,7 @@ public class GuiFuelLoader extends GuiContainerGC
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int par1, int par2)
-    {
+    protected void drawGuiContainerForegroundLayer(int par1, int par2) {
         this.fontRenderer.drawString(this.fuelLoader.getName(), 60, 10, 4210752);
         this.buttonLoadFuel.enabled = this.fuelLoader.disableCooldown == 0 && !(this.fuelLoader.fuelTank.getFluid() == null || this.fuelLoader.fuelTank.getFluid().amount == 0);
         this.buttonLoadFuel.displayString = !this.fuelLoader.getDisabled(0) ? GCCoreUtil.translate("gui.button.stoploading.name") : GCCoreUtil.translate("gui.button.loadfuel.name");
@@ -81,10 +75,8 @@ public class GuiFuelLoader extends GuiContainerGC
         this.fontRenderer.drawString(GCCoreUtil.translate("container.inventory"), 8, this.ySize - 118 + 2 + 11, 4210752);
     }
 
-    private String getStatus()
-    {
-        if (this.fuelLoader.fuelTank.getFluid() == null || this.fuelLoader.fuelTank.getFluid().amount == 0)
-        {
+    private String getStatus() {
+        if (this.fuelLoader.fuelTank.getFluid() == null || this.fuelLoader.fuelTank.getFluid().amount == 0) {
             return EnumColor.DARK_RED + GCCoreUtil.translate("gui.status.nofuel.name");
         }
 
@@ -92,8 +84,7 @@ public class GuiFuelLoader extends GuiContainerGC
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3)
-    {
+    protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3) {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.mc.getTextureManager().bindTexture(GuiFuelLoader.fuelLoaderTexture);
         final int var5 = (this.width - this.xSize) / 2;
@@ -109,8 +100,7 @@ public class GuiFuelLoader extends GuiContainerGC
 //		electricityDesc.add(EnumColor.YELLOW + GCCoreUtil.translate("gui.energy_storage.desc.1") + ((int) Math.floor(this.fuelLoader.getEnergyStoredGC()) + " / " + (int) Math.floor(this.fuelLoader.getMaxEnergyStoredGC())));
         this.electricInfoRegion.tooltipStrings = electricityDesc;
 
-        if (this.fuelLoader.getEnergyStoredGC() > 0)
-        {
+        if (this.fuelLoader.getEnergyStoredGC() > 0) {
             this.drawTexturedModalRect(var5 + 99, var6 + 65, 192, 7, 11, 10);
         }
 

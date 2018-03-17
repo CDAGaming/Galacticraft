@@ -20,8 +20,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
-public abstract class BlockTransmitter extends BlockAdvanced
-{
+public abstract class BlockTransmitter extends BlockAdvanced {
     public static final PropertyBool UP = PropertyBool.create("up");
     public static final PropertyBool DOWN = PropertyBool.create("down");
     public static final PropertyBool NORTH = PropertyBool.create("north");
@@ -29,23 +28,20 @@ public abstract class BlockTransmitter extends BlockAdvanced
     public static final PropertyBool SOUTH = PropertyBool.create("south");
     public static final PropertyBool WEST = PropertyBool.create("west");
 
-    public BlockTransmitter(Material material)
-    {
+    public BlockTransmitter(Material material) {
         super(material);
     }
 
     @Override
-    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)
-    {
+    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
         super.neighborChanged(state, worldIn, pos, blockIn, fromPos);
 
         TileEntity tile = worldIn.getTileEntity(pos);
 
 //        this.setBlockBoundsBasedOnState(worldIn, pos);
-        GalacticraftCore.packetPipeline.sendToAllAround(new PacketSimple(EnumSimplePacket.C_UPDATE_WIRE_BOUNDS, GCCoreUtil.getDimensionID((World) worldIn), new Object[] { pos }), new NetworkRegistry.TargetPoint(GCCoreUtil.getDimensionID((World) worldIn), pos.getX(), pos.getY(), pos.getZ(), 10.0D));
+        GalacticraftCore.packetPipeline.sendToAllAround(new PacketSimple(EnumSimplePacket.C_UPDATE_WIRE_BOUNDS, GCCoreUtil.getDimensionID((World) worldIn), new Object[]{pos}), new NetworkRegistry.TargetPoint(GCCoreUtil.getDimensionID((World) worldIn), pos.getX(), pos.getY(), pos.getZ(), 10.0D));
 
-        if (tile instanceof INetworkConnection)
-        {
+        if (tile instanceof INetworkConnection) {
             ((INetworkConnection) tile).refresh();
         }
     }
@@ -130,7 +126,6 @@ public abstract class BlockTransmitter extends BlockAdvanced
 //            this.setBlockBounds(minX, minY, minZ, maxX, maxY, maxZ);
 //        }
 //    }
-
     public abstract NetworkType getNetworkType(IBlockState state);
 
 //    @Override
@@ -198,23 +193,20 @@ public abstract class BlockTransmitter extends BlockAdvanced
 //    }
 
     @Override
-    public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
-    {
+    public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
         TileEntity tileEntity = worldIn.getTileEntity(pos);
 
-        if (tileEntity instanceof ITransmitter)
-        {
+        if (tileEntity instanceof ITransmitter) {
             TileEntity[] connectable = new TileEntity[6];
-            switch (this.getNetworkType(state))
-            {
-            case FLUID:
-                connectable = OxygenUtil.getAdjacentFluidConnections(tileEntity);
-                break;
-            case POWER:
-                connectable = EnergyUtil.getAdjacentPowerConnections(tileEntity);
-                break;
-            default:
-                break;
+            switch (this.getNetworkType(state)) {
+                case FLUID:
+                    connectable = OxygenUtil.getAdjacentFluidConnections(tileEntity);
+                    break;
+                case POWER:
+                    connectable = EnergyUtil.getAdjacentPowerConnections(tileEntity);
+                    break;
+                default:
+                    break;
             }
 
             return state.withProperty(DOWN, Boolean.valueOf(connectable[EnumFacing.DOWN.ordinal()] != null))

@@ -12,15 +12,12 @@ import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.HashMap;
 
-public class RecipeManagerMars
-{
-    public static void loadRecipes()
-    {
+public class RecipeManagerMars {
+    public static void loadRecipes() {
         RecipeManagerMars.addUniversalRecipes();
     }
 
-    private static void addUniversalRecipes()
-    {
+    private static void addUniversalRecipes() {
         OreDictionary.registerOre("ingotDesh", new ItemStack(MarsItems.marsItemBasic, 1, 2));
         OreDictionary.registerOre("compressedDesh", new ItemStack(MarsItems.marsItemBasic, 1, 5));
 

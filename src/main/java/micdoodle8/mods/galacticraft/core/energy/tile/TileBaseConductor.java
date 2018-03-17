@@ -23,28 +23,22 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  *
  * @author Calclavia
  */
-@SuppressWarnings({ "rawtypes" })
-public abstract class TileBaseConductor extends TileEntity implements IConductor
-{
+@SuppressWarnings({"rawtypes"})
+public abstract class TileBaseConductor extends TileEntity implements IConductor {
+    public TileEntity[] adjacentConnections = null;
     protected IGridNetwork network;
 
-    public TileEntity[] adjacentConnections = null;
-
     @Override
-    public void validate()
-    {
+    public void validate() {
         super.validate();
-        if (!this.world.isRemote)
-        {
+        if (!this.world.isRemote) {
             TickHandlerServer.energyTransmitterUpdates.add(this);
         }
     }
 
     @Override
-    public void invalidate()
-    {
-        if (!this.world.isRemote)
-        {
+    public void invalidate() {
+        if (!this.world.isRemote) {
             this.getNetwork().split(this);
         }
 
@@ -52,17 +46,14 @@ public abstract class TileBaseConductor extends TileEntity implements IConductor
     }
 
     @Override
-    public void onChunkUnload()
-    {
+    public void onChunkUnload() {
         super.invalidate();
         super.onChunkUnload();
     }
 
     @Override
-    public IElectricityNetwork getNetwork()
-    {
-        if (this.network == null)
-        {
+    public IElectricityNetwork getNetwork() {
+        if (this.network == null) {
             EnergyNetwork network = new EnergyNetwork();
             network.getTransmitters().add(this);
             this.setNetwork(network);
@@ -72,62 +63,50 @@ public abstract class TileBaseConductor extends TileEntity implements IConductor
     }
 
     @Override
-    public void setNetwork(IGridNetwork network)
-    {
+    public void setNetwork(IGridNetwork network) {
         this.network = network;
     }
 
     @Override
-    public void refresh()
-    {
-        if (!this.world.isRemote)
-        {
+    public void refresh() {
+        if (!this.world.isRemote) {
             this.adjacentConnections = null;
 
             this.getNetwork().refresh();
 
             BlockVec3 thisVec = new BlockVec3(this);
-            for (EnumFacing side : EnumFacing.VALUES)
-            {
-            	TileEntity tileEntity = thisVec.getTileEntityOnSide(this.world, side);
+            for (EnumFacing side : EnumFacing.VALUES) {
+                TileEntity tileEntity = thisVec.getTileEntityOnSide(this.world, side);
 
-            	if (tileEntity instanceof TileBaseConductor && ((TileBaseConductor)tileEntity).canConnect(side.getOpposite(), NetworkType.POWER))
-            	{
-            		IGridNetwork otherNet = ((INetworkProvider) tileEntity).getNetwork();
-            		if (!this.getNetwork().equals(otherNet))
-            		{
-            			if (!otherNet.getTransmitters().isEmpty())
-            			{
-            				otherNet.merge(this.getNetwork());
-            			}
-            		}
-            	}
+                if (tileEntity instanceof TileBaseConductor && ((TileBaseConductor) tileEntity).canConnect(side.getOpposite(), NetworkType.POWER)) {
+                    IGridNetwork otherNet = ((INetworkProvider) tileEntity).getNetwork();
+                    if (!this.getNetwork().equals(otherNet)) {
+                        if (!otherNet.getTransmitters().isEmpty()) {
+                            otherNet.merge(this.getNetwork());
+                        }
+                    }
+                }
             }
         }
     }
 
     @Override
-    public TileEntity[] getAdjacentConnections()
-    {
+    public TileEntity[] getAdjacentConnections() {
         /**
          * Cache the adjacentConnections.
          */
-        if (this.adjacentConnections == null)
-        {
+        if (this.adjacentConnections == null) {
             this.adjacentConnections = new TileEntity[6];
 
             BlockVec3 thisVec = new BlockVec3(this);
-            for (int i = 0; i < 6; i++)
-            {
+            for (int i = 0; i < 6; i++) {
                 EnumFacing side = EnumFacing.getFront(i);
                 TileEntity tileEntity = thisVec.getTileEntityOnSide(this.world, side);
 
-                if (tileEntity instanceof IConnector)
-                {
-                	if (((IConnector) tileEntity).canConnect(side.getOpposite(), NetworkType.POWER))
-                	{
-                		this.adjacentConnections[i] = tileEntity;
-                	}
+                if (tileEntity instanceof IConnector) {
+                    if (((IConnector) tileEntity).canConnect(side.getOpposite(), NetworkType.POWER)) {
+                        this.adjacentConnections[i] = tileEntity;
+                    }
                 }
             }
         }
@@ -136,39 +115,33 @@ public abstract class TileBaseConductor extends TileEntity implements IConductor
     }
 
     @Override
-    public boolean hasNetwork()
-    {
+    public boolean hasNetwork() {
         return this.network != null;
     }
 
     @Override
-    public boolean canConnect(EnumFacing direction, NetworkType type)
-    {
+    public boolean canConnect(EnumFacing direction, NetworkType type) {
         return type == NetworkType.POWER;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public AxisAlignedBB getRenderBoundingBox()
-    {
+    public AxisAlignedBB getRenderBoundingBox() {
         return new AxisAlignedBB(this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), this.getPos().getX() + 1, this.getPos().getY() + 1, this.getPos().getZ() + 1);
     }
 
     @Override
-    public NetworkType getNetworkType()
-    {
+    public NetworkType getNetworkType() {
         return NetworkType.POWER;
     }
 
     @Override
-    public boolean canTransmit()
-    {
+    public boolean canTransmit() {
         return true;
     }
 
     @Override
-    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
-    {
+    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate) {
         return oldState.getBlock() != newSate.getBlock();
     }
 }

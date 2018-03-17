@@ -23,9 +23,14 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class BlockWallGC extends Block /* Do not extend BlockWall */ implements ISortableBlock
-{
-    protected static final AxisAlignedBB[] AABB_BY_INDEX = new AxisAlignedBB[] {
+public class BlockWallGC extends Block /* Do not extend BlockWall */ implements ISortableBlock {
+    public final static PropertyBool UP = PropertyBool.create("up");
+    public final static PropertyBool NORTH = PropertyBool.create("north");
+    public final static PropertyBool EAST = PropertyBool.create("east");
+    public final static PropertyBool SOUTH = PropertyBool.create("south");
+    public final static PropertyBool WEST = PropertyBool.create("west");
+    public final static PropertyEnum<BlockType> VARIANT = PropertyEnum.create("variant", BlockType.class);
+    protected static final AxisAlignedBB[] AABB_BY_INDEX = new AxisAlignedBB[]{
             new AxisAlignedBB(0.25D, 0.0D, 0.25D, 0.75D, 1.0D, 0.75D),
             new AxisAlignedBB(0.25D, 0.0D, 0.25D, 0.75D, 1.0D, 1.0D),
             new AxisAlignedBB(0.0D, 0.0D, 0.25D, 0.75D, 1.0D, 0.75D),
@@ -43,7 +48,7 @@ public class BlockWallGC extends Block /* Do not extend BlockWall */ implements 
             new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 1.0D, 0.75D),
             new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 1.0D, 1.0D)
     };
-    protected static final AxisAlignedBB[] CLIP_AABB_BY_INDEX = new AxisAlignedBB[] {
+    protected static final AxisAlignedBB[] CLIP_AABB_BY_INDEX = new AxisAlignedBB[]{
             AABB_BY_INDEX[0].setMaxY(1.5D),
             AABB_BY_INDEX[1].setMaxY(1.5D),
             AABB_BY_INDEX[2].setMaxY(1.5D),
@@ -62,15 +67,7 @@ public class BlockWallGC extends Block /* Do not extend BlockWall */ implements 
             AABB_BY_INDEX[15].setMaxY(1.5D)
     };
 
-    public final static PropertyBool UP = PropertyBool.create("up");
-    public final static PropertyBool NORTH = PropertyBool.create("north");
-    public final static PropertyBool EAST = PropertyBool.create("east");
-    public final static PropertyBool SOUTH = PropertyBool.create("south");
-    public final static PropertyBool WEST = PropertyBool.create("west");
-    public final static PropertyEnum<BlockType> VARIANT = PropertyEnum.create("variant", BlockType.class);
-
-    public BlockWallGC(String name)
-    {
+    public BlockWallGC(String name) {
         super(Material.ROCK);
         this.setHardness(1.5F);
         this.setResistance(2.5F);
@@ -78,75 +75,63 @@ public class BlockWallGC extends Block /* Do not extend BlockWall */ implements 
         this.setUnlocalizedName(name);
     }
 
+    private static int getAABBIndex(IBlockState state) {
+        int i = 0;
+
+        if (state.getValue(NORTH)) {
+            i |= 1 << EnumFacing.NORTH.getHorizontalIndex();
+        }
+
+        if (state.getValue(EAST)) {
+            i |= 1 << EnumFacing.EAST.getHorizontalIndex();
+        }
+
+        if (state.getValue(SOUTH)) {
+            i |= 1 << EnumFacing.SOUTH.getHorizontalIndex();
+        }
+
+        if (state.getValue(WEST)) {
+            i |= 1 << EnumFacing.WEST.getHorizontalIndex();
+        }
+
+        return i;
+    }
+
     @Override
-    public boolean isFullCube(IBlockState state)
-    {
+    public boolean isFullCube(IBlockState state) {
         return false;
     }
 
     @Override
-    public boolean isPassable(IBlockAccess world, BlockPos pos)
-    {
+    public boolean isPassable(IBlockAccess world, BlockPos pos) {
         return false;
     }
 
     @Override
-    public boolean isOpaqueCube(IBlockState state)
-    {
+    public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
 
     @Override
-    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face)
-    {
+    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
         return face != EnumFacing.UP && face != EnumFacing.DOWN ? BlockFaceShape.MIDDLE_POLE_THICK : BlockFaceShape.CENTER_BIG;
     }
 
     @Override
-    public boolean canPlaceTorchOnTop(IBlockState state, IBlockAccess world, BlockPos pos)
-    {
+    public boolean canPlaceTorchOnTop(IBlockState state, IBlockAccess world, BlockPos pos) {
         return true;
     }
 
     @Override
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
-    {
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
         state = this.getActualState(state, source, pos);
         return AABB_BY_INDEX[getAABBIndex(state)];
     }
 
     @Override
-    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos)
-    {
+    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
         blockState = this.getActualState(blockState, worldIn, pos);
         return CLIP_AABB_BY_INDEX[getAABBIndex(blockState)];
-    }
-
-    private static int getAABBIndex(IBlockState state)
-    {
-        int i = 0;
-
-        if (state.getValue(NORTH))
-        {
-            i |= 1 << EnumFacing.NORTH.getHorizontalIndex();
-        }
-
-        if (state.getValue(EAST))
-        {
-            i |= 1 << EnumFacing.EAST.getHorizontalIndex();
-        }
-
-        if (state.getValue(SOUTH))
-        {
-            i |= 1 << EnumFacing.SOUTH.getHorizontalIndex();
-        }
-
-        if (state.getValue(WEST))
-        {
-            i |= 1 << EnumFacing.WEST.getHorizontalIndex();
-        }
-
-        return i;
     }
 
 //    @Override
@@ -202,8 +187,7 @@ public class BlockWallGC extends Block /* Do not extend BlockWall */ implements 
 //        return super.getCollisionBoundingBox(world, pos, state);
 //    }
 
-    private boolean canConnectTo(IBlockAccess world, BlockPos pos)
-    {
+    private boolean canConnectTo(IBlockAccess world, BlockPos pos) {
         IBlockState state = world.getBlockState(pos);
         Block block = state.getBlock();
         return block == Blocks.BARRIER ? false : block != this && !(block instanceof BlockFenceGate) ? block.getMaterial(state).isOpaque() && block.isFullCube(state) ? block.getMaterial(state) != Material.GOURD : false : true;
@@ -211,47 +195,39 @@ public class BlockWallGC extends Block /* Do not extend BlockWall */ implements 
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list)
-    {
-        for (int i = 0; i < (GalacticraftCore.isPlanetsLoaded ? 6 : 4); ++i)
-        {
+    public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list) {
+        for (int i = 0; i < (GalacticraftCore.isPlanetsLoaded ? 6 : 4); ++i) {
             list.add(new ItemStack(this, 1, i));
         }
     }
 
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
-    {
+    public CreativeTabs getCreativeTabToDisplayOn() {
         return GalacticraftCore.galacticraftBlocksTab;
     }
 
     @Override
-    public int damageDropped(IBlockState state)
-    {
+    public int damageDropped(IBlockState state) {
         return this.getMetaFromState(state);
     }
 
     @Override
-    public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
-    {
+    public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
         return side == EnumFacing.DOWN ? super.shouldSideBeRendered(blockState, blockAccess, pos, side) : true;
     }
 
     @Override
-    public IBlockState getStateFromMeta(int meta)
-    {
+    public IBlockState getStateFromMeta(int meta) {
         return this.getDefaultState().withProperty(VARIANT, BlockType.values()[meta]);
     }
 
     @Override
-    public int getMetaFromState(IBlockState state)
-    {
+    public int getMetaFromState(IBlockState state) {
         return ((BlockType) state.getValue(VARIANT)).ordinal();
     }
 
     @Override
-    public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos)
-    {
+    public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
         boolean flag = this.canConnectTo(world, pos.north());
         boolean flag1 = this.canConnectTo(world, pos.east());
         boolean flag2 = this.canConnectTo(world, pos.south());
@@ -261,19 +237,16 @@ public class BlockWallGC extends Block /* Do not extend BlockWall */ implements 
     }
 
     @Override
-    protected BlockStateContainer createBlockState()
-    {
-        return new BlockStateContainer(this, new IProperty[] { UP, NORTH, EAST, WEST, SOUTH, VARIANT });
+    protected BlockStateContainer createBlockState() {
+        return new BlockStateContainer(this, new IProperty[]{UP, NORTH, EAST, WEST, SOUTH, VARIANT});
     }
 
     @Override
-    public EnumSortCategoryBlock getCategory(int meta)
-    {
+    public EnumSortCategoryBlock getCategory(int meta) {
         return EnumSortCategoryBlock.WALLS;
     }
 
-    public enum BlockType implements IStringSerializable
-    {
+    public enum BlockType implements IStringSerializable {
         TIN_1_WALL("tin_1_wall"),
         TIN_2_WALL("tin_2_wall"),
         MOON_STONE_WALL("moon_stone_wall"),
@@ -283,20 +256,17 @@ public class BlockWallGC extends Block /* Do not extend BlockWall */ implements 
 
         private String name;
 
-        BlockType(String name)
-        {
+        BlockType(String name) {
             this.name = name;
         }
 
         @Override
-        public String toString()
-        {
+        public String toString() {
             return this.getName();
         }
 
         @Override
-        public String getName()
-        {
+        public String getName() {
             return this.name;
         }
     }

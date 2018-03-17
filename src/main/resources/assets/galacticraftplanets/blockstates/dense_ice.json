@@ -1,5 +1,7 @@
 {
-    "variants": {
-        "normal": { "model": "galacticraftplanets:dense_ice" }
+  "variants": {
+    "normal": {
+      "model": "galacticraftplanets:dense_ice"
     }
+  }
 }

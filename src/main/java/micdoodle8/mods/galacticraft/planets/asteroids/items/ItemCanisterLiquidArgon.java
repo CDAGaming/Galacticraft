@@ -8,16 +8,13 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
-import javax.annotation.Nullable;
-
-public class ItemCanisterLiquidArgon extends ItemCanisterGeneric
-{
+public class ItemCanisterLiquidArgon extends ItemCanisterGeneric {
 //    protected IIcon[] icons = new IIcon[7];
 
-    public ItemCanisterLiquidArgon(String assetName)
-    {
+    public ItemCanisterLiquidArgon(String assetName) {
         super(assetName);
         this.setAllowedFluid("liquidargon");
         //this.setTextureName(GalacticraftPlanets.TEXTURE_PREFIX + assetName);
@@ -34,15 +31,12 @@ public class ItemCanisterLiquidArgon extends ItemCanisterGeneric
     }*/
 
     @Override
-    public String getUnlocalizedName(ItemStack itemStack)
-    {
-        if (itemStack.getMaxDamage() - itemStack.getItemDamage() == 0)
-        {
+    public String getUnlocalizedName(ItemStack itemStack) {
+        if (itemStack.getMaxDamage() - itemStack.getItemDamage() == 0) {
             return "item.emptyGasCanister";
         }
 
-        if (itemStack.getItemDamage() == 1)
-        {
+        if (itemStack.getItemDamage() == 1) {
             return "item.canister.liquidArgon.full";
         }
 
@@ -64,10 +58,8 @@ public class ItemCanisterLiquidArgon extends ItemCanisterGeneric
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack par1ItemStack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
-    {
-        if (par1ItemStack.getMaxDamage() - par1ItemStack.getItemDamage() > 0)
-        {
+    public void addInformation(ItemStack par1ItemStack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+        if (par1ItemStack.getMaxDamage() - par1ItemStack.getItemDamage() > 0) {
             tooltip.add(GCCoreUtil.translate("item.canister.liquid_argon.name") + ": " + (par1ItemStack.getMaxDamage() - par1ItemStack.getItemDamage()));
         }
     }

@@ -16,69 +16,59 @@ import net.minecraftforge.fml.relauncher.Side;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class PacketDynamic extends PacketBase
-{
+public class PacketDynamic extends PacketBase {
     private int type;
     private Object[] data;
     private ArrayList<Object> sendData;
     private ByteBuf payloadData;
 
-    public PacketDynamic()
-    {
+    public PacketDynamic() {
         super();
     }
 
-    public PacketDynamic(Entity entity)
-    {
+    public PacketDynamic(Entity entity) {
         super(GCCoreUtil.getDimensionID(entity.world));
         assert entity instanceof IPacketReceiver : "Entity does not implement " + IPacketReceiver.class.getSimpleName();
         this.type = 0;
-        this.data = new Object[] { entity.getEntityId() };
+        this.data = new Object[]{entity.getEntityId()};
         this.sendData = new ArrayList<Object>();
         ((IPacketReceiver) entity).getNetworkedData(this.sendData);
     }
 
-    public PacketDynamic(TileEntity tile)
-    {
+    public PacketDynamic(TileEntity tile) {
         super(GCCoreUtil.getDimensionID(tile.getWorld()));
         assert tile instanceof IPacketReceiver : "TileEntity does not implement " + IPacketReceiver.class.getSimpleName();
         this.type = 1;
-        this.data = new Object[] { tile.getPos() };
+        this.data = new Object[]{tile.getPos()};
         this.sendData = new ArrayList<Object>();
         ((IPacketReceiver) tile).getNetworkedData(this.sendData);
     }
 
-    public boolean isEmpty()
-    {
+    public boolean isEmpty() {
         return sendData.isEmpty();
     }
 
     @Override
-    public void encodeInto(ByteBuf buffer)
-    {
+    public void encodeInto(ByteBuf buffer) {
         super.encodeInto(buffer);
         buffer.writeInt(this.type);
 
-        switch (this.type)
-        {
-        case 0:
-            buffer.writeInt((Integer) this.data[0]);
-            break;
-        case 1:
-            buffer.writeInt(((BlockPos) this.data[0]).getX());
-            buffer.writeInt(((BlockPos) this.data[0]).getY());
-            buffer.writeInt(((BlockPos) this.data[0]).getZ());
-            break;
+        switch (this.type) {
+            case 0:
+                buffer.writeInt((Integer) this.data[0]);
+                break;
+            case 1:
+                buffer.writeInt(((BlockPos) this.data[0]).getX());
+                buffer.writeInt(((BlockPos) this.data[0]).getY());
+                buffer.writeInt(((BlockPos) this.data[0]).getZ());
+                break;
         }
 
         ByteBuf payloadData = Unpooled.buffer();
 
-        try
-        {
+        try {
             NetworkUtil.encodeData(payloadData, this.sendData);
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -88,93 +78,79 @@ public class PacketDynamic extends PacketBase
     }
 
     @Override
-    public void decodeInto(ByteBuf buffer)
-    {
+    public void decodeInto(ByteBuf buffer) {
         super.decodeInto(buffer);
         this.type = buffer.readInt();
 
         World world = GalacticraftCore.proxy.getWorldForID(this.getDimensionID());
 
-        if (world == null)
-        {
+        if (world == null) {
             FMLLog.severe("Failed to get world for dimension ID: " + this.getDimensionID());
         }
 
-        switch (this.type)
-        {
-        case 0:
-            this.data = new Object[1];
-            this.data[0] = buffer.readInt();
+        switch (this.type) {
+            case 0:
+                this.data = new Object[1];
+                this.data[0] = buffer.readInt();
 
-            int length = buffer.readInt();
-            payloadData = Unpooled.copiedBuffer(buffer.readBytes(length));
+                int length = buffer.readInt();
+                payloadData = Unpooled.copiedBuffer(buffer.readBytes(length));
 //                if (entity instanceof IPacketReceiver && buffer.readableBytes() > 0)
-            break;
-        case 1:
-            this.data = new Object[1];
-            this.data[0] = new BlockPos(buffer.readInt(), buffer.readInt(), buffer.readInt());
+                break;
+            case 1:
+                this.data = new Object[1];
+                this.data[0] = new BlockPos(buffer.readInt(), buffer.readInt(), buffer.readInt());
 
-            length = buffer.readInt();
-            payloadData = Unpooled.copiedBuffer(buffer.readBytes(length));
+                length = buffer.readInt();
+                payloadData = Unpooled.copiedBuffer(buffer.readBytes(length));
 
-            break;
+                break;
         }
     }
 
     @Override
-    public void handleClientSide(EntityPlayer player)
-    {
+    public void handleClientSide(EntityPlayer player) {
         this.handleData(Side.CLIENT, player);
     }
 
     @Override
-    public void handleServerSide(EntityPlayer player)
-    {
+    public void handleServerSide(EntityPlayer player) {
         this.handleData(Side.SERVER, player);
     }
 
-    private void handleData(Side side, EntityPlayer player)
-    {
-        switch (this.type)
-        {
-        case 0:
-            Entity entity = player.world.getEntityByID((Integer) this.data[0]);
+    private void handleData(Side side, EntityPlayer player) {
+        switch (this.type) {
+            case 0:
+                Entity entity = player.world.getEntityByID((Integer) this.data[0]);
 
-            if (entity instanceof IPacketReceiver)
-            {
-                if (this.payloadData.readableBytes() > 0)
-                {
-                    ((IPacketReceiver) entity).decodePacketdata(payloadData);
-                }
-
-                //Treat any packet received by a server from a client as an update request specifically to that client
-                if (side == Side.SERVER && player instanceof EntityPlayerMP && entity != null)
-                {
-                    GalacticraftCore.packetPipeline.sendTo(new PacketDynamic(entity), (EntityPlayerMP) player);
-                }
-            }
-            break;
-
-        case 1:
-            if (player.world.isBlockLoaded((BlockPos) this.data[0], false))
-            {
-                TileEntity tile = player.world.getTileEntity((BlockPos) this.data[0]);
-
-                if (tile instanceof IPacketReceiver)
-                {
-                    if (this.payloadData.readableBytes() > 0)
-                    {
-                        ((IPacketReceiver) tile).decodePacketdata(payloadData);
+                if (entity instanceof IPacketReceiver) {
+                    if (this.payloadData.readableBytes() > 0) {
+                        ((IPacketReceiver) entity).decodePacketdata(payloadData);
                     }
 
                     //Treat any packet received by a server from a client as an update request specifically to that client
-                    if (side == Side.SERVER && player instanceof EntityPlayerMP && tile != null)
-                    {
-                        GalacticraftCore.packetPipeline.sendTo(new PacketDynamic(tile), (EntityPlayerMP) player);
+                    if (side == Side.SERVER && player instanceof EntityPlayerMP && entity != null) {
+                        GalacticraftCore.packetPipeline.sendTo(new PacketDynamic(entity), (EntityPlayerMP) player);
                     }
                 }
-            }
-            break;
+                break;
+
+            case 1:
+                if (player.world.isBlockLoaded((BlockPos) this.data[0], false)) {
+                    TileEntity tile = player.world.getTileEntity((BlockPos) this.data[0]);
+
+                    if (tile instanceof IPacketReceiver) {
+                        if (this.payloadData.readableBytes() > 0) {
+                            ((IPacketReceiver) tile).decodePacketdata(payloadData);
+                        }
+
+                        //Treat any packet received by a server from a client as an update request specifically to that client
+                        if (side == Side.SERVER && player instanceof EntityPlayerMP && tile != null) {
+                            GalacticraftCore.packetPipeline.sendTo(new PacketDynamic(tile), (EntityPlayerMP) player);
+                        }
+                    }
+                }
+                break;
         }
     }
 }

@@ -12,37 +12,29 @@ import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-
 import org.lwjgl.opengl.GL11;
 
-public class LayerShield implements LayerRenderer<EntityLivingBase>
-{
+public class LayerShield implements LayerRenderer<EntityLivingBase> {
     private final RenderPlayer renderer;
     private ModelBiped shieldModel;
 
-    public LayerShield(RenderPlayer playerRendererIn)
-    {
+    public LayerShield(RenderPlayer playerRendererIn) {
         this.renderer = playerRendererIn;
         this.initModel();
     }
 
     @Override
-    public boolean shouldCombineTextures()
-    {
+    public boolean shouldCombineTextures() {
         return false;
     }
 
     @Override
-    public void doRenderLayer(EntityLivingBase entitylivingbaseIn, float f2, float f3, float partialTicks, float f5, float f6, float f7, float scale)
-    {
-        if (!entitylivingbaseIn.isInvisible())
-        {
+    public void doRenderLayer(EntityLivingBase entitylivingbaseIn, float f2, float f3, float partialTicks, float f5, float f6, float f7, float scale) {
+        if (!entitylivingbaseIn.isInvisible()) {
             PlayerGearData gearData = GalacticraftCore.proxy.getGearData((EntityPlayer) entitylivingbaseIn);
 
-            if (gearData != null)
-            {
-                if (gearData.getShieldController() != GCPlayerHandler.GEAR_NOT_PRESENT)
-                {
+            if (gearData != null) {
+                if (gearData.getShieldController() != GCPlayerHandler.GEAR_NOT_PRESENT) {
                     this.shieldModel.setVisible(false);
                     this.shieldModel.bipedRightLeg.showModel = true;
                     this.shieldModel.bipedLeftLeg.showModel = true;
@@ -85,8 +77,7 @@ public class LayerShield implements LayerRenderer<EntityLivingBase>
         }
     }
 
-    private void initModel()
-    {
+    private void initModel() {
         this.shieldModel = new ModelPlayerGC(1.5F, false);
     }
 }

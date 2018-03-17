@@ -7,15 +7,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraftforge.oredict.OreDictionary;
 
-public class RecipeManagerVenus
-{
-    public static void loadRecipes()
-    {
+public class RecipeManagerVenus {
+    public static void loadRecipes() {
         RecipeManagerVenus.addUniversalRecipes();
     }
 
-    private static void addUniversalRecipes()
-    {
+    private static void addUniversalRecipes() {
         OreDictionary.registerOre("ingotLead", new ItemStack(VenusItems.basicItem, 1, 1));
 
         // Smelting

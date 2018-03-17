@@ -23,47 +23,39 @@ public class PropertyObject<T> implements IUnlistedProperty<T> {
     private final Predicate<T> validator;
     private final Function<T, String> stringFunction;
 
-    public PropertyObject(String name, Class<T> clazz, Predicate<T> validator, Function<T, String> stringFunction)
-    {
+    public PropertyObject(String name, Class<T> clazz, Predicate<T> validator, Function<T, String> stringFunction) {
         this.name = name;
         this.clazz = clazz;
         this.validator = validator;
         this.stringFunction = stringFunction;
     }
 
-    public PropertyObject(String name, Class<T> clazz)
-    {
-        this(name, clazz, Predicates.<T>alwaysTrue(), new Function<T, String>()
-        {
+    public PropertyObject(String name, Class<T> clazz) {
+        this(name, clazz, Predicates.<T>alwaysTrue(), new Function<T, String>() {
             @Override
-            public String apply(T input)
-            {
+            public String apply(T input) {
                 return Objects.toString(input);
             }
         });
     }
 
     @Override
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
     @Override
-    public boolean isValid(T value)
-    {
+    public boolean isValid(T value) {
         return validator.apply(value);
     }
 
     @Override
-    public Class<T> getType()
-    {
+    public Class<T> getType() {
         return clazz;
     }
 
     @Override
-    public String valueToString(T value)
-    {
+    public String valueToString(T value) {
         return stringFunction.apply(value);
     }
 }

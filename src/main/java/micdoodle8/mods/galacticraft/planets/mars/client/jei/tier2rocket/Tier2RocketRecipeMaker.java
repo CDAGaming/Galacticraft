@@ -7,16 +7,13 @@ import micdoodle8.mods.galacticraft.core.client.jei.tier1rocket.Tier1RocketRecip
 import java.util.ArrayList;
 import java.util.List;
 
-public class Tier2RocketRecipeMaker
-{
-    public static List<INasaWorkbenchRecipe> getRecipesList()
-    {
+public class Tier2RocketRecipeMaker {
+    public static List<INasaWorkbenchRecipe> getRecipesList() {
         List<INasaWorkbenchRecipe> recipes = new ArrayList<>();
 
         int chestCount = -1;
-        for (INasaWorkbenchRecipe recipe : GalacticraftRegistry.getRocketT2Recipes())
-        {
-            int chests = Tier1RocketRecipeMaker.countChests(recipe); 
+        for (INasaWorkbenchRecipe recipe : GalacticraftRegistry.getRocketT2Recipes()) {
+            int chests = Tier1RocketRecipeMaker.countChests(recipe);
             if (chests == chestCount)
                 continue;
             chestCount = chests;

@@ -7,8 +7,7 @@ import net.minecraft.world.gen.structure.template.TemplateManager;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class StructureComponentVillageStartPiece extends StructureComponentVillageWell
-{
+public class StructureComponentVillageStartPiece extends StructureComponentVillageWell {
     public BiomeProvider biomeProvider;
     public int terrainType;
     public StructureVillagePieceWeightMoon structVillagePieceWeight;
@@ -16,12 +15,10 @@ public class StructureComponentVillageStartPiece extends StructureComponentVilla
     public ArrayList<Object> field_74932_i = new ArrayList<Object>();
     public ArrayList<Object> field_74930_j = new ArrayList<Object>();
 
-    public StructureComponentVillageStartPiece()
-    {
+    public StructureComponentVillageStartPiece() {
     }
 
-    public StructureComponentVillageStartPiece(BiomeProvider biomeProvider, int par2, Random par3Random, int par4, int par5, ArrayList<StructureVillagePieceWeightMoon> par6ArrayList, int par7)
-    {
+    public StructureComponentVillageStartPiece(BiomeProvider biomeProvider, int par2, Random par3Random, int par4, int par5, ArrayList<StructureVillagePieceWeightMoon> par6ArrayList, int par7) {
         super(null, 0, par3Random, par4, par5);
         this.biomeProvider = biomeProvider;
         this.structureVillageWeightedPieceList = par6ArrayList;
@@ -30,23 +27,20 @@ public class StructureComponentVillageStartPiece extends StructureComponentVilla
     }
 
     @Override
-    protected void writeStructureToNBT(NBTTagCompound nbt)
-    {
+    protected void writeStructureToNBT(NBTTagCompound nbt) {
         super.writeStructureToNBT(nbt);
 
         nbt.setInteger("TerrainType", this.terrainType);
     }
 
     @Override
-    protected void readStructureFromNBT(NBTTagCompound nbt, TemplateManager manager)
-    {
+    protected void readStructureFromNBT(NBTTagCompound nbt, TemplateManager manager) {
         super.readStructureFromNBT(nbt, manager);
 
         this.terrainType = nbt.getInteger("TerrainType");
     }
 
-    public BiomeProvider getBiomeProvider()
-    {
+    public BiomeProvider getBiomeProvider() {
         return this.biomeProvider;
     }
 }

@@ -12,10 +12,8 @@ import net.minecraft.world.World;
 /**
  * An advanced block class that is to be extended for wrenching capabilities.
  */
-public abstract class BlockTileGC extends BlockAdvanced implements ITileEntityProvider
-{
-    public BlockTileGC(Material material)
-    {
+public abstract class BlockTileGC extends BlockAdvanced implements ITileEntityProvider {
+    public BlockTileGC(Material material) {
         super(material);
         this.hasTileEntity = true;
     }
@@ -23,21 +21,18 @@ public abstract class BlockTileGC extends BlockAdvanced implements ITileEntityPr
     /**
      * ejects contained items into the world, and notifies neighbours of an
      * update, as appropriate
-     * 
-     *   Note: breakBlock is called when placing blocks
-     *   getTileEntity() at this point will give the NEW block's tileEntity, if the old block's tile is already invalid
-     *   so: do NOT invalidate old tileEntities before breaking blocks 
+     * <p>
+     * Note: breakBlock is called when placing blocks
+     * getTileEntity() at this point will give the NEW block's tileEntity, if the old block's tile is already invalid
+     * so: do NOT invalidate old tileEntities before breaking blocks
      */
     @Override
-    public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
-    {
-        if (worldIn.getTileEntity(pos) instanceof IInventory)
-        {
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
+        if (worldIn.getTileEntity(pos) instanceof IInventory) {
             InventoryHelper.dropInventoryItems(worldIn, pos, (IInventory) worldIn.getTileEntity(pos));
         }
         super.breakBlock(worldIn, pos, state);
     }
-
 
 
     /**
@@ -46,8 +41,7 @@ public abstract class BlockTileGC extends BlockAdvanced implements ITileEntityPr
      * x, y, z, blockID, EventID, event parameter
      */
     @Override
-    public boolean eventReceived(IBlockState state, World worldIn, BlockPos pos, int eventID, int eventParam)
-    {
+    public boolean eventReceived(IBlockState state, World worldIn, BlockPos pos, int eventID, int eventParam) {
         super.eventReceived(state, worldIn, pos, eventID, eventParam);
         TileEntity tileentity = worldIn.getTileEntity(pos);
         return tileentity != null && tileentity.receiveClientEvent(eventID, eventParam);
@@ -58,8 +52,7 @@ public abstract class BlockTileGC extends BlockAdvanced implements ITileEntityPr
      * sensitive version of this to get the maximum optimization!
      */
     @Override
-    public TileEntity createNewTileEntity(World world, int meta)
-    {
+    public TileEntity createNewTileEntity(World world, int meta) {
         return null;
     }
 

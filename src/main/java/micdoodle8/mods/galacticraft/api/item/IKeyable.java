@@ -7,8 +7,7 @@ import net.minecraft.util.EnumFacing;
 /**
  * Implement into tile entities that do something upon being activated by a key
  */
-public interface IKeyable
-{
+public interface IKeyable {
     /**
      * @return -1 for any tier, or return tier required for key activated to
      * pass

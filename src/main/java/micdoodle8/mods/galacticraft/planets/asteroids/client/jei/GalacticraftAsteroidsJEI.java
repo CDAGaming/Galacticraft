@@ -19,11 +19,9 @@ import net.minecraft.item.ItemStack;
 import javax.annotation.Nonnull;
 
 @JEIPlugin
-public class GalacticraftAsteroidsJEI implements IModPlugin
-{
+public class GalacticraftAsteroidsJEI implements IModPlugin {
     @Override
-    public void register(@Nonnull IModRegistry registry)
-    {
+    public void register(@Nonnull IModRegistry registry) {
         registry.handleRecipes(INasaWorkbenchRecipe.class, Tier3RocketRecipeWrapper::new, RecipeCategories.ROCKET_T3_ID);
         registry.handleRecipes(INasaWorkbenchRecipe.class, AstroMinerRecipeWrapper::new, RecipeCategories.ASTRO_MINER_ID);
 
@@ -33,8 +31,7 @@ public class GalacticraftAsteroidsJEI implements IModPlugin
     }
 
     @Override
-    public void registerCategories(IRecipeCategoryRegistration registry)
-    {
+    public void registerCategories(IRecipeCategoryRegistration registry) {
         IGuiHelper guiHelper = registry.getJeiHelpers().getGuiHelper();
         registry.addRecipeCategories(new Tier3RocketRecipeCategory(guiHelper),
                 new AstroMinerRecipeCategory(guiHelper));

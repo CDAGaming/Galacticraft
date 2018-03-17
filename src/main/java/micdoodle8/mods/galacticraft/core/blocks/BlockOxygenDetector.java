@@ -20,12 +20,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class BlockOxygenDetector extends BlockContainer implements ITileEntityProvider, IShiftDescription, ISortableBlock
-{
+public class BlockOxygenDetector extends BlockContainer implements ITileEntityProvider, IShiftDescription, ISortableBlock {
     public static final PropertyBool ACTIVE = PropertyBool.create("active");
-    
-    public BlockOxygenDetector(String assetName)
-    {
+
+    public BlockOxygenDetector(String assetName) {
         super(Material.IRON);
         this.setHardness(1.0F);
         this.setSoundType(SoundType.METAL);
@@ -33,86 +31,70 @@ public class BlockOxygenDetector extends BlockContainer implements ITileEntityPr
     }
 
     @Override
-    public EnumBlockRenderType getRenderType(IBlockState state)
-    {
+    public EnumBlockRenderType getRenderType(IBlockState state) {
         return EnumBlockRenderType.MODEL;
     }
 
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
-    {
+    public CreativeTabs getCreativeTabToDisplayOn() {
         return GalacticraftCore.galacticraftBlocksTab;
     }
 
     @Override
-    public TileEntity createNewTileEntity(World world, int meta)
-    {
+    public TileEntity createNewTileEntity(World world, int meta) {
         return new TileEntityOxygenDetector();
     }
 
-    public void updateOxygenState(World worldIn, BlockPos pos, boolean valid)
-    {
-        if (valid)
-        {
+    public void updateOxygenState(World worldIn, BlockPos pos, boolean valid) {
+        if (valid) {
             worldIn.setBlockState(pos, getStateFromMeta(1), 3);
-        }
-        else
-        {
+        } else {
             worldIn.setBlockState(pos, getStateFromMeta(0), 3);
         }
     }
 
     @Override
-    public boolean canProvidePower(IBlockState state)
-    {
+    public boolean canProvidePower(IBlockState state) {
         return true;
     }
 
     @Override
-    public int getWeakPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
-    {
+    public int getWeakPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
         return getMetaFromState(blockAccess.getBlockState(pos)) == 1 ? 15 : 0;
     }
 
     @Override
-    public IBlockState getStateFromMeta(int meta)
-    {
+    public IBlockState getStateFromMeta(int meta) {
         return this.getDefaultState().withProperty(ACTIVE, meta > 0);
     }
 
     @Override
-    public int getMetaFromState(IBlockState state)
-    {
+    public int getMetaFromState(IBlockState state) {
         return state.getValue(ACTIVE) ? 1 : 0;
     }
 
     @Override
-    protected BlockStateContainer createBlockState()
-    {
+    protected BlockStateContainer createBlockState() {
         return new BlockStateContainer(this, ACTIVE);
     }
 
     @Override
-    public String getShiftDescription(int meta)
-    {
+    public String getShiftDescription(int meta) {
         return GCCoreUtil.translate(this.getUnlocalizedName() + ".description");
     }
 
     @Override
-    public boolean showDescription(int meta)
-    {
+    public boolean showDescription(int meta) {
         return true;
     }
 
     @Override
-    public boolean isSideSolid(IBlockState base_state, IBlockAccess world, BlockPos pos, EnumFacing side)
-    {
+    public boolean isSideSolid(IBlockState base_state, IBlockAccess world, BlockPos pos, EnumFacing side) {
         return true;
     }
 
     @Override
-    public EnumSortCategoryBlock getCategory(int meta)
-    {
+    public EnumSortCategoryBlock getCategory(int meta) {
         return EnumSortCategoryBlock.MACHINE;
     }
 }

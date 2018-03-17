@@ -11,8 +11,7 @@ import java.util.Random;
 /**
  * Do not include this prefab class in your released mod download.
  */
-public abstract class BiomeDecoratorSpace
-{
+public abstract class BiomeDecoratorSpace {
     protected Random rand;
 
     protected int posX;
@@ -20,19 +19,16 @@ public abstract class BiomeDecoratorSpace
 
     /**
      * Note: the passed X,Z co-ordinates are now block co-ordinates, not chunk co-ordinates
+     *
      * @param world
      * @param random
      * @param posX
      * @param posZ
      */
-    public void decorate(World world, Random random, int posX, int posZ)
-    {
-        if (this.getCurrentWorld() != null)
-        {
+    public void decorate(World world, Random random, int posX, int posZ) {
+        if (this.getCurrentWorld() != null) {
             throw new RuntimeException("Already decorating!!");
-        }
-        else
-        {
+        } else {
             this.setCurrentWorld(world);
             this.rand = random;
             this.posX = posX;
@@ -46,15 +42,13 @@ public abstract class BiomeDecoratorSpace
         }
     }
 
+    protected abstract World getCurrentWorld();
+
     protected abstract void setCurrentWorld(World world);
 
-	protected abstract World getCurrentWorld();
-
-	protected void generateOre(int amountPerChunk, WorldGenerator worldGenerator, int minY, int maxY)
-    {
+    protected void generateOre(int amountPerChunk, WorldGenerator worldGenerator, int minY, int maxY) {
         World currentWorld = this.getCurrentWorld();
-		for (int var5 = 0; var5 < amountPerChunk; ++var5)
-        {
+        for (int var5 = 0; var5 < amountPerChunk; ++var5) {
             final int var6 = this.posX + this.rand.nextInt(16);
             final int var7 = this.rand.nextInt(maxY - minY) + minY;
             final int var8 = this.posZ + this.rand.nextInt(16);

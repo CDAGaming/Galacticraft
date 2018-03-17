@@ -14,8 +14,7 @@ import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class OxygenCompressorRecipeCategory extends BlankRecipeCategory
-{
+public class OxygenCompressorRecipeCategory extends BlankRecipeCategory {
     private static final ResourceLocation compressorTexture = new ResourceLocation(Constants.ASSET_PREFIX, "textures/gui/compressor.png");
 
     @Nonnull
@@ -26,8 +25,7 @@ public class OxygenCompressorRecipeCategory extends BlankRecipeCategory
     private IDrawableAnimated oxygenBar;
     private IDrawable oxygenLabel;
 
-    public OxygenCompressorRecipeCategory(IGuiHelper guiHelper)
-    {
+    public OxygenCompressorRecipeCategory(IGuiHelper guiHelper) {
         this.background = guiHelper.createDrawable(compressorTexture, 3, 4, 168, 80);
         this.localizedName = GCCoreUtil.translate("tile.oxygen_compressor.0.name");
 
@@ -38,48 +36,41 @@ public class OxygenCompressorRecipeCategory extends BlankRecipeCategory
 
     @Nonnull
     @Override
-    public String getUid()
-    {
+    public String getUid() {
         return RecipeCategories.OXYGEN_COMPRESSOR_ID;
     }
 
     @Nonnull
     @Override
-    public String getTitle()
-    {
+    public String getTitle() {
         return this.localizedName;
     }
 
     @Nonnull
     @Override
-    public IDrawable getBackground()
-    {
+    public IDrawable getBackground() {
         return this.background;
     }
 
     @Override
-    public void drawExtras(@Nonnull Minecraft minecraft)
-    {
+    public void drawExtras(@Nonnull Minecraft minecraft) {
         this.oxygenLabel.draw(minecraft, 97, 15);
         this.oxygenBar.draw(minecraft, 110, 16);
     }
 
     @Override
-    public void setRecipe(IRecipeLayout recipeLayout, IRecipeWrapper recipeWrapper, IIngredients ingredients)
-    {
+    public void setRecipe(IRecipeLayout recipeLayout, IRecipeWrapper recipeWrapper, IIngredients ingredients) {
         IGuiItemStackGroup itemstacks = recipeLayout.getItemStacks();
 
         itemstacks.init(0, false, 129, 61);
 
-        if (recipeWrapper instanceof OxygenCompressorRecipeWrapper)
-        {
+        if (recipeWrapper instanceof OxygenCompressorRecipeWrapper) {
             itemstacks.set(ingredients);
         }
     }
 
     @Override
-    public String getModName()
-    {
+    public String getModName() {
         return GalacticraftCore.NAME;
     }
 }

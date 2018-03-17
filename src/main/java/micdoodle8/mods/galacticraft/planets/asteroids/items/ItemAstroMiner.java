@@ -35,14 +35,11 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
-import javax.annotation.Nullable;
-
-public class ItemAstroMiner extends Item implements IHoldableItem, ISortableItem
-{
-    public ItemAstroMiner(String assetName)
-    {
+public class ItemAstroMiner extends Item implements IHoldableItem, ISortableItem {
+    public ItemAstroMiner(String assetName) {
         super();
         this.setMaxDamage(0);
         this.setMaxStackSize(1);
@@ -52,71 +49,57 @@ public class ItemAstroMiner extends Item implements IHoldableItem, ISortableItem
 
     @Override
     @SideOnly(Side.CLIENT)
-    public EnumRarity getRarity(ItemStack par1ItemStack)
-    {
+    public EnumRarity getRarity(ItemStack par1ItemStack) {
         return ClientProxyCore.galacticraftItem;
     }
 
     @SideOnly(Side.CLIENT)
     @Override
-    public CreativeTabs getCreativeTab()
-    {
+    public CreativeTabs getCreativeTab() {
         return GalacticraftCore.galacticraftItemsTab;
     }
 
     @Override
-    public EnumActionResult onItemUseFirst(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand)
-    {
+    public EnumActionResult onItemUseFirst(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
         TileEntity tile = null;
 
-        if (playerIn == null)
-        {
+        if (playerIn == null) {
             return EnumActionResult.PASS;
-        }
-        else
-        {
+        } else {
             final Block id = worldIn.getBlockState(pos).getBlock();
 
-            if (id == GCBlocks.fakeBlock)
-            {
+            if (id == GCBlocks.fakeBlock) {
                 tile = worldIn.getTileEntity(pos);
 
-                if (tile instanceof TileEntityMulti)
-                {
+                if (tile instanceof TileEntityMulti) {
                     tile = ((TileEntityMulti) tile).getMainBlockTile();
                 }
             }
 
-            if (id == AsteroidBlocks.minerBaseFull)
-            {
+            if (id == AsteroidBlocks.minerBaseFull) {
                 tile = worldIn.getTileEntity(pos);
             }
 
-            if (tile instanceof TileEntityMinerBase)
-            {
+            if (tile instanceof TileEntityMinerBase) {
                 //Don't open GUI on client
-                if (worldIn.isRemote)
-                {
+                if (worldIn.isRemote) {
                     //Simulate a successful action from client -> server
-                    ((NetHandlerPlayClient)FMLCommonHandler.instance().getClientPlayHandler()).sendPacket(new CPacketPlayerTryUseItemOnBlock(pos, side, hand, hitX, hitY, hitZ));
+                    ((NetHandlerPlayClient) FMLCommonHandler.instance().getClientPlayHandler()).sendPacket(new CPacketPlayerTryUseItemOnBlock(pos, side, hand, hitX, hitY, hitZ));
                     return EnumActionResult.FAIL;
                 }
-                
-                if (worldIn.provider instanceof WorldProviderSpaceStation)
-                {
+
+                if (worldIn.provider instanceof WorldProviderSpaceStation) {
                     playerIn.sendMessage(new TextComponentString(GCCoreUtil.translate("gui.message.astro_miner7.fail")));
                     return EnumActionResult.FAIL;
                 }
 
-                if (((TileEntityMinerBase) tile).getLinkedMiner() != null)
-                {
+                if (((TileEntityMinerBase) tile).getLinkedMiner() != null) {
                     playerIn.sendMessage(new TextComponentString(GCCoreUtil.translate("gui.message.astro_miner.fail")));
                     return EnumActionResult.FAIL;
                 }
 
                 //Gives a chance for any loaded Astro Miner to link itself
-                if (((TileEntityMinerBase) tile).ticks < 15)
-                {
+                if (((TileEntityMinerBase) tile).ticks < 15) {
                     return EnumActionResult.FAIL;
                 }
 
@@ -124,20 +107,17 @@ public class ItemAstroMiner extends Item implements IHoldableItem, ISortableItem
                 GCPlayerStats stats = GCPlayerStats.get(playerIn);
 
                 int astroCount = stats.getAstroMinerCount();
-                if (astroCount >= ConfigManagerAsteroids.astroMinerMax && (!playerIn.capabilities.isCreativeMode))
-                {
+                if (astroCount >= ConfigManagerAsteroids.astroMinerMax && (!playerIn.capabilities.isCreativeMode)) {
                     playerIn.sendMessage(new TextComponentString(GCCoreUtil.translate("gui.message.astro_miner2.fail")));
                     return EnumActionResult.FAIL;
                 }
 
-                if (!((TileEntityMinerBase) tile).spawnMiner(playerMP))
-                {
+                if (!((TileEntityMinerBase) tile).spawnMiner(playerMP)) {
                     playerIn.sendMessage(new TextComponentString(GCCoreUtil.translate("gui.message.astro_miner1.fail") + " " + GCCoreUtil.translate(EntityAstroMiner.blockingBlock.toString())));
                     return EnumActionResult.FAIL;
                 }
 
-                if (!playerIn.capabilities.isCreativeMode)
-                {
+                if (!playerIn.capabilities.isCreativeMode) {
                     stats.setAstroMinerCount(stats.getAstroMinerCount() + 1);
                     playerIn.getHeldItem(hand).shrink(1);
                 }
@@ -149,32 +129,27 @@ public class ItemAstroMiner extends Item implements IHoldableItem, ISortableItem
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack par1ItemStack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
-    {
+    public void addInformation(ItemStack par1ItemStack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
         //TODO
     }
 
     @Override
-    public boolean shouldHoldLeftHandUp(EntityPlayer player)
-    {
+    public boolean shouldHoldLeftHandUp(EntityPlayer player) {
         return true;
     }
 
     @Override
-    public boolean shouldHoldRightHandUp(EntityPlayer player)
-    {
+    public boolean shouldHoldRightHandUp(EntityPlayer player) {
         return true;
     }
 
     @Override
-    public boolean shouldCrouch(EntityPlayer player)
-    {
+    public boolean shouldCrouch(EntityPlayer player) {
         return true;
     }
 
     @Override
-    public EnumSortCategoryItem getCategory(int meta)
-    {
+    public EnumSortCategoryItem getCategory(int meta) {
         return EnumSortCategoryItem.GENERAL;
     }
 }

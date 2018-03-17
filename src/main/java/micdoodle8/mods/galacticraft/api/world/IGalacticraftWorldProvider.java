@@ -7,8 +7,7 @@ import net.minecraft.util.ResourceLocation;
 
 import java.util.List;
 
-public interface IGalacticraftWorldProvider
-{
+public interface IGalacticraftWorldProvider {
     /**
      * gets additional gravity to add to players in this dimension. Typical
      * values range from 0.040 to 0.065
@@ -17,14 +16,14 @@ public interface IGalacticraftWorldProvider
      */
     float getGravity();
 
-    
+
     /**
      * Gets custom arrow gravity, overriding the vanilla gravity for arrows
-     * 
-     * @return added y-motion per tick for arrows 
+     *
+     * @return added y-motion per tick for arrows
      */
     float getArrowGravity();
-    
+
     /**
      * Determines the rate to spawn meteors in this planet. Lower means MORE
      * meteors.
@@ -62,11 +61,10 @@ public interface IGalacticraftWorldProvider
     float getFallDamageModifier();
 
     /**
-     * 
      * @return true if this world has no type of atmosphere at all - e.g. the Moon
      */
     boolean hasNoAtmosphere();
-    
+
     /**
      * Changes volume of sounds on this planet. You should be using higher
      * values for thin atmospheres and high values for dense atmospheres
@@ -84,12 +82,12 @@ public interface IGalacticraftWorldProvider
      * @return True if players can breathe here, False if not.
      */
     boolean hasBreathableAtmosphere();
-   
+
     /**
      * If false (the default) then Nether Portals will have no function on this world.
      * Nether Portals can still be constructed, if the player can make fire, they just
      * won't do anything.
-     * 
+     *
      * @return True if Nether Portals should work like on the Overworld.
      */
     boolean netherPortalsOperational();
@@ -118,12 +116,12 @@ public interface IGalacticraftWorldProvider
      * @return Flag movement magnitude. Relative to earth's value of 1.0F
      */
     float getWindLevel();
-    
+
     /**
      * Factor by which the sun is to be drawn smaller (<1.0) or larger (>1.0) than
      * the sun on the Overworld
-     * 
-     * @return  factor
+     *
+     * @return factor
      */
     float getSolarSize();
 
@@ -149,7 +147,7 @@ public interface IGalacticraftWorldProvider
      * @return true if armor should be corroded, false if not
      */
     boolean shouldCorrodeArmor();
-    
+
     /**
      * The size (in blocks) of the average spacing between dungeons
      * For example, on the Moon it's 704 blocks, meaning one dungeon in each (704 x 704) square in the (x, z) plane
@@ -157,7 +155,7 @@ public interface IGalacticraftWorldProvider
      * If your world has no dungeons you can safely return 0 here.
      */
     int getDungeonSpacing();
-    
+
     /**
      * The ChestGenHooks identifier of the dungeon chests to generate in this world
      */

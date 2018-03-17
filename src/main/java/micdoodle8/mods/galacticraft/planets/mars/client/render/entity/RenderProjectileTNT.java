@@ -13,17 +13,14 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class RenderProjectileTNT extends Render<EntityProjectileTNT>
-{
-    public RenderProjectileTNT(RenderManager renderManager)
-    {
+public class RenderProjectileTNT extends Render<EntityProjectileTNT> {
+    public RenderProjectileTNT(RenderManager renderManager) {
         super(renderManager);
         this.shadowSize = 0.5F;
     }
 
     @Override
-    public void doRender(EntityProjectileTNT entity, double x, double y, double z, float par8, float partialTicks)
-    {
+    public void doRender(EntityProjectileTNT entity, double x, double y, double z, float par8, float partialTicks) {
         BlockRendererDispatcher blockrendererdispatcher = Minecraft.getMinecraft().getBlockRendererDispatcher();
         GlStateManager.pushMatrix();
         GlStateManager.translate((float) x, (float) y + 0.5F, (float) z);
@@ -34,8 +31,7 @@ public class RenderProjectileTNT extends Render<EntityProjectileTNT>
         blockrendererdispatcher.renderBlockBrightness(Blocks.TNT.getDefaultState(), entity.getBrightness());
         GlStateManager.translate(0.0F, 0.0F, 1.0F);
 
-        if (entity.ticksExisted % 2 == 0)
-        {
+        if (entity.ticksExisted % 2 == 0) {
             GlStateManager.disableTexture2D();
             GlStateManager.disableLighting();
             GlStateManager.enableBlend();
@@ -57,8 +53,7 @@ public class RenderProjectileTNT extends Render<EntityProjectileTNT>
     }
 
     @Override
-    protected ResourceLocation getEntityTexture(EntityProjectileTNT entity)
-    {
+    protected ResourceLocation getEntityTexture(EntityProjectileTNT entity) {
         return TextureMap.LOCATION_BLOCKS_TEXTURE;
     }
 }

@@ -11,30 +11,25 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemHoeMars extends ItemHoe implements ISortableItem
-{
-    public ItemHoeMars(ToolMaterial par2EnumToolMaterial)
-    {
+public class ItemHoeMars extends ItemHoe implements ISortableItem {
+    public ItemHoeMars(ToolMaterial par2EnumToolMaterial) {
         super(par2EnumToolMaterial);
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public EnumRarity getRarity(ItemStack par1ItemStack)
-    {
+    public EnumRarity getRarity(ItemStack par1ItemStack) {
         return ClientProxyCore.galacticraftItem;
     }
 
     @SideOnly(Side.CLIENT)
     @Override
-    public CreativeTabs getCreativeTab()
-    {
+    public CreativeTabs getCreativeTab() {
         return GalacticraftCore.galacticraftItemsTab;
     }
 
     @Override
-    public EnumSortCategoryItem getCategory(int meta)
-    {
+    public EnumSortCategoryItem getCategory(int meta) {
         return EnumSortCategoryItem.TOOLS;
     }
 }

@@ -3,42 +3,33 @@ package micdoodle8.mods.galacticraft.planets.asteroids.tile;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
 
-public class TileEntityMinerBaseSingle extends TileEntity implements ITickable
-{
+public class TileEntityMinerBaseSingle extends TileEntity implements ITickable {
     @Override
-    public void update()
-    {
-        if (!this.world.isRemote)
-        {
+    public void update() {
+        if (!this.world.isRemote) {
             final ArrayList<TileEntity> attachedBaseBlocks = new ArrayList<TileEntity>();
-            
+
             final int thisX = this.getPos().getX();
             final int thisY = this.getPos().getY();
             final int thisZ = this.getPos().getZ();
 
             boolean success = true;
             SEARCH:
-            for (int x = 0; x < 2; x++)
-            {
-                for (int y = 0; y < 2; y++)
-                {
-                    for (int z = 0; z < 2; z++)
-                    {
+            for (int x = 0; x < 2; x++) {
+                for (int y = 0; y < 2; y++) {
+                    for (int z = 0; z < 2; z++) {
                         BlockPos pos = new BlockPos(x + thisX, y + thisY, z + thisZ);
                         final TileEntity tile = this.world.isBlockLoaded(pos, false) ? this.world.getTileEntity(pos) : null;
 
-                        if (tile instanceof TileEntityMinerBaseSingle && !tile.isInvalid())
-                        {
+                        if (tile instanceof TileEntityMinerBaseSingle && !tile.isInvalid()) {
                             attachedBaseBlocks.add(tile);
-                        }
-                        else
-                        {
+                        } else {
                             success = false;
                             break SEARCH;
                         }
@@ -46,11 +37,9 @@ public class TileEntityMinerBaseSingle extends TileEntity implements ITickable
                 }
             }
 
-            if (success)
-            {
+            if (success) {
                 TileEntityMinerBase.addNewMinerBase(GCCoreUtil.getDimensionID(this), this.getPos());
-                for (final TileEntity tile : attachedBaseBlocks)
-                {
+                for (final TileEntity tile : attachedBaseBlocks) {
                     this.world.setBlockToAir(this.getPos());
                 }
                 //Don't try setting a new block with a TileEntity, because new tiles can
@@ -68,8 +57,7 @@ public class TileEntityMinerBaseSingle extends TileEntity implements ITickable
     }
 
     @Override
-    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
-    {
+    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate) {
         return oldState.getBlock() != newSate.getBlock();
     }
 }

@@ -6,16 +6,13 @@ import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class ParticleLaunchSmoke extends EntityFXLaunchParticle
-{
+public class ParticleLaunchSmoke extends EntityFXLaunchParticle {
     float smokeParticleScale;
 
-    public ParticleLaunchSmoke(World par1World, Vector3 position, Vector3 motion, float size, boolean launched)
-    {
+    public ParticleLaunchSmoke(World par1World, Vector3 position, Vector3 motion, float size, boolean launched) {
         super(par1World, position.x, position.y, position.z, 0.0D, 0.0D, 0.0D);
         this.motionX *= 0.10000000149011612D;
         this.motionY *= 0.10000000149011612D;
@@ -30,12 +27,9 @@ public class ParticleLaunchSmoke extends EntityFXLaunchParticle
         this.particleScale *= size * 3;
         this.smokeParticleScale = this.particleScale;
 
-        if (launched)
-        {
+        if (launched) {
             this.particleMaxAge = (int) (this.particleMaxAge * size) + 10;
-        }
-        else
-        {
+        } else {
             this.motionX += par1World.rand.nextDouble() / 2 - 0.25;
             this.motionY += par1World.rand.nextDouble() / 20;
             this.motionZ += par1World.rand.nextDouble() / 2 - 0.25;
@@ -46,20 +40,17 @@ public class ParticleLaunchSmoke extends EntityFXLaunchParticle
     }
 
     @Override
-    public void renderParticle(BufferBuilder worldRendererIn, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ)
-    {
+    public void renderParticle(BufferBuilder worldRendererIn, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
         GL11.glPushMatrix();
         GL11.glDepthMask(false);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
         float var8 = (this.particleAge + partialTicks) / this.particleMaxAge * 32.0F;
 
-        if (var8 < 0.0F)
-        {
+        if (var8 < 0.0F) {
             var8 = 0.0F;
         }
 
-        if (var8 > 1.0F)
-        {
+        if (var8 > 1.0F) {
             var8 = 1.0F;
         }
 
@@ -72,14 +63,12 @@ public class ParticleLaunchSmoke extends EntityFXLaunchParticle
     }
 
     @Override
-    public void onUpdate()
-    {
+    public void onUpdate() {
         this.prevPosX = this.posX;
         this.prevPosY = this.posY;
         this.prevPosZ = this.posZ;
 
-        if (this.particleAge++ >= this.particleMaxAge)
-        {
+        if (this.particleAge++ >= this.particleMaxAge) {
             this.setExpired();
         }
 

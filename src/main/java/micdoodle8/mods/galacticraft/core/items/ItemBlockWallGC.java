@@ -8,9 +8,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemBlockWallGC extends ItemBlock
-{
-    private static final String[] types = new String[] {
+public class ItemBlockWallGC extends ItemBlock {
+    private static final String[] types = new String[]{
             "tin",
             "tin",
             "moon",
@@ -19,33 +18,28 @@ public class ItemBlockWallGC extends ItemBlock
             "mars_bricks"
     };
 
-    public ItemBlockWallGC(Block block)
-    {
+    public ItemBlockWallGC(Block block) {
         super(block);
         this.setMaxDamage(0);
         this.setHasSubtypes(true);
     }
 
     @Override
-    public int getMetadata(int meta)
-    {
+    public int getMetadata(int meta) {
         return meta;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public EnumRarity getRarity(ItemStack par1ItemStack)
-    {
+    public EnumRarity getRarity(ItemStack par1ItemStack) {
         return ClientProxyCore.galacticraftItem;
     }
 
     @Override
-    public String getUnlocalizedName(ItemStack itemstack)
-    {
+    public String getUnlocalizedName(ItemStack itemstack) {
         int meta = itemstack.getItemDamage();
 
-        if (meta < 0 || meta >= types.length)
-        {
+        if (meta < 0 || meta >= types.length) {
             meta = 0;
         }
         return super.getUnlocalizedName() + "." + types[meta];

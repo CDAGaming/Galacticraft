@@ -26,51 +26,43 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class BlockBeamReflector extends BlockTileGC implements IShiftDescription, ISortableBlock
-{
+public class BlockBeamReflector extends BlockTileGC implements IShiftDescription, ISortableBlock {
     protected static final AxisAlignedBB AABB = new AxisAlignedBB(0.25, 0.0, 0.25, 0.75, 0.8, 0.75);
 
-    public BlockBeamReflector(String assetName)
-    {
+    public BlockBeamReflector(String assetName) {
         super(Material.IRON);
         this.setUnlocalizedName(assetName);
         this.setSoundType(SoundType.METAL);
     }
 
     @Override
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
-    {
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
         return AABB;
     }
 
     @SideOnly(Side.CLIENT)
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
-    {
+    public CreativeTabs getCreativeTabToDisplayOn() {
         return GalacticraftCore.galacticraftBlocksTab;
     }
 
     @Override
-    public boolean isOpaqueCube(IBlockState state)
-    {
+    public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
 
     @Override
-    public boolean isFullCube(IBlockState state)
-    {
+    public boolean isFullCube(IBlockState state) {
         return false;
     }
 
     @Override
-    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face)
-    {
+    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
         return BlockFaceShape.UNDEFINED;
     }
 
     @Override
-    public EnumBlockRenderType getRenderType(IBlockState state)
-    {
+    public EnumBlockRenderType getRenderType(IBlockState state) {
         return EnumBlockRenderType.INVISIBLE;
     }
 
@@ -88,25 +80,21 @@ public class BlockBeamReflector extends BlockTileGC implements IShiftDescription
 //    }
 
     @Override
-    public TileEntity createTileEntity(World world, IBlockState state)
-    {
+    public TileEntity createTileEntity(World world, IBlockState state) {
         return new TileEntityBeamReflector();
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list)
-    {
+    public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list) {
         list.add(new ItemStack(this, 1, 0));
     }
 
     @Override
-    public boolean onSneakMachineActivated(World world, BlockPos pos, EntityPlayer entityPlayer, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
-    {
+    public boolean onSneakMachineActivated(World world, BlockPos pos, EntityPlayer entityPlayer, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
         TileEntity tile = world.getTileEntity(pos);
 
-        if (tile instanceof TileEntityBeamReflector)
-        {
+        if (tile instanceof TileEntityBeamReflector) {
             return ((TileEntityBeamReflector) tile).onMachineActivated(world, pos, world.getBlockState(pos), entityPlayer, hand, heldItem, side, hitX, hitY, hitZ);
         }
 
@@ -114,20 +102,17 @@ public class BlockBeamReflector extends BlockTileGC implements IShiftDescription
     }
 
     @Override
-    public String getShiftDescription(int meta)
-    {
+    public String getShiftDescription(int meta) {
         return GCCoreUtil.translate(this.getUnlocalizedName() + ".description");
     }
 
     @Override
-    public boolean showDescription(int meta)
-    {
+    public boolean showDescription(int meta) {
         return true;
     }
 
     @Override
-    public EnumSortCategoryBlock getCategory(int meta)
-    {
+    public EnumSortCategoryBlock getCategory(int meta) {
         return EnumSortCategoryBlock.MACHINE;
     }
 }

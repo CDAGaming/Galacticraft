@@ -11,12 +11,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class ParticleOilDrip extends Particle
-{
+public class ParticleOilDrip extends Particle {
     private int bobTimer;
 
-    public ParticleOilDrip(World world, double x, double y, double z)
-    {
+    public ParticleOilDrip(World world, double x, double y, double z) {
         super(world, x, y, z, 0.0D, 0.0D, 0.0D);
         this.motionX = this.motionY = this.motionZ = 0.0D;
         this.setParticleTextureIndex(113);
@@ -28,8 +26,7 @@ public class ParticleOilDrip extends Particle
     }
 
     @Override
-    public void onUpdate()
-    {
+    public void onUpdate() {
         this.prevPosX = this.posX;
         this.prevPosY = this.posY;
         this.prevPosZ = this.posZ;
@@ -39,15 +36,12 @@ public class ParticleOilDrip extends Particle
 
         this.motionY -= this.particleGravity;
 
-        if (this.bobTimer-- > 0)
-        {
+        if (this.bobTimer-- > 0) {
             this.motionX *= 0.02D;
             this.motionY *= 0.02D;
             this.motionZ *= 0.02D;
             this.setParticleTextureIndex(113);
-        }
-        else
-        {
+        } else {
             this.setParticleTextureIndex(112);
         }
 
@@ -56,13 +50,11 @@ public class ParticleOilDrip extends Particle
         this.motionY *= 0.9800000190734863D;
         this.motionZ *= 0.9800000190734863D;
 
-        if (this.particleMaxAge-- <= 0)
-        {
+        if (this.particleMaxAge-- <= 0) {
             this.setExpired();
         }
 
-        if (this.onGround)
-        {
+        if (this.onGround) {
             this.motionX *= 0.699999988079071D;
             this.motionZ *= 0.699999988079071D;
         }
@@ -71,19 +63,16 @@ public class ParticleOilDrip extends Particle
         IBlockState state = this.world.getBlockState(pos);
         Material material = state.getMaterial();
 
-        if (material.isLiquid() || material.isSolid())
-        {
+        if (material.isLiquid() || material.isSolid()) {
             double d0 = 0.0D;
 
-            if (state.getBlock() instanceof BlockLiquid)
-            {
+            if (state.getBlock() instanceof BlockLiquid) {
                 d0 = BlockLiquid.getLiquidHeightPercent(((Integer) state.getValue(BlockLiquid.LEVEL)).intValue());
             }
 
             double d1 = MathHelper.floor(this.posY) + 1 - d0;
 
-            if (this.posY < d1)
-            {
+            if (this.posY < d1) {
                 this.setExpired();
             }
         }

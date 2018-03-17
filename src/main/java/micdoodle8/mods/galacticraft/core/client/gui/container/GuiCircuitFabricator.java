@@ -17,23 +17,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
-public class GuiCircuitFabricator extends GuiContainerGC
-{
+public class GuiCircuitFabricator extends GuiContainerGC {
     private static final ResourceLocation circuitFabricatorTexture = new ResourceLocation(Constants.ASSET_PREFIX, "textures/gui/circuit_fabricator.png");
     private TileEntityCircuitFabricator tileEntity;
     private GuiElementInfoRegion electricInfoRegion = new GuiElementInfoRegion(0, 0, 56, 9, null, 0, 0, this);
     private GuiElementInfoRegion processInfoRegion = new GuiElementInfoRegion(0, 0, 53, 12, null, 0, 0, this);
 
-    public GuiCircuitFabricator(InventoryPlayer par1InventoryPlayer, TileEntityCircuitFabricator tileEntity)
-    {
+    public GuiCircuitFabricator(InventoryPlayer par1InventoryPlayer, TileEntityCircuitFabricator tileEntity) {
         super(new ContainerCircuitFabricator(par1InventoryPlayer, tileEntity));
         this.tileEntity = tileEntity;
         this.ySize = 192;
     }
 
     @Override
-    public void initGui()
-    {
+    public void initGui() {
         super.initGui();
         this.electricInfoRegion.tooltipStrings = new ArrayList<String>();
         this.electricInfoRegion.xPosition = (this.width - this.xSize) / 2 + 17;
@@ -54,17 +51,13 @@ public class GuiCircuitFabricator extends GuiContainerGC
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int par1, int par2)
-    {
+    protected void drawGuiContainerForegroundLayer(int par1, int par2) {
         this.fontRenderer.drawString(this.tileEntity.getName(), 10, 6, 4210752);
         String displayText;
 
-        if (this.tileEntity.processTicks > 0)
-        {
+        if (this.tileEntity.processTicks > 0) {
             displayText = EnumColor.BRIGHT_GREEN + GCCoreUtil.translate("gui.status.running.name");
-        }
-        else
-        {
+        } else {
             displayText = EnumColor.ORANGE + GCCoreUtil.translate("gui.status.idle.name");
         }
 
@@ -79,8 +72,7 @@ public class GuiCircuitFabricator extends GuiContainerGC
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3)
-    {
+    protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3) {
         this.mc.renderEngine.bindTexture(GuiCircuitFabricator.circuitFabricatorTexture);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
@@ -97,12 +89,9 @@ public class GuiCircuitFabricator extends GuiContainerGC
         EnergyDisplayHelper.getEnergyDisplayTooltip(this.tileEntity.getEnergyStoredGC(), this.tileEntity.getMaxEnergyStoredGC(), electricityDesc);
         this.electricInfoRegion.tooltipStrings = electricityDesc;
 
-        if (this.tileEntity.processTicks > 0)
-        {
+        if (this.tileEntity.processTicks > 0) {
             scale = (this.tileEntity.processTicks * 100) / this.tileEntity.getProcessTimeRequired();
-        }
-        else
-        {
+        } else {
             scale = 0;
         }
 
@@ -111,14 +100,12 @@ public class GuiCircuitFabricator extends GuiContainerGC
         processDesc.add(GCCoreUtil.translate("gui.electric_compressor.desc.0") + ": " + scale + "%");
         this.processInfoRegion.tooltipStrings = processDesc;
 
-        if (this.tileEntity.processTicks > 0)
-        {
+        if (this.tileEntity.processTicks > 0) {
             scale = (this.tileEntity.processTicks * 51) / this.tileEntity.getProcessTimeRequired();
             this.drawTexturedModalRect(containerWidth + 88, containerHeight + 20, 176, 17 + this.tileEntity.processTicks % 9 / 3 * 10, scale, 10);
         }
 
-        if (this.tileEntity.getEnergyStoredGC() > 0)
-        {
+        if (this.tileEntity.getEnergyStoredGC() > 0) {
             scale = this.tileEntity.getScaledElecticalLevel(54);
             this.drawTexturedModalRect(containerWidth + 116 - 98, containerHeight + 89, 176, 0, scale, 7);
             this.drawTexturedModalRect(containerWidth + 4, containerHeight + 88, 176, 7, 11, 10);

@@ -10,8 +10,7 @@ import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraftforge.common.util.EnumHelper;
 
-public class MarsItems
-{
+public class MarsItems {
     public static Item marsItemBasic;
     public static Item deshPickaxe;
     public static Item deshPickSlime;
@@ -29,11 +28,10 @@ public class MarsItems
     public static Item carbonFragments;
     public static Item bucketSludge;
 
-    public static ArmorMaterial ARMORDESH = EnumHelper.addArmorMaterial("DESH", "", 42, new int[] { 4, 7, 9, 4 }, 12, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 3.0F);
+    public static ArmorMaterial ARMORDESH = EnumHelper.addArmorMaterial("DESH", "", 42, new int[]{4, 7, 9, 4}, 12, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 3.0F);
     public static ToolMaterial TOOLDESH = EnumHelper.addToolMaterial("DESH", 3, 1024, 5.0F, 2.5F, 10);
 
-    public static void initItems()
-    {
+    public static void initItems() {
         MarsItems.marsItemBasic = new ItemBasicMars("item_basic_mars");
         MarsItems.deshPickaxe = new ItemPickaxeMars(MarsItems.TOOLDESH).setUnlocalizedName("desh_pick");
         MarsItems.deshPickSlime = new ItemPickaxeStickyMars(MarsItems.TOOLDESH).setUnlocalizedName("desh_pick_slime");
@@ -54,16 +52,14 @@ public class MarsItems
         MarsItems.registerHarvestLevels();
     }
 
-    public static void registerHarvestLevels()
-    {
+    public static void registerHarvestLevels() {
         MarsItems.deshPickaxe.setHarvestLevel("pickaxe", 4);
         MarsItems.deshPickSlime.setHarvestLevel("pickaxe", 4);
         MarsItems.deshAxe.setHarvestLevel("axe", 4);
         MarsItems.deshSpade.setHarvestLevel("shovel", 4);
     }
 
-    private static void registerItems()
-    {
+    private static void registerItems() {
         MarsItems.registerItem(MarsItems.carbonFragments);
         MarsItems.registerItem(MarsItems.marsItemBasic);
         MarsItems.registerItem(MarsItems.deshPickaxe);
@@ -81,8 +77,7 @@ public class MarsItems
         MarsItems.registerItem(MarsItems.schematic);
     }
 
-    public static void registerItem(Item item)
-    {
+    public static void registerItem(Item item) {
         String name = item.getUnlocalizedName().substring(5);
         GCCoreUtil.registerGalacticraftItem(name, item);
         GalacticraftCore.itemListTrue.add(item);

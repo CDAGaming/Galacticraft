@@ -30,13 +30,11 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class BlockGeothermalGenerator extends BlockTileGC implements ITileEntityProvider, IShiftDescription, IPartialSealableBlock, ISortableBlock
-{
+public class BlockGeothermalGenerator extends BlockTileGC implements ITileEntityProvider, IShiftDescription, IPartialSealableBlock, ISortableBlock {
     public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
     public static final PropertyBool ACTIVE = PropertyBool.create("active");
 
-    public BlockGeothermalGenerator(String assetName)
-    {
+    public BlockGeothermalGenerator(String assetName) {
         super(Material.IRON);
         this.setHardness(2.5F);
         this.setSoundType(SoundType.METAL);
@@ -44,101 +42,85 @@ public class BlockGeothermalGenerator extends BlockTileGC implements ITileEntity
     }
 
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
-    {
+    public CreativeTabs getCreativeTabToDisplayOn() {
         return GalacticraftCore.galacticraftBlocksTab;
     }
 
     @Override
-    public EnumBlockRenderType getRenderType(IBlockState state)
-    {
+    public EnumBlockRenderType getRenderType(IBlockState state) {
         return EnumBlockRenderType.MODEL;
     }
 
     @Override
-    public boolean onMachineActivated(World world, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
-    {
+    public boolean onMachineActivated(World world, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
         playerIn.openGui(GalacticraftPlanets.instance, GuiIdsPlanets.MACHINE_VENUS, world, pos.getX(), pos.getY(), pos.getZ());
         return true;
     }
 
     @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
-    {
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
         int angle = MathHelper.floor(placer.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
         int change = EnumFacing.getHorizontal(angle).getOpposite().getHorizontalIndex();
         worldIn.setBlockState(pos, getStateFromMeta(change), 3);
     }
 
     @Override
-    public boolean onUseWrench(World world, BlockPos pos, EntityPlayer entityPlayer, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
-    {
+    public boolean onUseWrench(World world, BlockPos pos, EntityPlayer entityPlayer, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
         int change = world.getBlockState(pos).getValue(FACING).rotateY().getHorizontalIndex();
         world.setBlockState(pos, this.getStateFromMeta(change), 3);
         return true;
     }
 
     @Override
-    public TileEntity createNewTileEntity(World world, int meta)
-    {
+    public TileEntity createNewTileEntity(World world, int meta) {
         return new TileEntityGeothermalGenerator();
     }
 
     @Override
-    public String getShiftDescription(int meta)
-    {
+    public String getShiftDescription(int meta) {
         return GCCoreUtil.translate(this.getUnlocalizedName() + ".description");
     }
 
     @Override
-    public boolean showDescription(int meta)
-    {
+    public boolean showDescription(int meta) {
         return true;
     }
 
     @Override
-    public boolean isOpaqueCube(IBlockState state)
-    {
+    public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
 
     @Override
-    public boolean isSealed(World worldIn, BlockPos pos, EnumFacing direction)
-    {
+    public boolean isSealed(World worldIn, BlockPos pos, EnumFacing direction) {
         return true;
     }
 
     @Override
-    public EnumSortCategoryBlock getCategory(int meta)
-    {
+    public EnumSortCategoryBlock getCategory(int meta) {
         return EnumSortCategoryBlock.MACHINE;
     }
 
     @Override
-    public IBlockState getStateFromMeta(int meta)
-    {
+    public IBlockState getStateFromMeta(int meta) {
         EnumFacing enumfacing = EnumFacing.getHorizontal(meta % 4);
         return this.getDefaultState().withProperty(FACING, enumfacing);
     }
 
     @Override
-    public int getMetaFromState(IBlockState state)
-    {
+    public int getMetaFromState(IBlockState state) {
         return state.getValue(FACING).getHorizontalIndex();
     }
 
     @Override
-    protected BlockStateContainer createBlockState()
-    {
+    protected BlockStateContainer createBlockState() {
         return new BlockStateContainer(this, FACING, ACTIVE);
     }
 
     @Override
-    public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
-    {
+    public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
         TileEntity tile = worldIn.getTileEntity(pos);
-        if (!(tile instanceof TileEntityGeothermalGenerator))
-        {
+        if (!(tile instanceof TileEntityGeothermalGenerator)) {
             return state;
         }
         TileEntityGeothermalGenerator generator = (TileEntityGeothermalGenerator) tile;

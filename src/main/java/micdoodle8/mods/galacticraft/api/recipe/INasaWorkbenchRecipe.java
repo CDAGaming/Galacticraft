@@ -6,8 +6,7 @@ import net.minecraft.item.ItemStack;
 import javax.annotation.Nonnull;
 import java.util.HashMap;
 
-public interface INasaWorkbenchRecipe
-{
+public interface INasaWorkbenchRecipe {
     boolean matches(IInventory inventory);
 
     int getRecipeSize();

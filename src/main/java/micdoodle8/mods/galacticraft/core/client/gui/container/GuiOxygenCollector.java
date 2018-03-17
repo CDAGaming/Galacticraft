@@ -14,8 +14,7 @@ import org.lwjgl.opengl.GL11;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GuiOxygenCollector extends GuiContainerGC
-{
+public class GuiOxygenCollector extends GuiContainerGC {
     private static final ResourceLocation collectorTexture = new ResourceLocation(Constants.ASSET_PREFIX, "textures/gui/oxygen.png");
 
     private final TileEntityOxygenCollector collector;
@@ -23,16 +22,14 @@ public class GuiOxygenCollector extends GuiContainerGC
     private GuiElementInfoRegion oxygenInfoRegion = new GuiElementInfoRegion((this.width - this.xSize) / 2 + 112, (this.height - this.ySize) / 2 + 24, 56, 9, new ArrayList<String>(), this.width, this.height, this);
     private GuiElementInfoRegion electricInfoRegion = new GuiElementInfoRegion((this.width - this.xSize) / 2 + 112, (this.height - this.ySize) / 2 + 37, 56, 9, new ArrayList<String>(), this.width, this.height, this);
 
-    public GuiOxygenCollector(InventoryPlayer par1InventoryPlayer, TileEntityOxygenCollector par2TileEntityAirDistributor)
-    {
+    public GuiOxygenCollector(InventoryPlayer par1InventoryPlayer, TileEntityOxygenCollector par2TileEntityAirDistributor) {
         super(new ContainerOxygenCollector(par1InventoryPlayer, par2TileEntityAirDistributor));
         this.collector = par2TileEntityAirDistributor;
         this.ySize = 180;
     }
 
     @Override
-    public void initGui()
-    {
+    public void initGui() {
         super.initGui();
         List<String> batterySlotDesc = new ArrayList<String>();
         batterySlotDesc.add(GCCoreUtil.translate("gui.battery_slot.desc.0"));
@@ -51,8 +48,7 @@ public class GuiOxygenCollector extends GuiContainerGC
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int par1, int par2)
-    {
+    protected void drawGuiContainerForegroundLayer(int par1, int par2) {
         this.fontRenderer.drawString(this.collector.getName(), 8, 10, 4210752);
         GCCoreUtil.drawStringRightAligned(GCCoreUtil.translate("gui.message.out.name") + ":", 99, 25, 4210752, this.fontRenderer);
         GCCoreUtil.drawStringRightAligned(GCCoreUtil.translate("gui.message.in.name") + ":", 99, 37, 4210752, this.fontRenderer);
@@ -62,12 +58,10 @@ public class GuiOxygenCollector extends GuiContainerGC
         this.fontRenderer.drawString(GCCoreUtil.translate("container.inventory"), 8, this.ySize - 90 + 2, 4210752);
     }
 
-    private String getStatus()
-    {
+    private String getStatus() {
         String returnValue = this.collector.getGUIstatus();
 
-        if (returnValue.equals(EnumColor.DARK_GREEN + GCCoreUtil.translate("gui.status.active.name")) && this.collector.lastOxygenCollected <= 0.0F)
-        {
+        if (returnValue.equals(EnumColor.DARK_GREEN + GCCoreUtil.translate("gui.status.active.name")) && this.collector.lastOxygenCollected <= 0.0F) {
             return EnumColor.DARK_RED + GCCoreUtil.translate("gui.status.missingleaves.name");
         }
 
@@ -75,28 +69,24 @@ public class GuiOxygenCollector extends GuiContainerGC
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3)
-    {
+    protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3) {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.mc.getTextureManager().bindTexture(GuiOxygenCollector.collectorTexture);
         final int var5 = (this.width - this.xSize) / 2;
         final int var6 = (this.height - this.ySize) / 2;
         this.drawTexturedModalRect(var5, var6 + 5, 0, 0, this.xSize, 181);
 
-        if (this.collector != null)
-        {
+        if (this.collector != null) {
             int scale = this.collector.getCappedScaledOxygenLevel(54);
             this.drawTexturedModalRect(var5 + 113, var6 + 25, 197, 7, Math.min(scale, 54), 7);
             scale = this.collector.getScaledElecticalLevel(54);
             this.drawTexturedModalRect(var5 + 113, var6 + 38, 197, 0, Math.min(scale, 54), 7);
 
-            if (this.collector.getEnergyStoredGC() > 0)
-            {
+            if (this.collector.getEnergyStoredGC() > 0) {
                 this.drawTexturedModalRect(var5 + 99, var6 + 37, 176, 0, 11, 10);
             }
 
-            if (this.collector.getOxygenStored() > 0)
-            {
+            if (this.collector.getOxygenStored() > 0) {
                 this.drawTexturedModalRect(var5 + 100, var6 + 24, 187, 0, 10, 10);
             }
 

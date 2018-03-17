@@ -13,30 +13,25 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class RenderEvolvedWitch extends RenderLiving<EntityEvolvedWitch>
-{
+public class RenderEvolvedWitch extends RenderLiving<EntityEvolvedWitch> {
     private static final ResourceLocation witchTexture = new ResourceLocation(Constants.ASSET_PREFIX, "textures/model/evolved_witch.png");
     private boolean texSwitch;
 
-    public RenderEvolvedWitch(RenderManager manager)
-    {
+    public RenderEvolvedWitch(RenderManager manager) {
         super(manager, new ModelEvolvedWitch(), 0.5F);
         this.addLayer(new LayerHeldItemEvolvedWitch(this));
     }
 
     @Override
-    public void transformHeldFull3DItemLayer()
-    {
+    public void transformHeldFull3DItemLayer() {
         GlStateManager.translate(0.0F, 0.1875F, 0.0F);
     }
 
     @Override
-    public void doRender(EntityEvolvedWitch entity, double x, double y, double z, float entityYaw, float partialTicks)
-    {
-        ((ModelEvolvedWitch)this.mainModel).holdingItem = entity.getHeldItemMainhand() != null;
+    public void doRender(EntityEvolvedWitch entity, double x, double y, double z, float entityYaw, float partialTicks) {
+        ((ModelEvolvedWitch) this.mainModel).holdingItem = entity.getHeldItemMainhand() != null;
         super.doRender(entity, x, y, z, entityYaw, partialTicks);
-        if (OverlaySensorGlasses.overrideMobTexture())
-        {
+        if (OverlaySensorGlasses.overrideMobTexture()) {
             texSwitch = true;
             super.doRender(entity, x, y, z, entityYaw, partialTicks);
             texSwitch = false;
@@ -44,19 +39,16 @@ public class RenderEvolvedWitch extends RenderLiving<EntityEvolvedWitch>
     }
 
     @Override
-    protected void preRenderCallback(EntityEvolvedWitch entity, float partialTickTime)
-    {
+    protected void preRenderCallback(EntityEvolvedWitch entity, float partialTickTime) {
         float f1 = 0.9375F;
         GlStateManager.scale(f1, f1, f1);
-        if (texSwitch)
-        {
+        if (texSwitch) {
             OverlaySensorGlasses.preRenderMobs();
         }
     }
 
     @Override
-    protected ResourceLocation getEntityTexture(EntityEvolvedWitch entity)
-    {
+    protected ResourceLocation getEntityTexture(EntityEvolvedWitch entity) {
         return texSwitch ? OverlaySensorGlasses.altTexture : RenderEvolvedWitch.witchTexture;
     }
 }

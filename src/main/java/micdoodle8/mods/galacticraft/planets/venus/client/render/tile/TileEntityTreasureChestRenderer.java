@@ -12,28 +12,22 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 @SideOnly(Side.CLIENT)
-public class TileEntityTreasureChestRenderer extends TileEntitySpecialRenderer<TileEntityTreasureChestVenus>
-{
+public class TileEntityTreasureChestRenderer extends TileEntitySpecialRenderer<TileEntityTreasureChestVenus> {
     private static final ResourceLocation treasureChestTexture = new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "textures/model/treasure_venus.png");
 
     private final ModelTreasureChest chestModel = new ModelTreasureChest();
 
     @Override
-    public void render(TileEntityTreasureChestVenus chest, double x, double y, double z, float par7, int par8, float alpha)
-    {
+    public void render(TileEntityTreasureChestVenus chest, double x, double y, double z, float par7, int par8, float alpha) {
         int var9;
 
-        if (!chest.hasWorld())
-        {
+        if (!chest.hasWorld()) {
             var9 = 0;
-        }
-        else
-        {
+        } else {
             final Block var10 = chest.getBlockType();
             var9 = chest.getBlockMetadata();
 
-            if (var10 != null && var9 == 0)
-            {
+            if (var10 != null && var9 == 0) {
                 var9 = chest.getBlockMetadata();
             }
         }
@@ -48,23 +42,19 @@ public class TileEntityTreasureChestRenderer extends TileEntitySpecialRenderer<T
         GL11.glTranslatef(0.5F, 0.5F, 0.5F);
         short var11 = 0;
 
-        if (var9 == 2)
-        {
+        if (var9 == 2) {
             var11 = 180;
         }
 
-        if (var9 == 3)
-        {
+        if (var9 == 3) {
             var11 = 0;
         }
 
-        if (var9 == 4)
-        {
+        if (var9 == 4) {
             var11 = 90;
         }
 
-        if (var9 == 5)
-        {
+        if (var9 == 5) {
             var11 = -90;
         }
 

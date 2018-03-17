@@ -9,57 +9,48 @@ import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 import micdoodle8.mods.galacticraft.core.client.render.RenderPlanet;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.WorldProvider;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.FMLClientHandler;
-
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.nio.DoubleBuffer;
 
-public class GameScreenCelestial implements IGameScreen
-{
+public class GameScreenCelestial implements IGameScreen {
+    private final int lineSegments = 90;
+    private final float cos = MathHelper.cos(Constants.twoPI / lineSegments);
+    private final float sin = MathHelper.sin(Constants.twoPI / lineSegments);
     private TextureManager renderEngine;
-
     private float frameA;
     private float frameBx;
     private float frameBy;
     private float centreX;
     private float centreY;
     private float scale;
-
-    private final int lineSegments = 90;
-    private final float cos = MathHelper.cos(Constants.twoPI / lineSegments);
-    private final float sin = MathHelper.sin(Constants.twoPI / lineSegments);
-
     private DoubleBuffer planes;
 
 
-    public GameScreenCelestial()
-    {
-        if (GCCoreUtil.getEffectiveSide().isClient())
-        {
+    public GameScreenCelestial() {
+        if (GCCoreUtil.getEffectiveSide().isClient()) {
             renderEngine = FMLClientHandler.instance().getClient().renderEngine;
             planes = BufferUtils.createDoubleBuffer(4 * Double.SIZE);
         }
     }
 
     @Override
-    public void setFrameSize(float frameSize)
-    {
+    public void setFrameSize(float frameSize) {
         this.frameA = frameSize;
     }
 
     @Override
-    public void render(int type, float ticks, float scaleX, float scaleY, IScreenManager scr)
-    {
+    public void render(int type, float ticks, float scaleX, float scaleY, IScreenManager scr) {
         centreX = scaleX / 2;
         centreY = scaleY / 2;
         frameBx = scaleX - frameA;
@@ -81,27 +72,24 @@ public class GameScreenCelestial implements IGameScreen
         GL11.glClipPlane(GL11.GL_CLIP_PLANE3, planes);
         GL11.glEnable(GL11.GL_CLIP_PLANE3);
 
-        switch (type)
-        {
-        case 2:
-            WorldProvider wp = scr.getWorldProvider();
-            CelestialBody body = null;
-            if (wp instanceof IGalacticraftWorldProvider)
-            {
-                body = ((IGalacticraftWorldProvider) wp).getCelestialBody();
-            }
-            if (body == null)
-            {
-                body = GalacticraftCore.planetOverworld;
-            }
-            drawCelestialBodies(body, ticks);
-            break;
-        case 3:
-            drawCelestialBodiesZ(GalacticraftCore.planetOverworld, ticks);
-            break;
-        case 4:
-            drawPlanetsTest(ticks);
-            break;
+        switch (type) {
+            case 2:
+                WorldProvider wp = scr.getWorldProvider();
+                CelestialBody body = null;
+                if (wp instanceof IGalacticraftWorldProvider) {
+                    body = ((IGalacticraftWorldProvider) wp).getCelestialBody();
+                }
+                if (body == null) {
+                    body = GalacticraftCore.planetOverworld;
+                }
+                drawCelestialBodies(body, ticks);
+                break;
+            case 3:
+                drawCelestialBodiesZ(GalacticraftCore.planetOverworld, ticks);
+                break;
+            case 4:
+                drawPlanetsTest(ticks);
+                break;
         }
 
         GL11.glDisable(GL11.GL_CLIP_PLANE3);
@@ -110,8 +98,7 @@ public class GameScreenCelestial implements IGameScreen
         GL11.glDisable(GL11.GL_CLIP_PLANE0);
     }
 
-    private void drawBlackBackground(float greyLevel)
-    {
+    private void drawBlackBackground(float greyLevel) {
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         final Tessellator tess = Tessellator.getInstance();
@@ -129,41 +116,30 @@ public class GameScreenCelestial implements IGameScreen
         GL11.glEnable(GL11.GL_TEXTURE_2D);
     }
 
-    private void drawCelestialBodies(CelestialBody body, float ticks)
-    {
+    private void drawCelestialBodies(CelestialBody body, float ticks) {
         Star star = null;
         SolarSystem solarSystem = null;
-        if (body instanceof Planet)
-        {
+        if (body instanceof Planet) {
             solarSystem = ((Planet) body).getParentSolarSystem();
-        }
-        else if (body instanceof Moon)
-        {
+        } else if (body instanceof Moon) {
             solarSystem = ((Moon) body).getParentPlanet().getParentSolarSystem();
-        }
-        else if (body instanceof Satellite)
-        {
+        } else if (body instanceof Satellite) {
             solarSystem = ((Satellite) body).getParentPlanet().getParentSolarSystem();
         }
 
-        if (solarSystem == null)
-        {
+        if (solarSystem == null) {
             solarSystem = GalacticraftCore.solarSystemSol;
         }
         star = solarSystem.getMainStar();
 
-        if (star != null && star.getBodyIcon() != null)
-        {
+        if (star != null && star.getBodyIcon() != null) {
             this.drawCelestialBody(star, 0F, 0F, ticks, 6F);
         }
 
         String mainSolarSystem = solarSystem.getUnlocalizedName();
-        for (Planet planet : GalaxyRegistry.getRegisteredPlanets().values())
-        {
-            if (planet.getParentSolarSystem() != null && planet.getBodyIcon() != null)
-            {
-                if (planet.getParentSolarSystem().getUnlocalizedName().equalsIgnoreCase(mainSolarSystem))
-                {
+        for (Planet planet : GalaxyRegistry.getRegisteredPlanets().values()) {
+            if (planet.getParentSolarSystem() != null && planet.getBodyIcon() != null) {
+                if (planet.getParentSolarSystem().getUnlocalizedName().equalsIgnoreCase(mainSolarSystem)) {
                     Vector3f pos = this.getCelestialBodyPosition(planet, ticks);
                     this.drawCircle(planet);
                     this.drawCelestialBody(planet, pos.x, pos.y, ticks, (planet.getRelativeDistanceFromCenter().unScaledDistance < 1.5F) ? 2F : 2.8F);
@@ -172,24 +148,19 @@ public class GameScreenCelestial implements IGameScreen
         }
     }
 
-    private void drawCelestialBodiesZ(CelestialBody planet, float ticks)
-    {
+    private void drawCelestialBodiesZ(CelestialBody planet, float ticks) {
         this.drawCelestialBody(planet, 0F, 0F, ticks, 11F);
 
-        for (Moon moon : GalaxyRegistry.getRegisteredMoons().values())
-        {
-            if (moon.getParentPlanet() == planet && moon.getBodyIcon() != null)
-            {
+        for (Moon moon : GalaxyRegistry.getRegisteredMoons().values()) {
+            if (moon.getParentPlanet() == planet && moon.getBodyIcon() != null) {
                 Vector3f pos = this.getCelestialBodyPosition(moon, ticks);
                 this.drawCircle(moon);
                 this.drawCelestialBody(moon, pos.x, pos.y, ticks, 4F);
             }
         }
 
-        for (Satellite satellite : GalaxyRegistry.getRegisteredSatellites().values())
-        {
-            if (satellite.getParentPlanet() == planet)
-            {
+        for (Satellite satellite : GalaxyRegistry.getRegisteredSatellites().values()) {
+            if (satellite.getParentPlanet() == planet) {
                 Vector3f pos = this.getCelestialBodyPosition(satellite, ticks);
                 this.drawCircle(satellite);
                 this.drawCelestialBody(satellite, pos.x, pos.y, ticks, 3F);
@@ -197,8 +168,7 @@ public class GameScreenCelestial implements IGameScreen
         }
     }
 
-    private void drawTexturedRectCBody(float x, float y, float width, float height)
-    {
+    private void drawTexturedRectCBody(float x, float y, float width, float height) {
         double v = 0.75D;    // Celestial body textures are 12x12 in a 16x16 .png
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder worldRenderer = tessellator.getBuffer();
@@ -210,14 +180,11 @@ public class GameScreenCelestial implements IGameScreen
         tessellator.draw();
     }
 
-    private void drawCelestialBody(CelestialBody planet, float xPos, float yPos, float ticks, float relSize)
-    {
-        if (xPos + centreX > frameBx || xPos + centreX < frameA)
-        {
+    private void drawCelestialBody(CelestialBody planet, float xPos, float yPos, float ticks, float relSize) {
+        if (xPos + centreX > frameBx || xPos + centreX < frameA) {
             return;
         }
-        if (yPos + centreY > frameBy || yPos + centreY < frameA)
-        {
+        if (yPos + centreY > frameBy || yPos + centreY < frameA) {
             return;
         }
 
@@ -230,13 +197,11 @@ public class GameScreenCelestial implements IGameScreen
         MinecraftForge.EVENT_BUS.post(preEvent);
 
         GL11.glColor4f(1, 1, 1, alpha);
-        if (preEvent.celestialBodyTexture != null)
-        {
+        if (preEvent.celestialBodyTexture != null) {
             this.renderEngine.bindTexture(preEvent.celestialBodyTexture);
         }
 
-        if (!preEvent.isCanceled())
-        {
+        if (!preEvent.isCanceled()) {
             float size = relSize / 70 * scale;
             this.drawTexturedRectCBody(-size / 2, -size / 2, size, size);
         }
@@ -247,8 +212,7 @@ public class GameScreenCelestial implements IGameScreen
         GL11.glPopMatrix();
     }
 
-    private void drawCircle(CelestialBody cBody)
-    {
+    private void drawCircle(CelestialBody cBody) {
         GL11.glPushMatrix();
         GL11.glTranslatef(centreX, centreY, 0.002F);
         GL11.glDisable(GL11.GL_TEXTURE_2D);
@@ -266,13 +230,11 @@ public class GameScreenCelestial implements IGameScreen
         CelestialBodyRenderEvent.CelestialRingRenderEvent.Pre preEvent = new CelestialBodyRenderEvent.CelestialRingRenderEvent.Pre(cBody, new Vector3f(0.0F, 0.0F, 0.0F));
         MinecraftForge.EVENT_BUS.post(preEvent);
 
-        if (!preEvent.isCanceled())
-        {
+        if (!preEvent.isCanceled()) {
             GL11.glBegin(GL11.GL_LINE_LOOP);
 
             float temp;
-            for (int i = 0; i < lineSegments; i++)
-            {
+            for (int i = 0; i < lineSegments; i++) {
                 GL11.glVertex2f(x, y);
 
                 temp = x;
@@ -290,32 +252,25 @@ public class GameScreenCelestial implements IGameScreen
         GL11.glPopMatrix();
     }
 
-    private Vector3f getCelestialBodyPosition(CelestialBody cBody, float ticks)
-    {
+    private Vector3f getCelestialBodyPosition(CelestialBody cBody, float ticks) {
         float timeScale = cBody instanceof Planet ? 200.0F : 2.0F;
         float distanceFromCenter = this.getScale(cBody) * scale;
         return new Vector3f((float) Math.sin(ticks / (timeScale * cBody.getRelativeOrbitTime()) + cBody.getPhaseShift()) * distanceFromCenter, (float) Math.cos(ticks / (timeScale * cBody.getRelativeOrbitTime()) + cBody.getPhaseShift()) * distanceFromCenter, 0);
     }
 
-    private float getScale(CelestialBody celestialBody)
-    {
+    private float getScale(CelestialBody celestialBody) {
         float distance = celestialBody.getRelativeDistanceFromCenter().unScaledDistance;
-        if (distance >= 1.375F)
-        {
-            if (distance >= 1.5F)
-            {
+        if (distance >= 1.375F) {
+            if (distance >= 1.5F) {
                 distance *= 1.15F;
-            }
-            else
-            {
+            } else {
                 distance += 0.075F;
             }
         }
         return 1 / 140.0F * distance * (celestialBody instanceof Planet ? 25.0F : 3.5F);
     }
 
-    private void planeEquation(float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3)
-    {
+    private void planeEquation(float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3) {
         double[] result = new double[4];
         result[0] = y1 * (z2 - z3) + y2 * (z3 - z1) + y3 * (z1 - z2);
         result[1] = z1 * (x2 - x3) + z2 * (x3 - x1) + z3 * (x1 - x2);
@@ -325,8 +280,7 @@ public class GameScreenCelestial implements IGameScreen
         planes.position(0);
     }
 
-    private void drawPlanetsTest(float ticks)
-    {
+    private void drawPlanetsTest(float ticks) {
         GL11.glPushMatrix();
         GL11.glTranslatef(centreX, centreY, 0F);
 
@@ -335,18 +289,15 @@ public class GameScreenCelestial implements IGameScreen
         GL11.glPopMatrix();
     }
 
-    private void drawTexturedRectUV(float x, float y, float width, float height, float ticks)
-    {
-        for (int ysect = 0; ysect < 6; ysect++)
-        {
+    private void drawTexturedRectUV(float x, float y, float width, float height, float ticks) {
+        for (int ysect = 0; ysect < 6; ysect++) {
 //    		drawTexturedRectUVSixth(x, y, width, height, (ticks / 600F) % 1F, ysect / 6F);
             float angle = 7.5F + 15F * ysect;
             drawTexturedRectUVSixth(x, y, width, height, (ticks / (900F - 80F * MathHelper.cos(angle))) % 1F, ysect / 6F);
         }
     }
 
-    private void drawTexturedRectUVSixth(float x, float y, float width, float height, float prog, float y0)
-    {
+    private void drawTexturedRectUVSixth(float x, float y, float width, float height, float prog, float y0) {
         y0 /= 2;
         prog = 1.0F - prog;
         float y1 = y0 + 1 / 12F;
@@ -358,8 +309,7 @@ public class GameScreenCelestial implements IGameScreen
         float ybb = y + height * y3;
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder worldRenderer = tessellator.getBuffer();
-        if (prog <= 0.75F)
-        {
+        if (prog <= 0.75F) {
             worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
             worldRenderer.pos(x, yab, 0F).tex(prog, y1).endVertex();
             worldRenderer.pos(x + width, yab, 0F).tex(prog + 0.25F, y1).endVertex();
@@ -372,9 +322,7 @@ public class GameScreenCelestial implements IGameScreen
             worldRenderer.pos(x + width, yba, 0F).tex(prog + 0.25F, y2).endVertex();
             worldRenderer.pos(x, yba, 0F).tex(prog, y2).endVertex();
             tessellator.draw();
-        }
-        else
-        {
+        } else {
             double xp = x + width * (1F - prog) / 0.25F;
             worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
             worldRenderer.pos(x, yab, 0F).tex(prog, y1).endVertex();

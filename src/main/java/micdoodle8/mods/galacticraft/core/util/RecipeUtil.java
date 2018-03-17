@@ -15,19 +15,15 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.registries.GameData;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 
-public class RecipeUtil
-{
+public class RecipeUtil {
     @Nonnull
-    public static ItemStack findMatchingBuggy(InventoryBuggyBench benchStacks)
-    {
-        for (INasaWorkbenchRecipe recipe : GalacticraftRegistry.getBuggyBenchRecipes())
-        {
-            if (recipe.matches(benchStacks))
-            {
+    public static ItemStack findMatchingBuggy(InventoryBuggyBench benchStacks) {
+        for (INasaWorkbenchRecipe recipe : GalacticraftRegistry.getBuggyBenchRecipes()) {
+            if (recipe.matches(benchStacks)) {
                 return recipe.getRecipeOutput();
             }
         }
@@ -36,12 +32,9 @@ public class RecipeUtil
     }
 
     @Nonnull
-    public static ItemStack findMatchingSpaceshipRecipe(InventoryRocketBench inventoryRocketBench)
-    {
-        for (INasaWorkbenchRecipe recipe : GalacticraftRegistry.getRocketT1Recipes())
-        {
-            if (recipe.matches(inventoryRocketBench))
-            {
+    public static ItemStack findMatchingSpaceshipRecipe(InventoryRocketBench inventoryRocketBench) {
+        for (INasaWorkbenchRecipe recipe : GalacticraftRegistry.getRocketT1Recipes()) {
+            if (recipe.matches(inventoryRocketBench)) {
                 return recipe.getRecipeOutput();
             }
         }
@@ -49,22 +42,18 @@ public class RecipeUtil
         return ItemStack.EMPTY;
     }
 
-    public static void addRecipe(ItemStack result, Object[] obj)
-    {
+    public static void addRecipe(ItemStack result, Object[] obj) {
         CraftingHelper.ShapedPrimer pattern = CraftingHelper.parseShaped(obj);
         addCustomRecipe(new ShapedRecipes(result.getItem().getRegistryName().toString(), pattern.width, pattern.height, pattern.input, result));
     }
 
-    public static void addCustomRecipe(IRecipe rec)
-    {
+    public static void addCustomRecipe(IRecipe rec) {
         String modID = Loader.instance().activeModContainer().getModId();
         ResourceLocation newLocation = new ResourceLocation(modID, rec.getRecipeOutput().getItem().getRegistryName().getResourcePath());
-        if (CraftingManager.REGISTRY.containsKey(newLocation))
-        {
+        if (CraftingManager.REGISTRY.containsKey(newLocation)) {
             int count = 1;
             String newNameBase = newLocation.getResourcePath() + "_";
-            while (CraftingManager.REGISTRY.containsKey(newLocation))
-            {
+            while (CraftingManager.REGISTRY.containsKey(newLocation)) {
                 newLocation = new ResourceLocation(modID, newNameBase + count++);
             }
         }
@@ -73,55 +62,45 @@ public class RecipeUtil
         GameData.register_impl(rec);
     }
 
-    public static void addRocketBenchRecipe(ItemStack result, HashMap<Integer, ItemStack> input)
-    {
+    public static void addRocketBenchRecipe(ItemStack result, HashMap<Integer, ItemStack> input) {
         GalacticraftRegistry.addT1RocketRecipe(new NasaWorkbenchRecipe(result, input));
     }
 
-    public static void addBuggyBenchRecipe(ItemStack result, HashMap<Integer, ItemStack> input)
-    {
+    public static void addBuggyBenchRecipe(ItemStack result, HashMap<Integer, ItemStack> input) {
         GalacticraftRegistry.addMoonBuggyRecipe(new NasaWorkbenchRecipe(result, input));
     }
 
-    public static ItemStack getIndustrialCraftItem(String indentifier, String variant)
-    {
+    public static ItemStack getIndustrialCraftItem(String indentifier, String variant) {
         return IC2Items.getItem(indentifier, variant);
     }
-    
+
     /**
      * An extended version of areItemStackTagsEqual which ignores LevelUp's "NoPlacing" tag on mined blocks
      */
-    public static boolean areItemStackTagsEqual(ItemStack stackA, ItemStack stackB)
-    {
+    public static boolean areItemStackTagsEqual(ItemStack stackA, ItemStack stackB) {
         if (ItemStack.areItemStackTagsEqual(stackA, stackB))
             return true;
-        
+
         NBTTagCompound query = null;
-        if (stackA.getTagCompound() == null && stackB.getTagCompound() != null)
-        {
+        if (stackA.getTagCompound() == null && stackB.getTagCompound() != null) {
             query = stackB.getTagCompound();
-        }
-        else if (stackA.getTagCompound() != null && stackB.getTagCompound() == null)
-        {
+        } else if (stackA.getTagCompound() != null && stackB.getTagCompound() == null) {
             query = stackA.getTagCompound();
         }
-        if (query != null)
-        {
+        if (query != null) {
             if (query.getKeySet().size() == 1 && query.hasKey("NoPlacing"))
                 return true;
         }
 
-       return false;
+        return false;
     }
-    
+
     /**
-     * 
-     * @param itemstack - it is assumed this one is not null in calling code
+     * @param itemstack  - it is assumed this one is not null in calling code
      * @param itemstack1
      * @return
      */
-    public static boolean stacksMatch(ItemStack itemstack, ItemStack itemstack1)
-    {
+    public static boolean stacksMatch(ItemStack itemstack, ItemStack itemstack1) {
         return !itemstack1.isEmpty() && itemstack1.getItem() == itemstack.getItem() && (!itemstack.getHasSubtypes() || itemstack.getItemDamage() == itemstack1.getItemDamage()) && RecipeUtil.areItemStackTagsEqual(itemstack, itemstack1);
     }
 }

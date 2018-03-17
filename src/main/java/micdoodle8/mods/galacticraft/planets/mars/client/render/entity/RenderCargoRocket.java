@@ -17,38 +17,31 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class RenderCargoRocket extends Render<EntityCargoRocket>
-{
+public class RenderCargoRocket extends Render<EntityCargoRocket> {
     private ItemModelCargoRocket rocketModel;
 
-    public RenderCargoRocket(RenderManager renderManager)
-    {
+    public RenderCargoRocket(RenderManager renderManager) {
         super(renderManager);
         this.shadowSize = 0.5F;
     }
 
-    private void updateModel()
-    {
-        if (this.rocketModel == null)
-        {
+    private void updateModel() {
+        if (this.rocketModel == null) {
             ModelResourceLocation modelResourceLocation = new ModelResourceLocation(GalacticraftPlanets.TEXTURE_PREFIX + "rocket_cargo", "inventory");
             this.rocketModel = (ItemModelCargoRocket) FMLClientHandler.instance().getClient().getRenderItem().getItemModelMesher().getModelManager().getModel(modelResourceLocation);
         }
     }
 
     @Override
-    protected ResourceLocation getEntityTexture(EntityCargoRocket entity)
-    {
+    protected ResourceLocation getEntityTexture(EntityCargoRocket entity) {
         return TextureMap.LOCATION_BLOCKS_TEXTURE;
     }
 
     @Override
-    public void doRender(EntityCargoRocket entity, double x, double y, double z, float entityYaw, float partialTicks)
-    {
+    public void doRender(EntityCargoRocket entity, double x, double y, double z, float entityYaw, float partialTicks) {
         float pitch = entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks;
         GlStateManager.disableRescaleNormal();
         GlStateManager.pushMatrix();
@@ -58,12 +51,9 @@ public class RenderCargoRocket extends Render<EntityCargoRocket>
         GlStateManager.rotate(-pitch, 0.0F, 0.0F, 1.0F);
         this.bindEntityTexture(entity);
 
-        if (Minecraft.isAmbientOcclusionEnabled())
-        {
+        if (Minecraft.isAmbientOcclusionEnabled()) {
             GlStateManager.shadeModel(GL11.GL_SMOOTH);
-        }
-        else
-        {
+        } else {
             GlStateManager.shadeModel(GL11.GL_FLAT);
         }
 
@@ -74,8 +64,7 @@ public class RenderCargoRocket extends Render<EntityCargoRocket>
     }
 
     @Override
-    public boolean shouldRender(EntityCargoRocket rocket, ICamera camera, double camX, double camY, double camZ)
-    {
+    public boolean shouldRender(EntityCargoRocket rocket, ICamera camera, double camX, double camY, double camZ) {
         AxisAlignedBB axisalignedbb = rocket.getEntityBoundingBox();
         return rocket.isInRangeToRender3d(camX, camY, camZ) && camera.isBoundingBoxInFrustum(axisalignedbb);
     }

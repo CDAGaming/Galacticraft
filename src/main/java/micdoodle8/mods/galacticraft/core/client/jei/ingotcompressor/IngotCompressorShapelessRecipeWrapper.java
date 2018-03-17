@@ -1,7 +1,5 @@
 package micdoodle8.mods.galacticraft.core.client.jei.ingotcompressor;
 
-import java.util.List;
-
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import mezz.jei.api.recipe.IStackHelper;
@@ -14,34 +12,29 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 
 import javax.annotation.Nonnull;
+import java.awt.*;
+import java.util.List;
 
-import java.awt.Color;
-
-public class IngotCompressorShapelessRecipeWrapper implements IRecipeWrapper
-{
+public class IngotCompressorShapelessRecipeWrapper implements IRecipeWrapper {
     @Nonnull
     private final ShapelessOreRecipeGC recipe;
     private final IStackHelper stackHelper;
 
-    public IngotCompressorShapelessRecipeWrapper(IStackHelper stackhelper, @Nonnull ShapelessOreRecipeGC recipe)
-    {
+    public IngotCompressorShapelessRecipeWrapper(IStackHelper stackhelper, @Nonnull ShapelessOreRecipeGC recipe) {
         this.recipe = recipe;
         this.stackHelper = stackhelper;
     }
 
     @Override
-    public void getIngredients(IIngredients ingredients)
-    {
-    	List<List<ItemStack>> inputs =  this.stackHelper.expandRecipeItemStackInputs(recipe.getInput());
-    	ingredients.setInputLists(ItemStack.class, inputs);
+    public void getIngredients(IIngredients ingredients) {
+        List<List<ItemStack>> inputs = this.stackHelper.expandRecipeItemStackInputs(recipe.getInput());
+        ingredients.setInputLists(ItemStack.class, inputs);
         ingredients.setOutput(ItemStack.class, this.recipe.getRecipeOutput());
     }
 
     @Override
-    public void drawInfo(Minecraft mc, int recipeWidth, int recipeHeight, int mouseX, int mouseY)
-    {
-        if (GalacticraftJEI.hidden.contains(this))
-        {
+    public void drawInfo(Minecraft mc, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
+        if (GalacticraftJEI.hidden.contains(this)) {
             FontRenderer fontRendererObj = mc.fontRenderer;
             String experienceString = "Asteroids Challenge";
             GCCoreUtil.drawStringCentered(experienceString, 69, 8, Color.gray.getRGB(), fontRendererObj);
@@ -52,14 +45,12 @@ public class IngotCompressorShapelessRecipeWrapper implements IRecipeWrapper
         FurnaceRecipes furnaceRecipes = FurnaceRecipes.instance();
         float experience = 0;
 
-        try
-        {
+        try {
             experience = furnaceRecipes.getSmeltingExperience(this.recipe.getRecipeOutput());
+        } catch (Exception e) {
         }
-        catch (Exception e) {}
 
-        if (experience > 0)
-        {
+        if (experience > 0) {
             String experienceString = GCCoreUtil.translateWithFormat("gui.jei.category.smelting.experience", experience);
             FontRenderer fontRendererObj = mc.fontRenderer;
             int stringWidth = fontRendererObj.getStringWidth(experienceString);
@@ -67,8 +58,7 @@ public class IngotCompressorShapelessRecipeWrapper implements IRecipeWrapper
         }
     }
 
-    public boolean matches(@Nonnull ShapelessOreRecipeGC test)
-    {
+    public boolean matches(@Nonnull ShapelessOreRecipeGC test) {
         return this.recipe == test;
     }
 }

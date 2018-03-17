@@ -25,15 +25,13 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.FMLClientHandler;
-
 import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GuiJoinSpaceRace extends GuiScreen implements ICheckBoxCallback, ITextBoxCallback
-{
+public class GuiJoinSpaceRace extends GuiScreen implements ICheckBoxCallback, ITextBoxCallback {
     protected static final ResourceLocation texture = new ResourceLocation(Constants.ASSET_PREFIX, "textures/gui/gui.png");
 
     private int ticksPassed;
@@ -49,19 +47,15 @@ public class GuiJoinSpaceRace extends GuiScreen implements ICheckBoxCallback, IT
 
     private SpaceRace spaceRaceData;
 
-    public GuiJoinSpaceRace(EntityPlayerSP player)
-    {
+    public GuiJoinSpaceRace(EntityPlayerSP player) {
         this.thePlayer = player;
         GCPlayerStatsClient stats = GCPlayerStatsClient.get(player);
 
         SpaceRace race = SpaceRaceManager.getSpaceRaceFromID(stats.getSpaceRaceInviteTeamID());
 
-        if (race != null)
-        {
+        if (race != null) {
             this.spaceRaceData = race;
-        }
-        else
-        {
+        } else {
             List<String> playerList = new ArrayList<String>();
             playerList.add(PlayerUtil.getName(player));
             this.spaceRaceData = new SpaceRace(playerList, SpaceRace.DEFAULT_NAME, new FlagData(48, 32), new Vector3(1, 1, 1));
@@ -69,13 +63,11 @@ public class GuiJoinSpaceRace extends GuiScreen implements ICheckBoxCallback, IT
     }
 
     @Override
-    public void initGui()
-    {
+    public void initGui() {
         super.initGui();
         this.buttonList.clear();
 
-        if (this.initialized)
-        {
+        if (this.initialized) {
             final int var5 = (this.width - this.width / 4) / 2;
             final int var6 = (this.height - this.height / 4) / 2;
 
@@ -91,48 +83,41 @@ public class GuiJoinSpaceRace extends GuiScreen implements ICheckBoxCallback, IT
     }
 
     @Override
-    protected void actionPerformed(GuiButton buttonClicked)
-    {
-        switch (buttonClicked.id)
-        {
-        case 0:
-            this.thePlayer.closeScreen();
-            break;
-        case 1:
-            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_ADD_RACE_PLAYER, GCCoreUtil.getDimensionID(mc.world), new Object[] { PlayerUtil.getName(this.thePlayer), this.spaceRaceData.getSpaceRaceID() }));
-            this.thePlayer.closeScreen();
-            break;
-        default:
-            break;
+    protected void actionPerformed(GuiButton buttonClicked) {
+        switch (buttonClicked.id) {
+            case 0:
+                this.thePlayer.closeScreen();
+                break;
+            case 1:
+                GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_ADD_RACE_PLAYER, GCCoreUtil.getDimensionID(mc.world), new Object[]{PlayerUtil.getName(this.thePlayer), this.spaceRaceData.getSpaceRaceID()}));
+                this.thePlayer.closeScreen();
+                break;
+            default:
+                break;
         }
     }
 
     @Override
-    protected void mouseClicked(int x, int y, int clickIndex) throws IOException
-    {
+    protected void mouseClicked(int x, int y, int clickIndex) throws IOException {
         super.mouseClicked(x, y, clickIndex);
     }
 
     @Override
-    public void updateScreen()
-    {
+    public void updateScreen() {
         super.updateScreen();
         ++this.ticksPassed;
 
-        if (!this.initialized)
-        {
+        if (!this.initialized) {
         }
     }
 
     @Override
-    public void drawScreen(int par1, int par2, float par3)
-    {
+    public void drawScreen(int par1, int par2, float par3) {
         this.drawDefaultBackground();
         final int var5 = (this.width - this.width / 4) / 2;
         final int var6 = (this.height - this.height / 4) / 2;
 
-        if (this.initialized)
-        {
+        if (this.initialized) {
             this.drawCenteredString(this.fontRenderer, GCCoreUtil.translate("gui.space_race.join.title.name"), this.width / 2, this.height / 2 - this.height / 3 - 15, 16777215);
             this.drawFlagButton(par1, par2);
             this.drawCenteredString(this.fontRenderer, GCCoreUtil.translate("gui.space_race.join.owner.name") + ": " + this.spaceRaceData.getPlayerNames().get(0), this.width / 2, this.buttonFlag_yPosition + this.buttonFlag_height + 25, ColorUtil.to32BitColor(255, 150, 150, 150));
@@ -148,8 +133,7 @@ public class GuiJoinSpaceRace extends GuiScreen implements ICheckBoxCallback, IT
         super.drawScreen(par1, par2, par3);
     }
 
-    private void drawFlagButton(int mouseX, int mouseY)
-    {
+    private void drawFlagButton(int mouseX, int mouseY) {
         GL11.glPushMatrix();
         GL11.glTranslatef(this.buttonFlag_xPosition + 2.9F, this.buttonFlag_yPosition + this.buttonFlag_height + 1 - 4, 0);
         GL11.glScalef(74.0F, 74.0F, 1F);
@@ -162,75 +146,61 @@ public class GuiJoinSpaceRace extends GuiScreen implements ICheckBoxCallback, IT
     }
 
     @Override
-    public void drawWorldBackground(int i)
-    {
-        if (this.mc.world != null)
-        {
+    public void drawWorldBackground(int i) {
+        if (this.mc.world != null) {
             int scaleX = Math.min(this.ticksPassed * 14, this.width / 3);
             int scaleY = Math.min(this.ticksPassed * 14, this.height / 3);
 
-            if (scaleX == this.width / 3 && scaleY == this.height / 3 && !this.initialized)
-            {
+            if (scaleX == this.width / 3 && scaleY == this.height / 3 && !this.initialized) {
                 this.initialized = true;
                 this.initGui();
             }
 
             this.drawGradientRect(this.width / 2 - scaleX, this.height / 2 - scaleY, this.width / 2 + scaleX, this.height / 2 + scaleY, -1072689136, -804253680);
-        }
-        else
-        {
+        } else {
             this.drawBackground(i);
         }
     }
 
     @Override
-    public void onSelectionChanged(GuiElementCheckbox checkbox, boolean newSelected)
-    {
+    public void onSelectionChanged(GuiElementCheckbox checkbox, boolean newSelected) {
 
     }
 
     @Override
-    public boolean canPlayerEdit(GuiElementCheckbox checkbox, EntityPlayer player)
-    {
+    public boolean canPlayerEdit(GuiElementCheckbox checkbox, EntityPlayer player) {
         return true;
     }
 
     @Override
-    public boolean getInitiallySelected(GuiElementCheckbox checkbox)
-    {
+    public boolean getInitiallySelected(GuiElementCheckbox checkbox) {
         return false;
     }
 
     @Override
-    public void onIntruderInteraction()
-    {
+    public void onIntruderInteraction() {
     }
 
     @Override
-    public void onIntruderInteraction(GuiElementTextBox textBox)
-    {
+    public void onIntruderInteraction(GuiElementTextBox textBox) {
     }
 
     @Override
-    public boolean canPlayerEdit(GuiElementTextBox textBox, EntityPlayer player)
-    {
+    public boolean canPlayerEdit(GuiElementTextBox textBox, EntityPlayer player) {
         return true;
     }
 
     @Override
-    public void onTextChanged(GuiElementTextBox textBox, String newText)
-    {
+    public void onTextChanged(GuiElementTextBox textBox, String newText) {
     }
 
     @Override
-    public String getInitialText(GuiElementTextBox textBox)
-    {
+    public String getInitialText(GuiElementTextBox textBox) {
         return "";
     }
 
     @Override
-    public int getTextColor(GuiElementTextBox textBox)
-    {
+    public int getTextColor(GuiElementTextBox textBox) {
         return ColorUtil.to32BitColor(255, 255, 255, 255);
     }
 }

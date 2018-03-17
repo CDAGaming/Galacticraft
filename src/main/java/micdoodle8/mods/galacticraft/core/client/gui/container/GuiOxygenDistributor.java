@@ -20,8 +20,7 @@ import org.lwjgl.opengl.GL11;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GuiOxygenDistributor extends GuiContainerGC implements ICheckBoxCallback
-{
+public class GuiOxygenDistributor extends GuiContainerGC implements ICheckBoxCallback {
     private static final ResourceLocation distributorTexture = new ResourceLocation(Constants.ASSET_PREFIX, "textures/gui/oxygen_distributor.png");
 
     private final TileEntityOxygenDistributor distributor;
@@ -31,16 +30,14 @@ public class GuiOxygenDistributor extends GuiContainerGC implements ICheckBoxCal
 
     private GuiElementCheckbox checkboxRenderBubble;
 
-    public GuiOxygenDistributor(InventoryPlayer par1InventoryPlayer, TileEntityOxygenDistributor par2TileEntityAirDistributor)
-    {
+    public GuiOxygenDistributor(InventoryPlayer par1InventoryPlayer, TileEntityOxygenDistributor par2TileEntityAirDistributor) {
         super(new ContainerOxygenDistributor(par1InventoryPlayer, par2TileEntityAirDistributor));
         this.distributor = par2TileEntityAirDistributor;
         this.ySize = 180;
     }
 
     @Override
-    public void initGui()
-    {
+    public void initGui() {
         super.initGui();
         final int var5 = (this.width - this.xSize) / 2;
         final int var6 = (this.height - this.ySize) / 2;
@@ -75,8 +72,7 @@ public class GuiOxygenDistributor extends GuiContainerGC implements ICheckBoxCal
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int par1, int par2)
-    {
+    protected void drawGuiContainerForegroundLayer(int par1, int par2) {
         this.fontRenderer.drawString(this.distributor.getName(), 8, 10, 4210752);
         GCCoreUtil.drawStringRightAligned(GCCoreUtil.translate("gui.message.in.name") + ":", 99, 26, 4210752, this.fontRenderer);
         GCCoreUtil.drawStringRightAligned(GCCoreUtil.translate("gui.message.in.name") + ":", 99, 38, 4210752, this.fontRenderer);
@@ -91,10 +87,8 @@ public class GuiOxygenDistributor extends GuiContainerGC implements ICheckBoxCal
         this.fontRenderer.drawString(GCCoreUtil.translate("container.inventory"), 8, this.ySize - 90 + 3, 4210752);
     }
 
-    private String getStatus()
-    {
-        if (this.distributor.getOxygenStored() < this.distributor.oxygenPerTick)
-        {
+    private String getStatus() {
+        if (this.distributor.getOxygenStored() < this.distributor.oxygenPerTick) {
             return EnumColor.DARK_RED + GCCoreUtil.translate("gui.status.missingoxygen.name");
         }
 
@@ -102,28 +96,24 @@ public class GuiOxygenDistributor extends GuiContainerGC implements ICheckBoxCal
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3)
-    {
+    protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3) {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.mc.getTextureManager().bindTexture(GuiOxygenDistributor.distributorTexture);
         final int var5 = (this.width - this.xSize) / 2;
         final int var6 = (this.height - this.ySize) / 2;
         this.drawTexturedModalRect(var5, var6 + 5, 0, 0, this.xSize, 181);
 
-        if (this.distributor != null)
-        {
+        if (this.distributor != null) {
             int scale = this.distributor.getCappedScaledOxygenLevel(54);
             this.drawTexturedModalRect(var5 + 113, var6 + 25, 197, 7, Math.min(scale, 54), 7);
             scale = this.distributor.getScaledElecticalLevel(54);
             this.drawTexturedModalRect(var5 + 113, var6 + 38, 197, 0, Math.min(scale, 54), 7);
 
-            if (this.distributor.getEnergyStoredGC() > 0)
-            {
+            if (this.distributor.getEnergyStoredGC() > 0) {
                 this.drawTexturedModalRect(var5 + 99, var6 + 37, 176, 0, 11, 10);
             }
 
-            if (this.distributor.getOxygenStored() > 0)
-            {
+            if (this.distributor.getOxygenStored() > 0) {
                 this.drawTexturedModalRect(var5 + 100, var6 + 24, 187, 0, 10, 10);
             }
 
@@ -143,27 +133,23 @@ public class GuiOxygenDistributor extends GuiContainerGC implements ICheckBoxCal
     }
 
     @Override
-    public void onSelectionChanged(GuiElementCheckbox checkbox, boolean newSelected)
-    {
+    public void onSelectionChanged(GuiElementCheckbox checkbox, boolean newSelected) {
         this.distributor.setBubbleVisible(newSelected);
-        GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_ON_ADVANCED_GUI_CLICKED_INT, GCCoreUtil.getDimensionID(mc.world), new Object[] { 6, this.distributor.getPos(), newSelected ? 1 : 0 }));
+        GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_ON_ADVANCED_GUI_CLICKED_INT, GCCoreUtil.getDimensionID(mc.world), new Object[]{6, this.distributor.getPos(), newSelected ? 1 : 0}));
     }
 
     @Override
-    public boolean canPlayerEdit(GuiElementCheckbox checkbox, EntityPlayer player)
-    {
+    public boolean canPlayerEdit(GuiElementCheckbox checkbox, EntityPlayer player) {
         return true;
     }
 
     @Override
-    public boolean getInitiallySelected(GuiElementCheckbox checkbox)
-    {
+    public boolean getInitiallySelected(GuiElementCheckbox checkbox) {
         return this.distributor.shouldRenderBubble;
     }
 
     @Override
-    public void onIntruderInteraction()
-    {
+    public void onIntruderInteraction() {
 
     }
 }

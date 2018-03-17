@@ -10,45 +10,31 @@ import net.minecraft.world.gen.structure.StructureBoundingBox;
 import java.lang.reflect.Constructor;
 import java.util.Random;
 
-public class Corridor extends SizedPiece
-{
-    public Corridor()
-    {
+public class Corridor extends SizedPiece {
+    public Corridor() {
     }
 
-    public Corridor(DungeonConfiguration configuration, Random rand, int blockPosX, int blockPosZ, int sizeX, int sizeY, int sizeZ, EnumFacing direction)
-    {
+    public Corridor(DungeonConfiguration configuration, Random rand, int blockPosX, int blockPosZ, int sizeX, int sizeY, int sizeZ, EnumFacing direction) {
         super(configuration, sizeX, sizeY, sizeZ, direction);
         this.setCoordBaseMode(EnumFacing.SOUTH);
         this.boundingBox = new StructureBoundingBox(blockPosX, configuration.getYPosition(), blockPosZ, blockPosX + sizeX, configuration.getYPosition() + sizeY, blockPosZ + sizeZ);
     }
 
     @Override
-    public boolean addComponentParts(World worldIn, Random randomIn, StructureBoundingBox structureBoundingBoxIn)
-    {
-        for (int i = 0; i < this.boundingBox.getXSize(); i++)
-        {
-            for (int j = 0; j < this.boundingBox.getYSize(); j++)
-            {
-                for (int k = 0; k < this.boundingBox.getZSize(); k++)
-                {
+    public boolean addComponentParts(World worldIn, Random randomIn, StructureBoundingBox structureBoundingBoxIn) {
+        for (int i = 0; i < this.boundingBox.getXSize(); i++) {
+            for (int j = 0; j < this.boundingBox.getYSize(); j++) {
+                for (int k = 0; k < this.boundingBox.getZSize(); k++) {
                     if ((this.getDirection().getAxis() == EnumFacing.Axis.Z && (i == 0 || i == this.boundingBox.getXSize() - 1)) ||
                             j == 0 || j == this.boundingBox.getYSize() - 1 ||
-                            (this.getDirection().getAxis() == EnumFacing.Axis.X && (k == 0 || k == this.boundingBox.getZSize() - 1)))
-                    {
+                            (this.getDirection().getAxis() == EnumFacing.Axis.X && (k == 0 || k == this.boundingBox.getZSize() - 1))) {
                         this.setBlockState(worldIn, this.configuration.getBrickBlock(), i, j, k, this.boundingBox);
-                    }
-                    else
-                    {
-                        if (j == this.boundingBox.getYSize() - 2)
-                        {
-                            if (this.getDirection().getAxis() == EnumFacing.Axis.Z && (k + 1) % 4 == 0 && (i == 1 || i == this.boundingBox.getXSize() - 2))
-                            {
+                    } else {
+                        if (j == this.boundingBox.getYSize() - 2) {
+                            if (this.getDirection().getAxis() == EnumFacing.Axis.Z && (k + 1) % 4 == 0 && (i == 1 || i == this.boundingBox.getXSize() - 2)) {
                                 this.setBlockState(worldIn, GCBlocks.unlitTorch.getDefaultState().withProperty(BlockUnlitTorch.FACING, i == 1 ? EnumFacing.WEST.getOpposite() : EnumFacing.EAST.getOpposite()), i, j, k, this.boundingBox);
                                 continue;
-                            }
-                            else if (this.getDirection().getAxis() == EnumFacing.Axis.X && (i + 1) % 4 == 0 && (k == 1 || k == this.boundingBox.getZSize() - 2))
-                            {
+                            } else if (this.getDirection().getAxis() == EnumFacing.Axis.X && (i + 1) % 4 == 0 && (k == 1 || k == this.boundingBox.getZSize() - 2)) {
                                 this.setBlockState(worldIn, GCBlocks.unlitTorch.getDefaultState().withProperty(BlockUnlitTorch.FACING, k == 1 ? EnumFacing.NORTH.getOpposite() : EnumFacing.SOUTH.getOpposite()), i, j, k, this.boundingBox);
                                 continue;
                             }
@@ -63,15 +49,12 @@ public class Corridor extends SizedPiece
         return true;
     }
 
-    private <T extends SizedPiece> T getRoom(Class<?> clazz, DungeonStart startPiece, Random rand)
-    {
-        try
-        {
+    private <T extends SizedPiece> T getRoom(Class<?> clazz, DungeonStart startPiece, Random rand) {
+        try {
             Constructor<?> c0 = clazz.getConstructor(DungeonConfiguration.class, Random.class, Integer.TYPE, Integer.TYPE, EnumFacing.class);
             T dummy = (T) c0.newInstance(this.configuration, rand, 0, 0, this.getDirection().getOpposite());
             StructureBoundingBox extension = getExtension(this.getDirection(), getDirection().getAxis() == EnumFacing.Axis.X ? dummy.getSizeX() : dummy.getSizeZ(), getDirection().getAxis() == EnumFacing.Axis.X ? dummy.getSizeZ() : dummy.getSizeX());
-            if (startPiece.checkIntersection(extension))
-            {
+            if (startPiece.checkIntersection(extension)) {
                 return null;
             }
             int sizeX = extension.maxX - extension.minX;
@@ -81,9 +64,7 @@ public class Corridor extends SizedPiece
             int blockZ = extension.minZ;
             Constructor<?> c1 = clazz.getConstructor(DungeonConfiguration.class, Random.class, Integer.TYPE, Integer.TYPE, Integer.TYPE, Integer.TYPE, Integer.TYPE, EnumFacing.class);
             return (T) c1.newInstance(this.configuration, rand, blockX, blockZ, sizeX, sizeY, sizeZ, this.getDirection().getOpposite());
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -91,40 +72,26 @@ public class Corridor extends SizedPiece
     }
 
     @Override
-    public Piece getNextPiece(DungeonStart startPiece, Random rand)
-    {
-        if (startPiece.attachedComponents.size() > 2 && startPiece.attachedComponents.get(startPiece.attachedComponents.size() - 2) instanceof RoomBoss)
-        {
-            try
-            {
+    public Piece getNextPiece(DungeonStart startPiece, Random rand) {
+        if (startPiece.attachedComponents.size() > 2 && startPiece.attachedComponents.get(startPiece.attachedComponents.size() - 2) instanceof RoomBoss) {
+            try {
                 return getRoom(this.configuration.getTreasureRoom(), startPiece, rand);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-        else
-        {
+        } else {
             int bossRoomChance = Math.max((int) (1.0 / Math.pow(startPiece.attachedComponents.size() / 55.0, 2)), 5);
             boolean bossRoom = rand.nextInt(bossRoomChance) == 0;
-            if (bossRoom)
-            {
-                try
-                {
+            if (bossRoom) {
+                try {
                     return getRoom(this.configuration.getBossRoom(), startPiece, rand);
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
-            }
-            else
-            {
+            } else {
                 StructureBoundingBox extension = getExtension(this.getDirection(), rand.nextInt(4) + 6, rand.nextInt(4) + 6);
 
-                if (startPiece.checkIntersection(extension))
-                {
+                if (startPiece.checkIntersection(extension)) {
                     return null;
                 }
 
@@ -134,25 +101,22 @@ public class Corridor extends SizedPiece
                 int blockX = extension.minX;
                 int blockZ = extension.minZ;
 
-                if (Math.abs(startPiece.getBoundingBox().maxZ - boundingBox.minZ) > 200)
-                {
+                if (Math.abs(startPiece.getBoundingBox().maxZ - boundingBox.minZ) > 200) {
                     return null;
                 }
 
-                if (Math.abs(startPiece.getBoundingBox().maxX - boundingBox.minX) > 200)
-                {
+                if (Math.abs(startPiece.getBoundingBox().maxX - boundingBox.minX) > 200) {
                     return null;
                 }
 
-                switch (rand.nextInt(3))
-                {
-                case 0:
-                    return new RoomSpawner(this.configuration, rand, blockX, blockZ, sizeX, sizeY, sizeZ, this.getDirection().getOpposite());
-                case 1:
-                    return new RoomChest(this.configuration, rand, blockX, blockZ, sizeX, sizeY, sizeZ, this.getDirection().getOpposite());
-                default:
-                case 2:
-                    return new RoomEmpty(this.configuration, rand, blockX, blockZ, sizeX, sizeY, sizeZ, this.getDirection().getOpposite());
+                switch (rand.nextInt(3)) {
+                    case 0:
+                        return new RoomSpawner(this.configuration, rand, blockX, blockZ, sizeX, sizeY, sizeZ, this.getDirection().getOpposite());
+                    case 1:
+                        return new RoomChest(this.configuration, rand, blockX, blockZ, sizeX, sizeY, sizeZ, this.getDirection().getOpposite());
+                    default:
+                    case 2:
+                        return new RoomEmpty(this.configuration, rand, blockX, blockZ, sizeX, sizeY, sizeZ, this.getDirection().getOpposite());
                 }
             }
 

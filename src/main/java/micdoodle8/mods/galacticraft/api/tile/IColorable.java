@@ -6,8 +6,7 @@ import net.minecraft.util.EnumFacing;
 /**
  * Used for colored pipes to set/get colors
  */
-public interface IColorable
-{
+public interface IColorable {
     /**
      * Called when the color is changed
      */

@@ -12,8 +12,7 @@ import java.util.Set;
  *
  * @author Calclavia
  */
-public class Pathfinder
-{
+public class Pathfinder {
     /**
      * A ai call back interface used to call back on paths.
      */
@@ -30,8 +29,7 @@ public class Pathfinder
      */
     public Set<BlockVec3> results;
 
-    public Pathfinder(IPathCallBack callBack)
-    {
+    public Pathfinder(IPathCallBack callBack) {
         this.callBackCheck = callBack;
         this.reset();
     }
@@ -39,21 +37,16 @@ public class Pathfinder
     /**
      * @return True on success finding, false on failure.
      */
-    public boolean findNodes(BlockVec3 currentNode)
-    {
+    public boolean findNodes(BlockVec3 currentNode) {
         this.closedSet.add(currentNode);
 
-        if (this.callBackCheck.onSearch(this, currentNode))
-        {
+        if (this.callBackCheck.onSearch(this, currentNode)) {
             return false;
         }
 
-        for (BlockVec3 node : this.callBackCheck.getConnectedNodes(this, currentNode))
-        {
-            if (!this.closedSet.contains(node))
-            {
-                if (this.findNodes(node))
-                {
+        for (BlockVec3 node : this.callBackCheck.getConnectedNodes(this, currentNode)) {
+            if (!this.closedSet.contains(node)) {
+                if (this.findNodes(node)) {
                     return true;
                 }
             }
@@ -65,14 +58,12 @@ public class Pathfinder
     /**
      * Called to execute the ai operation.
      */
-    public Pathfinder init(BlockVec3 startNode)
-    {
+    public Pathfinder init(BlockVec3 startNode) {
         this.findNodes(startNode);
         return this;
     }
 
-    public Pathfinder reset()
-    {
+    public Pathfinder reset() {
         this.closedSet = new HashSet<BlockVec3>();
         this.results = new HashSet<BlockVec3>();
         return this;

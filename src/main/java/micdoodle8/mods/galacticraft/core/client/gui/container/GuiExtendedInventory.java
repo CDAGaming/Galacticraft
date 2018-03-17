@@ -16,93 +16,17 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 
-public class GuiExtendedInventory extends InventoryEffectRenderer
-{
+public class GuiExtendedInventory extends InventoryEffectRenderer {
     private static final ResourceLocation inventoryTexture = new ResourceLocation(Constants.ASSET_PREFIX, "textures/gui/inventory.png");
-    private int potionOffsetLast;
     private static float rotation = 0.0F;
+    private int potionOffsetLast;
     private boolean initWithPotion;
 
-    public GuiExtendedInventory(EntityPlayer player, InventoryExtended inventory)
-    {
+    public GuiExtendedInventory(EntityPlayer player, InventoryExtended inventory) {
         super(new ContainerExtendedInventory(player, inventory));
     }
 
-    @Override
-    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
-    {
-        GuiExtendedInventory.drawPlayerOnGui(this.mc, 33, 60, 29);
-    }
-
-    @Override
-    public void initGui()
-    {
-        super.initGui();
-
-        this.guiLeft = (this.width - this.xSize) / 2;
-        this.guiLeft += this.getPotionOffset();
-        this.potionOffsetLast = this.getPotionOffsetNEI();
-
-        int cornerX = this.guiLeft;
-        int cornerY = this.guiTop;
-
-        TabRegistry.updateTabValues(cornerX, cornerY, InventoryTabGalacticraft.class);
-        TabRegistry.addTabsToList(this.buttonList);
-
-        this.buttonList.add(new GuiButton(0, this.guiLeft + 10, this.guiTop + 71, 7, 7, ""));
-        this.buttonList.add(new GuiButton(1, this.guiLeft + 51, this.guiTop + 71, 7, 7, ""));
-    }
-
-    @Override
-    protected void actionPerformed(GuiButton button)
-    {
-        switch (button.id)
-        {
-        case 0:
-            GuiExtendedInventory.rotation += 10.0F;
-            break;
-        case 1:
-            GuiExtendedInventory.rotation -= 10.0F;
-            break;
-        }
-    }
-
-    @Override
-    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)
-    {
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        this.mc.getTextureManager().bindTexture(GuiExtendedInventory.inventoryTexture);
-        this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
-    }
-
-    @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks)
-    {
-        int newPotionOffset = this.getPotionOffsetNEI();
-
-        if (newPotionOffset < this.potionOffsetLast)
-        {
-            int diff = newPotionOffset - this.potionOffsetLast;
-            this.potionOffsetLast = newPotionOffset;
-            this.guiLeft += diff;
-
-            for (int k = 0; k < this.buttonList.size(); ++k)
-            {
-                GuiButton button = this.buttonList.get(k);
-
-                if (!(button instanceof AbstractTab))
-                {
-                    button.x += diff;
-                }
-            }
-        }
-        this.drawDefaultBackground();
-        super.drawScreen(mouseX, mouseY, partialTicks);
-        this.renderHoveredToolTip(mouseX, mouseY);
-    }
-
-    public static void drawPlayerOnGui(Minecraft mc, int x, int y, int scale)
-    {
+    public static void drawPlayerOnGui(Minecraft mc, int x, int y, int scale) {
         RenderManager rendermanager = Minecraft.getMinecraft().getRenderManager();
         GlStateManager.enableColorMaterial();
         GlStateManager.pushMatrix();
@@ -138,9 +62,72 @@ public class GuiExtendedInventory extends InventoryEffectRenderer
         GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
     }
 
+    @Override
+    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+        GuiExtendedInventory.drawPlayerOnGui(this.mc, 33, 60, 29);
+    }
+
+    @Override
+    public void initGui() {
+        super.initGui();
+
+        this.guiLeft = (this.width - this.xSize) / 2;
+        this.guiLeft += this.getPotionOffset();
+        this.potionOffsetLast = this.getPotionOffsetNEI();
+
+        int cornerX = this.guiLeft;
+        int cornerY = this.guiTop;
+
+        TabRegistry.updateTabValues(cornerX, cornerY, InventoryTabGalacticraft.class);
+        TabRegistry.addTabsToList(this.buttonList);
+
+        this.buttonList.add(new GuiButton(0, this.guiLeft + 10, this.guiTop + 71, 7, 7, ""));
+        this.buttonList.add(new GuiButton(1, this.guiLeft + 51, this.guiTop + 71, 7, 7, ""));
+    }
+
+    @Override
+    protected void actionPerformed(GuiButton button) {
+        switch (button.id) {
+            case 0:
+                GuiExtendedInventory.rotation += 10.0F;
+                break;
+            case 1:
+                GuiExtendedInventory.rotation -= 10.0F;
+                break;
+        }
+    }
+
+    @Override
+    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        this.mc.getTextureManager().bindTexture(GuiExtendedInventory.inventoryTexture);
+        this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+    }
+
+    @Override
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        int newPotionOffset = this.getPotionOffsetNEI();
+
+        if (newPotionOffset < this.potionOffsetLast) {
+            int diff = newPotionOffset - this.potionOffsetLast;
+            this.potionOffsetLast = newPotionOffset;
+            this.guiLeft += diff;
+
+            for (int k = 0; k < this.buttonList.size(); ++k) {
+                GuiButton button = this.buttonList.get(k);
+
+                if (!(button instanceof AbstractTab)) {
+                    button.x += diff;
+                }
+            }
+        }
+        this.drawDefaultBackground();
+        super.drawScreen(mouseX, mouseY, partialTicks);
+        this.renderHoveredToolTip(mouseX, mouseY);
+    }
+
     //Instanced method of this to have the instance field initWithPotion
-    public int getPotionOffset()
-    {
+    public int getPotionOffset() {
         /*Disabled in 1.12.2 because a vanilla bug means potion offsets are currently not a thing
          *The vanilla bug is that GuiInventory.initGui() resets GuiLeft to the recipe book version of GuiLeft,
          *and in GuiRecipeBook.updateScreenPosition() it takes no account of potion offset even if the recipe book is inactive.
@@ -158,29 +145,22 @@ public class GuiExtendedInventory extends InventoryEffectRenderer
     }
 
     //Instanced method of this to use the instance field initWithPotion
-    public int getPotionOffsetNEI()
-    {
-        if (this.initWithPotion && TabRegistry.clazzNEIConfig != null)
-        {
-            try
-            {
+    public int getPotionOffsetNEI() {
+        if (this.initWithPotion && TabRegistry.clazzNEIConfig != null) {
+            try {
                 // Check whether NEI is hidden and enabled
                 Object hidden = TabRegistry.clazzNEIConfig.getMethod("isHidden").invoke(null);
                 Object enabled = TabRegistry.clazzNEIConfig.getMethod("isEnabled").invoke(null);
 
-                if (hidden instanceof Boolean && enabled instanceof Boolean)
-                {
-                    if ((Boolean) hidden || !((Boolean) enabled))
-                    {
+                if (hidden instanceof Boolean && enabled instanceof Boolean) {
+                    if ((Boolean) hidden || !((Boolean) enabled)) {
                         // If NEI is disabled or hidden, offset the tabs by the standard 60
                         return 0;
                     }
                     //Active NEI undoes the standard potion offset
                     return -60;
                 }
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
             }
         }
         //No NEI, no change

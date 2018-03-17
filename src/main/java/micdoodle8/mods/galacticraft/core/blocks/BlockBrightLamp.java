@@ -26,8 +26,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class BlockBrightLamp extends BlockAdvanced implements IShiftDescription, ITileEntityProvider, ISortableBlock
-{
+public class BlockBrightLamp extends BlockAdvanced implements IShiftDescription, ITileEntityProvider, ISortableBlock {
     public static final PropertyDirection FACING = PropertyDirection.create("facing");
 //    public static final PropertyBool ACTIVE = PropertyBool.create("active");
 
@@ -40,8 +39,7 @@ public class BlockBrightLamp extends BlockAdvanced implements IShiftDescription,
 
     //Metadata: bits 0-2 are the side of the base plate using standard side convention (0-5)
 
-    public BlockBrightLamp(String assetName)
-    {
+    public BlockBrightLamp(String assetName) {
         super(Material.GLASS);
         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.UP));  //.withProperty(ACTIVE, true));
         this.setHardness(0.1F);
@@ -51,40 +49,35 @@ public class BlockBrightLamp extends BlockAdvanced implements IShiftDescription,
     }
 
     @Override
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
-    {
-        switch (state.getValue(FACING))
-        {
-        case EAST:
-            return EAST_AABB;
-        case WEST:
-            return WEST_AABB;
-        case SOUTH:
-            return SOUTH_AABB;
-        case NORTH:
-            return NORTH_AABB;
-        case DOWN:
-            return DOWN_AABB;
-        case UP:
-        default:
-            return UP_AABB;
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+        switch (state.getValue(FACING)) {
+            case EAST:
+                return EAST_AABB;
+            case WEST:
+                return WEST_AABB;
+            case SOUTH:
+                return SOUTH_AABB;
+            case NORTH:
+                return NORTH_AABB;
+            case DOWN:
+                return DOWN_AABB;
+            case UP:
+            default:
+                return UP_AABB;
         }
     }
 
     @Override
-    public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos)
-    {
+    public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos) {
         Block block = state.getBlock();
-        if (block != this)
-        {
+        if (block != this) {
             return block.getLightValue(state);
         }
         /**
          * Gets the light value of the specified block coords. Args: x, y, z
          */
 
-        if (world instanceof World)
-        {
+        if (world instanceof World) {
             return RedstoneUtil.isBlockReceivingRedstone((World) world, pos) ? 0 : this.lightValue;
         }
 
@@ -92,46 +85,38 @@ public class BlockBrightLamp extends BlockAdvanced implements IShiftDescription,
     }
 
     @Override
-    public int getLightOpacity(IBlockState state, IBlockAccess world, BlockPos pos)
-    {
+    public int getLightOpacity(IBlockState state, IBlockAccess world, BlockPos pos) {
         return 1;
     }
 
     @Override
-    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos)
-    {
+    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
         double boundsMin = 0.2D;
         double boundsMax = 0.8D;
         return new AxisAlignedBB(pos.getX() + boundsMin, pos.getY() + boundsMin, pos.getZ() + boundsMin, pos.getX() + boundsMax, pos.getY() + boundsMax, pos.getZ() + boundsMax);
     }
 
     @Override
-    public boolean isOpaqueCube(IBlockState state)
-    {
+    public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
 
     @Override
-    public boolean isFullCube(IBlockState state)
-    {
+    public boolean isFullCube(IBlockState state) {
         return false;
     }
 
     @Override
-    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face)
-    {
+    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
         return BlockFaceShape.UNDEFINED;
     }
 
     @Override
-    public boolean canPlaceBlockAt(World worldIn, BlockPos pos)
-    {
-        for (EnumFacing side : EnumFacing.VALUES)
-        {
+    public boolean canPlaceBlockAt(World worldIn, BlockPos pos) {
+        for (EnumFacing side : EnumFacing.VALUES) {
             BlockPos offsetPos = pos.offset(side);
             IBlockState state = worldIn.getBlockState(offsetPos);
-            if (state.getBlock().isSideSolid(state, worldIn, offsetPos, side.getOpposite()))
-            {
+            if (state.getBlock().isSideSolid(state, worldIn, offsetPos, side.getOpposite())) {
                 return true;
             }
         }
@@ -139,19 +124,16 @@ public class BlockBrightLamp extends BlockAdvanced implements IShiftDescription,
     }
 
     @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
-    {
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
         super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
     }
 
     @Override
-    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand)
-    {
+    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
         EnumFacing opposite = facing.getOpposite();
         BlockPos offsetPos = pos.offset(opposite);
         IBlockState state = world.getBlockState(offsetPos);
-        if (state.getBlock().isSideSolid(state, world, offsetPos, facing))
-        {
+        if (state.getBlock().isSideSolid(state, world, offsetPos, facing)) {
             return this.getDefaultState().withProperty(FACING, opposite);
         }
 
@@ -164,14 +146,12 @@ public class BlockBrightLamp extends BlockAdvanced implements IShiftDescription,
      * neighbor blockID
      */
     @Override
-    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)
-    {
+    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
         EnumFacing side = state.getValue(FACING);
 
         BlockPos offsetPos = pos.offset(side);
         IBlockState state1 = worldIn.getBlockState(offsetPos);
-        if (state1.getBlock().isSideSolid(state1, worldIn, offsetPos, EnumFacing.getFront(side.getIndex() ^ 1)))
-        {
+        if (state1.getBlock().isSideSolid(state1, worldIn, offsetPos, EnumFacing.getFront(side.getIndex() ^ 1))) {
             return;
         }
 
@@ -214,13 +194,10 @@ public class BlockBrightLamp extends BlockAdvanced implements IShiftDescription,
 //    }
 
     @Override
-    public boolean onUseWrench(World world, BlockPos pos, EntityPlayer entityPlayer, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
-    {
-        if (!world.isRemote)
-        {
+    public boolean onUseWrench(World world, BlockPos pos, EntityPlayer entityPlayer, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+        if (!world.isRemote) {
             TileEntity tile = world.getTileEntity(pos);
-            if (tile instanceof TileEntityArclamp)
-            {
+            if (tile instanceof TileEntityArclamp) {
                 ((TileEntityArclamp) tile).facingChanged();
             }
         }
@@ -228,57 +205,49 @@ public class BlockBrightLamp extends BlockAdvanced implements IShiftDescription,
     }
 
     @Override
-    public TileEntity createNewTileEntity(World world, int meta)
-    {
+    public TileEntity createNewTileEntity(World world, int meta) {
         return new TileEntityArclamp();
     }
 
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
-    {
+    public CreativeTabs getCreativeTabToDisplayOn() {
         return GalacticraftCore.galacticraftBlocksTab;
     }
 
     @Override
-    public String getShiftDescription(int meta)
-    {
+    public String getShiftDescription(int meta) {
         return GCCoreUtil.translate(this.getUnlocalizedName() + ".description");
     }
 
     @Override
-    public boolean showDescription(int meta)
-    {
+    public boolean showDescription(int meta) {
         return true;
     }
 
     @Override
-    public IBlockState getStateFromMeta(int meta)
-    {
+    public IBlockState getStateFromMeta(int meta) {
         EnumFacing enumfacing = EnumFacing.getFront(meta);
         return this.getDefaultState().withProperty(FACING, enumfacing);
     }
 
     @Override
-    public int getMetaFromState(IBlockState state)
-    {
+    public int getMetaFromState(IBlockState state) {
         return (state.getValue(FACING)).getIndex();
     }
 
     @Override
-    protected BlockStateContainer createBlockState()
-    {
+    protected BlockStateContainer createBlockState() {
         return new BlockStateContainer(this, FACING);  //, ACTIVE });
     }
 
-//    @Override
+    //    @Override
 //    public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
 //    {
 //        return state.withProperty(ACTIVE, ((TileEntityArclamp) worldIn.getTileEntity(pos)).getEnabled());
 //    }
 //
     @Override
-    public EnumSortCategoryBlock getCategory(int meta)
-    {
+    public EnumSortCategoryBlock getCategory(int meta) {
         return EnumSortCategoryBlock.MACHINE;
     }
 }

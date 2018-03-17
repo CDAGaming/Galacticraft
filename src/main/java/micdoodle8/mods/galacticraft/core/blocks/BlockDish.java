@@ -22,10 +22,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
-public class BlockDish extends BlockTileGC implements IShiftDescription, IPartialSealableBlock, ISortableBlock
-{
-    public BlockDish(String assetName)
-    {
+public class BlockDish extends BlockTileGC implements IShiftDescription, IPartialSealableBlock, ISortableBlock {
+    public BlockDish(String assetName) {
         super(Material.IRON);
         this.setHardness(1.0F);
         this.setSoundType(SoundType.METAL);
@@ -33,25 +31,19 @@ public class BlockDish extends BlockTileGC implements IShiftDescription, IPartia
     }
 
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
-    {
+    public CreativeTabs getCreativeTabToDisplayOn() {
         return GalacticraftCore.galacticraftBlocksTab;
     }
 
     @Override
-    public boolean canPlaceBlockOnSide(World world, BlockPos pos, EnumFacing side)
-    {
-        for (int y = 1; y <= 2; y++)
-        {
-            for (int x = -1; x <= 1; x++)
-            {
-                for (int z = -1; z <= 1; z++)
-                {
+    public boolean canPlaceBlockOnSide(World world, BlockPos pos, EnumFacing side) {
+        for (int y = 1; y <= 2; y++) {
+            for (int x = -1; x <= 1; x++) {
+                for (int z = -1; z <= 1; z++) {
                     BlockPos pos1 = pos.add((y == 2 ? x : 0), y, (y == 2 ? z : 0));
                     Block block = world.getBlockState(pos1).getBlock();
 
-                    if (block.getMaterial(world.getBlockState(pos)) != Material.AIR && !block.isReplaceable(world, pos1))
-                    {
+                    if (block.getMaterial(world.getBlockState(pos)) != Material.AIR && !block.isReplaceable(world, pos1)) {
                         return false;
                     }
                 }
@@ -63,27 +55,25 @@ public class BlockDish extends BlockTileGC implements IShiftDescription, IPartia
     }
 
     @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
-    {
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
         int metadata = state.getBlock().getMetaFromState(state);
 
         int angle = MathHelper.floor(placer.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
         int change = 0;
 
-        switch (angle)
-        {
-        case 0:
-            change = 1;
-            break;
-        case 1:
-            change = 2;
-            break;
-        case 2:
-            change = 0;
-            break;
-        case 3:
-            change = 3;
-            break;
+        switch (angle) {
+            case 0:
+                change = 1;
+                break;
+            case 1:
+                change = 2;
+                break;
+            case 2:
+                change = 0;
+                break;
+            case 3:
+                change = 3;
+                break;
         }
 
         worldIn.setBlockState(pos, state.getBlock().getStateFromMeta(change), 3);
@@ -92,12 +82,10 @@ public class BlockDish extends BlockTileGC implements IShiftDescription, IPartia
     }
 
     @Override
-    public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
-    {
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
         final TileEntity tile = worldIn.getTileEntity(pos);
 
-        if (tile instanceof TileEntityDish)
-        {
+        if (tile instanceof TileEntityDish) {
             ((TileEntityDish) tile).onDestroy(tile);
         }
 
@@ -105,8 +93,7 @@ public class BlockDish extends BlockTileGC implements IShiftDescription, IPartia
     }
 
     @Override
-    public boolean onUseWrench(World world, BlockPos pos, EntityPlayer entityPlayer, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
-    {
+    public boolean onUseWrench(World world, BlockPos pos, EntityPlayer entityPlayer, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
 //        IBlockState state = world.getBlockState(pos);
 //        int original = state.getBlock().getMetaFromState(state);
 //        int change = world.getBlockState(pos).getValue(FACING).rotateY().getHorizontalIndex();
@@ -122,51 +109,43 @@ public class BlockDish extends BlockTileGC implements IShiftDescription, IPartia
     }
 
     @Override
-    public boolean onSneakMachineActivated(World world, BlockPos pos, EntityPlayer entityPlayer, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
-    {
+    public boolean onSneakMachineActivated(World world, BlockPos pos, EntityPlayer entityPlayer, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
         //entityPlayer.openGui(GalacticraftCore.instance, -1, world, x, y, z);
         return true;
     }
 
     @Override
-    public TileEntity createTileEntity(World world, IBlockState metadata)
-    {
+    public TileEntity createTileEntity(World world, IBlockState metadata) {
         return new TileEntityDish();
     }
 
     @Override
-    public boolean isFullCube(IBlockState state)
-    {
+    public boolean isFullCube(IBlockState state) {
         return false;
     }
 
     @Override
-    public String getShiftDescription(int meta)
-    {
+    public String getShiftDescription(int meta) {
         return GCCoreUtil.translate("tile.radio_telescope.description");
     }
 
     @Override
-    public boolean showDescription(int meta)
-    {
+    public boolean showDescription(int meta) {
         return true;
     }
 
     @Override
-    public boolean isOpaqueCube(IBlockState state)
-    {
+    public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
 
     @Override
-    public boolean isSealed(World world, BlockPos pos, EnumFacing direction)
-    {
+    public boolean isSealed(World world, BlockPos pos, EnumFacing direction) {
         return true;
     }
 
     @Override
-    public EnumSortCategoryBlock getCategory(int meta)
-    {
+    public EnumSortCategoryBlock getCategory(int meta) {
         return EnumSortCategoryBlock.GENERAL;
     }
 }

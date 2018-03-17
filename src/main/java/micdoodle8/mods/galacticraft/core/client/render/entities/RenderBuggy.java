@@ -2,7 +2,6 @@ package micdoodle8.mods.galacticraft.core.client.render.entities;
 
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
-
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.client.model.OBJLoaderGC;
 import micdoodle8.mods.galacticraft.core.entities.EntityBuggy;
@@ -22,12 +21,10 @@ import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.obj.OBJModel;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class RenderBuggy extends Render<EntityBuggy>
-{
+public class RenderBuggy extends Render<EntityBuggy> {
     private OBJModel.OBJBakedModel mainModel;
     private OBJModel.OBJBakedModel radarDish;
     private OBJModel.OBJBakedModel wheelLeftCover;
@@ -38,12 +35,14 @@ public class RenderBuggy extends Render<EntityBuggy>
     private OBJModel.OBJBakedModel cargoMid;
     private OBJModel.OBJBakedModel cargoRight;
 
-    private void updateModels()
-    {
-        if (this.mainModel == null)
-        {
-            try
-            {
+    public RenderBuggy(RenderManager manager) {
+        super(manager);
+        this.shadowSize = 1.0F;
+    }
+
+    private void updateModels() {
+        if (this.mainModel == null) {
+            try {
                 IModel model = OBJLoaderGC.instance.loadModel(new ResourceLocation(Constants.ASSET_PREFIX, "buggy.obj"));
                 Function<ResourceLocation, TextureAtlasSprite> spriteFunction = location -> Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(location.toString());
 
@@ -56,29 +55,19 @@ public class RenderBuggy extends Render<EntityBuggy>
                 this.cargoLeft = (OBJModel.OBJBakedModel) model.bake(new OBJModel.OBJState(ImmutableList.of("CargoLeft"), false), DefaultVertexFormats.ITEM, spriteFunction);
                 this.cargoMid = (OBJModel.OBJBakedModel) model.bake(new OBJModel.OBJState(ImmutableList.of("CargoMid"), false), DefaultVertexFormats.ITEM, spriteFunction);
                 this.cargoRight = (OBJModel.OBJBakedModel) model.bake(new OBJModel.OBJState(ImmutableList.of("CargoRight"), false), DefaultVertexFormats.ITEM, spriteFunction);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }
     }
 
-    public RenderBuggy(RenderManager manager)
-    {
-        super(manager);
-        this.shadowSize = 1.0F;
-    }
-
     @Override
-    protected ResourceLocation getEntityTexture(EntityBuggy entity)
-    {
+    protected ResourceLocation getEntityTexture(EntityBuggy entity) {
         return TextureMap.LOCATION_BLOCKS_TEXTURE;
     }
 
     @Override
-    public void doRender(EntityBuggy entity, double x, double y, double z, float entityYaw, float partialTicks)
-    {
+    public void doRender(EntityBuggy entity, double x, double y, double z, float entityYaw, float partialTicks) {
         float pitch = entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks;
         GlStateManager.disableRescaleNormal();
         GlStateManager.pushMatrix();
@@ -91,12 +80,9 @@ public class RenderBuggy extends Render<EntityBuggy>
         this.updateModels();
         this.bindEntityTexture(entity);
 
-        if (Minecraft.isAmbientOcclusionEnabled())
-        {
+        if (Minecraft.isAmbientOcclusionEnabled()) {
             GlStateManager.shadeModel(GL11.GL_SMOOTH);
-        }
-        else
-        {
+        } else {
             GlStateManager.shadeModel(GL11.GL_FLAT);
         }
 
@@ -149,16 +135,13 @@ public class RenderBuggy extends Render<EntityBuggy>
         ClientUtil.drawBakedModel(this.radarDish);
         GlStateManager.popMatrix();
 
-        if (entity.buggyType > 0)
-        {
+        if (entity.buggyType > 0) {
             ClientUtil.drawBakedModel(this.cargoLeft);
 
-            if (entity.buggyType > 1)
-            {
+            if (entity.buggyType > 1) {
                 ClientUtil.drawBakedModel(this.cargoMid);
 
-                if (entity.buggyType > 2)
-                {
+                if (entity.buggyType > 2) {
                     ClientUtil.drawBakedModel(this.cargoRight);
                 }
             }
@@ -167,10 +150,9 @@ public class RenderBuggy extends Render<EntityBuggy>
         GlStateManager.popMatrix();
         RenderHelper.enableStandardItemLighting();
     }
-    
+
     @Override
-    public boolean shouldRender(EntityBuggy buggy, ICamera camera, double camX, double camY, double camZ)
-    {
+    public boolean shouldRender(EntityBuggy buggy, ICamera camera, double camX, double camY, double camZ) {
         AxisAlignedBB axisalignedbb = buggy.getEntityBoundingBox().grow(2D, 1D, 2D);
         return buggy.isInRangeToRender3d(camX, camY, camZ) && camera.isBoundingBoxInFrustum(axisalignedbb);
     }

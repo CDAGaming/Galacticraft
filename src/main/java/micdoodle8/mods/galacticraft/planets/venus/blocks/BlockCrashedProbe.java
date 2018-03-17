@@ -28,8 +28,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Random;
 
-public class BlockCrashedProbe extends BlockTileGC implements ISortableBlock, ITileEntityProvider
-{
+public class BlockCrashedProbe extends BlockTileGC implements ISortableBlock, ITileEntityProvider {
 //    public static final String CRASHED_PROBE = "crashedProbe";
 //    private static final List<WeightedRandomChestContent> CONTENTS = Lists.newArrayList(
 //            new WeightedRandomChestContent(MarsItems.marsItemBasic, 3, 3, 6, 5), // Tier 2 plate
@@ -43,8 +42,7 @@ public class BlockCrashedProbe extends BlockTileGC implements ISortableBlock, IT
 //        net.minecraftforge.common.ChestGenHooks.init(CRASHED_PROBE, CONTENTS, 4, 6);
 //    }
 
-    public BlockCrashedProbe(String assetName)
-    {
+    public BlockCrashedProbe(String assetName) {
         super(Material.IRON);
         this.blockHardness = 4.5F;
         this.blockResistance = 2.5F;
@@ -55,45 +53,38 @@ public class BlockCrashedProbe extends BlockTileGC implements ISortableBlock, IT
 
     @SideOnly(Side.CLIENT)
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
-    {
+    public CreativeTabs getCreativeTabToDisplayOn() {
         return GalacticraftCore.galacticraftBlocksTab;
     }
 
     @Override
-    public EnumSortCategoryBlock getCategory(int meta)
-    {
+    public EnumSortCategoryBlock getCategory(int meta) {
         return EnumSortCategoryBlock.GENERAL;
     }
 
     @Override
-    public TileEntity createNewTileEntity(World worldIn, int meta)
-    {
+    public TileEntity createNewTileEntity(World worldIn, int meta) {
         return new TileEntityCrashedProbe();
     }
 
     @Override
-    public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand)
-    {
+    public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand) {
         worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, pos.getX() + 0.65, pos.getY() + 1.0, pos.getZ() + 0.9, 0.0, 0.0, 0.0);
         worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, pos.getX() + 0.2, pos.getY() + 1.0, pos.getZ() + 0.2, 0.0, 0.0, 0.0);
         worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, pos.getX() + 1.0, pos.getY() + 0.25, pos.getZ() + 0.5, 0.0, 0.0, 0.0);
     }
 
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
-    {
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         playerIn.openGui(GalacticraftPlanets.instance, GuiIdsPlanets.MACHINE_VENUS, worldIn, pos.getX(), pos.getY(), pos.getZ());
         return true;
     }
 
     @Override
-    public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
-    {
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
         final TileEntity tile = worldIn.getTileEntity(pos);
 
-        if (tile instanceof TileEntityCrashedProbe && ((TileEntityCrashedProbe)tile).getDropCore())
-        {
+        if (tile instanceof TileEntityCrashedProbe && ((TileEntityCrashedProbe) tile).getDropCore()) {
             spawnItem(worldIn, pos);
         }
 
@@ -101,8 +92,7 @@ public class BlockCrashedProbe extends BlockTileGC implements ISortableBlock, IT
     }
 
     //Drops a Radioisotope Core as well as the Crashed Probe block
-    private void spawnItem(World worldIn, BlockPos pos)
-    {
+    private void spawnItem(World worldIn, BlockPos pos) {
         final float f = 0.7F;
         Random syncRandom = GCCoreUtil.getRandom(pos);
         final double d0 = syncRandom.nextFloat() * f + (1.0F - f) * 0.5D;

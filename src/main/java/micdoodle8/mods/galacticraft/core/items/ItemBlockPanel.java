@@ -12,29 +12,24 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class ItemBlockPanel extends ItemBlockDesc
-{
-    public ItemBlockPanel(Block block)
-    {
+public class ItemBlockPanel extends ItemBlockDesc {
+    public ItemBlockPanel(Block block) {
         super(block);
         this.setMaxDamage(0);
         this.setHasSubtypes(true);
     }
-    
+
     @Override
-    public int getMetadata(int damage)
-    {
+    public int getMetadata(int damage) {
         return damage;
     }
-    
+
     @Override
-    public String getUnlocalizedName(ItemStack par1ItemStack)
-    {
+    public String getUnlocalizedName(ItemStack par1ItemStack) {
         String name = "";
 
-        int meta = par1ItemStack.getItemDamage(); 
-        if (meta >= BlockPanelLighting.PANELTYPES_LENGTH)
-        {
+        int meta = par1ItemStack.getItemDamage();
+        if (meta >= BlockPanelLighting.PANELTYPES_LENGTH) {
             meta = 0;
         }
 
@@ -42,34 +37,24 @@ public class ItemBlockPanel extends ItemBlockDesc
     }
 
     @Override
-    public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand)
-    {
-        if (!player.isSneaking())
-        {
+    public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
+        if (!player.isSneaking()) {
             return EnumActionResult.PASS;
         }
         IBlockState state = world.getBlockState(pos);
-        if (state.getBlock().isOpaqueCube(state) && !(state.getBlock() instanceof BlockPanelLighting))
-        {
-        	ItemStack stack;
-            if (hand == EnumHand.OFF_HAND)
-            {
-            	stack = player.inventory.offHandInventory.get(0);
+        if (state.getBlock().isOpaqueCube(state) && !(state.getBlock() instanceof BlockPanelLighting)) {
+            ItemStack stack;
+            if (hand == EnumHand.OFF_HAND) {
+                stack = player.inventory.offHandInventory.get(0);
+            } else {
+                stack = player.inventory.getStackInSlot(player.inventory.currentItem);
             }
-            else
-            {
-            	stack = player.inventory.getStackInSlot(player.inventory.currentItem);
+            if (stack.getItem() != this) {
+                return EnumActionResult.FAIL;
             }
-            if (stack.getItem() != this)
-            {
-            	return EnumActionResult.FAIL;
-            }
-            if (world.isRemote)
-            {
+            if (world.isRemote) {
                 BlockPanelLighting.updateClient(stack.getItemDamage(), state);
-            }
-            else
-            {
+            } else {
                 int meta = stack.getItemDamage();
                 if (meta >= BlockPanelLighting.PANELTYPES_LENGTH) meta = 0;
                 GCPlayerStats stats = GCPlayerStats.get(player);

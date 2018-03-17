@@ -5,34 +5,18 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.WorldSavedData;
 
-public class WorldDataSpaceRaces extends WorldSavedData
-{
+public class WorldDataSpaceRaces extends WorldSavedData {
     public static final String saveDataID = Constants.GCDATAFOLDER + "GCSpaceRaceData";
     private NBTTagCompound dataCompound;
 
-    public WorldDataSpaceRaces(String id)
-    {
+    public WorldDataSpaceRaces(String id) {
         super(id);
     }
 
-    @Override
-    public void readFromNBT(NBTTagCompound nbt)
-    {
-        SpaceRaceManager.loadSpaceRaces(nbt);
-    }
-
-    @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt)
-    {
-        return SpaceRaceManager.saveSpaceRaces(nbt);
-    }
-
-    public static WorldDataSpaceRaces initWorldData(World world)
-    {
+    public static WorldDataSpaceRaces initWorldData(World world) {
         WorldDataSpaceRaces worldData = (WorldDataSpaceRaces) world.loadData(WorldDataSpaceRaces.class, WorldDataSpaceRaces.saveDataID);
 
-        if (worldData == null)
-        {
+        if (worldData == null) {
             worldData = new WorldDataSpaceRaces(WorldDataSpaceRaces.saveDataID);
             world.setData(WorldDataSpaceRaces.saveDataID, worldData);
             worldData.dataCompound = new NBTTagCompound();
@@ -43,8 +27,17 @@ public class WorldDataSpaceRaces extends WorldSavedData
     }
 
     @Override
-    public boolean isDirty()
-    {
+    public void readFromNBT(NBTTagCompound nbt) {
+        SpaceRaceManager.loadSpaceRaces(nbt);
+    }
+
+    @Override
+    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+        return SpaceRaceManager.saveSpaceRaces(nbt);
+    }
+
+    @Override
+    public boolean isDirty() {
         return true;
     }
 }

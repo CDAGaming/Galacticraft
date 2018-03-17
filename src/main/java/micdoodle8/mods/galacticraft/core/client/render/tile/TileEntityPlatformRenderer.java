@@ -1,8 +1,5 @@
 package micdoodle8.mods.galacticraft.core.client.render.tile;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.GCBlocks;
 import micdoodle8.mods.galacticraft.core.blocks.BlockPlatform;
@@ -14,66 +11,30 @@ import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.fml.relauncher.Side;
-
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @SideOnly(Side.CLIENT)
-public class TileEntityPlatformRenderer extends TileEntitySpecialRenderer<TileEntityPlatform>
-{
-    public class ModelPlatform extends ModelBase
-    {
-        ModelRenderer panelMain;
-
-        public ModelPlatform()
-        {
-            this(0.0F);
-        }
-
-        public ModelPlatform(float var1)
-        {
-            this.textureWidth = 128;
-            this.textureHeight = 128;
-            this.panelMain = new ModelRenderer(this, 0, 0);
-            this.panelMain.addBox(-22F, -3.5F, -22F, 44, 7, 44);
-            this.panelMain.setRotationPoint(0F, 0F, 0F);
-            this.panelMain.setTextureSize(128, 128);
-            this.panelMain.mirror = true;
-            this.setRotation(this.panelMain, 0F, 0F, 0F);
-        }
-
-        private void setRotation(ModelRenderer model, float x, float y, float z)
-        {
-            model.rotateAngleX = x;
-            model.rotateAngleY = y;
-            model.rotateAngleZ = z;
-        }
-
-        public void render()
-        {
-            this.panelMain.render(1.125F/44F);
-        }
-    }
-
+public class TileEntityPlatformRenderer extends TileEntitySpecialRenderer<TileEntityPlatform> {
     public static final ResourceLocation platformTexture = new ResourceLocation(Constants.ASSET_PREFIX, "textures/model/platform_moving.png");
     public static final ResourceLocation lightTexture = new ResourceLocation(Constants.ASSET_PREFIX, "textures/misc/light.png");
-    private ModelPlatform platform = new ModelPlatform();
     private static Map<Integer, Float> lastYMap = new HashMap<>();
     private static float lastPartialTicks = -1F;
+    private ModelPlatform platform = new ModelPlatform();
 
     @Override
-    public void render(TileEntityPlatform tileEntity, double d, double d1, double d2, float f, int par9, float alpha)
-    {
-        if (f != lastPartialTicks)
-        {
+    public void render(TileEntityPlatform tileEntity, double d, double d1, double d2, float f, int par9, float alpha) {
+        if (f != lastPartialTicks) {
             lastPartialTicks = f;
             lastYMap.clear();
         }
         IBlockState b = tileEntity.getWorld().getBlockState(tileEntity.getPos());
         float yOffset = tileEntity.getYOffset(f);
-        if (b.getBlock() == GCBlocks.platform && b.getValue(BlockPlatform.CORNER) == BlockPlatform.EnumCorner.NW)
-        {
+        if (b.getBlock() == GCBlocks.platform && b.getValue(BlockPlatform.CORNER) == BlockPlatform.EnumCorner.NW) {
             GlStateManager.pushMatrix();
             GlStateManager.translate((float) d + 0.5F, (float) d1 + 0.5F, (float) d2 + 0.5F);
             GlStateManager.rotate(90F, 0, 1F, 0F);
@@ -88,19 +49,15 @@ public class TileEntityPlatformRenderer extends TileEntitySpecialRenderer<TileEn
             xz += tenLSB(tileEntity.getPos().getZ());
             Float lastYF = lastYMap.get(xz);
             float lastY = lastYF == null ? -1 : lastYF;
-            if (!tileEntity.isMoving() || Math.abs(newY - lastY) > 0.001F || Math.abs(f - lastPartialTicks) > 0.001F)
-            {
+            if (!tileEntity.isMoving() || Math.abs(newY - lastY) > 0.001F || Math.abs(f - lastPartialTicks) > 0.001F) {
                 renderPlatformForThisTE = true;
                 lastYMap.put(xz, newY);
                 GlStateManager.pushMatrix();
-                if (tileEntity.isMoving())
-                {
+                if (tileEntity.isMoving()) {
                     OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, tileEntity.getMeanLightX(yOffset), tileEntity.getMeanLightZ(yOffset));
-                }
-                else
-                {
+                } else {
                     int light = tileEntity.getBlendedLight();
-                    OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)(light % 65536), (float)(light / 65536));
+                    OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) (light % 65536), (float) (light / 65536));
                 }
                 GlStateManager.translate(0F, 0.79F + yOffset, 0F);
                 this.bindTexture(TileEntityPlatformRenderer.platformTexture);
@@ -108,8 +65,7 @@ public class TileEntityPlatformRenderer extends TileEntitySpecialRenderer<TileEn
                 GlStateManager.popMatrix();
             }
 
-            if (tileEntity.lightEnabled() || tileEntity.isMoving())
-            {
+            if (tileEntity.lightEnabled() || tileEntity.isMoving()) {
                 OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
                 GlStateManager.disableLighting();
                 GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -120,9 +76,8 @@ public class TileEntityPlatformRenderer extends TileEntitySpecialRenderer<TileEn
                 BufferBuilder worldRenderer = tess.getBuffer();
                 float frameA, frameB, frameC, frameD;
 
-                // Draw the moving platform side-lights 
-                if (tileEntity.isMoving() && renderPlatformForThisTE)
-                {
+                // Draw the moving platform side-lights
+                if (tileEntity.isMoving() && renderPlatformForThisTE) {
                     GlStateManager.pushMatrix();
                     GlStateManager.translate(0F, 0.26F + yOffset, 0F);
                     GlStateManager.color(1.0F, 0.84F, 65F / 255F, 1.0F);
@@ -197,19 +152,19 @@ public class TileEntityPlatformRenderer extends TileEntitySpecialRenderer<TileEn
                     worldRenderer.pos(-frameRadius, frameD, frameC).endVertex();
                     worldRenderer.pos(-frameRadius, frameA, frameC).endVertex();
                     tess.draw();
-                    
+
                     GlStateManager.popMatrix();
                 }
 
-                // Draw the activation lights 
-                if (tileEntity.lightEnabled())
-                {
+                // Draw the activation lights
+                if (tileEntity.lightEnabled()) {
                     float greyLevel = 125F / 255F;
-                    switch (tileEntity.lightColor())
-                    {
-                    case 1: GlStateManager.color(1.0F, 115F/255F, 115F/255F, 1.0F);
-                    break;
-                    default: GlStateManager.color(greyLevel, 1.0F, greyLevel, 1.0F);
+                    switch (tileEntity.lightColor()) {
+                        case 1:
+                            GlStateManager.color(1.0F, 115F / 255F, 115F / 255F, 1.0F);
+                            break;
+                        default:
+                            GlStateManager.color(greyLevel, 1.0F, greyLevel, 1.0F);
                     }
 
                     float frameY = 0.9376F;
@@ -260,11 +215,39 @@ public class TileEntityPlatformRenderer extends TileEntitySpecialRenderer<TileEn
         }
     }
 
-    private int tenLSB(int x)
-    {
+    private int tenLSB(int x) {
         if (x < 0)
             return x % 1024 + 1024;
-        
+
         return x % 1024;
+    }
+
+    public class ModelPlatform extends ModelBase {
+        ModelRenderer panelMain;
+
+        public ModelPlatform() {
+            this(0.0F);
+        }
+
+        public ModelPlatform(float var1) {
+            this.textureWidth = 128;
+            this.textureHeight = 128;
+            this.panelMain = new ModelRenderer(this, 0, 0);
+            this.panelMain.addBox(-22F, -3.5F, -22F, 44, 7, 44);
+            this.panelMain.setRotationPoint(0F, 0F, 0F);
+            this.panelMain.setTextureSize(128, 128);
+            this.panelMain.mirror = true;
+            this.setRotation(this.panelMain, 0F, 0F, 0F);
+        }
+
+        private void setRotation(ModelRenderer model, float x, float y, float z) {
+            model.rotateAngleX = x;
+            model.rotateAngleY = y;
+            model.rotateAngleZ = z;
+        }
+
+        public void render() {
+            this.panelMain.render(1.125F / 44F);
+        }
     }
 }

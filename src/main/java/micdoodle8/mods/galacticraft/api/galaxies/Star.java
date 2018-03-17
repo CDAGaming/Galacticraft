@@ -1,34 +1,28 @@
 package micdoodle8.mods.galacticraft.api.galaxies;
 
-public class Star extends CelestialBody
-{
+public class Star extends CelestialBody {
     protected SolarSystem parentSolarSystem = null;
 
-    public Star(String planetName)
-    {
+    public Star(String planetName) {
         super(planetName);
     }
 
-    public SolarSystem getParentSolarSystem()
-    {
+    public SolarSystem getParentSolarSystem() {
         return this.parentSolarSystem;
     }
 
+    public Star setParentSolarSystem(SolarSystem galaxy) {
+        this.parentSolarSystem = galaxy;
+        return this;
+    }
+
     @Override
-    public int getID()
-    {
+    public int getID() {
         return this.parentSolarSystem.getID();
     }
 
     @Override
-    public String getUnlocalizedNamePrefix()
-    {
+    public String getUnlocalizedNamePrefix() {
         return "star";
-    }
-
-    public Star setParentSolarSystem(SolarSystem galaxy)
-    {
-        this.parentSolarSystem = galaxy;
-        return this;
     }
 }

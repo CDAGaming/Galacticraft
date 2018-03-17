@@ -10,12 +10,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class ParticleSmokeSmall extends Particle
-{
+public class ParticleSmokeSmall extends Particle {
     float smokeParticleScale;
 
-    public ParticleSmokeSmall(World par1World, Vector3 position, Vector3 motion)
-    {
+    public ParticleSmokeSmall(World par1World, Vector3 position, Vector3 motion) {
         super(par1World, position.x, position.y, position.z, 0.0D, 0.0D, 0.0D);
         this.motionX *= 0.01D;
         this.motionY *= 0.01D;
@@ -33,20 +31,17 @@ public class ParticleSmokeSmall extends Particle
     }
 
     @Override
-    public void renderParticle(BufferBuilder worldRendererIn, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ)
-    {
+    public void renderParticle(BufferBuilder worldRendererIn, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
         GL11.glPushMatrix();
         GL11.glDepthMask(false);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
         float var8 = (this.particleAge + partialTicks) / this.particleMaxAge * 32.0F;
 
-        if (var8 < 0.0F)
-        {
+        if (var8 < 0.0F) {
             var8 = 0.0F;
         }
 
-        if (var8 > 1.0F)
-        {
+        if (var8 > 1.0F) {
             var8 = 1.0F;
         }
 
@@ -59,22 +54,19 @@ public class ParticleSmokeSmall extends Particle
     }
 
     @Override
-    public void onUpdate()
-    {
+    public void onUpdate() {
         this.prevPosX = this.posX;
         this.prevPosY = this.posY;
         this.prevPosZ = this.posZ;
 
-        if (this.particleAge++ >= this.particleMaxAge)
-        {
+        if (this.particleAge++ >= this.particleMaxAge) {
             this.setExpired();
         }
 
         this.setParticleTextureIndex(7 - this.particleAge * 8 / this.particleMaxAge);
         this.move(this.motionX, this.motionY, this.motionZ);
 
-        if (this.posY == this.prevPosY)
-        {
+        if (this.posY == this.prevPosY) {
             this.motionX *= 1.03D;
             this.motionZ *= 1.03D;
         }

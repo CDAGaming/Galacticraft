@@ -3,25 +3,21 @@ package micdoodle8.mods.galacticraft.planets.asteroids.client.render.item;
 import micdoodle8.mods.galacticraft.core.wrappers.ModelTransformWrapper;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
-import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraftforge.common.model.TRSRTransformation;
 
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Quat4f;
 import javax.vecmath.Vector3f;
 
-public class ItemModelBeamReceiver extends ModelTransformWrapper
-{
-    public ItemModelBeamReceiver(IBakedModel modelToWrap)
-    {
+public class ItemModelBeamReceiver extends ModelTransformWrapper {
+    public ItemModelBeamReceiver(IBakedModel modelToWrap) {
         super(modelToWrap);
     }
 
     @Override
-    protected Matrix4f getTransformForPerspective(TransformType cameraTransformType)
-    {
-        if (cameraTransformType == TransformType.GUI)
-        {
+    protected Matrix4f getTransformForPerspective(TransformType cameraTransformType) {
+        if (cameraTransformType == TransformType.GUI) {
             Matrix4f ret = new Matrix4f();
             ret.setIdentity();
             Matrix4f mul = new Matrix4f();
@@ -38,8 +34,7 @@ public class ItemModelBeamReceiver extends ModelTransformWrapper
             return ret;
         }
 
-        if (cameraTransformType == TransformType.FIRST_PERSON_RIGHT_HAND || cameraTransformType == TransformType.FIRST_PERSON_LEFT_HAND)
-        {
+        if (cameraTransformType == TransformType.FIRST_PERSON_RIGHT_HAND || cameraTransformType == TransformType.FIRST_PERSON_LEFT_HAND) {
             float xTran = cameraTransformType == TransformType.FIRST_PERSON_LEFT_HAND ? -0.5F : 0.5F;
             float zTran = cameraTransformType == TransformType.FIRST_PERSON_LEFT_HAND ? 0.3F : 0.7F;
             int yRot = cameraTransformType == TransformType.FIRST_PERSON_LEFT_HAND ? -90 : 90;
@@ -62,8 +57,7 @@ public class ItemModelBeamReceiver extends ModelTransformWrapper
             return ret;
         }
 
-        if (cameraTransformType == TransformType.THIRD_PERSON_RIGHT_HAND || cameraTransformType == TransformType.THIRD_PERSON_LEFT_HAND)
-        {
+        if (cameraTransformType == TransformType.THIRD_PERSON_RIGHT_HAND || cameraTransformType == TransformType.THIRD_PERSON_LEFT_HAND) {
             float xTran = cameraTransformType == TransformType.THIRD_PERSON_LEFT_HAND ? -0.4F : 0.4F;
             float zTran = cameraTransformType == TransformType.THIRD_PERSON_LEFT_HAND ? 0.5F : 0.5F;
             int yRot = cameraTransformType == TransformType.THIRD_PERSON_LEFT_HAND ? -45 : -225;
@@ -84,8 +78,7 @@ public class ItemModelBeamReceiver extends ModelTransformWrapper
             return ret;
         }
 
-        if (cameraTransformType == TransformType.GROUND)
-        {
+        if (cameraTransformType == TransformType.GROUND) {
             Matrix4f ret = new Matrix4f();
             ret.setIdentity();
             Matrix4f mul = new Matrix4f();
@@ -98,8 +91,7 @@ public class ItemModelBeamReceiver extends ModelTransformWrapper
             return ret;
         }
 
-        if (cameraTransformType == TransformType.FIXED)
-        {
+        if (cameraTransformType == TransformType.FIXED) {
             Matrix4f ret = new Matrix4f();
             ret.setIdentity();
             Matrix4f mul = new Matrix4f();
@@ -118,8 +110,7 @@ public class ItemModelBeamReceiver extends ModelTransformWrapper
     }
 
     @Override
-    public TextureAtlasSprite getParticleTexture()
-    {
+    public TextureAtlasSprite getParticleTexture() {
         return super.getParticleTexture();
     }
 }

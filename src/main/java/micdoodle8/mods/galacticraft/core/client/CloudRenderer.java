@@ -6,12 +6,10 @@ import net.minecraftforge.client.IRenderHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class CloudRenderer extends IRenderHandler
-{
+public class CloudRenderer extends IRenderHandler {
     @Override
     @SideOnly(Side.CLIENT)
-    public void render(float partialTicks, WorldClient world, Minecraft mc)
-    {
+    public void render(float partialTicks, WorldClient world, Minecraft mc) {
         // Do nothing
     }
 }

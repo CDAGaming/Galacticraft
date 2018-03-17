@@ -18,18 +18,15 @@ import net.minecraftforge.fml.client.FMLClientHandler;
 
 import java.io.IOException;
 
-public class GuiSlimelingInventory extends GuiContainer
-{
+public class GuiSlimelingInventory extends GuiContainer {
     private static final ResourceLocation slimelingPanelGui = new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "textures/gui/slimeling_panel2.png");
     private final EntitySlimeling slimeling;
-
-    private int invX;
-    private int invY;
     private final int invWidth = 18;
     private final int invHeight = 18;
+    private int invX;
+    private int invY;
 
-    public GuiSlimelingInventory(EntityPlayer player, EntitySlimeling slimeling)
-    {
+    public GuiSlimelingInventory(EntityPlayer player, EntitySlimeling slimeling) {
         super(new ContainerSlimeling(player.inventory, slimeling, FMLClientHandler.instance().getClient().player));
         this.slimeling = slimeling;
         this.xSize = 176;
@@ -37,8 +34,7 @@ public class GuiSlimelingInventory extends GuiContainer
     }
 
     @Override
-    public void initGui()
-    {
+    public void initGui() {
         super.initGui();
         this.buttonList.clear();
         final int var5 = (this.width - this.xSize) / 2;
@@ -48,29 +44,23 @@ public class GuiSlimelingInventory extends GuiContainer
     }
 
     @Override
-    public boolean doesGuiPauseGame()
-    {
+    public boolean doesGuiPauseGame() {
         return false;
     }
 
     @Override
-    protected void actionPerformed(GuiButton par1GuiButton)
-    {
-        if (par1GuiButton.enabled)
-        {
-            switch (par1GuiButton.id)
-            {
-            case 0:
-                break;
+    protected void actionPerformed(GuiButton par1GuiButton) {
+        if (par1GuiButton.enabled) {
+            switch (par1GuiButton.id) {
+                case 0:
+                    break;
             }
         }
     }
 
     @Override
-    protected void mouseClicked(int px, int py, int par3) throws IOException
-    {
-        if (px >= this.invX && px < this.invX + this.invWidth && py >= this.invY && py < this.invY + this.invHeight)
-        {
+    protected void mouseClicked(int px, int py, int par3) throws IOException {
+        if (px >= this.invX && px < this.invX + this.invWidth && py >= this.invY && py < this.invY + this.invHeight) {
             this.mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
             this.mc.displayGuiScreen(new GuiSlimeling(this.slimeling));
         }
@@ -79,13 +69,11 @@ public class GuiSlimelingInventory extends GuiContainer
     }
 
     @Override
-    public void drawDefaultBackground()
-    {
+    public void drawDefaultBackground() {
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
-    {
+    protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
         final int var5 = (this.width - this.xSize) / 2;
         final int var6 = (this.height - this.ySize) / 2;
 
@@ -121,15 +109,12 @@ public class GuiSlimelingInventory extends GuiContainer
 
         ItemStack stack = this.slimeling.slimelingInventory.getStackInSlot(1);
 
-        if (stack != null && stack.getItem() == MarsItems.marsItemBasic && stack.getItemDamage() == 4)
-        {
+        if (stack != null && stack.getItem() == MarsItems.marsItemBasic && stack.getItemDamage() == 4) {
             int offsetX = 7;
             int offsetY = 53;
 
-            for (int y = 0; y < 3; ++y)
-            {
-                for (int x = 0; x < 9; ++x)
-                {
+            for (int y = 0; y < 3; ++y) {
+                for (int x = 0; x < 9; ++x) {
                     this.drawTexturedModalRect(var5 + offsetX + x * 18, var6 + offsetY + y * 18, 176, 9, 18, 18);
                 }
             }

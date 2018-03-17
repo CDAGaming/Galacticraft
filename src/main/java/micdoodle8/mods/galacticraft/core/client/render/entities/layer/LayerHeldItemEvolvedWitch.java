@@ -14,33 +14,28 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class LayerHeldItemEvolvedWitch implements LayerRenderer<EntityEvolvedWitch>
-{
+public class LayerHeldItemEvolvedWitch implements LayerRenderer<EntityEvolvedWitch> {
     private RenderEvolvedWitch witchRenderer;
 
-    public LayerHeldItemEvolvedWitch(RenderEvolvedWitch witchRenderer)
-    {
+    public LayerHeldItemEvolvedWitch(RenderEvolvedWitch witchRenderer) {
         this.witchRenderer = witchRenderer;
     }
 
     @Override
-    public void doRenderLayer(EntityEvolvedWitch entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale)
-    {
+    public void doRenderLayer(EntityEvolvedWitch entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         ItemStack itemstack = entity.getHeldItemMainhand();
 
-        if (itemstack != null)
-        {
+        if (itemstack != null) {
             GlStateManager.color(1.0F, 1.0F, 1.0F);
             GlStateManager.pushMatrix();
 
-            if (this.witchRenderer.getMainModel().isChild)
-            {
+            if (this.witchRenderer.getMainModel().isChild) {
                 GlStateManager.translate(0.0F, 0.625F, 0.0F);
                 GlStateManager.rotate(-20.0F, -1.0F, 0.0F, 0.0F);
                 GlStateManager.scale(0.5F, 0.5F, 0.5F);
             }
 
-            ((ModelEvolvedWitch)this.witchRenderer.getMainModel()).villagerNose.postRender(0.0625F);
+            ((ModelEvolvedWitch) this.witchRenderer.getMainModel()).villagerNose.postRender(0.0625F);
             GlStateManager.translate(-0.0625F, 0.53125F, 0.21875F);
             Item item = itemstack.getItem();
             Minecraft mc = Minecraft.getMinecraft();
@@ -52,18 +47,14 @@ public class LayerHeldItemEvolvedWitch implements LayerRenderer<EntityEvolvedWit
 //                GlStateManager.rotate(-5.0F, 0.0F, 1.0F, 0.0F);
 //                GlStateManager.scale(0.375F, -0.375F, 0.375F);
 //            }
-            if (item == Items.BOW)
-            {
+            if (item == Items.BOW) {
                 GlStateManager.translate(0.0F, 0.125F, -0.125F);
                 GlStateManager.rotate(-45.0F, 0.0F, 1.0F, 0.0F);
                 GlStateManager.scale(0.625F, -0.625F, 0.625F);
                 GlStateManager.rotate(-100.0F, 1.0F, 0.0F, 0.0F);
                 GlStateManager.rotate(-20.0F, 0.0F, 1.0F, 0.0F);
-            }
-            else if (item.isFull3D())
-            {
-                if (item.shouldRotateAroundWhenRendering())
-                {
+            } else if (item.isFull3D()) {
+                if (item.shouldRotateAroundWhenRendering()) {
                     GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
                     GlStateManager.translate(0.0F, -0.0625F, 0.0F);
                 }
@@ -73,9 +64,7 @@ public class LayerHeldItemEvolvedWitch implements LayerRenderer<EntityEvolvedWit
                 GlStateManager.scale(0.625F, -0.625F, 0.625F);
                 GlStateManager.rotate(0.0F, 1.0F, 0.0F, 0.0F);
                 GlStateManager.rotate(0.0F, 0.0F, 1.0F, 0.0F);
-            }
-            else
-            {
+            } else {
                 GlStateManager.translate(0.1875F, 0.1875F, 0.0F);
                 GlStateManager.scale(0.875F, 0.875F, 0.875F);
                 GlStateManager.rotate(-20.0F, 0.0F, 0.0F, 1.0F);
@@ -90,8 +79,7 @@ public class LayerHeldItemEvolvedWitch implements LayerRenderer<EntityEvolvedWit
     }
 
     @Override
-    public boolean shouldCombineTextures()
-    {
+    public boolean shouldCombineTextures() {
         return false;
     }
 }

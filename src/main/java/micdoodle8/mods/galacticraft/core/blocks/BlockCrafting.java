@@ -21,79 +21,23 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
-public class BlockCrafting extends BlockAdvancedTile implements ITileEntityProvider, ISortableBlock, IShiftDescription
-{
+public class BlockCrafting extends BlockAdvancedTile implements ITileEntityProvider, ISortableBlock, IShiftDescription {
     public static final PropertyDirection FACING = PropertyDirection.create("facing");
 
-    public BlockCrafting(String assetName)
-    {
+    public BlockCrafting(String assetName) {
         super(Material.IRON);
         this.setUnlocalizedName(assetName);
     }
 
-    @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
-    {
-        return GalacticraftCore.galacticraftBlocksTab;
-    }
+    public static EnumFacing getFacingFromEntity(World worldIn, BlockPos clickedBlock, EntityLivingBase entityIn) {
+        if (MathHelper.abs((float) entityIn.posX - (float) clickedBlock.getX()) < 3.0F && MathHelper.abs((float) entityIn.posZ - (float) clickedBlock.getZ()) < 3.0F) {
+            double d0 = entityIn.posY + (double) entityIn.getEyeHeight();
 
-    @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
-    {
-        ItemStack heldItem = playerIn.getHeldItem(hand);
-
-        if (this.useWrench(worldIn, pos, playerIn, hand, heldItem, side, hitX, hitY, hitZ))
-        {
-            return true;
-        }
-
-        if (playerIn.isSneaking())
-        {
-            if (this.onSneakMachineActivated(worldIn, pos, playerIn, hand, heldItem, side, hitX, hitY, hitZ))
-            {
-                return true;
-            }
-        }
-
-        if (!worldIn.isRemote)
-        {
-            playerIn.openGui(GalacticraftCore.instance, -1, worldIn, pos.getX(), pos.getY(), pos.getZ());
-        }
-        return true;
-    }
-
-    @Override
-    public boolean onUseWrench(World world, BlockPos pos, EntityPlayer entityPlayer, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
-    {
-        this.rotate6Ways(world, pos);
-        return true;
-    }
-
-    @Override
-    public TileEntity createNewTileEntity(World worldIn, int meta)
-    {
-        return new TileEntityCrafting();
-    }
-
-    @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
-    {
-        worldIn.setBlockState(pos, state.withProperty(FACING, getFacingFromEntity(worldIn, pos, placer)), 2);
-    }
-
-    public static EnumFacing getFacingFromEntity(World worldIn, BlockPos clickedBlock, EntityLivingBase entityIn)
-    {
-        if (MathHelper.abs((float)entityIn.posX - (float)clickedBlock.getX()) < 3.0F && MathHelper.abs((float)entityIn.posZ - (float)clickedBlock.getZ()) < 3.0F)
-        {
-            double d0 = entityIn.posY + (double)entityIn.getEyeHeight();
-
-            if (d0 - (double)clickedBlock.getY() > 2.0D)
-            {
+            if (d0 - (double) clickedBlock.getY() > 2.0D) {
                 return EnumFacing.UP;
             }
 
-            if ((double)clickedBlock.getY() - d0 > 1.0D)
-            {
+            if ((double) clickedBlock.getY() - d0 > 1.0D) {
                 return EnumFacing.DOWN;
             }
         }
@@ -102,38 +46,73 @@ public class BlockCrafting extends BlockAdvancedTile implements ITileEntityProvi
     }
 
     @Override
-    public EnumSortCategoryBlock getCategory(int meta)
-    {
-        return EnumSortCategoryBlock.GENERAL;
-    }
-    
-    @Override
-    public String getShiftDescription(int meta)
-    {
-        return GCCoreUtil.translate(this.getUnlocalizedName() + ".description");
+    public CreativeTabs getCreativeTabToDisplayOn() {
+        return GalacticraftCore.galacticraftBlocksTab;
     }
 
     @Override
-    public boolean showDescription(int meta)
-    {
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+        ItemStack heldItem = playerIn.getHeldItem(hand);
+
+        if (this.useWrench(worldIn, pos, playerIn, hand, heldItem, side, hitX, hitY, hitZ)) {
+            return true;
+        }
+
+        if (playerIn.isSneaking()) {
+            if (this.onSneakMachineActivated(worldIn, pos, playerIn, hand, heldItem, side, hitX, hitY, hitZ)) {
+                return true;
+            }
+        }
+
+        if (!worldIn.isRemote) {
+            playerIn.openGui(GalacticraftCore.instance, -1, worldIn, pos.getX(), pos.getY(), pos.getZ());
+        }
         return true;
     }
 
     @Override
-    public IBlockState getStateFromMeta(int meta)
-    {
+    public boolean onUseWrench(World world, BlockPos pos, EntityPlayer entityPlayer, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+        this.rotate6Ways(world, pos);
+        return true;
+    }
+
+    @Override
+    public TileEntity createNewTileEntity(World worldIn, int meta) {
+        return new TileEntityCrafting();
+    }
+
+    @Override
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+        worldIn.setBlockState(pos, state.withProperty(FACING, getFacingFromEntity(worldIn, pos, placer)), 2);
+    }
+
+    @Override
+    public EnumSortCategoryBlock getCategory(int meta) {
+        return EnumSortCategoryBlock.GENERAL;
+    }
+
+    @Override
+    public String getShiftDescription(int meta) {
+        return GCCoreUtil.translate(this.getUnlocalizedName() + ".description");
+    }
+
+    @Override
+    public boolean showDescription(int meta) {
+        return true;
+    }
+
+    @Override
+    public IBlockState getStateFromMeta(int meta) {
         return this.getDefaultState().withProperty(FACING, EnumFacing.getFront(meta));
     }
 
     @Override
-    public int getMetaFromState(IBlockState state)
-    {
+    public int getMetaFromState(IBlockState state) {
         return (state.getValue(FACING)).getIndex();
     }
 
     @Override
-    protected BlockStateContainer createBlockState()
-    {
+    protected BlockStateContainer createBlockState() {
         return new BlockStateContainer(this, FACING);
     }
 }

@@ -14,8 +14,7 @@ import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class RefineryRecipeCategory implements IRecipeCategory
-{
+public class RefineryRecipeCategory implements IRecipeCategory {
     private static final ResourceLocation refineryGuiTex = new ResourceLocation(Constants.ASSET_PREFIX, "textures/gui/refinery_recipe.png");
 
     @Nonnull
@@ -27,8 +26,7 @@ public class RefineryRecipeCategory implements IRecipeCategory
     @Nonnull
     private final IDrawableAnimated fuelBar;
 
-    public RefineryRecipeCategory(IGuiHelper guiHelper)
-    {
+    public RefineryRecipeCategory(IGuiHelper guiHelper) {
         this.background = guiHelper.createDrawable(refineryGuiTex, 3, 4, 168, 64);
         this.localizedName = GCCoreUtil.translate("tile.refinery.name");
 
@@ -40,35 +38,30 @@ public class RefineryRecipeCategory implements IRecipeCategory
 
     @Nonnull
     @Override
-    public String getUid()
-    {
+    public String getUid() {
         return RecipeCategories.REFINERY_ID;
     }
 
     @Nonnull
     @Override
-    public String getTitle()
-    {
+    public String getTitle() {
         return this.localizedName;
     }
 
     @Nonnull
     @Override
-    public IDrawable getBackground()
-    {
+    public IDrawable getBackground() {
         return this.background;
     }
 
     @Override
-    public void drawExtras(@Nonnull Minecraft minecraft)
-    {
+    public void drawExtras(@Nonnull Minecraft minecraft) {
         this.oilBar.draw(minecraft, 40, 24);
         this.fuelBar.draw(minecraft, 114, 24);
     }
 
     @Override
-    public void setRecipe(IRecipeLayout recipeLayout, IRecipeWrapper recipeWrapper, IIngredients ingredients)
-    {
+    public void setRecipe(IRecipeLayout recipeLayout, IRecipeWrapper recipeWrapper, IIngredients ingredients) {
         IGuiItemStackGroup itemstacks = recipeLayout.getItemStacks();
 
         itemstacks.init(0, true, 39, 2);
@@ -78,8 +71,7 @@ public class RefineryRecipeCategory implements IRecipeCategory
     }
 
     @Override
-    public String getModName()
-    {
+    public String getModName() {
         return GalacticraftCore.NAME;
     }
 }

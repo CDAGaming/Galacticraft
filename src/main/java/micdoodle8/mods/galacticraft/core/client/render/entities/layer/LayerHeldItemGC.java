@@ -15,32 +15,26 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class LayerHeldItemGC implements LayerRenderer<AbstractClientPlayer>
-{
+public class LayerHeldItemGC implements LayerRenderer<AbstractClientPlayer> {
     protected final RenderLivingBase<?> livingEntityRenderer;
 
-    public LayerHeldItemGC(RenderLivingBase<?> livingEntityRendererIn)
-    {
+    public LayerHeldItemGC(RenderLivingBase<?> livingEntityRendererIn) {
         this.livingEntityRenderer = livingEntityRendererIn;
     }
 
     @Override
-    public void doRenderLayer(AbstractClientPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale)
-    {
-        if (player.getRidingEntity() instanceof ICameraZoomEntity)
-        {
+    public void doRenderLayer(AbstractClientPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+        if (player.getRidingEntity() instanceof ICameraZoomEntity) {
             return;
         }
         boolean flag = player.getPrimaryHand() == EnumHandSide.RIGHT;
         ItemStack itemstack = flag ? player.getHeldItemOffhand() : player.getHeldItemMainhand();
         ItemStack itemstack1 = flag ? player.getHeldItemMainhand() : player.getHeldItemOffhand();
 
-        if (itemstack != null || itemstack1 != null)
-        {
+        if (itemstack != null || itemstack1 != null) {
             GlStateManager.pushMatrix();
 
-            if (this.livingEntityRenderer.getMainModel().isChild)
-            {
+            if (this.livingEntityRenderer.getMainModel().isChild) {
                 float f = 0.5F;
                 GlStateManager.translate(0.0F, 0.625F, 0.0F);
                 GlStateManager.rotate(-20.0F, -1.0F, 0.0F, 0.0F);
@@ -53,30 +47,26 @@ public class LayerHeldItemGC implements LayerRenderer<AbstractClientPlayer>
         }
     }
 
-    private void renderHeldItem(EntityLivingBase p_188358_1_, ItemStack p_188358_2_, ItemCameraTransforms.TransformType p_188358_3_, EnumHandSide handSide)
-    {
-        if (p_188358_2_ != null)
-        {
+    private void renderHeldItem(EntityLivingBase p_188358_1_, ItemStack p_188358_2_, ItemCameraTransforms.TransformType p_188358_3_, EnumHandSide handSide) {
+        if (p_188358_2_ != null) {
             GlStateManager.pushMatrix();
 
-            if (p_188358_1_.isSneaking())
-            {
+            if (p_188358_1_.isSneaking()) {
                 GlStateManager.translate(0.0F, 0.2F, 0.0F);
             }
             // Forge: moved this call down, fixes incorrect offset while sneaking.
-            ((ModelBiped)this.livingEntityRenderer.getMainModel()).postRenderArm(0.0625F, handSide);
+            ((ModelBiped) this.livingEntityRenderer.getMainModel()).postRenderArm(0.0625F, handSide);
             GlStateManager.rotate(-90.0F, 1.0F, 0.0F, 0.0F);
             GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
             boolean flag = handSide == EnumHandSide.LEFT;
-            GlStateManager.translate((float)(flag ? -1 : 1) / 16.0F, 0.125F, -0.625F);
+            GlStateManager.translate((float) (flag ? -1 : 1) / 16.0F, 0.125F, -0.625F);
             Minecraft.getMinecraft().getItemRenderer().renderItemSide(p_188358_1_, p_188358_2_, p_188358_3_, flag);
             GlStateManager.popMatrix();
         }
     }
 
     @Override
-    public boolean shouldCombineTextures()
-    {
+    public boolean shouldCombineTextures() {
         return false;
     }
 }

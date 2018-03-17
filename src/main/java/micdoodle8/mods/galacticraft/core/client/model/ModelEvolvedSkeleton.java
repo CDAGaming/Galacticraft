@@ -4,8 +4,8 @@ import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 
-public class ModelEvolvedSkeleton extends ModelBiped
-{
+public class ModelEvolvedSkeleton extends ModelBiped {
+    public boolean aimedBow;
     ModelRenderer leftOxygenTank;
     ModelRenderer rightOxygenTank;
     ModelRenderer tubeRight2;
@@ -24,15 +24,11 @@ public class ModelEvolvedSkeleton extends ModelBiped
     ModelRenderer tubeRight6;
     ModelRenderer oxygenMask;
 
-    public boolean aimedBow;
-
-    public ModelEvolvedSkeleton()
-    {
+    public ModelEvolvedSkeleton() {
         this(0.0F);
     }
 
-    public ModelEvolvedSkeleton(float par1)
-    {
+    public ModelEvolvedSkeleton(float par1) {
         this.textureWidth = 128;
         this.textureHeight = 64;
         this.aimedBow = false;
@@ -169,8 +165,7 @@ public class ModelEvolvedSkeleton extends ModelBiped
     }
 
     @Override
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
-    {
+    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
         this.setRotationAngles(f, f1, f2, f3, f4, f5, entity);
         this.leftOxygenTank.render(f5);
         this.rightOxygenTank.render(f5);
@@ -198,16 +193,14 @@ public class ModelEvolvedSkeleton extends ModelBiped
         this.bipedHeadwear.render(f5);
     }
 
-    private void setRotation(ModelRenderer model, float x, float y, float z)
-    {
+    private void setRotation(ModelRenderer model, float x, float y, float z) {
         model.rotateAngleX = x;
         model.rotateAngleY = y;
         model.rotateAngleZ = z;
     }
 
     @Override
-    public void setRotationAngles(float par1, float par2, float par3, float par4, float par5, float par6, Entity entity)
-    {
+    public void setRotationAngles(float par1, float par2, float par3, float par4, float par5, float par6, Entity entity) {
         super.setRotationAngles(par1, par2, par3, par4, par5, par6, entity);
         copyModelAngles(this.bipedHead, this.oxygenMask);
     }

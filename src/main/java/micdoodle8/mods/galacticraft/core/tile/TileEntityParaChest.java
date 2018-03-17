@@ -28,8 +28,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import java.util.Iterator;
 import java.util.List;
 
-public class TileEntityParaChest extends TileEntityAdvanced implements IInventorySettable, IScaleableFuelLevel
-{
+public class TileEntityParaChest extends TileEntityAdvanced implements IInventorySettable, IScaleableFuelLevel {
     private final int tankCapacity = 5000;
     @NetworkedField(targetSide = Side.CLIENT)
     public FluidTank fuelTank = new FluidTank(this.tankCapacity);
@@ -43,48 +42,45 @@ public class TileEntityParaChest extends TileEntityAdvanced implements IInventor
     @NetworkedField(targetSide = Side.CLIENT)
     public EnumDyeColor color = EnumDyeColor.RED;
 
-    public TileEntityParaChest()
-    {
+    public TileEntityParaChest() {
         this.color = EnumDyeColor.RED;
     }
 
     @Override
-    public void onLoad()
-    {
-        if (this.world.isRemote)
-        {
+    public void onLoad() {
+        if (this.world.isRemote) {
             //Request size + contents information from server
             GalacticraftCore.packetPipeline.sendToServer(new PacketDynamicInventory(this));
         }
     }
 
     @Override
-    public int getScaledFuelLevel(int i)
-    {
+    public int getScaledFuelLevel(int i) {
         final double fuelLevel = this.fuelTank.getFluid() == null ? 0 : this.fuelTank.getFluid().amount;
 
         return (int) (fuelLevel * i / this.tankCapacity);
     }
 
     @Override
-    public int getSizeInventory()
-    {
+    public int getSizeInventory() {
         return this.stacks.size();
     }
 
     @Override
-    public ItemStack getStackInSlot(int index)
-    {
+    public void setSizeInventory(int size) {
+        this.stacks = NonNullList.withSize(size, ItemStack.EMPTY);
+    }
+
+    @Override
+    public ItemStack getStackInSlot(int index) {
         return this.stacks.get(index);
     }
 
     @Override
-    public ItemStack decrStackSize(int index, int count)
-    {
+    public ItemStack decrStackSize(int index, int count) {
         ItemStack itemstack = ItemStackHelper.getAndSplit(this.stacks, index, count);
 
-        if (!itemstack.isEmpty())
-        {
+        if (!itemstack.isEmpty()) {
             this.markDirty();
         }
 
@@ -92,23 +88,19 @@ public class TileEntityParaChest extends TileEntityAdvanced implements IInventor
     }
 
     @Override
-    public ItemStack removeStackFromSlot(int index)
-    {
+    public ItemStack removeStackFromSlot(int index) {
         ItemStack oldstack = ItemStackHelper.getAndRemove(this.stacks, index);
-        if (!oldstack.isEmpty())
-        {
-        	this.markDirty();
+        if (!oldstack.isEmpty()) {
+            this.markDirty();
         }
-    	return oldstack;
+        return oldstack;
     }
 
     @Override
-    public void setInventorySlotContents(int index, ItemStack stack)
-    {
+    public void setInventorySlotContents(int index, ItemStack stack) {
         this.stacks.set(index, stack);
 
-        if (stack.getCount() > this.getInventoryStackLimit())
-        {
+        if (stack.getCount() > this.getInventoryStackLimit()) {
             stack.setCount(this.getInventoryStackLimit());
         }
 
@@ -116,18 +108,9 @@ public class TileEntityParaChest extends TileEntityAdvanced implements IInventor
     }
 
     @Override
-    public void setSizeInventory(int size)
-    {
-        this.stacks = NonNullList.withSize(size, ItemStack.EMPTY);
-    }
-
-    @Override
-    public boolean isEmpty()
-    {
-        for (ItemStack itemstack : this.stacks)
-        {
-            if (!itemstack.isEmpty())
-            {
+    public boolean isEmpty() {
+        for (ItemStack itemstack : this.stacks) {
+            if (!itemstack.isEmpty()) {
                 return false;
             }
         }
@@ -136,52 +119,44 @@ public class TileEntityParaChest extends TileEntityAdvanced implements IInventor
     }
 
     @Override
-    public String getName()
-    {
+    public String getName() {
         return GCCoreUtil.translate("container.parachest.name");
     }
 
     @Override
-    public boolean hasCustomName()
-    {
+    public boolean hasCustomName() {
         return true;
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt)
-    {
+    public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
 
         int size = nbt.getInteger("chestContentLength");
-        if ((size - 3) % 18 != 0)
-        {
+        if ((size - 3) % 18 != 0) {
             size += 18 - ((size - 3) % 18);
         }
         this.stacks = NonNullList.withSize(size, ItemStack.EMPTY);
 
         ItemStackHelper.loadAllItems(nbt, this.stacks);
 
-        if (nbt.hasKey("fuelTank"))
-        {
+        if (nbt.hasKey("fuelTank")) {
             this.fuelTank.readFromNBT(nbt.getCompoundTag("fuelTank"));
         }
 
-        if (nbt.hasKey("color"))
-        {
+        if (nbt.hasKey("color")) {
             this.color = EnumDyeColor.byDyeDamage(nbt.getInteger("color"));
         }
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt)
-    {
+    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
 
         nbt.setInteger("chestContentLength", this.stacks.size());
         ItemStackHelper.saveAllItems(nbt, this.stacks);
 
-        if (this.fuelTank.getFluid() != null)
-        {
+        if (this.fuelTank.getFluid() != null) {
             nbt.setTag("fuelTank", this.fuelTank.writeToNBT(new NBTTagCompound()));
         }
 
@@ -190,49 +165,41 @@ public class TileEntityParaChest extends TileEntityAdvanced implements IInventor
     }
 
     @Override
-    public NBTTagCompound getUpdateTag()
-    {
+    public NBTTagCompound getUpdateTag() {
         return this.writeToNBT(new NBTTagCompound());
     }
 
     @Override
-    public int getInventoryStackLimit()
-    {
+    public int getInventoryStackLimit() {
         return 64;
     }
 
     @Override
-    public boolean isUsableByPlayer(EntityPlayer par1EntityPlayer)
-    {
+    public boolean isUsableByPlayer(EntityPlayer par1EntityPlayer) {
         return this.world.getTileEntity(this.getPos()) == this && par1EntityPlayer.getDistanceSq(this.getPos().getX() + 0.5D, this.getPos().getY() + 0.5D, this.getPos().getZ() + 0.5D) <= 64.0D;
     }
 
     @Override
-    public void updateContainingBlockInfo()
-    {
+    public void updateContainingBlockInfo() {
         super.updateContainingBlockInfo();
         this.adjacentChestChecked = false;
     }
 
     @Override
-    public void update()
-    {
+    public void update() {
         super.update();
         float f;
 
-        if (!this.world.isRemote && this.numUsingPlayers != 0 && (this.ticks + this.getPos().getX() + this.getPos().getY() + this.getPos().getZ()) % 200 == 0)
-        {
+        if (!this.world.isRemote && this.numUsingPlayers != 0 && (this.ticks + this.getPos().getX() + this.getPos().getY() + this.getPos().getZ()) % 200 == 0) {
             this.numUsingPlayers = 0;
             f = 5.0F;
             List<?> list = this.world.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(this.getPos().getX() - f, this.getPos().getY() - f, this.getPos().getZ() - f, this.getPos().getX() + 1 + f, this.getPos().getY() + 1 + f, this.getPos().getZ() + 1 + f));
             Iterator<?> iterator = list.iterator();
 
-            while (iterator.hasNext())
-            {
+            while (iterator.hasNext()) {
                 EntityPlayer entityplayer = (EntityPlayer) iterator.next();
 
-                if (entityplayer.openContainer instanceof ContainerParaChest)
-                {
+                if (entityplayer.openContainer instanceof ContainerParaChest) {
                     ++this.numUsingPlayers;
                 }
             }
@@ -242,79 +209,63 @@ public class TileEntityParaChest extends TileEntityAdvanced implements IInventor
         f = 0.1F;
         double d0;
 
-        if (this.numUsingPlayers > 0 && this.lidAngle == 0.0F)
-        {
+        if (this.numUsingPlayers > 0 && this.lidAngle == 0.0F) {
             double d1 = this.getPos().getX() + 0.5D;
             d0 = this.getPos().getZ() + 0.5D;
 
             this.world.playSound(null, d1, this.getPos().getY() + 0.5D, d0, SoundEvents.BLOCK_CHEST_OPEN, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.9F);
         }
 
-        if (this.numUsingPlayers == 0 && this.lidAngle > 0.0F || this.numUsingPlayers > 0 && this.lidAngle < 1.0F)
-        {
+        if (this.numUsingPlayers == 0 && this.lidAngle > 0.0F || this.numUsingPlayers > 0 && this.lidAngle < 1.0F) {
             float f1 = this.lidAngle;
 
-            if (this.numUsingPlayers > 0)
-            {
+            if (this.numUsingPlayers > 0) {
                 this.lidAngle += f;
-            }
-            else
-            {
+            } else {
                 this.lidAngle -= f;
             }
 
-            if (this.lidAngle > 1.0F)
-            {
+            if (this.lidAngle > 1.0F) {
                 this.lidAngle = 1.0F;
             }
 
             float f2 = 0.5F;
 
-            if (this.lidAngle < f2 && f1 >= f2)
-            {
+            if (this.lidAngle < f2 && f1 >= f2) {
                 d0 = this.getPos().getX() + 0.5D;
                 double d2 = this.getPos().getZ() + 0.5D;
 
                 this.world.playSound(null, d0, this.getPos().getY() + 0.5D, d2, SoundEvents.BLOCK_CHEST_CLOSE, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.9F);
             }
 
-            if (this.lidAngle < 0.0F)
-            {
+            if (this.lidAngle < 0.0F) {
                 this.lidAngle = 0.0F;
             }
         }
 
-        if (!this.world.isRemote)
-        {
+        if (!this.world.isRemote) {
             this.checkFluidTankTransfer(this.stacks.size() - 1, this.fuelTank);
         }
     }
 
-    private void checkFluidTankTransfer(int slot, FluidTank tank)
-    {
+    private void checkFluidTankTransfer(int slot, FluidTank tank) {
         FluidUtil.tryFillContainerFuel(tank, this.stacks, slot);
     }
 
 
     @Override
-    public boolean receiveClientEvent(int par1, int par2)
-    {
-        if (par1 == 1)
-        {
+    public boolean receiveClientEvent(int par1, int par2) {
+        if (par1 == 1) {
             this.numUsingPlayers = par2;
             return true;
-        }
-        else
-        {
+        } else {
             return super.receiveClientEvent(par1, par2);
         }
     }
 
     @Override
-    public void openInventory(EntityPlayer player)
-    {
-        if (this.numUsingPlayers < 0)
-        {
+    public void openInventory(EntityPlayer player) {
+        if (this.numUsingPlayers < 0) {
             this.numUsingPlayers = 0;
         }
 
@@ -325,10 +276,8 @@ public class TileEntityParaChest extends TileEntityAdvanced implements IInventor
     }
 
     @Override
-    public void closeInventory(EntityPlayer player)
-    {
-        if (this.getBlockType() != null && this.getBlockType() instanceof BlockParaChest)
-        {
+    public void closeInventory(EntityPlayer player) {
+        if (this.getBlockType() != null && this.getBlockType() instanceof BlockParaChest) {
             --this.numUsingPlayers;
             this.world.addBlockEvent(this.getPos(), this.getBlockType(), 1, this.numUsingPlayers);
             this.world.notifyNeighborsOfStateChange(this.getPos(), this.getBlockType(), false);
@@ -337,75 +286,63 @@ public class TileEntityParaChest extends TileEntityAdvanced implements IInventor
     }
 
     @Override
-    public boolean isItemValidForSlot(int par1, ItemStack par2ItemStack)
-    {
+    public boolean isItemValidForSlot(int par1, ItemStack par2ItemStack) {
         return true;
     }
 
     @Override
-    public void invalidate()
-    {
+    public void invalidate() {
         super.invalidate();
         this.updateContainingBlockInfo();
     }
 
     @Override
-    public double getPacketRange()
-    {
+    public double getPacketRange() {
         return 12.0D;
     }
 
     @Override
-    public int getPacketCooldown()
-    {
+    public int getPacketCooldown() {
         return 3;
     }
 
     @Override
-    public boolean isNetworkedTile()
-    {
+    public boolean isNetworkedTile() {
         return true;
     }
 
     @Override
-    public int getField(int id)
-    {
+    public int getField(int id) {
         return 0;
     }
 
     @Override
-    public void setField(int id, int value)
-    {
+    public void setField(int id, int value) {
 
     }
 
     @Override
-    public int getFieldCount()
-    {
+    public int getFieldCount() {
         return 0;
     }
 
     @Override
-    public void clear()
-    {
+    public void clear() {
 
     }
 
     @Override
-    public ITextComponent getDisplayName()
-    {
+    public ITextComponent getDisplayName() {
         return (this.hasCustomName() ? new TextComponentString(this.getName()) : new TextComponentTranslation(this.getName(), new Object[0]));
     }
 
     @Override
-    public void decodePacketdata(ByteBuf buffer)
-    {
+    public void decodePacketdata(ByteBuf buffer) {
         EnumDyeColor color = this.color;
 
         super.decodePacketdata(buffer);
 
-        if (this.world.isRemote && color != this.color)
-        {
+        if (this.world.isRemote && color != this.color) {
             this.world.markBlockRangeForRenderUpdate(getPos(), getPos());
         }
     }

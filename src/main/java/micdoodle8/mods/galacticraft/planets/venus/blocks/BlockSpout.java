@@ -24,10 +24,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.List;
 import java.util.Random;
 
-public class BlockSpout extends Block implements ISortableBlock, ITileEntityProvider
-{
-    public BlockSpout(String assetName)
-    {
+public class BlockSpout extends Block implements ISortableBlock, ITileEntityProvider {
+    public BlockSpout(String assetName) {
         super(Material.ROCK);
         this.blockHardness = 4.5F;
         this.blockResistance = 2.5F;
@@ -36,44 +34,37 @@ public class BlockSpout extends Block implements ISortableBlock, ITileEntityProv
 
     @SideOnly(Side.CLIENT)
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
-    {
+    public CreativeTabs getCreativeTabToDisplayOn() {
         return GalacticraftCore.galacticraftBlocksTab;
     }
 
     @Override
-    public EnumSortCategoryBlock getCategory(int meta)
-    {
+    public EnumSortCategoryBlock getCategory(int meta) {
         return EnumSortCategoryBlock.GENERAL;
     }
 
     @Override
-    public TileEntity createNewTileEntity(World worldIn, int meta)
-    {
+    public TileEntity createNewTileEntity(World worldIn, int meta) {
         return new TileEntitySpout();
     }
 
     @Override
-    public Item getItemDropped(IBlockState state, Random rand, int fortune)
-    {
+    public Item getItemDropped(IBlockState state, Random rand, int fortune) {
         return Item.getItemFromBlock(VenusBlocks.venusBlock);
     }
 
     @Override
-    public int damageDropped(IBlockState state)
-    {
+    public int damageDropped(IBlockState state) {
         return BlockBasicVenus.EnumBlockBasicVenus.ROCK_SOFT.getMeta();
     }
 
     @Override
-    public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune)
-    {
+    public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
         return super.getDrops(world, pos, state, fortune);
     }
 
     @Override
-    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face)
-    {
+    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
         return (face == EnumFacing.UP) ? BlockFaceShape.BOWL : BlockFaceShape.SOLID;
     }
 }

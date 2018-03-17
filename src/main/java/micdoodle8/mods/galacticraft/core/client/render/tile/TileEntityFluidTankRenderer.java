@@ -2,9 +2,9 @@ package micdoodle8.mods.galacticraft.core.client.render.tile;
 
 import micdoodle8.mods.galacticraft.core.tile.TileEntityFluidTank;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -12,23 +12,18 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
-
 import org.lwjgl.opengl.GL11;
 
-public class TileEntityFluidTankRenderer extends TileEntitySpecialRenderer<TileEntityFluidTank>
-{
+public class TileEntityFluidTankRenderer extends TileEntitySpecialRenderer<TileEntityFluidTank> {
     @Override
-    public void render(TileEntityFluidTank tank, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
-    {
+    public void render(TileEntityFluidTank tank, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         FluidTankInfo[] info = tank.getTankInfo(EnumFacing.DOWN);
 
-        if (info.length != 1)
-        {
+        if (info.length != 1) {
             return;
         }
-        FluidStack tankFluid = info[0].fluid; 
-        if (tankFluid == null || tankFluid.getFluid() == null || (!tankFluid.getFluid().isGaseous() && tankFluid.amount == 0))
-        {
+        FluidStack tankFluid = info[0].fluid;
+        if (tankFluid == null || tankFluid.getFluid() == null || (!tankFluid.getFluid().isGaseous() && tankFluid.amount == 0)) {
             return;
         }
 
@@ -60,27 +55,20 @@ public class TileEntityFluidTankRenderer extends TileEntitySpecialRenderer<TileE
 
         boolean compositeGaseous = tankFluid.getFluid().isGaseous();
 
-        if (compositeGaseous)
-        {
+        if (compositeGaseous) {
             opacity = Math.min(tankFluid.amount / (float) info[0].capacity * 0.8F + 0.2F, 1F);
-        }
-        else
-        {
+        } else {
             level = tank.fluidTank.getFluidAmount() / 16400.0F;
-            if (level <= 0.012F)
-            {
+            if (level <= 0.012F) {
                 levelInv = 1.0F;  //Empty tanks render empty - see #3222
-            }
-            else
-            {
+            } else {
                 levelInv = 0.988F - level;  //1.2% inset from each end of the tank, to avoid z-fighting with blocks above/below
             }
         }
 
         GL11.glColor4f(1.0F, 1.0F, 1.0F, opacity);
 
-        if (levelInv < 1.0F)
-        {
+        if (levelInv < 1.0F) {
             // North
             worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
             worldRenderer.pos(-0.4, levelInv, -0.399).tex(uMin, vMin).endVertex();
@@ -113,8 +101,7 @@ public class TileEntityFluidTankRenderer extends TileEntitySpecialRenderer<TileE
             worldRenderer.pos(0.399, 1.0, -0.4).tex(uMin, vMin + (vMax - vMin) * level).endVertex();
             tess.draw();
 
-            if (tankAbove == null || (tankAbove.fluidTank.getFluidAmount() == 0 && !compositeGaseous))
-            {
+            if (tankAbove == null || (tankAbove.fluidTank.getFluidAmount() == 0 && !compositeGaseous)) {
                 worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
                 worldRenderer.pos(0.4, 0.01 + levelInv, 0.4).tex(uMax, vMax).endVertex();
                 worldRenderer.pos(-0.4, 0.01 + levelInv, 0.4).tex(uMax, vMin).endVertex();
@@ -123,8 +110,7 @@ public class TileEntityFluidTankRenderer extends TileEntitySpecialRenderer<TileE
                 tess.draw();
             }
 
-            if (tankBelow == null || (tankBelow.fluidTank.getFluidAmount() == 0 && !compositeGaseous))
-            {
+            if (tankBelow == null || (tankBelow.fluidTank.getFluidAmount() == 0 && !compositeGaseous)) {
                 worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
                 worldRenderer.pos(0.4, 0.99, 0.4).tex(uMax, vMax).endVertex();
                 worldRenderer.pos(0.4, 0.99, -0.4).tex(uMin, vMax).endVertex();

@@ -4,28 +4,25 @@ import micdoodle8.mods.galacticraft.api.vector.Vector3;
 import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 import micdoodle8.mods.galacticraft.core.network.PacketSimple;
 import micdoodle8.mods.galacticraft.core.network.PacketSimple.EnumSimplePacket;
+import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.BufferBuilder;
-import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
 import org.lwjgl.opengl.GL11;
 
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
-public class ParticleLaunchFlame extends Particle
-{
+public class ParticleLaunchFlame extends Particle {
     private float smokeParticleScale;
     private boolean spawnSmokeShort;
     private EntityLivingBase ridingEntity;
 
-    public ParticleLaunchFlame(World par1World, Vector3 position, Vector3 motion, boolean launched, EntityLivingBase ridingEntity)
-    {
+    public ParticleLaunchFlame(World par1World, Vector3 position, Vector3 motion, boolean launched, EntityLivingBase ridingEntity) {
         super(par1World, position.x, position.y, position.z, 0.0D, 0.0D, 0.0D);
         this.motionX = motion.x;
         this.motionY = motion.y;
@@ -42,19 +39,16 @@ public class ParticleLaunchFlame extends Particle
     }
 
     @Override
-    public void renderParticle(BufferBuilder worldRendererIn, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ)
-    {
+    public void renderParticle(BufferBuilder worldRendererIn, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
         GL11.glDepthMask(false);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
         float var8 = (this.particleAge + partialTicks) / this.particleMaxAge * 32.0F;
 
-        if (var8 < 0.0F)
-        {
+        if (var8 < 0.0F) {
             var8 = 0.0F;
         }
 
-        if (var8 > 1.0F)
-        {
+        if (var8 > 1.0F) {
             var8 = 1.0F;
         }
 
@@ -65,20 +59,17 @@ public class ParticleLaunchFlame extends Particle
     }
 
     @Override
-    public void onUpdate()
-    {
+    public void onUpdate() {
         this.prevPosX = this.posX;
         this.prevPosY = this.posY;
         this.prevPosZ = this.posZ;
 
-        if (this.particleAge++ >= this.particleMaxAge)
-        {
-            GalacticraftCore.proxy.spawnParticle(this.spawnSmokeShort ? "whiteSmokeLaunched" : "whiteSmokeIdle", new Vector3(this.posX, this.posY + this.rand.nextDouble() * 2, this.posZ), new Vector3(this.motionX, this.motionY, this.motionZ), new Object[] {});
-            GalacticraftCore.proxy.spawnParticle(this.spawnSmokeShort ? "whiteSmokeLargeLaunched" : "whiteSmokeLargeIdle", new Vector3(this.posX, this.posY + this.rand.nextDouble() * 2, this.posZ), new Vector3(this.motionX, this.motionY, this.motionZ), new Object[] {});
-            if (!this.spawnSmokeShort)
-            {
-                GalacticraftCore.proxy.spawnParticle("whiteSmokeIdle", new Vector3(this.posX, this.posY + this.rand.nextDouble() * 2, this.posZ), new Vector3(this.motionX, this.motionY, this.motionZ), new Object[] {});
-                GalacticraftCore.proxy.spawnParticle("whiteSmokeLargeIdle", new Vector3(this.posX, this.posY + this.rand.nextDouble() * 2, this.posZ), new Vector3(this.motionX, this.motionY, this.motionZ), new Object[] {});
+        if (this.particleAge++ >= this.particleMaxAge) {
+            GalacticraftCore.proxy.spawnParticle(this.spawnSmokeShort ? "whiteSmokeLaunched" : "whiteSmokeIdle", new Vector3(this.posX, this.posY + this.rand.nextDouble() * 2, this.posZ), new Vector3(this.motionX, this.motionY, this.motionZ), new Object[]{});
+            GalacticraftCore.proxy.spawnParticle(this.spawnSmokeShort ? "whiteSmokeLargeLaunched" : "whiteSmokeLargeIdle", new Vector3(this.posX, this.posY + this.rand.nextDouble() * 2, this.posZ), new Vector3(this.motionX, this.motionY, this.motionZ), new Object[]{});
+            if (!this.spawnSmokeShort) {
+                GalacticraftCore.proxy.spawnParticle("whiteSmokeIdle", new Vector3(this.posX, this.posY + this.rand.nextDouble() * 2, this.posZ), new Vector3(this.motionX, this.motionY, this.motionZ), new Object[]{});
+                GalacticraftCore.proxy.spawnParticle("whiteSmokeLargeIdle", new Vector3(this.posX, this.posY + this.rand.nextDouble() * 2, this.posZ), new Vector3(this.motionX, this.motionY, this.motionZ), new Object[]{});
             }
             this.setExpired();
         }
@@ -89,8 +80,7 @@ public class ParticleLaunchFlame extends Particle
 
         this.particleGreen += 0.01F;
 
-        if (this.posY == this.prevPosY)
-        {
+        if (this.posY == this.prevPosY) {
             this.motionX *= 1.1D;
             this.motionZ *= 1.1D;
         }
@@ -101,18 +91,14 @@ public class ParticleLaunchFlame extends Particle
 
         final List<?> var3 = this.world.getEntitiesWithinAABB(Entity.class, this.getBoundingBox().grow(1.0D, 0.5D, 1.0D));
 
-        if (var3 != null)
-        {
-            for (int var4 = 0; var4 < var3.size(); ++var4)
-            {
+        if (var3 != null) {
+            for (int var4 = 0; var4 < var3.size(); ++var4) {
                 final Entity var5 = (Entity) var3.get(var4);
 
-                if (var5 instanceof EntityLivingBase)
-                {
-                    if (!var5.isDead && !var5.isBurning() && !var5.equals(this.ridingEntity))
-                    {
+                if (var5 instanceof EntityLivingBase) {
+                    if (!var5.isDead && !var5.isBurning() && !var5.equals(this.ridingEntity)) {
                         var5.setFire(3);
-                        GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_SET_ENTITY_FIRE, GCCoreUtil.getDimensionID(var5.world), new Object[] { var5.getEntityId() }));
+                        GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_SET_ENTITY_FIRE, GCCoreUtil.getDimensionID(var5.world), new Object[]{var5.getEntityId()}));
                     }
                 }
             }
@@ -120,8 +106,7 @@ public class ParticleLaunchFlame extends Particle
     }
 
     @Override
-    public int getBrightnessForRender(float par1)
-    {
+    public int getBrightnessForRender(float par1) {
         return 15728880;
     }
 

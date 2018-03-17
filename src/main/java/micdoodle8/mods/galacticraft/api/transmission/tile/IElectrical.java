@@ -7,8 +7,7 @@ import net.minecraft.util.EnumFacing;
  *
  * @author Calclavia, King_Lemming
  */
-public interface IElectrical extends IConnector
-{
+public interface IElectrical extends IConnector {
     /**
      * Adds electricity to an block. Returns the quantity of electricity that
      * was accepted. This should always return 0 if the block cannot be

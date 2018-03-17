@@ -17,23 +17,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
-public class GuiElectricIngotCompressor extends GuiContainerGC
-{
+public class GuiElectricIngotCompressor extends GuiContainerGC {
     private static final ResourceLocation electricFurnaceTexture = new ResourceLocation(Constants.ASSET_PREFIX, "textures/gui/electric_ingot_compressor.png");
     private TileEntityElectricIngotCompressor tileEntity;
     private GuiElementInfoRegion electricInfoRegion = new GuiElementInfoRegion(0, 0, 56, 9, null, 0, 0, this);
     private GuiElementInfoRegion processInfoRegion = new GuiElementInfoRegion(0, 0, 52, 25, null, 0, 0, this);
 
-    public GuiElectricIngotCompressor(InventoryPlayer par1InventoryPlayer, TileEntityElectricIngotCompressor tileEntity)
-    {
+    public GuiElectricIngotCompressor(InventoryPlayer par1InventoryPlayer, TileEntityElectricIngotCompressor tileEntity) {
         super(new ContainerElectricIngotCompressor(par1InventoryPlayer, tileEntity));
         this.tileEntity = tileEntity;
         this.ySize = 199;
     }
 
     @Override
-    public void initGui()
-    {
+    public void initGui() {
         super.initGui();
         this.electricInfoRegion.tooltipStrings = new ArrayList<String>();
         this.electricInfoRegion.xPosition = (this.width - this.xSize) / 2 + 17;
@@ -54,17 +51,13 @@ public class GuiElectricIngotCompressor extends GuiContainerGC
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int par1, int par2)
-    {
+    protected void drawGuiContainerForegroundLayer(int par1, int par2) {
         this.fontRenderer.drawString(this.tileEntity.getName(), 10, 6, 4210752);
         String displayText;
 
-        if (this.tileEntity.processTicks > 0)
-        {
+        if (this.tileEntity.processTicks > 0) {
             displayText = EnumColor.BRIGHT_GREEN + GCCoreUtil.translate("gui.status.running.name");
-        }
-        else
-        {
+        } else {
             displayText = EnumColor.ORANGE + GCCoreUtil.translate("gui.status.idle.name");
         }
 
@@ -82,8 +75,7 @@ public class GuiElectricIngotCompressor extends GuiContainerGC
      * items)
      */
     @Override
-    protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3)
-    {
+    protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3) {
         this.mc.renderEngine.bindTexture(GuiElectricIngotCompressor.electricFurnaceTexture);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
@@ -97,12 +89,9 @@ public class GuiElectricIngotCompressor extends GuiContainerGC
         EnergyDisplayHelper.getEnergyDisplayTooltip(this.tileEntity.getEnergyStoredGC(), this.tileEntity.getMaxEnergyStoredGC(), electricityDesc);
         this.electricInfoRegion.tooltipStrings = electricityDesc;
 
-        if (this.tileEntity.processTicks > 0)
-        {
+        if (this.tileEntity.processTicks > 0) {
             scale = (int) ((double) this.tileEntity.processTicks / (double) this.tileEntity.processTimeRequired * 100);
-        }
-        else
-        {
+        } else {
             scale = 0;
         }
 
@@ -111,21 +100,18 @@ public class GuiElectricIngotCompressor extends GuiContainerGC
         processDesc.add(GCCoreUtil.translate("gui.electric_compressor.desc.0") + ": " + scale + "%");
         this.processInfoRegion.tooltipStrings = processDesc;
 
-        if (this.tileEntity.processTicks > 0)
-        {
+        if (this.tileEntity.processTicks > 0) {
             scale = (int) ((double) this.tileEntity.processTicks / (double) this.tileEntity.processTimeRequired * 54);
             this.drawTexturedModalRect(containerWidth + 77, containerHeight + 38, 176, 13, scale, 17);
         }
 
-        if (this.tileEntity.getEnergyStoredGC() > 0)
-        {
+        if (this.tileEntity.getEnergyStoredGC() > 0) {
             scale = this.tileEntity.getScaledElecticalLevel(54);
             this.drawTexturedModalRect(containerWidth + 116 - 98, containerHeight + 96, 176, 30, scale, 7);
             this.drawTexturedModalRect(containerWidth + 4, containerHeight + 95, 176, 37, 11, 10);
         }
 
-        if (this.tileEntity.processTicks > this.tileEntity.processTimeRequired / 2)
-        {
+        if (this.tileEntity.processTicks > this.tileEntity.processTimeRequired / 2) {
             this.drawTexturedModalRect(containerWidth + 101, containerHeight + 30, 176, 0, 15, 13);
         }
     }

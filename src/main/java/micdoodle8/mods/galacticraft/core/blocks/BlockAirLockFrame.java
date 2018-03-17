@@ -25,43 +25,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class BlockAirLockFrame extends BlockAdvancedTile implements IShiftDescription, ISortableBlock
-{
-    private enum EnumAirLockType implements IStringSerializable
-    {
-        AIR_LOCK_FRAME(0, "air_lock_frame"),
-        AIR_LOCK_CONTROLLER(1, "air_lock_controller");
-
-        private final int meta;
-        private final String name;
-
-        EnumAirLockType(int meta, String name)
-        {
-            this.meta = meta;
-            this.name = name;
-        }
-
-        public int getMeta()
-        {
-            return this.meta;
-        }
-
-        public static EnumAirLockType byMetadata(int meta)
-        {
-            return values()[meta];
-        }
-
-        @Override
-        public String getName()
-        {
-            return this.name;
-        }
-    }
-
+public class BlockAirLockFrame extends BlockAdvancedTile implements IShiftDescription, ISortableBlock {
     public static final PropertyEnum<EnumAirLockType> AIR_LOCK_TYPE = PropertyEnum.create("airlocktype", EnumAirLockType.class);
 
-    public BlockAirLockFrame(String assetName)
-    {
+    public BlockAirLockFrame(String assetName) {
         super(Material.ROCK);
         this.setDefaultState(this.blockState.getBaseState().withProperty(AIR_LOCK_TYPE, EnumAirLockType.AIR_LOCK_FRAME));
         this.setHardness(1.0F);
@@ -70,63 +37,51 @@ public class BlockAirLockFrame extends BlockAdvancedTile implements IShiftDescri
     }
 
     @Override
-    public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list)
-    {
+    public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list) {
         list.add(new ItemStack(this, 1, EnumAirLockType.AIR_LOCK_FRAME.getMeta()));
         list.add(new ItemStack(this, 1, EnumAirLockType.AIR_LOCK_CONTROLLER.getMeta()));
     }
 
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
-    {
+    public CreativeTabs getCreativeTabToDisplayOn() {
         return GalacticraftCore.galacticraftBlocksTab;
     }
 
     @Override
-    public boolean canPlaceBlockAt(World worldIn, BlockPos pos)
-    {
+    public boolean canPlaceBlockAt(World worldIn, BlockPos pos) {
         return true;
     }
 
     @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
-    {
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
         super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
 
         TileEntity tile = worldIn.getTileEntity(pos);
 
-        if (tile instanceof TileEntityAirLockController && placer instanceof EntityPlayer)
-        {
+        if (tile instanceof TileEntityAirLockController && placer instanceof EntityPlayer) {
             ((TileEntityAirLockController) tile).ownerName = PlayerUtil.getName(((EntityPlayer) placer));
         }
     }
 
     @Override
-    public TileEntity createTileEntity(World world, IBlockState state)
-    {
-        if (((EnumAirLockType) state.getValue(AIR_LOCK_TYPE)).getMeta() == EnumAirLockType.AIR_LOCK_FRAME.getMeta())
-        {
+    public TileEntity createTileEntity(World world, IBlockState state) {
+        if (((EnumAirLockType) state.getValue(AIR_LOCK_TYPE)).getMeta() == EnumAirLockType.AIR_LOCK_FRAME.getMeta()) {
             return new TileEntityAirLock();
-        }
-        else
-        {
+        } else {
             return new TileEntityAirLockController();
         }
     }
 
     @Override
-    public boolean canConnectRedstone(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
-    {
+    public boolean canConnectRedstone(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
         return true;
     }
 
     @Override
-    public boolean onMachineActivated(World world, BlockPos pos, IBlockState state, EntityPlayer entityPlayer, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
-    {
+    public boolean onMachineActivated(World world, BlockPos pos, IBlockState state, EntityPlayer entityPlayer, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
         TileEntity tile = world.getTileEntity(pos);
 
-        if (((EnumAirLockType) state.getValue(AIR_LOCK_TYPE)).getMeta() == EnumAirLockType.AIR_LOCK_CONTROLLER.getMeta() && tile instanceof TileEntityAirLockController)
-        {
+        if (((EnumAirLockType) state.getValue(AIR_LOCK_TYPE)).getMeta() == EnumAirLockType.AIR_LOCK_CONTROLLER.getMeta() && tile instanceof TileEntityAirLockController) {
             entityPlayer.openGui(GalacticraftCore.instance, -1, world, pos.getX(), pos.getY(), pos.getZ());
             return true;
         }
@@ -135,12 +90,10 @@ public class BlockAirLockFrame extends BlockAdvancedTile implements IShiftDescri
     }
 
     @Override
-    public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
-    {
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
         TileEntity tile = worldIn.getTileEntity(pos);
 
-        if (tile instanceof TileEntityAirLockController)
-        {
+        if (tile instanceof TileEntityAirLockController) {
             ((TileEntityAirLockController) tile).unsealAirLock();
         }
 
@@ -148,44 +101,63 @@ public class BlockAirLockFrame extends BlockAdvancedTile implements IShiftDescri
     }
 
     @Override
-    public int damageDropped(IBlockState state)
-    {
+    public int damageDropped(IBlockState state) {
         return getMetaFromState(state);
     }
 
     @Override
-    public IBlockState getStateFromMeta(int meta)
-    {
+    public IBlockState getStateFromMeta(int meta) {
         return this.getDefaultState().withProperty(AIR_LOCK_TYPE, EnumAirLockType.byMetadata(meta));
     }
 
     @Override
-    public int getMetaFromState(IBlockState state)
-    {
+    public int getMetaFromState(IBlockState state) {
         return ((EnumAirLockType) state.getValue(AIR_LOCK_TYPE)).getMeta();
     }
 
     @Override
-    protected BlockStateContainer createBlockState()
-    {
+    protected BlockStateContainer createBlockState() {
         return new BlockStateContainer(this, AIR_LOCK_TYPE);
     }
 
     @Override
-    public String getShiftDescription(int itemDamage)
-    {
+    public String getShiftDescription(int itemDamage) {
         return GCCoreUtil.translate(this.getUnlocalizedName() + ".description");
     }
 
     @Override
-    public boolean showDescription(int itemDamage)
-    {
+    public boolean showDescription(int itemDamage) {
         return true;
     }
 
     @Override
-    public EnumSortCategoryBlock getCategory(int meta)
-    {
+    public EnumSortCategoryBlock getCategory(int meta) {
         return EnumSortCategoryBlock.MACHINE;
+    }
+
+    private enum EnumAirLockType implements IStringSerializable {
+        AIR_LOCK_FRAME(0, "air_lock_frame"),
+        AIR_LOCK_CONTROLLER(1, "air_lock_controller");
+
+        private final int meta;
+        private final String name;
+
+        EnumAirLockType(int meta, String name) {
+            this.meta = meta;
+            this.name = name;
+        }
+
+        public static EnumAirLockType byMetadata(int meta) {
+            return values()[meta];
+        }
+
+        public int getMeta() {
+            return this.meta;
+        }
+
+        @Override
+        public String getName() {
+            return this.name;
+        }
     }
 }

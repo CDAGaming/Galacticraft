@@ -7,10 +7,8 @@ import net.minecraft.item.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MethaneSynthesizerRecipeMaker
-{
-    public static List<MethaneSynthesizerRecipeWrapper> getRecipesList()
-    {
+public class MethaneSynthesizerRecipeMaker {
+    public static List<MethaneSynthesizerRecipeWrapper> getRecipesList() {
         List<MethaneSynthesizerRecipeWrapper> recipes = new ArrayList<>();
 
         recipes.add(new MethaneSynthesizerRecipeWrapper(new ItemStack(AsteroidsItems.atmosphericValve), new ItemStack(AsteroidsItems.methaneCanister, 1, 1)));

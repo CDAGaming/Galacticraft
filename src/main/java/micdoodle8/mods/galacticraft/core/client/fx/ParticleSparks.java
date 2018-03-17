@@ -5,12 +5,10 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 
-public class ParticleSparks extends Particle
-{
+public class ParticleSparks extends Particle {
     float smokeParticleScale;
 
-    public ParticleSparks(World par1World, double par2, double par4, double par6, double par8, double par12)
-    {
+    public ParticleSparks(World par1World, double par2, double par4, double par6, double par8, double par12) {
         super(par1World, par2, par4, par6, 0.0D, 0.0D, 0.0D);
         this.motionX *= 0.10000000149011612D;
         this.motionY *= 0.10000000149011612D;
@@ -30,17 +28,14 @@ public class ParticleSparks extends Particle
     }
 
     @Override
-    public void renderParticle(BufferBuilder worldRendererIn, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ)
-    {
+    public void renderParticle(BufferBuilder worldRendererIn, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
         float var8 = (this.particleAge + partialTicks) / this.particleMaxAge * 32.0F;
 
-        if (var8 < 0.0F)
-        {
+        if (var8 < 0.0F) {
             var8 = 0.0F;
         }
 
-        if (var8 > 1.0F)
-        {
+        if (var8 > 1.0F) {
             var8 = 1.0F;
         }
 
@@ -49,22 +44,19 @@ public class ParticleSparks extends Particle
     }
 
     @Override
-    public void onUpdate()
-    {
+    public void onUpdate() {
         this.prevPosX = this.posX;
         this.prevPosY = this.posY;
         this.prevPosZ = this.posZ;
 
-        if (this.particleAge++ >= this.particleMaxAge)
-        {
+        if (this.particleAge++ >= this.particleMaxAge) {
             this.setExpired();
         }
 
         this.setParticleTextureIndex(7 - this.particleAge * 8 / this.particleMaxAge);
         this.move(this.motionX, this.motionY, this.motionZ);
 
-        if (this.posY == this.prevPosY)
-        {
+        if (this.posY == this.prevPosY) {
             this.motionX *= 1.1D;
             this.motionZ *= 1.1D;
         }

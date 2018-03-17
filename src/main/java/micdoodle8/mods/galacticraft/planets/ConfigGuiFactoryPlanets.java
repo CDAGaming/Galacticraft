@@ -9,36 +9,29 @@ import net.minecraftforge.fml.client.config.GuiConfig;
 
 import java.util.Set;
 
-public class ConfigGuiFactoryPlanets implements IModGuiFactory
-{
-    public static class PlanetsConfigGUI extends GuiConfig
-    {
-        public PlanetsConfigGUI(GuiScreen parent)
-        {
-            super(parent, GalacticraftPlanets.getConfigElements(), Constants.MOD_ID_PLANETS, false, false, GCCoreUtil.translate("gc.configgui.planets.title"));
-        }
-    }
-
+public class ConfigGuiFactoryPlanets implements IModGuiFactory {
     @Override
-    public void initialize(Minecraft minecraftInstance)
-    {
+    public void initialize(Minecraft minecraftInstance) {
 
     }
 
     @Override
-    public Set<RuntimeOptionCategoryElement> runtimeGuiCategories()
-    {
+    public Set<RuntimeOptionCategoryElement> runtimeGuiCategories() {
         return null;
     }
 
-	public GuiScreen createConfigGui(GuiScreen arg0)
-	{
-		// TODO  Forge 2282 addition!
-		return new PlanetsConfigGUI(arg0);
-	}
+    public GuiScreen createConfigGui(GuiScreen arg0) {
+        // TODO  Forge 2282 addition!
+        return new PlanetsConfigGUI(arg0);
+    }
 
-	public boolean hasConfigGui()
-	{
-		return true;
-	}
+    public boolean hasConfigGui() {
+        return true;
+    }
+
+    public static class PlanetsConfigGUI extends GuiConfig {
+        public PlanetsConfigGUI(GuiScreen parent) {
+            super(parent, GalacticraftPlanets.getConfigElements(), Constants.MOD_ID_PLANETS, false, false, GCCoreUtil.translate("gc.configgui.planets.title"));
+        }
+    }
 }

@@ -1,5 +1,7 @@
 {
-    "variants": {
-        "normal": { "model": "galacticraftcore:detector_model" }
+  "variants": {
+    "normal": {
+      "model": "galacticraftcore:detector_model"
     }
+  }
 }

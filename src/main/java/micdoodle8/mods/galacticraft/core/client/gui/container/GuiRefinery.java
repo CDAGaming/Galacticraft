@@ -22,8 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
-public class GuiRefinery extends GuiContainerGC
-{
+public class GuiRefinery extends GuiContainerGC {
     private static final ResourceLocation refineryTexture = new ResourceLocation(Constants.ASSET_PREFIX, "textures/gui/refinery.png");
 
     private final TileEntityRefinery tileEntity;
@@ -34,16 +33,14 @@ public class GuiRefinery extends GuiContainerGC
     private GuiElementInfoRegion oilTankRegion = new GuiElementInfoRegion((this.width - this.xSize) / 2 + 7, (this.height - this.ySize) / 2 + 28, 16, 38, new ArrayList<String>(), this.width, this.height, this);
     private GuiElementInfoRegion electricInfoRegion = new GuiElementInfoRegion((this.width - this.xSize) / 2 + 62, (this.height - this.ySize) / 2 + 16, 56, 9, new ArrayList<String>(), this.width, this.height, this);
 
-    public GuiRefinery(InventoryPlayer par1InventoryPlayer, TileEntityRefinery tileEntity)
-    {
+    public GuiRefinery(InventoryPlayer par1InventoryPlayer, TileEntityRefinery tileEntity) {
         super(new ContainerRefinery(par1InventoryPlayer, tileEntity, FMLClientHandler.instance().getClient().player));
         this.tileEntity = tileEntity;
         this.ySize = 168;
     }
 
     @Override
-    public void initGui()
-    {
+    public void initGui() {
         super.initGui();
         List<String> oilTankDesc = new ArrayList<String>();
         oilTankDesc.add(GCCoreUtil.translate("gui.oil_tank.desc.0"));
@@ -90,27 +87,23 @@ public class GuiRefinery extends GuiContainerGC
     }
 
     @Override
-    protected void actionPerformed(GuiButton par1GuiButton)
-    {
-        switch (par1GuiButton.id)
-        {
-        case 0:
-            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_UPDATE_DISABLEABLE_BUTTON, GCCoreUtil.getDimensionID(this.mc.world), new Object[] { this.tileEntity.getPos(), 0 }));
-            break;
+    protected void actionPerformed(GuiButton par1GuiButton) {
+        switch (par1GuiButton.id) {
+            case 0:
+                GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_UPDATE_DISABLEABLE_BUTTON, GCCoreUtil.getDimensionID(this.mc.world), new Object[]{this.tileEntity.getPos(), 0}));
+                break;
         }
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int par1, int par2)
-    {
+    protected void drawGuiContainerForegroundLayer(int par1, int par2) {
         GCCoreUtil.drawStringCentered(this.tileEntity.getName(), this.xSize / 2, 5, 4210752, this.fontRenderer);
         String displayText = "";
         int yOffset = -18;
 
         String missingInput = null;
-        if (this.tileEntity.oilTank.getFluid() == null || this.tileEntity.oilTank.getFluidAmount() == 0)
-        {
-            missingInput= EnumColor.RED + GCCoreUtil.translate("gui.status.nooil.name");
+        if (this.tileEntity.oilTank.getFluid() == null || this.tileEntity.oilTank.getFluidAmount() == 0) {
+            missingInput = EnumColor.RED + GCCoreUtil.translate("gui.status.nooil.name");
         }
         String activeString = this.tileEntity.canProcess() ? EnumColor.BRIGHT_GREEN + GCCoreUtil.translate("gui.status.refining.name") : null;
         displayText = this.tileEntity.getGUIstatus(missingInput, activeString, false);
@@ -125,8 +118,7 @@ public class GuiRefinery extends GuiContainerGC
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3)
-    {
+    protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3) {
         this.mc.renderEngine.bindTexture(GuiRefinery.refineryTexture);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
@@ -161,8 +153,7 @@ public class GuiRefinery extends GuiContainerGC
         EnergyDisplayHelper.getEnergyDisplayTooltip(this.tileEntity.getEnergyStoredGC(), this.tileEntity.getMaxEnergyStoredGC(), electricityDesc);
         this.electricInfoRegion.tooltipStrings = electricityDesc;
 
-        if (this.tileEntity.getEnergyStoredGC() > 0)
-        {
+        if (this.tileEntity.getEnergyStoredGC() > 0) {
             this.drawTexturedModalRect(containerWidth + 49, containerHeight + 16, 208, 0, 11, 10);
         }
 

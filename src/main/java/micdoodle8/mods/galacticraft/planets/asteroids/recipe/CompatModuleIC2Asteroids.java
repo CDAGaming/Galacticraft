@@ -8,12 +8,10 @@ import micdoodle8.mods.galacticraft.planets.asteroids.items.AsteroidsItems;
 import micdoodle8.mods.galacticraft.planets.venus.VenusBlocks;
 import net.minecraft.item.ItemStack;
 
-public class CompatModuleIC2Asteroids
-{
-    public static void addIC2Recipes(ItemStack titaniumIngot, ItemStack titaniumDust)
-    {
+public class CompatModuleIC2Asteroids {
+    public static void addIC2Recipes(ItemStack titaniumIngot, ItemStack titaniumDust) {
         // Titanium dust from small dust
-        RecipeUtil.addRecipe(new ItemStack(AsteroidsItems.basicItem, 1, 9), new Object[] { "XXX", "XXX", "XXX", 'X', new ItemStack(GCItems.ic2compat, 1, 7) });
+        RecipeUtil.addRecipe(new ItemStack(AsteroidsItems.basicItem, 1, 9), new Object[]{"XXX", "XXX", "XXX", 'X', new ItemStack(GCItems.ic2compat, 1, 7)});
         Recipes.compressor.addRecipe(Recipes.inputFactory.forStack(new ItemStack(GCItems.ic2compat, 1, 7), 9), null, false, new ItemStack(AsteroidsItems.basicItem, 1, 9));
         Recipes.macerator.addRecipe(Recipes.inputFactory.forStack(titaniumIngot, 1), null, false, new ItemStack(AsteroidsItems.basicItem, 1, 9));
         Recipes.macerator.addRecipe(Recipes.inputFactory.forStack(new ItemStack(AsteroidsItems.basicItem, 1, 4), 1), null, false, new ItemStack(AsteroidsItems.basicItem, 1, 9));

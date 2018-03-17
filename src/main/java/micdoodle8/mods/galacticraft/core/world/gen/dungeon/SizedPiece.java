@@ -4,18 +4,15 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.gen.structure.template.TemplateManager;
 
-public abstract class SizedPiece extends DirectionalPiece
-{
+public abstract class SizedPiece extends DirectionalPiece {
     protected int sizeX;
     protected int sizeY;
     protected int sizeZ;
 
-    public SizedPiece()
-    {
+    public SizedPiece() {
     }
 
-    public SizedPiece(DungeonConfiguration configuration, int sizeX, int sizeY, int sizeZ, EnumFacing direction)
-    {
+    public SizedPiece(DungeonConfiguration configuration, int sizeX, int sizeY, int sizeZ, EnumFacing direction) {
         super(configuration, direction);
         this.sizeX = sizeX;
         this.sizeY = sizeY;
@@ -23,8 +20,7 @@ public abstract class SizedPiece extends DirectionalPiece
     }
 
     @Override
-    protected void writeStructureToNBT(NBTTagCompound tagCompound)
-    {
+    protected void writeStructureToNBT(NBTTagCompound tagCompound) {
         super.writeStructureToNBT(tagCompound);
 
         tagCompound.setInteger("sizeX", this.sizeX);
@@ -33,8 +29,7 @@ public abstract class SizedPiece extends DirectionalPiece
     }
 
     @Override
-    protected void readStructureFromNBT(NBTTagCompound nbt, TemplateManager manager)
-    {
+    protected void readStructureFromNBT(NBTTagCompound nbt, TemplateManager manager) {
         super.readStructureFromNBT(nbt, manager);
 
         this.sizeX = nbt.getInteger("sizeX");
@@ -42,18 +37,15 @@ public abstract class SizedPiece extends DirectionalPiece
         this.sizeZ = nbt.getInteger("sizeZ");
     }
 
-    public int getSizeX()
-    {
+    public int getSizeX() {
         return sizeX;
     }
 
-    public int getSizeY()
-    {
+    public int getSizeY() {
         return sizeY;
     }
 
-    public int getSizeZ()
-    {
+    public int getSizeZ() {
         return sizeZ;
     }
 }

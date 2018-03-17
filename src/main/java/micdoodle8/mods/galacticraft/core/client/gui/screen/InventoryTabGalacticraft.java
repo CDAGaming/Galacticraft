@@ -10,23 +10,19 @@ import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.client.FMLClientHandler;
 
-public class InventoryTabGalacticraft extends AbstractTab
-{
-    public InventoryTabGalacticraft()
-    {
+public class InventoryTabGalacticraft extends AbstractTab {
+    public InventoryTabGalacticraft() {
         super(0, 0, 0, new ItemStack(GCItems.oxMask));
     }
 
     @Override
-    public void onTabClicked()
-    {
-        GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_OPEN_EXTENDED_INVENTORY, GCCoreUtil.getDimensionID(FMLClientHandler.instance().getClient().world), new Object[] {}));
+    public void onTabClicked() {
+        GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_OPEN_EXTENDED_INVENTORY, GCCoreUtil.getDimensionID(FMLClientHandler.instance().getClient().world), new Object[]{}));
         ClientProxyCore.playerClientHandler.onBuild(0, FMLClientHandler.instance().getClientPlayerEntity());
     }
 
     @Override
-    public boolean shouldAddToList()
-    {
+    public boolean shouldAddToList() {
         return true;
     }
 }

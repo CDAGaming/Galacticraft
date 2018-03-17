@@ -9,20 +9,7 @@ import org.lwjgl.input.Mouse;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GuiElementGradientList extends Gui
-{
-    public static class ListElement
-    {
-        public String value;
-        public int color;
-
-        public ListElement(String value, int color)
-        {
-            this.value = value;
-            this.color = color;
-        }
-    }
-
+public class GuiElementGradientList extends Gui {
     public static final int BUTTON_HEIGHT = 20;
     public int width;
     public int height;
@@ -34,9 +21,7 @@ public class GuiElementGradientList extends Gui
     private boolean sliderGrabbed;
     private boolean sliderEnabled;
     private int selectedIndex = -1;
-
-    public GuiElementGradientList(int xPos, int yPos, int width, int height)
-    {
+    public GuiElementGradientList(int xPos, int yPos, int width, int height) {
         this.xPosition = xPos;
         this.yPosition = yPos;
         this.width = width;
@@ -44,61 +29,44 @@ public class GuiElementGradientList extends Gui
         this.sliderPos = this.yPosition + 1;
     }
 
-    public void updateListContents(List<ListElement> newContents)
-    {
+    public void updateListContents(List<ListElement> newContents) {
         this.listContents = newContents;
         this.sliderEnabled = this.listContents.size() * GuiElementGradientList.BUTTON_HEIGHT > this.height;
-        if (this.selectedIndex >= this.listContents.size())
-        {
+        if (this.selectedIndex >= this.listContents.size()) {
             this.selectedIndex = -1;
         }
     }
 
-    public void draw(int mousePosX, int mousePosY)
-    {
-        if (this.sliderEnabled)
-        {
-            if (this.sliderGrabbed || mousePosX >= this.xPosition + this.width - 9 && mousePosX < this.xPosition + this.width && mousePosY >= this.yPosition && mousePosY < this.yPosition + this.height)
-            {
-                if (Mouse.isButtonDown(0))
-                {
+    public void draw(int mousePosX, int mousePosY) {
+        if (this.sliderEnabled) {
+            if (this.sliderGrabbed || mousePosX >= this.xPosition + this.width - 9 && mousePosX < this.xPosition + this.width && mousePosY >= this.yPosition && mousePosY < this.yPosition + this.height) {
+                if (Mouse.isButtonDown(0)) {
                     this.sliderGrabbed = true;
 
-                    if (this.lastMousePosY > 0)
-                    {
-                        if (mousePosY >= this.sliderPos && mousePosY < this.sliderPos + 15)
-                        {
+                    if (this.lastMousePosY > 0) {
+                        if (mousePosY >= this.sliderPos && mousePosY < this.sliderPos + 15) {
                             int deltaY = this.lastMousePosY - this.sliderPos;
                             this.sliderPos = mousePosY - deltaY;
-                        }
-                        else
-                        {
+                        } else {
                             this.sliderPos = mousePosY - 7;
                         }
                     }
 
                     this.lastMousePosY = mousePosY;
-                }
-                else
-                {
+                } else {
                     this.sliderGrabbed = false;
                 }
-            }
-            else
-            {
+            } else {
                 this.lastMousePosY = 0;
             }
         }
 
-        if (Mouse.isButtonDown(0))
-        {
-            if (mousePosX >= this.xPosition && mousePosX < this.xPosition + this.width - 10 && mousePosY >= this.yPosition && mousePosY < this.yPosition + this.height)
-            {
+        if (Mouse.isButtonDown(0)) {
+            if (mousePosX >= this.xPosition && mousePosX < this.xPosition + this.width - 10 && mousePosY >= this.yPosition && mousePosY < this.yPosition + this.height) {
                 int clickPosY = mousePosY - this.yPosition + (int) Math.floor((this.listContents.size() * GuiElementGradientList.BUTTON_HEIGHT - this.height) * this.getSliderPercentage());
                 this.selectedIndex = clickPosY / GuiElementGradientList.BUTTON_HEIGHT;
 
-                if (this.selectedIndex < 0 || this.selectedIndex >= this.listContents.size())
-                {
+                if (this.selectedIndex < 0 || this.selectedIndex >= this.listContents.size()) {
                     this.selectedIndex = -1;
                 }
             }
@@ -126,17 +94,14 @@ public class GuiElementGradientList extends Gui
         int currentDrawHeight = this.yPosition + 1 - (int) Math.floor((this.listContents.size() * GuiElementGradientList.BUTTON_HEIGHT - this.height) * this.getSliderPercentage());
         FontRenderer fontRenderer = FMLClientHandler.instance().getClient().fontRenderer;
 
-        for (int i = 0; i < this.listContents.size(); i++)
-        {
+        for (int i = 0; i < this.listContents.size(); i++) {
             ListElement displayButton = this.listContents.get(i);
 
-            if (displayButton != null && displayButton.value != null && !displayButton.value.isEmpty())
-            {
+            if (displayButton != null && displayButton.value != null && !displayButton.value.isEmpty()) {
                 int yCoord0 = currentDrawHeight;
                 int yCoord1 = currentDrawHeight + GuiElementGradientList.BUTTON_HEIGHT - 1;
 
-                if (yCoord1 > this.yPosition && yCoord0 < this.yPosition + this.height)
-                {
+                if (yCoord1 > this.yPosition && yCoord0 < this.yPosition + this.height) {
                     yCoord0 = Math.max(this.yPosition + 1, yCoord0);
                     yCoord1 = Math.min(this.yPosition + this.height - 1, yCoord1);
 
@@ -144,8 +109,7 @@ public class GuiElementGradientList extends Gui
 
                     Gui.drawRect(this.xPosition + 1, yCoord0, this.xPosition + this.width - 10, yCoord1, color);
 
-                    if (currentDrawHeight + GuiElementGradientList.BUTTON_HEIGHT / 2 - fontRenderer.FONT_HEIGHT / 2 > this.yPosition && currentDrawHeight + GuiElementGradientList.BUTTON_HEIGHT / 2 + fontRenderer.FONT_HEIGHT / 2 < this.yPosition + this.height)
-                    {
+                    if (currentDrawHeight + GuiElementGradientList.BUTTON_HEIGHT / 2 - fontRenderer.FONT_HEIGHT / 2 > this.yPosition && currentDrawHeight + GuiElementGradientList.BUTTON_HEIGHT / 2 + fontRenderer.FONT_HEIGHT / 2 < this.yPosition + this.height) {
                         fontRenderer.drawString(displayButton.value, this.xPosition + (this.width - 10) / 2 - fontRenderer.getStringWidth(displayButton.value) / 2, currentDrawHeight + GuiElementGradientList.BUTTON_HEIGHT / 2 - fontRenderer.FONT_HEIGHT / 2, displayButton.color);
                     }
 
@@ -156,27 +120,32 @@ public class GuiElementGradientList extends Gui
         }
     }
 
-    public void update()
-    {
+    public void update() {
     }
 
-    private float getSliderPercentage()
-    {
-        if (!this.sliderEnabled)
-        {
+    private float getSliderPercentage() {
+        if (!this.sliderEnabled) {
             return 0.0F;
         }
 
         return (this.sliderPos - this.yPosition) / (float) (this.height - 15);
     }
 
-    public ListElement getSelectedElement()
-    {
-        if (this.selectedIndex == -1)
-        {
+    public ListElement getSelectedElement() {
+        if (this.selectedIndex == -1) {
             return null;
         }
 
         return this.listContents.get(this.selectedIndex);
+    }
+
+    public static class ListElement {
+        public String value;
+        public int color;
+
+        public ListElement(String value, int color) {
+            this.value = value;
+            this.color = color;
+        }
     }
 }

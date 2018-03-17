@@ -30,138 +30,106 @@ import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
 import org.lwjgl.input.Keyboard;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
-import javax.annotation.Nullable;
-
-public class ItemVolcanicPickaxe extends ItemPickaxe implements ISortableItem, IShiftDescription
-{
-    public ItemVolcanicPickaxe(String assetName)
-    {
+public class ItemVolcanicPickaxe extends ItemPickaxe implements ISortableItem, IShiftDescription {
+    public ItemVolcanicPickaxe(String assetName) {
         super(VenusItems.TOOL_VOLCANIC);
         this.setUnlocalizedName(assetName);
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> info, ITooltipFlag flagIn)
-    {
-        if (this.showDescription(stack.getItemDamage()))
-        {
-            if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
-            {
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> info, ITooltipFlag flagIn) {
+        if (this.showDescription(stack.getItemDamage())) {
+            if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
                 info.addAll(FMLClientHandler.instance().getClient().fontRenderer.listFormattedStringToWidth(this.getShiftDescription(stack.getItemDamage()), 150));
-            }
-            else
-            {
+            } else {
                 info.add(GCCoreUtil.translateWithFormat("item_desc.shift.name", GameSettings.getKeyDisplayString(FMLClientHandler.instance().getClient().gameSettings.keyBindSneak.getKeyCode())));
             }
         }
     }
 
     @Override
-    public CreativeTabs getCreativeTab()
-    {
+    public CreativeTabs getCreativeTab() {
         return GalacticraftCore.galacticraftItemsTab;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public EnumRarity getRarity(ItemStack par1ItemStack)
-    {
+    public EnumRarity getRarity(ItemStack par1ItemStack) {
         return ClientProxyCore.galacticraftItem;
     }
 
     @Override
-    public EnumSortCategoryItem getCategory(int meta)
-    {
+    public EnumSortCategoryItem getCategory(int meta) {
         return EnumSortCategoryItem.TOOLS;
     }
 
     @Override
-    public boolean onBlockDestroyed(ItemStack stack, World worldIn, IBlockState state, BlockPos pos, EntityLivingBase entityLiving)
-    {
+    public boolean onBlockDestroyed(ItemStack stack, World worldIn, IBlockState state, BlockPos pos, EntityLivingBase entityLiving) {
         boolean ret = super.onBlockDestroyed(stack, worldIn, state, pos, entityLiving);
 
-        if (!(entityLiving instanceof EntityPlayer))
-        {
+        if (!(entityLiving instanceof EntityPlayer)) {
             return ret;
         }
 
         EntityPlayer player = (EntityPlayer) entityLiving;
         EnumFacing facing = entityLiving.getHorizontalFacing();
 
-        if (entityLiving.rotationPitch < -45.0F)
-        {
+        if (entityLiving.rotationPitch < -45.0F) {
             facing = EnumFacing.UP;
-        }
-        else if (entityLiving.rotationPitch > 45.0F)
-        {
+        } else if (entityLiving.rotationPitch > 45.0F) {
             facing = EnumFacing.DOWN;
         }
 
         boolean yAxis = facing.getAxis() == EnumFacing.Axis.Y;
         boolean xAxis = facing.getAxis() == EnumFacing.Axis.X;
-        
-        for (int i = -1; i <= 1; ++i)
-        {
-            for (int j = -1; j <= 1 && !stack.isEmpty(); ++j)
-            {
-                if (i == 0 && j == 0)
-                {
+
+        for (int i = -1; i <= 1; ++i) {
+            for (int j = -1; j <= 1 && !stack.isEmpty(); ++j) {
+                if (i == 0 && j == 0) {
                     continue;
                 }
 
                 BlockPos pos1;
-                if (yAxis)
-                {
+                if (yAxis) {
                     pos1 = pos.add(i, 0, j);
-                }
-                else if (xAxis)
-                {
+                } else if (xAxis) {
                     pos1 = pos.add(0, i, j);
-                }
-                else
-                {
+                } else {
                     pos1 = pos.add(i, j, 0);
                 }
 
                 //:Replicate logic of PlayerInteractionManager.tryHarvestBlock(pos1)
                 IBlockState state1 = worldIn.getBlockState(pos1);
                 float f = state1.getBlockHardness(worldIn, pos);
-                if (f >= 0F)
-                {
+                if (f >= 0F) {
                     BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(worldIn, pos1, state1, player);
                     MinecraftForge.EVENT_BUS.post(event);
-                    if (!event.isCanceled())
-                    {
-                        Block block = state1.getBlock(); 
-                        if ((block instanceof BlockCommandBlock || block instanceof BlockStructure) && !player.canUseCommandBlock())
-                        {
+                    if (!event.isCanceled()) {
+                        Block block = state1.getBlock();
+                        if ((block instanceof BlockCommandBlock || block instanceof BlockStructure) && !player.canUseCommandBlock()) {
                             worldIn.notifyBlockUpdate(pos1, state1, state1, 3);
                             continue;
                         }
                         TileEntity tileentity = worldIn.getTileEntity(pos1);
-                        if (tileentity != null)
-                        {
+                        if (tileentity != null) {
                             Packet<?> pkt = tileentity.getUpdatePacket();
-                            if (pkt != null)
-                            {
-                                ((EntityPlayerMP)player).connection.sendPacket(pkt);
+                            if (pkt != null) {
+                                ((EntityPlayerMP) player).connection.sendPacket(pkt);
                             }
                         }
-    
+
                         boolean canHarvest = block.canHarvestBlock(worldIn, pos1, player);
                         boolean destroyed = block.removedByPlayer(state1, worldIn, pos1, player, canHarvest);
-                        if (destroyed)
-                        {
+                        if (destroyed) {
                             block.onBlockDestroyedByPlayer(worldIn, pos1, state1);
                         }
-                        if (canHarvest && destroyed)
-                        {
+                        if (canHarvest && destroyed) {
                             block.harvestBlock(worldIn, player, pos1, state1, tileentity, stack);
                             stack.damageItem(1, player);
                         }
@@ -174,14 +142,12 @@ public class ItemVolcanicPickaxe extends ItemPickaxe implements ISortableItem, I
     }
 
     @Override
-    public String getShiftDescription(int meta)
-    {
+    public String getShiftDescription(int meta) {
         return GCCoreUtil.translate("item.volcanic_pickaxe.description");
     }
 
     @Override
-    public boolean showDescription(int meta)
-    {
+    public boolean showDescription(int meta) {
         return true;
     }
 }

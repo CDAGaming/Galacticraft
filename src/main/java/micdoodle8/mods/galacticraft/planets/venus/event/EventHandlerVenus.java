@@ -13,20 +13,14 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.ArrayList;
 
-public class EventHandlerVenus
-{
+public class EventHandlerVenus {
     @SubscribeEvent
-    public void onWorldTick(TickEvent.WorldTickEvent event)
-    {
-        if (event.side == Side.SERVER && event.phase == Phase.START)
-        {
+    public void onWorldTick(TickEvent.WorldTickEvent event) {
+        if (event.side == Side.SERVER && event.phase == Phase.START) {
             ArrayList<Entity> list = new ArrayList<>(event.world.loadedEntityList);
-            for (Entity e : list)
-            {
-                if (e.ticksExisted % 20 == 1 && e instanceof EntityLivingBase)
-                {
-                    if (event.world.isMaterialInBB(e.getEntityBoundingBox().grow(-0.1D, -0.4D, -0.1D), VenusModule.acidMaterial))
-                    {
+            for (Entity e : list) {
+                if (e.ticksExisted % 20 == 1 && e instanceof EntityLivingBase) {
+                    if (event.world.isMaterialInBB(e.getEntityBoundingBox().grow(-0.1D, -0.4D, -0.1D), VenusModule.acidMaterial)) {
                         e.attackEntityFrom(DamageSourceGC.acid, 3.0F);
                     }
                 }
@@ -35,14 +29,10 @@ public class EventHandlerVenus
     }
 
     @SubscribeEvent
-    public void onThermalArmorEvent(GCPlayerHandler.ThermalArmorEvent event)
-    {
-        if (event.armorStack.isEmpty())
-        {
+    public void onThermalArmorEvent(GCPlayerHandler.ThermalArmorEvent event) {
+        if (event.armorStack.isEmpty()) {
             event.setArmorAddResult(GCPlayerHandler.ThermalArmorEvent.ArmorAddResult.REMOVE);
-        }
-        else if (event.armorStack.getItem() == VenusItems.thermalPaddingTier2 && event.armorStack.getItemDamage() == event.armorIndex)
-        {
+        } else if (event.armorStack.getItem() == VenusItems.thermalPaddingTier2 && event.armorStack.getItemDamage() == event.armorIndex) {
             event.setArmorAddResult(GCPlayerHandler.ThermalArmorEvent.ArmorAddResult.ADD);
         }
     }

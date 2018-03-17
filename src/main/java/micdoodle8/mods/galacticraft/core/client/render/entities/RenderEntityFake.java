@@ -9,27 +9,22 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class RenderEntityFake extends Render<EntityCelestialFake>
-{
-    public RenderEntityFake(RenderManager manager)
-    {
+public class RenderEntityFake extends Render<EntityCelestialFake> {
+    public RenderEntityFake(RenderManager manager) {
         super(manager);
     }
 
     @Override
-    protected ResourceLocation getEntityTexture(EntityCelestialFake par1Entity)
-    {
+    protected ResourceLocation getEntityTexture(EntityCelestialFake par1Entity) {
         return null;
     }
 
     @Override
-    public void doRender(EntityCelestialFake par1Entity, double par2, double par4, double par6, float par8, float par9)
-    {
+    public void doRender(EntityCelestialFake par1Entity, double par2, double par4, double par6, float par8, float par9) {
     }
-    
+
     @Override
-    public boolean shouldRender(EntityCelestialFake lander, ICamera camera, double camX, double camY, double camZ)
-    {
+    public boolean shouldRender(EntityCelestialFake lander, ICamera camera, double camX, double camY, double camZ) {
         return false;
     }
 }

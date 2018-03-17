@@ -7,8 +7,7 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.Random;
 
-public class BaseConfiguration
-{
+public class BaseConfiguration {
     private final static int HANGAR_AIRLOCK_HEIGHT = 6;
     private final static int HANGAR_AIRLOCK_WIDTH = 7;
     private int yPosition;
@@ -21,12 +20,10 @@ public class BaseConfiguration
     private int[] randomRoomTypes;
     private EnumRoomType[] roomTypes = EnumRoomType.values();
 
-    public BaseConfiguration()
-    {
+    public BaseConfiguration() {
     }
 
-    public BaseConfiguration(int yPosition, Random rand)
-    {
+    public BaseConfiguration(int yPosition, Random rand) {
         BaseDeck.EnumBaseType[] types = BaseDeck.EnumBaseType.values();
         this.yPosition = yPosition - 2 + rand.nextInt(5);
         this.baseType = rand.nextInt(types.length);
@@ -38,61 +35,50 @@ public class BaseConfiguration
         this.createRandomRoomList(rand);
     }
 
-    private void createRandomRoomList(Random rand)
-    {
+    private void createRandomRoomList(Random rand) {
         int range = this.roomTypes.length;
-        int size =  this.hangar ? 8 : this.roomsNo * 6;
+        int size = this.hangar ? 8 : this.roomsNo * 6;
         this.randomRoomTypes = new int[size];
-        for (int i = 0; i < size; i++)
-        {
+        for (int i = 0; i < size; i++) {
             this.randomRoomTypes[i] = i % range;
         }
         int index, temp;
-        for (int i = size - 1; i > 0; i--)
-        {
+        for (int i = size - 1; i > 0; i--) {
             index = rand.nextInt(i + 1);
             if (i == index) continue;
             temp = this.randomRoomTypes[index];
             this.randomRoomTypes[index] = this.randomRoomTypes[i];
             this.randomRoomTypes[i] = temp;
         }
-        
+
         //Make sure there's a Cargo Loader on lower tier (50/50 chance this causes one other room to be missed completely, that's OK!)
-        if (this.hangar)
-        {
+        if (this.hangar) {
             boolean storeFound = false;
-            for (int i = 0; i < 4; i++)
-            {
-                if (this.randomRoomTypes[i] == EnumRoomType.STORE.ordinal())
-                {
+            for (int i = 0; i < 4; i++) {
+                if (this.randomRoomTypes[i] == EnumRoomType.STORE.ordinal()) {
                     storeFound = true;
                     break;
                 }
             }
-            if (!storeFound)
-            {
+            if (!storeFound) {
                 this.randomRoomTypes[rand.nextInt(4)] = EnumRoomType.STORE.ordinal();
             }
         }
     }
 
-    public void writeToNBT(NBTTagCompound tagCompound)
-    {
+    public void writeToNBT(NBTTagCompound tagCompound) {
         tagCompound.setInteger("yPos", this.yPosition);
         tagCompound.setInteger("dT", this.baseType + (this.hangar ? 16 : 0));
         tagCompound.setInteger("rmD", this.roomDepth);
         tagCompound.setInteger("rmN", this.roomsNo);
     }
 
-    public void readFromNBT(NBTTagCompound tagCompound)
-    {
-        try
-        {
+    public void readFromNBT(NBTTagCompound tagCompound) {
+        try {
             this.yPosition = tagCompound.getInteger("yPos");
             this.baseType = tagCompound.getInteger("dT");
             this.hangar = false;
-            if (this.baseType >= 16)
-            {
+            if (this.baseType >= 16) {
                 this.hangar = true;
                 this.baseType -= 16;
             }
@@ -100,56 +86,45 @@ public class BaseConfiguration
             this.roomsNo = tagCompound.getInteger("rmN");
             this.roomHeight = BaseDeck.EnumBaseType.values()[this.baseType].height;
             this.wallBlock = BaseDeck.EnumBaseType.values()[this.baseType].wall;
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             System.err.println("Failed to read Abandoned Base configuration from NBT");
             System.err.println(tagCompound.toString());
         }
     }
 
-    public int getYPosition()
-    {
+    public int getYPosition() {
         return this.yPosition;
     }
 
-    public IBlockState getWallBlock()
-    {
+    public IBlockState getWallBlock() {
         return this.wallBlock;
     }
 
-    public int getRoomHeight()
-    {
+    public int getRoomHeight() {
         return hangar ? HANGAR_AIRLOCK_HEIGHT : this.roomHeight;
     }
 
-    public int getRoomDepth()
-    {
+    public int getRoomDepth() {
         return this.roomDepth;
     }
 
-    public EnumBaseType getDeckType()
-    {
+    public EnumBaseType getDeckType() {
         return BaseDeck.EnumBaseType.values()[this.baseType];
     }
 
-    public boolean isHangarDeck()
-    {
+    public boolean isHangarDeck() {
         return hangar;
     }
 
-    public int getCorridorWidth()
-    {
+    public int getCorridorWidth() {
         return hangar ? HANGAR_AIRLOCK_WIDTH : this.getDeckType().width;
     }
 
-    public int getRoomsNo()
-    {
+    public int getRoomsNo() {
         return hangar ? 2 : roomsNo;
     }
 
-    public int getCorridorLength()
-    {
+    public int getCorridorLength() {
         if (getRoomsNo() == 1)
             return BaseDeck.ROOMLARGE;
 
@@ -159,8 +134,7 @@ public class BaseConfiguration
         return getRoomsNo() * BaseDeck.ROOMSMALL + 2 * (BaseDeck.ROOMLARGE - BaseDeck.ROOMSMALL);
     }
 
-    public EnumRoomType getRandomRoom(int i)
-    {
+    public EnumRoomType getRandomRoom(int i) {
         return roomTypes[this.randomRoomTypes[i % this.randomRoomTypes.length]];
     }
 }

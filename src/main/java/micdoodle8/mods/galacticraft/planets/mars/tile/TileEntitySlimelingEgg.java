@@ -12,23 +12,17 @@ import net.minecraft.world.World;
 
 import java.util.UUID;
 
-public class TileEntitySlimelingEgg extends TileEntity implements ITickable
-{
+public class TileEntitySlimelingEgg extends TileEntity implements ITickable {
     public int timeToHatch = -1;
     public String lastTouchedPlayerUUID = "";
     public String lastTouchedPlayerName = "";
 
     @Override
-    public void update()
-    {
-        if (!this.world.isRemote)
-        {
-            if (this.timeToHatch > 0)
-            {
+    public void update() {
+        if (!this.world.isRemote) {
+            if (this.timeToHatch > 0) {
                 this.timeToHatch--;
-            }
-            else if (this.timeToHatch == 0 && lastTouchedPlayerUUID != null && lastTouchedPlayerUUID.length() > 0)
-            {
+            } else if (this.timeToHatch == 0 && lastTouchedPlayerUUID != null && lastTouchedPlayerUUID.length() > 0) {
                 IBlockState state = this.world.getBlockState(this.getPos());
                 int metadata = state.getBlock().getMetaFromState(state) % 3;
 
@@ -36,18 +30,17 @@ public class TileEntitySlimelingEgg extends TileEntity implements ITickable
                 float colorGreen = 0.0F;
                 float colorBlue = 0.0F;
 
-                switch (metadata)
-                {
-                case 0:
-                    colorRed = 1.0F;
-                    break;
-                case 1:
-                    colorBlue = 1.0F;
-                    break;
-                case 2:
-                    colorRed = 1.0F;
-                    colorGreen = 1.0F;
-                    break;
+                switch (metadata) {
+                    case 0:
+                        colorRed = 1.0F;
+                        break;
+                    case 1:
+                        colorBlue = 1.0F;
+                        break;
+                    case 2:
+                        colorRed = 1.0F;
+                        colorGreen = 1.0F;
+                        break;
                 }
 
                 EntitySlimeling slimeling = new EntitySlimeling(this.world, colorRed, colorGreen, colorBlue);
@@ -56,8 +49,7 @@ public class TileEntitySlimelingEgg extends TileEntity implements ITickable
                 slimeling.setOwnerId(UUID.fromString(this.lastTouchedPlayerUUID));
                 slimeling.setOwnerUsername(this.lastTouchedPlayerName);
 
-                if (!this.world.isRemote)
-                {
+                if (!this.world.isRemote) {
                     this.world.spawnEntity(slimeling);
                 }
 
@@ -72,23 +64,18 @@ public class TileEntitySlimelingEgg extends TileEntity implements ITickable
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt)
-    {
+    public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
         this.timeToHatch = nbt.getInteger("TimeToHatch");
 
         String uuid;
-        if (nbt.hasKey("OwnerUUID", 8))
-        {
+        if (nbt.hasKey("OwnerUUID", 8)) {
             uuid = nbt.getString("OwnerUUID");
-        }
-        else
-        {
+        } else {
             uuid = PreYggdrasilConverter.convertMobOwnerIfNeeded(this.world.getMinecraftServer(), nbt.getString("Owner"));
         }
 
-        if (uuid.length() > 0)
-        {
+        if (uuid.length() > 0) {
             lastTouchedPlayerUUID = uuid;
         }
 
@@ -96,8 +83,7 @@ public class TileEntitySlimelingEgg extends TileEntity implements ITickable
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt)
-    {
+    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
         nbt.setInteger("TimeToHatch", this.timeToHatch);
         nbt.setString("OwnerUUID", this.lastTouchedPlayerUUID);
@@ -106,8 +92,7 @@ public class TileEntitySlimelingEgg extends TileEntity implements ITickable
     }
 
     @Override
-    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
-    {
+    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate) {
         return oldState.getBlock() != newSate.getBlock();
     }
 }

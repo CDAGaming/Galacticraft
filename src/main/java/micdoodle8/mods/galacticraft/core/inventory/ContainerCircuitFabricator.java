@@ -18,12 +18,10 @@ import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
 
-public class ContainerCircuitFabricator extends Container
-{
+public class ContainerCircuitFabricator extends Container {
     private TileEntityCircuitFabricator tileEntity;
 
-    public ContainerCircuitFabricator(InventoryPlayer playerInv, TileEntityCircuitFabricator tileEntity)
-    {
+    public ContainerCircuitFabricator(InventoryPlayer playerInv, TileEntityCircuitFabricator tileEntity) {
         this.tileEntity = tileEntity;
 
         // Energy slot
@@ -52,29 +50,24 @@ public class ContainerCircuitFabricator extends Container
 
         int slot;
 
-        for (slot = 0; slot < 3; ++slot)
-        {
-            for (int var4 = 0; var4 < 9; ++var4)
-            {
+        for (slot = 0; slot < 3; ++slot) {
+            for (int var4 = 0; var4 < 9; ++var4) {
                 this.addSlotToContainer(new Slot(playerInv, var4 + slot * 9 + 9, 8 + var4 * 18, 110 + slot * 18));
             }
         }
 
-        for (slot = 0; slot < 9; ++slot)
-        {
+        for (slot = 0; slot < 9; ++slot) {
             this.addSlotToContainer(new Slot(playerInv, slot, 8 + slot * 18, 168));
         }
     }
 
     @Override
-    public boolean canInteractWith(EntityPlayer par1EntityPlayer)
-    {
+    public boolean canInteractWith(EntityPlayer par1EntityPlayer) {
         return this.tileEntity.isUsableByPlayer(par1EntityPlayer);
     }
 
     @Override
-    public void onCraftMatrixChanged(IInventory par1IInventory)
-    {
+    public void onCraftMatrixChanged(IInventory par1IInventory) {
         super.onCraftMatrixChanged(par1IInventory);
     }
 
@@ -83,91 +76,61 @@ public class ContainerCircuitFabricator extends Container
      * clicking.
      */
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int par1)
-    {
+    public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int par1) {
         ItemStack var2 = ItemStack.EMPTY;
         Slot slot = this.inventorySlots.get(par1);
         final int b = this.inventorySlots.size();
 
-        if (slot != null && slot.getHasStack())
-        {
+        if (slot != null && slot.getHasStack()) {
             ItemStack var4 = slot.getStack();
             var2 = var4.copy();
 
-            if (par1 < b - 36)
-            {
-                if (!this.mergeItemStack(var4, b - 36, b, true))
-                {
+            if (par1 < b - 36) {
+                if (!this.mergeItemStack(var4, b - 36, b, true)) {
                     return ItemStack.EMPTY;
                 }
 
-                if (par1 == 6)
-                {
+                if (par1 == 6) {
                     slot.onSlotChange(var4, var2);
                 }
-            }
-            else
-            {
+            } else {
                 Item i = var4.getItem();
-                if (EnergyUtil.isElectricItem(i))
-                {
-                    if (!this.mergeItemStack(var4, 0, 1, false))
-                    {
+                if (EnergyUtil.isElectricItem(i)) {
+                    if (!this.mergeItemStack(var4, 0, 1, false)) {
                         return ItemStack.EMPTY;
                     }
-                }
-                else if (i == Items.DIAMOND)
-                {
-                    if (!this.mergeItemStack(var4, 1, 2, false))
-                    {
+                } else if (i == Items.DIAMOND) {
+                    if (!this.mergeItemStack(var4, 1, 2, false)) {
                         return ItemStack.EMPTY;
                     }
-                }
-                else if (i == GCItems.basicItem && i.getDamage(var4) == 2)
-                {
-                    if (!this.mergeItemStack(var4, 2, 4, false))
-                    {
+                } else if (i == GCItems.basicItem && i.getDamage(var4) == 2) {
+                    if (!this.mergeItemStack(var4, 2, 4, false)) {
                         return ItemStack.EMPTY;
                     }
-                }
-                else if (i == Items.REDSTONE)
-                {
-                    if (!this.mergeItemStack(var4, 4, 5, false))
-                    {
+                } else if (i == Items.REDSTONE) {
+                    if (!this.mergeItemStack(var4, 4, 5, false)) {
                         return ItemStack.EMPTY;
                     }
-                }
-                else if (i == Items.REPEATER || i == new ItemStack(Blocks.REDSTONE_TORCH).getItem() || i == Items.DYE && i.getDamage(var4) == 4)
-                {
-                    if (!this.mergeItemStack(var4, 5, 6, false))
-                    {
+                } else if (i == Items.REPEATER || i == new ItemStack(Blocks.REDSTONE_TORCH).getItem() || i == Items.DYE && i.getDamage(var4) == 4) {
+                    if (!this.mergeItemStack(var4, 5, 6, false)) {
                         return ItemStack.EMPTY;
                     }
-                }
-                else if (par1 < b - 9)
-                {
-                    if (!this.mergeItemStack(var4, b - 9, b, false))
-                    {
+                } else if (par1 < b - 9) {
+                    if (!this.mergeItemStack(var4, b - 9, b, false)) {
                         return ItemStack.EMPTY;
                     }
-                }
-                else if (!this.mergeItemStack(var4, b - 36, b - 9, false))
-                {
+                } else if (!this.mergeItemStack(var4, b - 36, b - 9, false)) {
                     return ItemStack.EMPTY;
                 }
             }
 
-            if (var4.getCount() == 0)
-            {
+            if (var4.getCount() == 0) {
                 slot.putStack(ItemStack.EMPTY);
-            }
-            else
-            {
+            } else {
                 slot.onSlotChanged();
             }
 
-            if (var4.getCount() == var2.getCount())
-            {
+            if (var4.getCount() == var2.getCount()) {
                 return ItemStack.EMPTY;
             }
 

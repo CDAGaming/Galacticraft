@@ -28,71 +28,58 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 
-public abstract class EntityAdvancedMotion extends InventoryEntity implements IControllableEntity, IEntityFullSync
-{
-    protected long ticks = 0;
-
+public abstract class EntityAdvancedMotion extends InventoryEntity implements IControllableEntity, IEntityFullSync {
     public float currentDamage;
     public int timeSinceHit;
     public int rockDirection;
-
     public double advancedPositionX;
     public double advancedPositionY;
     public double advancedPositionZ;
     public double advancedYaw;
     public double advancedPitch;
     public int posRotIncrements;
-
+    protected long ticks = 0;
     protected boolean lastOnGround;
 
-    public EntityAdvancedMotion(World world)
-    {
+    public EntityAdvancedMotion(World world) {
         super(world);
         this.preventEntitySpawning = true;
         this.ignoreFrustumCheck = true;
         this.isImmuneToFire = true;
     }
 
-    public EntityAdvancedMotion(World world, double var2, double var4, double var6)
-    {
+    public EntityAdvancedMotion(World world, double var2, double var4, double var6) {
         this(world);
         this.setPosition(var2, var4, var6);
     }
 
     @Override
-    protected void entityInit()
-    {
+    protected void entityInit() {
     }
 
     @Override
-    protected boolean canTriggerWalking()
-    {
+    protected boolean canTriggerWalking() {
         return false;
     }
 
     @Override
-    public boolean canBePushed()
-    {
+    public boolean canBePushed() {
         return false;
     }
 
     @Override
-    public double getMountedYOffset()
-    {
+    public double getMountedYOffset() {
         return this.height - 1.0D;
     }
 
     @Override
-    public boolean canBeCollidedWith()
-    {
+    public boolean canBeCollidedWith() {
         return !this.isDead;
     }
 
     @Override
-    public void updatePassenger(Entity passenger)
-    {
-        if (this.isPassenger(passenger))
-        {
+    public void updatePassenger(Entity passenger) {
+        if (this.isPassenger(passenger)) {
             final double offsetx = Math.cos(this.rotationYaw / Constants.RADIANS_TO_DEGREES_D + 114.8) * -0.5D;
             final double offsetz = Math.sin(this.rotationYaw / Constants.RADIANS_TO_DEGREES_D + 114.8) * -0.5D;
             passenger.setPosition(this.posX + offsetx, this.posY + this.getMountedYOffset() + passenger.getYOffset(), this.posZ + offsetz);
@@ -100,10 +87,8 @@ public abstract class EntityAdvancedMotion extends InventoryEntity implements IC
     }
 
     @Override
-    public void setPositionRotationAndMotion(double x, double y, double z, float yaw, float pitch, double motX, double motY, double motZ, boolean onGround)
-    {
-        if (this.world.isRemote)
-        {
+    public void setPositionRotationAndMotion(double x, double y, double z, float yaw, float pitch, double motX, double motY, double motZ, boolean onGround) {
+        if (this.world.isRemote) {
             this.advancedPositionX = x;
             this.advancedPositionY = y;
             this.advancedPositionZ = z;
@@ -113,71 +98,55 @@ public abstract class EntityAdvancedMotion extends InventoryEntity implements IC
             this.motionY = motY;
             this.motionZ = motZ;
             this.posRotIncrements = 5;
-        }
-        else
-        {
+        } else {
             this.setPosition(x, y, z);
             this.setRotation(yaw, pitch);
             this.motionX = motX;
             this.motionY = motY;
             this.motionZ = motZ;
-            if (onGround || this.forceGroundUpdate())
-            {
+            if (onGround || this.forceGroundUpdate()) {
                 this.onGround = onGround;
             }
         }
     }
 
-    protected boolean forceGroundUpdate()
-    {
+    protected boolean forceGroundUpdate() {
         return true;
     }
 
     @Override
-    public void performHurtAnimation()
-    {
+    public void performHurtAnimation() {
         this.rockDirection = -this.rockDirection;
         this.timeSinceHit = 10;
         this.currentDamage *= 5;
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource var1, float var2)
-    {
-        if (this.isDead || var1.equals(DamageSource.CACTUS) || !this.allowDamageSource(var1))
-        {
+    public boolean attackEntityFrom(DamageSource var1, float var2) {
+        if (this.isDead || var1.equals(DamageSource.CACTUS) || !this.allowDamageSource(var1)) {
             return true;
-        }
-        else
-        {
+        } else {
             Entity e = var1.getTrueSource();
-            if (this.isEntityInvulnerable(var1) || this.posY > 300 || (e instanceof EntityLivingBase && !(e instanceof EntityPlayer)))
-            {
+            if (this.isEntityInvulnerable(var1) || this.posY > 300 || (e instanceof EntityLivingBase && !(e instanceof EntityPlayer))) {
                 return false;
-            }
-            else
-            {
+            } else {
                 this.rockDirection = -this.rockDirection;
                 this.timeSinceHit = 10;
                 this.currentDamage = this.currentDamage + var2 * 10;
                 this.markVelocityChanged();
 
-                if (e instanceof EntityPlayer && ((EntityPlayer) e).capabilities.isCreativeMode)
-                {
+                if (e instanceof EntityPlayer && ((EntityPlayer) e).capabilities.isCreativeMode) {
                     this.currentDamage = 100;
                 }
 
-                if (this.currentDamage > 70)
-                {
-                    if (!this.getPassengers().isEmpty())
-                    {
+                if (this.currentDamage > 70) {
+                    if (!this.getPassengers().isEmpty()) {
                         this.removePassengers();
 
                         return false;
                     }
 
-                    if (!this.world.isRemote)
-                    {
+                    if (!this.world.isRemote) {
                         this.dropItems();
 
                         this.setDead();
@@ -235,17 +204,13 @@ public abstract class EntityAdvancedMotion extends InventoryEntity implements IC
 
     public abstract boolean allowDamageSource(DamageSource damageSource);
 
-    public void dropItems()
-    {
-        if (this.getItemsDropped() == null)
-        {
+    public void dropItems() {
+        if (this.getItemsDropped() == null) {
             return;
         }
 
-        for (final ItemStack item : this.getItemsDropped())
-        {
-            if (item != null && !item.isEmpty())
-            {
+        for (final ItemStack item : this.getItemsDropped()) {
+            if (item != null && !item.isEmpty()) {
                 this.entityDropItem(item, 0);
             }
         }
@@ -253,15 +218,10 @@ public abstract class EntityAdvancedMotion extends InventoryEntity implements IC
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean b)
-    {
-        if (!this.getPassengers().isEmpty())
-        {
-            if (this.getPassengers().contains(FMLClientHandler.instance().getClient().player))
-            {
-            }
-            else
-            {
+    public void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean b) {
+        if (!this.getPassengers().isEmpty()) {
+            if (this.getPassengers().contains(FMLClientHandler.instance().getClient().player)) {
+            } else {
                 this.posRotIncrements = posRotationIncrements + 5;
                 this.advancedPositionX = x;
                 this.advancedPositionY = y;
@@ -273,10 +233,8 @@ public abstract class EntityAdvancedMotion extends InventoryEntity implements IC
     }
 
     @Override
-    public void move(MoverType type, double x, double y, double z)
-    {
-        if (this.shouldMove())
-        {
+    public void move(MoverType type, double x, double y, double z) {
+        if (this.shouldMove()) {
             super.move(type, x, y, z);
         }
     }
@@ -286,20 +244,17 @@ public abstract class EntityAdvancedMotion extends InventoryEntity implements IC
     public abstract boolean shouldSendAdvancedMotionPacket();
 
     @Override
-    public void onUpdate()
-    {
+    public void onUpdate() {
         this.ticks++;
 
         super.onUpdate();
 
-        if (this.canSetPositionClient() && this.world.isRemote && (this.getPassengers().isEmpty() || !this.getPassengers().contains(FMLClientHandler.instance().getClient().player)))
-        {
+        if (this.canSetPositionClient() && this.world.isRemote && (this.getPassengers().isEmpty() || !this.getPassengers().contains(FMLClientHandler.instance().getClient().player))) {
             double x;
             double y;
             double var12;
             double z;
-            if (this.posRotIncrements > 0)
-            {
+            if (this.posRotIncrements > 0) {
                 x = this.posX + (this.advancedPositionX - this.posX) / this.posRotIncrements;
                 y = this.posY + (this.advancedPositionY - this.posY) / this.posRotIncrements;
                 z = this.posZ + (this.advancedPositionZ - this.posZ) / this.posRotIncrements;
@@ -309,9 +264,7 @@ public abstract class EntityAdvancedMotion extends InventoryEntity implements IC
                 --this.posRotIncrements;
                 this.setPosition(x, y, z);
                 this.setRotation(this.rotationYaw, this.rotationPitch);
-            }
-            else
-            {
+            } else {
 //                x = this.posX + this.motionX;
 //                y = this.posY + this.motionY;
 //                z = this.posZ + this.motionZ;
@@ -319,32 +272,25 @@ public abstract class EntityAdvancedMotion extends InventoryEntity implements IC
             }
         }
 
-        if (this.timeSinceHit > 0)
-        {
+        if (this.timeSinceHit > 0) {
             this.timeSinceHit--;
         }
 
-        if (this.currentDamage > 0)
-        {
+        if (this.currentDamage > 0) {
             this.currentDamage--;
         }
 
-        if (this.shouldSpawnParticles() && this.world.isRemote)
-        {
+        if (this.shouldSpawnParticles() && this.world.isRemote) {
             this.spawnParticles(this.getParticleMap());
         }
 
-        if (this.onGround)
-        {
+        if (this.onGround) {
             this.tickOnGround();
-        }
-        else
-        {
+        } else {
             this.tickInAir();
         }
 
-        if (this.world.isRemote)
-        {
+        if (this.world.isRemote) {
             Vector3 mot = this.getMotionVec();
             this.motionX = mot.x;
             this.motionY = mot.y;
@@ -353,20 +299,16 @@ public abstract class EntityAdvancedMotion extends InventoryEntity implements IC
         //Necessary on both server and client to achieve a correct this.onGround setting
         this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
 
-        if (this.onGround && !this.lastOnGround)
-        {
+        if (this.onGround && !this.lastOnGround) {
             this.onGroundHit();
         }
 
-        if (shouldSendAdvancedMotionPacket())
-        {
-            if (this.world.isRemote)
-            {
+        if (shouldSendAdvancedMotionPacket()) {
+            if (this.world.isRemote) {
                 GalacticraftCore.packetPipeline.sendToServer(new PacketEntityUpdate(this));
             }
 
-            if (!this.world.isRemote && this.ticks % 5 == 0)
-            {
+            if (!this.world.isRemote && this.ticks % 5 == 0) {
                 GalacticraftCore.packetPipeline.sendToAllAround(new PacketEntityUpdate(this), new TargetPoint(GCCoreUtil.getDimensionID(this.world), this.posX, this.posY, this.posZ, 50.0D));
             }
         }
@@ -378,22 +320,18 @@ public abstract class EntityAdvancedMotion extends InventoryEntity implements IC
     }
 
     @Override
-    public void getNetworkedData(ArrayList<Object> sendData)
-    {
+    public void getNetworkedData(ArrayList<Object> sendData) {
         sendData.addAll(this.getNetworkedData());
     }
 
     @Override
-    public void decodePacketdata(ByteBuf buffer)
-    {
+    public void decodePacketdata(ByteBuf buffer) {
         this.readNetworkedData(buffer);
     }
 
     @SideOnly(Side.CLIENT)
-    public void spawnParticles(Map<Vector3, Vector3> points)
-    {
-        for (final Entry<Vector3, Vector3> vec : points.entrySet())
-        {
+    public void spawnParticles(Map<Vector3, Vector3> points) {
+        for (final Entry<Vector3, Vector3> vec : points.entrySet()) {
             final Vector3 posVec = vec.getKey();
             final Vector3 motionVec = vec.getValue();
 
@@ -402,14 +340,11 @@ public abstract class EntityAdvancedMotion extends InventoryEntity implements IC
     }
 
     @SideOnly(Side.CLIENT)
-    public void spawnParticle(Particle fx)
-    {
+    public void spawnParticle(Particle fx) {
         final Minecraft mc = FMLClientHandler.instance().getClient();
 
-        if (mc != null && mc.getRenderViewEntity() != null && mc.effectRenderer != null)
-        {
-            if (fx != null)
-            {
+        if (mc != null && mc.getRenderViewEntity() != null && mc.effectRenderer != null) {
+            if (fx != null) {
                 mc.effectRenderer.addEffect(fx);
             }
         }

@@ -15,14 +15,12 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class LayerOxygenParachute implements LayerRenderer<AbstractClientPlayer>
-{
+public class LayerOxygenParachute implements LayerRenderer<AbstractClientPlayer> {
     private final RenderPlayer playerRenderer;
     public ModelRenderer[] parachute = new ModelRenderer[3];
     public ModelRenderer[] parachuteStrings = new ModelRenderer[4];
 
-    public LayerOxygenParachute(RenderPlayer playerRendererIn)
-    {
+    public LayerOxygenParachute(RenderPlayer playerRendererIn) {
         this.playerRenderer = playerRendererIn;
         float scaleFactor = 0.0F;
         ModelPlayer modelPlayer = playerRendererIn.getMainModel();
@@ -52,18 +50,14 @@ public class LayerOxygenParachute implements LayerRenderer<AbstractClientPlayer>
     }
 
     @Override
-    public void doRenderLayer(AbstractClientPlayer player, float f5, float f6, float partialTicks, float f8, float f2, float f7, float scale)
-    {
-        if (!player.isInvisible())
-        {
+    public void doRenderLayer(AbstractClientPlayer player, float f5, float f6, float partialTicks, float f8, float f2, float f7, float scale) {
+        if (!player.isInvisible()) {
             PlayerGearData gearData = GalacticraftCore.proxy.getGearData(player);
 
-            if (gearData != null)
-            {
+            if (gearData != null) {
                 boolean usingParachute = gearData.getParachute() != null;
 
-                if (usingParachute)
-                {
+                if (usingParachute) {
                     FMLClientHandler.instance().getClient().renderEngine.bindTexture(ModelPlayerGC.playerTexture);
 
                     this.parachute[0].rotateAngleZ = (float) (30F / Constants.RADIANS_TO_DEGREES);
@@ -101,8 +95,7 @@ public class LayerOxygenParachute implements LayerRenderer<AbstractClientPlayer>
     }
 
     @Override
-    public boolean shouldCombineTextures()
-    {
+    public boolean shouldCombineTextures() {
         return true;
     }
 }

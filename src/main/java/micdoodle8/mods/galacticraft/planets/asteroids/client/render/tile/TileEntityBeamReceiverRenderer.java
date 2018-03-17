@@ -20,41 +20,32 @@ import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.obj.OBJModel;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class TileEntityBeamReceiverRenderer extends TileEntitySpecialRenderer<TileEntityBeamReceiver>
-{
+public class TileEntityBeamReceiverRenderer extends TileEntitySpecialRenderer<TileEntityBeamReceiver> {
     private static OBJModel.OBJBakedModel reflectorModelMain;
     private static OBJModel.OBJBakedModel reflectorModelReceiver;
     private static OBJModel.OBJBakedModel reflectorModelRing;
 
-    private void updateModels()
-    {
-        if (reflectorModelMain == null)
-        {
-            try
-            {
+    private void updateModels() {
+        if (reflectorModelMain == null) {
+            try {
                 IModel model = OBJLoaderGC.instance.loadModel(new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "block/receiver.obj"));
                 Function<ResourceLocation, TextureAtlasSprite> spriteFunction = location -> Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(location.toString());
 
                 reflectorModelMain = (OBJModel.OBJBakedModel) model.bake(new OBJModel.OBJState(ImmutableList.of("Main"), false), DefaultVertexFormats.ITEM, spriteFunction);
                 reflectorModelReceiver = (OBJModel.OBJBakedModel) model.bake(new OBJModel.OBJState(ImmutableList.of("Receiver"), false), DefaultVertexFormats.ITEM, spriteFunction);
                 reflectorModelRing = (OBJModel.OBJBakedModel) model.bake(new OBJModel.OBJState(ImmutableList.of("Ring"), false), DefaultVertexFormats.ITEM, spriteFunction);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }
     }
 
     @Override
-    public void render(TileEntityBeamReceiver tile, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
-    {
-        if (tile.facing == null)
-        {
+    public void render(TileEntityBeamReceiver tile, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+        if (tile.facing == null) {
             return;
         }
 
@@ -63,46 +54,42 @@ public class TileEntityBeamReceiverRenderer extends TileEntitySpecialRenderer<Ti
         GlStateManager.translate((float) x + 0.5F, (float) y, (float) z + 0.5F);
         GlStateManager.scale(0.85F, 0.85F, 0.85F);
 
-        switch (tile.facing)
-        {
-        case DOWN:
-            GlStateManager.translate(0.7F, -0.15F, 0.0F);
-            GlStateManager.rotate(90, 0, 0, 1);
-            break;
-        case UP:
-            GlStateManager.translate(-0.7F, 1.3F, 0.0F);
-            GlStateManager.rotate(-90, 0, 0, 1);
-            break;
-        case EAST:
-            GlStateManager.translate(0.7F, -0.15F, 0.0F);
-            GlStateManager.rotate(180, 0, 1, 0);
-            break;
-        case SOUTH:
-            GlStateManager.translate(0.0F, -0.15F, 0.7F);
-            GlStateManager.rotate(90, 0, 1, 0);
-            break;
-        case WEST:
-            GlStateManager.translate(-0.7F, -0.15F, 0.0F);
-            GlStateManager.rotate(0, 0, 1, 0);
-            break;
-        case NORTH:
-            GlStateManager.translate(0.0F, -0.15F, -0.7F);
-            GlStateManager.rotate(270, 0, 1, 0);
-            break;
-        default:
-            GlStateManager.popMatrix();
-            return;
+        switch (tile.facing) {
+            case DOWN:
+                GlStateManager.translate(0.7F, -0.15F, 0.0F);
+                GlStateManager.rotate(90, 0, 0, 1);
+                break;
+            case UP:
+                GlStateManager.translate(-0.7F, 1.3F, 0.0F);
+                GlStateManager.rotate(-90, 0, 0, 1);
+                break;
+            case EAST:
+                GlStateManager.translate(0.7F, -0.15F, 0.0F);
+                GlStateManager.rotate(180, 0, 1, 0);
+                break;
+            case SOUTH:
+                GlStateManager.translate(0.0F, -0.15F, 0.7F);
+                GlStateManager.rotate(90, 0, 1, 0);
+                break;
+            case WEST:
+                GlStateManager.translate(-0.7F, -0.15F, 0.0F);
+                GlStateManager.rotate(0, 0, 1, 0);
+                break;
+            case NORTH:
+                GlStateManager.translate(0.0F, -0.15F, -0.7F);
+                GlStateManager.rotate(270, 0, 1, 0);
+                break;
+            default:
+                GlStateManager.popMatrix();
+                return;
         }
 
         this.updateModels();
         this.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
-        if (Minecraft.isAmbientOcclusionEnabled())
-        {
+        if (Minecraft.isAmbientOcclusionEnabled()) {
             GlStateManager.shadeModel(GL11.GL_SMOOTH);
-        }
-        else
-        {
+        } else {
             GlStateManager.shadeModel(GL11.GL_FLAT);
         }
 
@@ -111,16 +98,11 @@ public class TileEntityBeamReceiverRenderer extends TileEntitySpecialRenderer<Ti
 
         int color;
 
-        if (tile.modeReceive == ReceiverMode.RECEIVE.ordinal())
-        {
+        if (tile.modeReceive == ReceiverMode.RECEIVE.ordinal()) {
             color = ColorUtil.to32BitColor(255, 0, 204, 0);
-        }
-        else if (tile.modeReceive == ReceiverMode.EXTRACT.ordinal())
-        {
+        } else if (tile.modeReceive == ReceiverMode.EXTRACT.ordinal()) {
             color = ColorUtil.to32BitColor(255, 0, 0, 153);
-        }
-        else
-        {
+        } else {
             color = ColorUtil.to32BitColor(255, 25, 25, 25);
         }
 
@@ -134,8 +116,7 @@ public class TileEntityBeamReceiverRenderer extends TileEntitySpecialRenderer<Ti
         float dZ = 0.0F;
         GlStateManager.translate(dX, dY, dZ);
 
-        if (tile.modeReceive != ReceiverMode.UNDEFINED.ordinal())
-        {
+        if (tile.modeReceive != ReceiverMode.UNDEFINED.ordinal()) {
             GlStateManager.rotate(-tile.ticks * 50, 1, 0, 0);
         }
 

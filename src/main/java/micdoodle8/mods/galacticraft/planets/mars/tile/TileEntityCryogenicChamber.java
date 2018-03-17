@@ -1,8 +1,5 @@
 package micdoodle8.mods.galacticraft.planets.mars.tile;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import micdoodle8.mods.galacticraft.core.GCBlocks;
 import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 import micdoodle8.mods.galacticraft.core.blocks.BlockMulti;
@@ -27,71 +24,62 @@ import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class TileEntityCryogenicChamber extends TileEntityMulti implements IMultiBlock
-{
+import java.util.LinkedList;
+import java.util.List;
+
+public class TileEntityCryogenicChamber extends TileEntityMulti implements IMultiBlock {
     public boolean isOccupied;
     private boolean initialised;
 
-    public TileEntityCryogenicChamber()
-    {
+    public TileEntityCryogenicChamber() {
         super(null);
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public AxisAlignedBB getRenderBoundingBox()
-    {
+    public AxisAlignedBB getRenderBoundingBox() {
         return new AxisAlignedBB(getPos().getX() - 1, getPos().getY(), getPos().getZ() - 1, getPos().getX() + 2, getPos().getY() + 3, getPos().getZ() + 2);
     }
 
     @Override
-    public boolean onActivated(EntityPlayer entityPlayer)
-    {
-        if (this.world.isRemote)
-        {
+    public boolean onActivated(EntityPlayer entityPlayer) {
+        if (this.world.isRemote) {
             return false;
         }
 
         EntityPlayer.SleepResult enumstatus = this.sleepInBedAt(entityPlayer, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ());
 
-        switch (enumstatus)
-        {
-        case OK:
-            ((EntityPlayerMP) entityPlayer).connection.setPlayerLocation(entityPlayer.posX, entityPlayer.posY, entityPlayer.posZ, entityPlayer.rotationYaw, entityPlayer.rotationPitch);
-            GalacticraftCore.packetPipeline.sendTo(new PacketSimpleMars(EnumSimplePacketMars.C_BEGIN_CRYOGENIC_SLEEP, GCCoreUtil.getDimensionID(entityPlayer.world), new Object[] { this.getPos() }), (EntityPlayerMP) entityPlayer);
-            return true;
-        case NOT_POSSIBLE_NOW:
-            GCPlayerStats stats = GCPlayerStats.get(entityPlayer);
-            entityPlayer.sendMessage(new TextComponentString(GCCoreUtil.translateWithFormat("gui.cryogenic.chat.cant_use", stats.getCryogenicChamberCooldown() / 20)));
-            return false;
-        default:
-            return false;
+        switch (enumstatus) {
+            case OK:
+                ((EntityPlayerMP) entityPlayer).connection.setPlayerLocation(entityPlayer.posX, entityPlayer.posY, entityPlayer.posZ, entityPlayer.rotationYaw, entityPlayer.rotationPitch);
+                GalacticraftCore.packetPipeline.sendTo(new PacketSimpleMars(EnumSimplePacketMars.C_BEGIN_CRYOGENIC_SLEEP, GCCoreUtil.getDimensionID(entityPlayer.world), new Object[]{this.getPos()}), (EntityPlayerMP) entityPlayer);
+                return true;
+            case NOT_POSSIBLE_NOW:
+                GCPlayerStats stats = GCPlayerStats.get(entityPlayer);
+                entityPlayer.sendMessage(new TextComponentString(GCCoreUtil.translateWithFormat("gui.cryogenic.chat.cant_use", stats.getCryogenicChamberCooldown() / 20)));
+                return false;
+            default:
+                return false;
         }
     }
 
-    public EntityPlayer.SleepResult sleepInBedAt(EntityPlayer entityPlayer, int par1, int par2, int par3)
-    {
-        if (!this.world.isRemote)
-        {
-            if (entityPlayer.isPlayerSleeping() || !entityPlayer.isEntityAlive())
-            {
+    public EntityPlayer.SleepResult sleepInBedAt(EntityPlayer entityPlayer, int par1, int par2, int par3) {
+        if (!this.world.isRemote) {
+            if (entityPlayer.isPlayerSleeping() || !entityPlayer.isEntityAlive()) {
                 return EntityPlayer.SleepResult.OTHER_PROBLEM;
             }
 
-            if (this.world.getBiome(new BlockPos(par1, par2, par3)) == Biomes.HELL)
-            {
+            if (this.world.getBiome(new BlockPos(par1, par2, par3)) == Biomes.HELL) {
                 return EntityPlayer.SleepResult.NOT_POSSIBLE_HERE;
             }
 
             GCPlayerStats stats = GCPlayerStats.get(entityPlayer);
-            if (stats.getCryogenicChamberCooldown() > 0)
-            {
+            if (stats.getCryogenicChamberCooldown() > 0) {
                 return EntityPlayer.SleepResult.NOT_POSSIBLE_NOW;
             }
         }
 
-        if (entityPlayer.isRiding())
-        {
+        if (entityPlayer.isRiding()) {
             entityPlayer.dismountRidingEntity();
         }
 
@@ -102,8 +90,7 @@ public class TileEntityCryogenicChamber extends TileEntityMulti implements IMult
         entityPlayer.bedLocation = new BlockPos(this.getPos().getX(), this.getPos().getY(), this.getPos().getZ());
         entityPlayer.motionX = entityPlayer.motionZ = entityPlayer.motionY = 0.0D;
 
-        if (!this.world.isRemote)
-        {
+        if (!this.world.isRemote) {
             this.world.updateAllPlayersSleepingFlag();
         }
 
@@ -117,17 +104,14 @@ public class TileEntityCryogenicChamber extends TileEntityMulti implements IMult
 //    }
 
     @Override
-    public void update()
-    {
-        if (!this.initialised)
-        {
+    public void update() {
+        if (!this.initialised) {
             this.initialised = this.initialiseMultiTiles(this.getPos(), this.world);
         }
     }
 
     @Override
-    public void onCreate(World world, BlockPos placedPosition)
-    {
+    public void onCreate(World world, BlockPos placedPosition) {
         this.mainBlockPosition = placedPosition;
         this.markDirty();
 
@@ -135,22 +119,18 @@ public class TileEntityCryogenicChamber extends TileEntityMulti implements IMult
         this.getPositions(placedPosition, positions);
         ((BlockMulti) GCBlocks.fakeBlock).makeFakeBlock(world, positions, placedPosition, this.getMultiType());
     }
-    
+
     @Override
-    public BlockMulti.EnumBlockMultiType getMultiType()
-    {
+    public BlockMulti.EnumBlockMultiType getMultiType() {
         return EnumBlockMultiType.CRYO_CHAMBER;
     }
 
     @Override
-    public void getPositions(BlockPos placedPosition, List<BlockPos> positions)
-    {
+    public void getPositions(BlockPos placedPosition, List<BlockPos> positions) {
         int buildHeight = this.world.getHeight() - 1;
 
-        for (int y = 1; y < 3; y++)
-        {
-            if (placedPosition.getY() + y > buildHeight)
-            {
+        for (int y = 1; y < 3; y++) {
+            if (placedPosition.getY() + y > buildHeight) {
                 return;
             }
             positions.add(new BlockPos(placedPosition.getX(), placedPosition.getY() + y, placedPosition.getZ()));
@@ -158,20 +138,16 @@ public class TileEntityCryogenicChamber extends TileEntityMulti implements IMult
     }
 
     @Override
-    public void onDestroy(TileEntity callingBlock)
-    {
+    public void onDestroy(TileEntity callingBlock) {
         final BlockPos thisBlock = getPos();
         List<BlockPos> positions = new LinkedList<>();
         this.getPositions(thisBlock, positions);
 
-        for (BlockPos pos : positions)
-        {
+        for (BlockPos pos : positions) {
             IBlockState stateAt = this.world.getBlockState(pos);
 
-            if (stateAt.getBlock() == GCBlocks.fakeBlock && (EnumBlockMultiType) stateAt.getValue(BlockMulti.MULTI_TYPE) == EnumBlockMultiType.CRYO_CHAMBER)
-            {
-                if (this.world.isRemote && this.world.rand.nextDouble() < 0.1D)
-                {
+            if (stateAt.getBlock() == GCBlocks.fakeBlock && (EnumBlockMultiType) stateAt.getValue(BlockMulti.MULTI_TYPE) == EnumBlockMultiType.CRYO_CHAMBER) {
+                if (this.world.isRemote && this.world.rand.nextDouble() < 0.1D) {
                     FMLClientHandler.instance().getClient().effectRenderer.addBlockDestroyEffects(pos, this.world.getBlockState(pos));
                 }
                 this.world.destroyBlock(pos, false);
@@ -181,23 +157,20 @@ public class TileEntityCryogenicChamber extends TileEntityMulti implements IMult
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt)
-    {
+    public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
         this.isOccupied = nbt.getBoolean("IsChamberOccupied");
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt)
-    {
+    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
         nbt.setBoolean("IsChamberOccupied", this.isOccupied);
         return nbt;
     }
 
     @Override
-    public NBTTagCompound getUpdateTag()
-    {
+    public NBTTagCompound getUpdateTag() {
         return this.writeToNBT(new NBTTagCompound());
     }
 }

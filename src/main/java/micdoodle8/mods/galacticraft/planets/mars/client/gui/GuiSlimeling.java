@@ -19,38 +19,67 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.FMLClientHandler;
-
 import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
 
-public class GuiSlimeling extends GuiScreen
-{
+public class GuiSlimeling extends GuiScreen {
+    private static final ResourceLocation slimelingPanelGui = new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "textures/gui/slimeling_panel0.png");
+    public static boolean renderingOnGui = false;
     private final int xSize;
     private final int ySize;
-    private static final ResourceLocation slimelingPanelGui = new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "textures/gui/slimeling_panel0.png");
     private final EntitySlimeling slimeling;
-
-    public GuiTextField nameField;
-    public GuiButton stayButton;
-
-    public static boolean renderingOnGui = false;
-
-    private int invX;
-    private int invY;
     private final int invWidth = 18;
     private final int invHeight = 18;
+    public GuiTextField nameField;
+    public GuiButton stayButton;
+    private int invX;
+    private int invY;
 
-    public GuiSlimeling(EntitySlimeling slimeling)
-    {
+    public GuiSlimeling(EntitySlimeling slimeling) {
         this.slimeling = slimeling;
         this.xSize = 176;
         this.ySize = 147;
     }
 
+    public static void drawSlimelingOnGui(EntitySlimeling slimeling, int x, int y, int scale, float mouseX, float mouseY) {
+        GuiSlimeling.renderingOnGui = true;
+        GlStateManager.enableColorMaterial();
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(x, y, 50.0F);
+        GlStateManager.scale(-scale / 2.0F, scale / 2.0F, scale / 2.0F);
+        GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
+        float f2 = slimeling.renderYawOffset;
+        float f3 = slimeling.rotationYaw;
+        float f4 = slimeling.rotationPitch;
+        mouseX += 40;
+        mouseY -= 20;
+        GlStateManager.rotate(135.0F, 0.0F, 1.0F, 0.0F);
+        RenderHelper.enableStandardItemLighting();
+        GlStateManager.rotate(-135.0F, 0.0F, 1.0F, 0.0F);
+        GlStateManager.rotate(-((float) Math.atan(mouseY / 40.0F)) * 20.0F, 1.0F, 0.0F, 0.0F);
+        slimeling.renderYawOffset = (float) Math.atan(mouseX / 40.0F) * 20.0F;
+        slimeling.rotationYaw = (float) Math.atan(mouseX / 40.0F) * 40.0F;
+        slimeling.rotationPitch = -((float) Math.atan(mouseY / 40.0F)) * 20.0F;
+        slimeling.rotationYawHead = slimeling.rotationYaw;
+        GlStateManager.translate(0.0F, (float) slimeling.getYOffset(), 0.0F);
+        FMLClientHandler.instance().getClient().getRenderManager().playerViewY = 180.0F;
+        FMLClientHandler.instance().getClient().getRenderManager().renderEntity(slimeling, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, false);
+        slimeling.renderYawOffset = f2;
+        slimeling.rotationYaw = f3;
+        slimeling.rotationPitch = f4;
+        GlStateManager.popMatrix();
+        RenderHelper.disableStandardItemLighting();
+        GlStateManager.disableRescaleNormal();
+        GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
+        GlStateManager.disableTexture2D();
+        GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
+        GlStateManager.color(1.0F, 1.0F, 1.0F);
+        GuiSlimeling.renderingOnGui = false;
+    }
+
     @Override
-    public void initGui()
-    {
+    public void initGui() {
         super.initGui();
         this.buttonList.clear();
         Keyboard.enableRepeatEvents(true);
@@ -71,73 +100,59 @@ public class GuiSlimeling extends GuiScreen
     }
 
     @Override
-    public void updateScreen()
-    {
-        if (this.slimeling.isOwner(this.mc.player))
-        {
+    public void updateScreen() {
+        if (this.slimeling.isOwner(this.mc.player)) {
             this.nameField.updateCursorCounter();
         }
         this.stayButton.displayString = this.slimeling.isSitting() ? GCCoreUtil.translate("gui.slimeling.button.follow") : GCCoreUtil.translate("gui.slimeling.button.sit");
     }
 
     @Override
-    public void onGuiClosed()
-    {
+    public void onGuiClosed() {
         Keyboard.enableRepeatEvents(false);
     }
 
     @Override
-    public boolean doesGuiPauseGame()
-    {
+    public boolean doesGuiPauseGame() {
         return false;
     }
 
     @Override
-    protected void keyTyped(char typedChar, int keyCode) throws IOException
-    {
-        if (this.slimeling.isOwner(this.mc.player))
-        {
-            if (this.nameField.textboxKeyTyped(typedChar, keyCode))
-            {
+    protected void keyTyped(char typedChar, int keyCode) throws IOException {
+        if (this.slimeling.isOwner(this.mc.player)) {
+            if (this.nameField.textboxKeyTyped(typedChar, keyCode)) {
                 this.slimeling.setName(this.nameField.getText());
-                GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleMars(EnumSimplePacketMars.S_UPDATE_SLIMELING_DATA, GCCoreUtil.getDimensionID(this.slimeling.world), new Object[] { this.slimeling.getEntityId(), 1, this.slimeling.getName() }));
+                GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleMars(EnumSimplePacketMars.S_UPDATE_SLIMELING_DATA, GCCoreUtil.getDimensionID(this.slimeling.world), new Object[]{this.slimeling.getEntityId(), 1, this.slimeling.getName()}));
             }
         }
         super.keyTyped(typedChar, keyCode);
     }
 
     @Override
-    protected void actionPerformed(GuiButton button)
-    {
-        if (button.enabled)
-        {
-            switch (button.id)
-            {
-            case 0:
-                GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleMars(EnumSimplePacketMars.S_UPDATE_SLIMELING_DATA, GCCoreUtil.getDimensionID(this.slimeling.world), new Object[] { this.slimeling.getEntityId(), 0, "" }));
-                break;
+    protected void actionPerformed(GuiButton button) {
+        if (button.enabled) {
+            switch (button.id) {
+                case 0:
+                    GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleMars(EnumSimplePacketMars.S_UPDATE_SLIMELING_DATA, GCCoreUtil.getDimensionID(this.slimeling.world), new Object[]{this.slimeling.getEntityId(), 0, ""}));
+                    break;
             }
         }
     }
 
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
-    {
-        if (this.slimeling.isOwner(this.mc.player))
-        {
+    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+        if (this.slimeling.isOwner(this.mc.player)) {
             this.nameField.mouseClicked(mouseX, mouseY, mouseButton);
         }
-        if (mouseX >= this.invX && mouseX < this.invX + this.invWidth && mouseY >= this.invY && mouseY < this.invY + this.invHeight)
-        {
+        if (mouseX >= this.invX && mouseX < this.invX + this.invWidth && mouseY >= this.invY && mouseY < this.invY + this.invHeight) {
             this.mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-            GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleMars(EnumSimplePacketMars.S_UPDATE_SLIMELING_DATA, GCCoreUtil.getDimensionID(this.slimeling.world), new Object[] { this.slimeling.getEntityId(), 6, "" }));
+            GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleMars(EnumSimplePacketMars.S_UPDATE_SLIMELING_DATA, GCCoreUtil.getDimensionID(this.slimeling.world), new Object[]{this.slimeling.getEntityId(), 6, ""}));
         }
         super.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks)
-    {
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         int i = (this.width - this.xSize) / 2;
         int j = (this.height - this.ySize) / 2;
 
@@ -200,46 +215,8 @@ public class GuiSlimeling extends GuiScreen
         GlStateManager.popMatrix();
         ItemStack foodStack = new ItemStack(this.slimeling.getFavoriteFood());
 
-        if (foodStack != null && mouseX >= this.invX - 66 && mouseX < this.invX + this.invWidth - 68 && mouseY >= this.invY + 44 && mouseY < this.invY + this.invHeight + 42)
-        {
+        if (foodStack != null && mouseX >= this.invX - 66 && mouseX < this.invX + this.invWidth - 68 && mouseY >= this.invY + 44 && mouseY < this.invY + this.invHeight + 42) {
             this.renderToolTip(foodStack, mouseX, mouseY);
         }
-    }
-
-    public static void drawSlimelingOnGui(EntitySlimeling slimeling, int x, int y, int scale, float mouseX, float mouseY)
-    {
-        GuiSlimeling.renderingOnGui = true;
-        GlStateManager.enableColorMaterial();
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(x, y, 50.0F);
-        GlStateManager.scale(-scale / 2.0F, scale / 2.0F, scale / 2.0F);
-        GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
-        float f2 = slimeling.renderYawOffset;
-        float f3 = slimeling.rotationYaw;
-        float f4 = slimeling.rotationPitch;
-        mouseX += 40;
-        mouseY -= 20;
-        GlStateManager.rotate(135.0F, 0.0F, 1.0F, 0.0F);
-        RenderHelper.enableStandardItemLighting();
-        GlStateManager.rotate(-135.0F, 0.0F, 1.0F, 0.0F);
-        GlStateManager.rotate(-((float) Math.atan(mouseY / 40.0F)) * 20.0F, 1.0F, 0.0F, 0.0F);
-        slimeling.renderYawOffset = (float) Math.atan(mouseX / 40.0F) * 20.0F;
-        slimeling.rotationYaw = (float) Math.atan(mouseX / 40.0F) * 40.0F;
-        slimeling.rotationPitch = -((float) Math.atan(mouseY / 40.0F)) * 20.0F;
-        slimeling.rotationYawHead = slimeling.rotationYaw;
-        GlStateManager.translate(0.0F, (float) slimeling.getYOffset(), 0.0F);
-        FMLClientHandler.instance().getClient().getRenderManager().playerViewY = 180.0F;
-        FMLClientHandler.instance().getClient().getRenderManager().renderEntity(slimeling, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, false);
-        slimeling.renderYawOffset = f2;
-        slimeling.rotationYaw = f3;
-        slimeling.rotationPitch = f4;
-        GlStateManager.popMatrix();
-        RenderHelper.disableStandardItemLighting();
-        GlStateManager.disableRescaleNormal();
-        GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
-        GlStateManager.disableTexture2D();
-        GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
-        GlStateManager.color(1.0F, 1.0F, 1.0F);
-        GuiSlimeling.renderingOnGui = false;
     }
 }

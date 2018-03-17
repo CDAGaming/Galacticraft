@@ -13,43 +13,32 @@ import net.minecraft.world.WorldServer;
 
 import java.util.Random;
 
-public class TeleportTypeMars implements ITeleportType
-{
+public class TeleportTypeMars implements ITeleportType {
     @Override
-    public boolean useParachute()
-    {
+    public boolean useParachute() {
         return false;
     }
 
     @Override
-    public Vector3 getPlayerSpawnLocation(WorldServer world, EntityPlayerMP player)
-    {
-        if (player != null)
-        {
+    public Vector3 getPlayerSpawnLocation(WorldServer world, EntityPlayerMP player) {
+        if (player != null) {
             GCPlayerStats stats = GCPlayerStats.get(player);
             double x = stats.getCoordsTeleportedFromX();
             double z = stats.getCoordsTeleportedFromZ();
             int limit = ConfigManagerCore.otherPlanetWorldBorders - 2;
-            if (limit > 20)
-            {
-                if (x > limit)
-                {
+            if (limit > 20) {
+                if (x > limit) {
                     z *= limit / x;
                     x = limit;
-                }
-                else if (x < -limit)
-                {   
+                } else if (x < -limit) {
                     z *= -limit / x;
                     x = -limit;
                 }
-                if (z > limit)
-                {
+                if (z > limit) {
                     x *= limit / z;
                     z = limit;
-                }
-                else if (z < -limit)
-                {
-                    x *= - limit / z;
+                } else if (z < -limit) {
+                    x *= -limit / z;
                     z = -limit;
                 }
             }
@@ -60,35 +49,28 @@ public class TeleportTypeMars implements ITeleportType
     }
 
     @Override
-    public Vector3 getEntitySpawnLocation(WorldServer world, Entity entity)
-    {
+    public Vector3 getEntitySpawnLocation(WorldServer world, Entity entity) {
         return new Vector3(entity.posX, ConfigManagerCore.disableLander ? 250.0 : 900.0, entity.posZ);
     }
 
     @Override
-    public Vector3 getParaChestSpawnLocation(WorldServer world, EntityPlayerMP player, Random rand)
-    {
+    public Vector3 getParaChestSpawnLocation(WorldServer world, EntityPlayerMP player, Random rand) {
         return null;
     }
 
     @Override
-    public void onSpaceDimensionChanged(World newWorld, EntityPlayerMP player, boolean ridingAutoRocket)
-    {
-        if (!ridingAutoRocket && player != null)
-        {
+    public void onSpaceDimensionChanged(World newWorld, EntityPlayerMP player, boolean ridingAutoRocket) {
+        if (!ridingAutoRocket && player != null) {
             GCPlayerStats stats = GCPlayerStats.get(player);
 
-            if (stats.getTeleportCooldown() <= 0)
-            {
-                if (player.capabilities.isFlying)
-                {
+            if (stats.getTeleportCooldown() <= 0) {
+                if (player.capabilities.isFlying) {
                     player.capabilities.isFlying = false;
                 }
 
                 EntityLandingBalloons lander = new EntityLandingBalloons(player);
 
-                if (!newWorld.isRemote)
-                {
+                if (!newWorld.isRemote) {
                     CompatibilityManager.forceLoadChunks((WorldServer) newWorld);
                     lander.forceSpawn = true;
                     newWorld.spawnEntity(lander);
@@ -101,8 +83,7 @@ public class TeleportTypeMars implements ITeleportType
     }
 
     @Override
-    public void setupAdventureSpawn(EntityPlayerMP player)
-    {
+    public void setupAdventureSpawn(EntityPlayerMP player) {
         // TODO Auto-generated method stub
 
     }

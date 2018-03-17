@@ -1,7 +1,6 @@
 package micdoodle8.mods.galacticraft.api.item;
 
-public enum EnumExtendedInventorySlot
-{
+public enum EnumExtendedInventorySlot {
     MASK,
     GEAR,
     LEFT_TANK,

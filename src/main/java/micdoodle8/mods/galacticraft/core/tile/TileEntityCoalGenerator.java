@@ -22,8 +22,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.EnumSet;
 
-public class TileEntityCoalGenerator extends TileBaseUniversalElectricalSource implements IInventoryDefaults, ISidedInventory, IConnector
-{
+public class TileEntityCoalGenerator extends TileBaseUniversalElectricalSource implements IInventoryDefaults, ISidedInventory, IConnector {
     //New energy rates:
     //
     //Tier 1 machine typically consumes 600 gJ/s = 30 gJ/t
@@ -51,39 +50,30 @@ public class TileEntityCoalGenerator extends TileBaseUniversalElectricalSource i
     public int itemCookTime = 0;
     private NonNullList<ItemStack> stacks = NonNullList.withSize(1, ItemStack.EMPTY);
 
-    public TileEntityCoalGenerator()
-    {
+    public TileEntityCoalGenerator() {
         this.storage.setMaxExtract(TileEntityCoalGenerator.MAX_GENERATE_GJ_PER_TICK - TileEntityCoalGenerator.MIN_GENERATE_GJ_PER_TICK);
     }
 
     @Override
-    public void update()
-    {
-        if (!this.world.isRemote && this.heatGJperTick - TileEntityCoalGenerator.MIN_GENERATE_GJ_PER_TICK > 0)
-        {
+    public void update() {
+        if (!this.world.isRemote && this.heatGJperTick - TileEntityCoalGenerator.MIN_GENERATE_GJ_PER_TICK > 0) {
             this.receiveEnergyGC(null, (this.heatGJperTick - TileEntityCoalGenerator.MIN_GENERATE_GJ_PER_TICK), false);
         }
 
         super.update();
 
-        if (!this.world.isRemote)
-        {
-            if (this.itemCookTime > 0)
-            {
+        if (!this.world.isRemote) {
+            if (this.itemCookTime > 0) {
                 this.itemCookTime--;
 
                 this.heatGJperTick = Math.min(this.heatGJperTick + Math.max(this.heatGJperTick * 0.005F, TileEntityCoalGenerator.BASE_ACCELERATION), TileEntityCoalGenerator.MAX_GENERATE_GJ_PER_TICK);
             }
 
-            if (this.itemCookTime <= 0 && !this.stacks.get(0).isEmpty())
-            {
-                if (this.stacks.get(0).getItem() == Items.COAL && this.stacks.get(0).getCount() > 0)
-                {
+            if (this.itemCookTime <= 0 && !this.stacks.get(0).isEmpty()) {
+                if (this.stacks.get(0).getItem() == Items.COAL && this.stacks.get(0).getCount() > 0) {
                     this.itemCookTime = 320;
                     this.decrStackSize(0, 1);
-                }
-                else if (this.stacks.get(0).getItem() == Item.getItemFromBlock(Blocks.COAL_BLOCK) && this.stacks.get(0).getCount() > 0)
-                {
+                } else if (this.stacks.get(0).getItem() == Item.getItemFromBlock(Blocks.COAL_BLOCK) && this.stacks.get(0).getCount() > 0) {
                     this.itemCookTime = 320 * 10;
                     this.decrStackSize(0, 1);
                 }
@@ -91,8 +81,7 @@ public class TileEntityCoalGenerator extends TileBaseUniversalElectricalSource i
 
             this.produce();
 
-            if (this.itemCookTime <= 0)
-            {
+            if (this.itemCookTime <= 0) {
                 this.heatGJperTick = Math.max(this.heatGJperTick - 0.3F, 0);
             }
 
@@ -101,8 +90,7 @@ public class TileEntityCoalGenerator extends TileBaseUniversalElectricalSource i
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt)
-    {
+    public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
         this.itemCookTime = nbt.getInteger("itemCookTime");
         this.heatGJperTick = nbt.getInteger("generateRateInt");
@@ -112,8 +100,7 @@ public class TileEntityCoalGenerator extends TileBaseUniversalElectricalSource i
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt)
-    {
+    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
         nbt.setInteger("itemCookTime", this.itemCookTime);
         nbt.setFloat("generateRate", this.heatGJperTick);
@@ -123,24 +110,20 @@ public class TileEntityCoalGenerator extends TileBaseUniversalElectricalSource i
     }
 
     @Override
-    public int getSizeInventory()
-    {
+    public int getSizeInventory() {
         return this.stacks.size();
     }
 
     @Override
-    public ItemStack getStackInSlot(int var1)
-    {
+    public ItemStack getStackInSlot(int var1) {
         return this.stacks.get(var1);
     }
 
     @Override
-    public ItemStack decrStackSize(int index, int count)
-    {
+    public ItemStack decrStackSize(int index, int count) {
         ItemStack itemstack = ItemStackHelper.getAndSplit(this.stacks, index, count);
 
-        if (!itemstack.isEmpty())
-        {
+        if (!itemstack.isEmpty()) {
             this.markDirty();
         }
 
@@ -148,23 +131,19 @@ public class TileEntityCoalGenerator extends TileBaseUniversalElectricalSource i
     }
 
     @Override
-    public ItemStack removeStackFromSlot(int index)
-    {
+    public ItemStack removeStackFromSlot(int index) {
         ItemStack oldstack = ItemStackHelper.getAndRemove(this.stacks, index);
-        if (!oldstack.isEmpty())
-        {
-        	this.markDirty();
+        if (!oldstack.isEmpty()) {
+            this.markDirty();
         }
-    	return oldstack;
+        return oldstack;
     }
 
     @Override
-    public void setInventorySlotContents(int index, ItemStack stack)
-    {
+    public void setInventorySlotContents(int index, ItemStack stack) {
         this.stacks.set(index, stack);
 
-        if (stack.getCount() > this.getInventoryStackLimit())
-        {
+        if (stack.getCount() > this.getInventoryStackLimit()) {
             stack.setCount(this.getInventoryStackLimit());
         }
 
@@ -172,12 +151,9 @@ public class TileEntityCoalGenerator extends TileBaseUniversalElectricalSource i
     }
 
     @Override
-    public boolean isEmpty()
-    {
-        for (ItemStack itemstack : this.stacks)
-        {
-            if (!itemstack.isEmpty())
-            {
+    public boolean isEmpty() {
+        for (ItemStack itemstack : this.stacks) {
+            if (!itemstack.isEmpty()) {
                 return false;
             }
         }
@@ -186,20 +162,17 @@ public class TileEntityCoalGenerator extends TileBaseUniversalElectricalSource i
     }
 
     @Override
-    public String getName()
-    {
+    public String getName() {
         return GCCoreUtil.translate("tile.machine.0.name");
     }
 
     @Override
-    public int getInventoryStackLimit()
-    {
+    public int getInventoryStackLimit() {
         return 64;
     }
 
     @Override
-    public boolean isUsableByPlayer(EntityPlayer par1EntityPlayer)
-    {
+    public boolean isUsableByPlayer(EntityPlayer par1EntityPlayer) {
         return this.world.getTileEntity(this.getPos()) == this && par1EntityPlayer.getDistanceSq(this.getPos().getX() + 0.5D, this.getPos().getY() + 0.5D, this.getPos().getZ() + 0.5D) <= 64.0D;
     }
 
@@ -210,8 +183,7 @@ public class TileEntityCoalGenerator extends TileBaseUniversalElectricalSource i
 //    }
 
     @Override
-    public boolean isItemValidForSlot(int slotID, ItemStack itemstack)
-    {
+    public boolean isItemValidForSlot(int slotID, ItemStack itemstack) {
         return itemstack.getItem() == Items.COAL || itemstack.getItem() == Item.getItemFromBlock(Blocks.COAL_BLOCK);
     }
 
@@ -222,20 +194,17 @@ public class TileEntityCoalGenerator extends TileBaseUniversalElectricalSource i
 //    }
 
     @Override
-    public int[] getSlotsForFace(EnumFacing side)
-    {
-        return new int[] { 0 };
+    public int[] getSlotsForFace(EnumFacing side) {
+        return new int[]{0};
     }
 
     @Override
-    public boolean canInsertItem(int slotID, ItemStack itemstack, EnumFacing direction)
-    {
+    public boolean canInsertItem(int slotID, ItemStack itemstack, EnumFacing direction) {
         return this.isItemValidForSlot(slotID, itemstack);
     }
 
     @Override
-    public boolean canExtractItem(int slotID, ItemStack itemstack, EnumFacing direction)
-    {
+    public boolean canExtractItem(int slotID, ItemStack itemstack, EnumFacing direction) {
         return slotID == 0;
     }
 
@@ -252,8 +221,7 @@ public class TileEntityCoalGenerator extends TileBaseUniversalElectricalSource i
 //    }
 
     @Override
-    public float receiveElectricity(EnumFacing from, float energy, int tier, boolean doReceive)
-    {
+    public float receiveElectricity(EnumFacing from, float energy, int tier, boolean doReceive) {
         return 0;
     }
 
@@ -266,38 +234,31 @@ public class TileEntityCoalGenerator extends TileBaseUniversalElectricalSource i
 	*/
 
     @Override
-    public EnumSet<EnumFacing> getElectricalInputDirections()
-    {
+    public EnumSet<EnumFacing> getElectricalInputDirections() {
         return EnumSet.noneOf(EnumFacing.class);
     }
 
     @Override
-    public EnumSet<EnumFacing> getElectricalOutputDirections()
-    {
+    public EnumSet<EnumFacing> getElectricalOutputDirections() {
         return EnumSet.of(this.getElectricOutputDirection());
     }
 
-    public EnumFacing getFront()
-    {
-        IBlockState state = this.world.getBlockState(getPos()); 
-        if (state.getBlock() instanceof BlockMachine)
-        {
+    public EnumFacing getFront() {
+        IBlockState state = this.world.getBlockState(getPos());
+        if (state.getBlock() instanceof BlockMachine) {
             return state.getValue(BlockMachine.FACING);
         }
         return EnumFacing.NORTH;
     }
 
     @Override
-    public EnumFacing getElectricOutputDirection()
-    {
+    public EnumFacing getElectricOutputDirection() {
         return getFront().rotateY();
     }
 
     @Override
-    public boolean canConnect(EnumFacing direction, NetworkType type)
-    {
-        if (direction == null || type != NetworkType.POWER)
-        {
+    public boolean canConnect(EnumFacing direction, NetworkType type) {
+        if (direction == null || type != NetworkType.POWER) {
             return false;
         }
 

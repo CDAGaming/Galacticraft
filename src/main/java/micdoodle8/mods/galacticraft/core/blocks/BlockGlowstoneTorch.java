@@ -20,11 +20,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Random;
 
-public class BlockGlowstoneTorch extends BlockTorchBase implements IShiftDescription, ISortableBlock
-{
+public class BlockGlowstoneTorch extends BlockTorchBase implements IShiftDescription, ISortableBlock {
 
-    public BlockGlowstoneTorch(String assetName)
-    {
+    public BlockGlowstoneTorch(String assetName) {
         super(Material.CIRCUITS);
         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.UP));
         this.setTickRandomly(true);
@@ -34,30 +32,24 @@ public class BlockGlowstoneTorch extends BlockTorchBase implements IShiftDescrip
     }
 
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
-    {
+    public CreativeTabs getCreativeTabToDisplayOn() {
         return GalacticraftCore.galacticraftBlocksTab;
     }
 
     @Override
-    public boolean isOpaqueCube(IBlockState state)
-    {
+    public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
 
     @Override
-    public boolean isFullCube(IBlockState state)
-    {
+    public boolean isFullCube(IBlockState state) {
         return false;
     }
 
     @Override
-    public boolean canPlaceBlockAt(World worldIn, BlockPos pos)
-    {
-        for (EnumFacing enumfacing : FACING.getAllowedValues())
-        {
-            if (this.canPlaceAt(worldIn, pos, enumfacing))
-            {
+    public boolean canPlaceBlockAt(World worldIn, BlockPos pos) {
+        for (EnumFacing enumfacing : FACING.getAllowedValues()) {
+            if (this.canPlaceAt(worldIn, pos, enumfacing)) {
                 return true;
             }
         }
@@ -66,36 +58,27 @@ public class BlockGlowstoneTorch extends BlockTorchBase implements IShiftDescrip
     }
 
     @Override
-    public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)
-    {
+    public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
         this.checkForDrop(worldIn, pos, state);
     }
 
     @Override
-    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)
-    {
-        if (!this.checkForDrop(worldIn, pos, state))
-        {
+    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
+        if (!this.checkForDrop(worldIn, pos, state)) {
             return;
-        }
-        else
-        {
+        } else {
             EnumFacing enumfacing = state.getValue(FACING);
             EnumFacing.Axis enumfacing$axis = enumfacing.getAxis();
             EnumFacing enumfacing1 = enumfacing.getOpposite();
             boolean flag = false;
 
-            if (enumfacing$axis.isHorizontal() && !worldIn.isSideSolid(pos.offset(enumfacing1), enumfacing, true))
-            {
+            if (enumfacing$axis.isHorizontal() && !worldIn.isSideSolid(pos.offset(enumfacing1), enumfacing, true)) {
                 flag = true;
-            }
-            else if (enumfacing$axis.isVertical() && !this.canPlaceOn(worldIn, pos.offset(enumfacing1)))
-            {
+            } else if (enumfacing$axis.isVertical() && !this.canPlaceOn(worldIn, pos.offset(enumfacing1))) {
                 flag = true;
             }
 
-            if (flag)
-            {
+            if (flag) {
                 this.dropBlockAsItem(worldIn, pos, state, 0);
                 worldIn.setBlockToAir(pos);
             }
@@ -103,12 +86,10 @@ public class BlockGlowstoneTorch extends BlockTorchBase implements IShiftDescrip
     }
 
     @Override
-    public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
-    {
+    public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand) {
         super.updateTick(worldIn, pos, state, rand);
 
-        if (getMetaFromState(state) == 0)
-        {
+        if (getMetaFromState(state) == 0) {
             this.onBlockAdded(worldIn, pos, state);
         }
     }
@@ -146,32 +127,27 @@ public class BlockGlowstoneTorch extends BlockTorchBase implements IShiftDescrip
 
     @Override
     @SideOnly(Side.CLIENT)
-    public BlockRenderLayer getBlockLayer()
-    {
+    public BlockRenderLayer getBlockLayer() {
         return BlockRenderLayer.CUTOUT;
     }
 
     @Override
-    protected BlockStateContainer createBlockState()
-    {
-        return new BlockStateContainer(this, new IProperty[] { FACING });
+    protected BlockStateContainer createBlockState() {
+        return new BlockStateContainer(this, new IProperty[]{FACING});
     }
 
     @Override
-    public String getShiftDescription(int meta)
-    {
+    public String getShiftDescription(int meta) {
         return GCCoreUtil.translate(this.getUnlocalizedName() + ".description");
     }
 
     @Override
-    public boolean showDescription(int meta)
-    {
+    public boolean showDescription(int meta) {
         return true;
     }
 
     @Override
-    public EnumSortCategoryBlock getCategory(int meta)
-    {
+    public EnumSortCategoryBlock getCategory(int meta) {
         return EnumSortCategoryBlock.GENERAL;
     }
 }

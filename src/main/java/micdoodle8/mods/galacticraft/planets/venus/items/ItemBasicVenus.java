@@ -20,12 +20,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemBasicVenus extends ItemDesc implements ISortableItem
-{
-    public static String[] names = { "shield_controller", "ingot_lead", "radioisotope_core", "thermal_fabric" };
+public class ItemBasicVenus extends ItemDesc implements ISortableItem {
+    public static String[] names = {"shield_controller", "ingot_lead", "radioisotope_core", "thermal_fabric"};
 
-    public ItemBasicVenus(String name)
-    {
+    public ItemBasicVenus(String name) {
         super();
         this.setMaxDamage(0);
         this.setHasSubtypes(true);
@@ -34,35 +32,28 @@ public class ItemBasicVenus extends ItemDesc implements ISortableItem
 
     @SideOnly(Side.CLIENT)
     @Override
-    public CreativeTabs getCreativeTab()
-    {
+    public CreativeTabs getCreativeTab() {
         return GalacticraftCore.galacticraftItemsTab;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public EnumRarity getRarity(ItemStack par1ItemStack)
-    {
+    public EnumRarity getRarity(ItemStack par1ItemStack) {
         return ClientProxyCore.galacticraftItem;
     }
 
     @Override
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list)
-    {
-        if (tab == GalacticraftCore.galacticraftItemsTab || tab == CreativeTabs.SEARCH)
-        {
-            for (int i = 0; i < ItemBasicVenus.names.length; i++)
-            {
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list) {
+        if (tab == GalacticraftCore.galacticraftItemsTab || tab == CreativeTabs.SEARCH) {
+            for (int i = 0; i < ItemBasicVenus.names.length; i++) {
                 list.add(new ItemStack(this, 1, i));
             }
         }
     }
 
     @Override
-    public String getUnlocalizedName(ItemStack par1ItemStack)
-    {
-        if (names.length > par1ItemStack.getItemDamage())
-        {
+    public String getUnlocalizedName(ItemStack par1ItemStack) {
+        if (names.length > par1ItemStack.getItemDamage()) {
             return "item." + ItemBasicVenus.names[par1ItemStack.getItemDamage()];
         }
 
@@ -70,37 +61,31 @@ public class ItemBasicVenus extends ItemDesc implements ISortableItem
     }
 
     @Override
-    public int getMetadata(int par1)
-    {
+    public int getMetadata(int par1) {
         return par1;
     }
 
     @Override
-    public EnumSortCategoryItem getCategory(int meta)
-    {
-        switch (meta)
-        {
-        case 0:
-            return EnumSortCategoryItem.GEAR;
-        case 1:
-            return EnumSortCategoryItem.INGOT;
-        default:
-            return EnumSortCategoryItem.GENERAL;
+    public EnumSortCategoryItem getCategory(int meta) {
+        switch (meta) {
+            case 0:
+                return EnumSortCategoryItem.GEAR;
+            case 1:
+                return EnumSortCategoryItem.INGOT;
+            default:
+                return EnumSortCategoryItem.GENERAL;
         }
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer player, EnumHand hand)
-    {
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer player, EnumHand hand) {
         ItemStack itemStack = player.getHeldItem(hand);
 
-        if (player instanceof EntityPlayerMP && itemStack.getItemDamage() == 0)
-        {
+        if (player instanceof EntityPlayerMP && itemStack.getItemDamage() == 0) {
             GCPlayerStats stats = GCPlayerStats.get(player);
             ItemStack gear = stats.getExtendedInventory().getStackInSlot(10);
 
-            if (gear == null)
-            {
+            if (gear == null) {
                 stats.getExtendedInventory().setInventorySlotContents(10, itemStack.copy());
                 itemStack.setCount(0);
             }
@@ -109,10 +94,8 @@ public class ItemBasicVenus extends ItemDesc implements ISortableItem
     }
 
     @Override
-    public String getShiftDescription(int meta)
-    {
-        if (meta == 0)
-        {
+    public String getShiftDescription(int meta) {
+        if (meta == 0) {
             return GCCoreUtil.translate("item.shield_controller.description");
         }
 
@@ -120,8 +103,7 @@ public class ItemBasicVenus extends ItemDesc implements ISortableItem
     }
 
     @Override
-    public boolean showDescription(int meta)
-    {
+    public boolean showDescription(int meta) {
         return meta == 0;
     }
 }

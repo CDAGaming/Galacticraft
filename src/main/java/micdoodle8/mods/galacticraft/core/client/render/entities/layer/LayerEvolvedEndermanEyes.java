@@ -11,26 +11,22 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class LayerEvolvedEndermanEyes implements LayerRenderer<EntityEvolvedEnderman>
-{
+public class LayerEvolvedEndermanEyes implements LayerRenderer<EntityEvolvedEnderman> {
     private static final ResourceLocation eyesTexture = new ResourceLocation(Constants.ASSET_PREFIX, "textures/model/evolved_enderman_eyes.png");
-    
+
     private RenderEvolvedEnderman render;
 
-    public LayerEvolvedEndermanEyes(RenderEvolvedEnderman render)
-    {
+    public LayerEvolvedEndermanEyes(RenderEvolvedEnderman render) {
         this.render = render;
     }
 
     @Override
-    public boolean shouldCombineTextures()
-    {
+    public boolean shouldCombineTextures() {
         return false;
     }
 
     @Override
-    public void doRenderLayer(EntityEvolvedEnderman entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale)
-    {
+    public void doRenderLayer(EntityEvolvedEnderman entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         this.render.bindTexture(LayerEvolvedEndermanEyes.eyesTexture);
         GlStateManager.enableBlend();
         GlStateManager.disableAlpha();

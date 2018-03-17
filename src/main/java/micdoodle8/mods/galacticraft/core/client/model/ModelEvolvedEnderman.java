@@ -7,8 +7,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class ModelEvolvedEnderman extends ModelBiped
-{
+public class ModelEvolvedEnderman extends ModelBiped {
     public boolean isCarrying;
     public boolean isAttacking;
     ModelRenderer oxygenMask;
@@ -29,8 +28,7 @@ public class ModelEvolvedEnderman extends ModelBiped
     ModelRenderer tube13;
     ModelRenderer tube14;
 
-    public ModelEvolvedEnderman()
-    {
+    public ModelEvolvedEnderman() {
         super(0.0F, -14.0F, 64, 64);
         float f1 = -14.0F;
         this.bipedHeadwear = new ModelRenderer(this, 0, 16);
@@ -124,8 +122,7 @@ public class ModelEvolvedEnderman extends ModelBiped
     }
 
     @Override
-    public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale, Entity entity)
-    {
+    public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale, Entity entity) {
         super.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, entity);
         this.bipedHead.showModel = true;
         float f6 = -14.0F;
@@ -134,47 +131,38 @@ public class ModelEvolvedEnderman extends ModelBiped
         this.bipedBody.rotationPointZ = -0.0F;
         this.bipedRightLeg.rotateAngleX -= 0.0F;
         this.bipedLeftLeg.rotateAngleX -= 0.0F;
-        this.bipedRightArm.rotateAngleX = (float)(this.bipedRightArm.rotateAngleX * 0.5D);
-        this.bipedLeftArm.rotateAngleX = (float)(this.bipedLeftArm.rotateAngleX * 0.5D);
-        this.bipedRightLeg.rotateAngleX = (float)(this.bipedRightLeg.rotateAngleX * 0.5D);
-        this.bipedLeftLeg.rotateAngleX = (float)(this.bipedLeftLeg.rotateAngleX * 0.5D);
+        this.bipedRightArm.rotateAngleX = (float) (this.bipedRightArm.rotateAngleX * 0.5D);
+        this.bipedLeftArm.rotateAngleX = (float) (this.bipedLeftArm.rotateAngleX * 0.5D);
+        this.bipedRightLeg.rotateAngleX = (float) (this.bipedRightLeg.rotateAngleX * 0.5D);
+        this.bipedLeftLeg.rotateAngleX = (float) (this.bipedLeftLeg.rotateAngleX * 0.5D);
         float f7 = 0.4F;
 
-        if (this.bipedRightArm.rotateAngleX > f7)
-        {
+        if (this.bipedRightArm.rotateAngleX > f7) {
             this.bipedRightArm.rotateAngleX = f7;
         }
-        if (this.bipedLeftArm.rotateAngleX > f7)
-        {
+        if (this.bipedLeftArm.rotateAngleX > f7) {
             this.bipedLeftArm.rotateAngleX = f7;
         }
-        if (this.bipedRightArm.rotateAngleX < -f7)
-        {
+        if (this.bipedRightArm.rotateAngleX < -f7) {
             this.bipedRightArm.rotateAngleX = -f7;
         }
-        if (this.bipedLeftArm.rotateAngleX < -f7)
-        {
+        if (this.bipedLeftArm.rotateAngleX < -f7) {
             this.bipedLeftArm.rotateAngleX = -f7;
         }
-        if (this.bipedRightLeg.rotateAngleX > f7)
-        {
+        if (this.bipedRightLeg.rotateAngleX > f7) {
             this.bipedRightLeg.rotateAngleX = f7;
         }
-        if (this.bipedLeftLeg.rotateAngleX > f7)
-        {
+        if (this.bipedLeftLeg.rotateAngleX > f7) {
             this.bipedLeftLeg.rotateAngleX = f7;
         }
-        if (this.bipedRightLeg.rotateAngleX < -f7)
-        {
+        if (this.bipedRightLeg.rotateAngleX < -f7) {
             this.bipedRightLeg.rotateAngleX = -f7;
         }
-        if (this.bipedLeftLeg.rotateAngleX < -f7)
-        {
+        if (this.bipedLeftLeg.rotateAngleX < -f7) {
             this.bipedLeftLeg.rotateAngleX = -f7;
         }
 
-        if (this.isCarrying)
-        {
+        if (this.isCarrying) {
             this.bipedRightArm.rotateAngleX = -0.5F;
             this.bipedLeftArm.rotateAngleX = -0.5F;
             this.bipedRightArm.rotateAngleZ = 0.05F;
@@ -203,8 +191,7 @@ public class ModelEvolvedEnderman extends ModelBiped
         this.oxygenMask.rotateAngleY = this.bipedHead.rotateAngleY;
         this.oxygenMask.rotateAngleZ = this.bipedHead.rotateAngleZ;
 
-        if (this.isAttacking)
-        {
+        if (this.isAttacking) {
             float f8 = 1.0F;
             this.bipedHead.rotationPointY -= f8 * 5.0F;
             this.oxygenMask.rotationPointY -= f8 * 5.0F;
@@ -212,8 +199,7 @@ public class ModelEvolvedEnderman extends ModelBiped
     }
 
     @Override
-    public void render(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale)
-    {
+    public void render(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         super.render(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
         this.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, entity);
         this.oxygenMask.render(scale);

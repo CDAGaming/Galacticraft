@@ -38,42 +38,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 
-public class BlockSlimelingEgg extends Block implements ITileEntityProvider, IShiftDescription, ISortableBlock
-{
+public class BlockSlimelingEgg extends Block implements ITileEntityProvider, IShiftDescription, ISortableBlock {
     //    private IIcon[] icons;
     public static final PropertyEnum<EnumEggColor> EGG_COLOR = PropertyEnum.create("eggcolor", EnumEggColor.class);
     public static final PropertyBool BROKEN = PropertyBool.create("broken");
     protected static final AxisAlignedBB AABB = new AxisAlignedBB(0.25, 0.0, 0.25, 0.75, 0.625, 0.75);
 
-    public enum EnumEggColor implements IStringSerializable
-    {
-        RED(0, "red"),
-        BLUE(1, "blue"),
-        YELLOW(2, "yellow");
-
-        private final int meta;
-        private final String name;
-
-        private EnumEggColor(int meta, String name)
-        {
-            this.meta = meta;
-            this.name = name;
-        }
-
-        public int getMeta()
-        {
-            return this.meta;
-        }
-
-        @Override
-        public String getName()
-        {
-            return this.name;
-        }
-    }
-
-    public BlockSlimelingEgg(String assetName)
-    {
+    public BlockSlimelingEgg(String assetName) {
         super(Material.ROCK);
 //        this.setBlockBounds(0.25F, 0.0F, 0.25F, 0.75F, 0.625F, 0.75F);
         this.setUnlocalizedName(assetName);
@@ -81,27 +52,47 @@ public class BlockSlimelingEgg extends Block implements ITileEntityProvider, ISh
     }
 
     @Override
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
-    {
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
         return AABB;
     }
 
     @Override
-    public boolean isFullCube(IBlockState state)
-    {
+    public boolean isFullCube(IBlockState state) {
         return false;
     }
 
     @Override
-    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face)
-    {
+    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
         return BlockFaceShape.UNDEFINED;
     }
 
     @Override
-    public boolean canPlaceBlockAt(World worldIn, BlockPos pos)
-    {
+    public boolean canPlaceBlockAt(World worldIn, BlockPos pos) {
         return worldIn.getBlockState(pos).getBlock().isReplaceable(worldIn, pos);
+    }
+
+    private boolean beginHatch(World world, BlockPos pos, EntityPlayer player) {
+        IBlockState state = world.getBlockState(pos);
+        int l = state.getBlock().getMetaFromState(state);
+
+        if (l < 3) {
+            world.setBlockState(pos, state.getBlock().getStateFromMeta(l + 3), 2);
+
+            TileEntity tile = world.getTileEntity(pos);
+
+            if (tile instanceof TileEntitySlimelingEgg) {
+                ((TileEntitySlimelingEgg) tile).timeToHatch = world.rand.nextInt(50) + 20;
+                ((TileEntitySlimelingEgg) tile).lastTouchedPlayerUUID = player.getUniqueID().toString();
+                ((TileEntitySlimelingEgg) tile).lastTouchedPlayerName = player.getName();
+            }
+
+            world.markBlockRangeForRenderUpdate(pos, pos);
+
+            return true;
+        } else {
+            world.markBlockRangeForRenderUpdate(pos, pos);
+            return false;
+        }
     }
 
 //    @Override
@@ -111,80 +102,46 @@ public class BlockSlimelingEgg extends Block implements ITileEntityProvider, ISh
 //        return block.isSideSolid(par1World, par2, par3, par4, ForgeDirection.UP);
 //    }
 
-    private boolean beginHatch(World world, BlockPos pos, EntityPlayer player)
-    {
-        IBlockState state = world.getBlockState(pos);
-        int l = state.getBlock().getMetaFromState(state);
-
-        if (l < 3)
-        {
-            world.setBlockState(pos, state.getBlock().getStateFromMeta(l + 3), 2);
-
-            TileEntity tile = world.getTileEntity(pos);
-
-            if (tile instanceof TileEntitySlimelingEgg)
-            {
-                ((TileEntitySlimelingEgg) tile).timeToHatch = world.rand.nextInt(50) + 20;
-                ((TileEntitySlimelingEgg) tile).lastTouchedPlayerUUID = player.getUniqueID().toString();
-                ((TileEntitySlimelingEgg) tile).lastTouchedPlayerName = player.getName();
-            }
-
-            world.markBlockRangeForRenderUpdate(pos, pos);
-
-            return true;
-        }
-        else
-        {
-            world.markBlockRangeForRenderUpdate(pos, pos);
-            return false;
-        }
-    }
-
     @Override
-    public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest)
-    {
+    public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest) {
         ItemStack currentStack = player.getActiveItemStack();
-        if (currentStack != null && currentStack.getItem() instanceof ItemPickaxe)
-        {
+        if (currentStack != null && currentStack.getItem() instanceof ItemPickaxe) {
             return world.setBlockToAir(pos);
-        }
-        else if (player.capabilities.isCreativeMode)
-        {
+        } else if (player.capabilities.isCreativeMode) {
             return world.setBlockToAir(pos);
-        }
-        else
-        {
+        } else {
             beginHatch(world, pos, player);
             return false;
         }
     }
 
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
-    {
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         return beginHatch(worldIn, pos, playerIn);
     }
 
     @Override
-    public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, @Nullable TileEntity te, @Nullable ItemStack stack)
-    {
+    public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, @Nullable TileEntity te, @Nullable ItemStack stack) {
         ItemStack currentStack = player.getActiveItemStack();
 
-        if (!currentStack.isEmpty() && currentStack.getItem() instanceof ItemPickaxe)
-        {
+        if (!currentStack.isEmpty() && currentStack.getItem() instanceof ItemPickaxe) {
             player.addStat(StatList.getBlockStats(this));
             player.addExhaustion(0.025F);
             this.dropBlockAsItem(worldIn, pos, state.getBlock().getStateFromMeta(state.getBlock().getMetaFromState(state) % 3), 0);
-            if (currentStack.getItem() == MarsItems.deshPickaxe && EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, stack) > 0)
-            {
+            if (currentStack.getItem() == MarsItems.deshPickaxe && EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, stack) > 0) {
                 ItemStack itemstack = new ItemStack(MarsItems.deshPickSlime, 1, currentStack.getItemDamage());
-                if (currentStack.getTagCompound() != null)
-                {
+                if (currentStack.getTagCompound() != null) {
                     itemstack.setTagCompound(currentStack.getTagCompound().copy());
                 }
                 player.inventory.setInventorySlotContents(player.inventory.currentItem, itemstack);
             }
         }
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public CreativeTabs getCreativeTabToDisplayOn() {
+        return GalacticraftCore.galacticraftBlocksTab;
     }
 
     /*@Override
@@ -194,17 +151,14 @@ public class BlockSlimelingEgg extends Block implements ITileEntityProvider, ISh
         return this.icons[metadata % 6];
     }*/
 
-    @SideOnly(Side.CLIENT)
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
-    {
-        return GalacticraftCore.galacticraftBlocksTab;
+    public boolean isOpaqueCube(IBlockState state) {
+        return false;
     }
 
     @Override
-    public boolean isOpaqueCube(IBlockState state)
-    {
-        return false;
+    public int damageDropped(IBlockState state) {
+        return getMetaFromState(state);
     }
 
 //    @Override
@@ -214,9 +168,10 @@ public class BlockSlimelingEgg extends Block implements ITileEntityProvider, ISh
 //    }
 
     @Override
-    public int damageDropped(IBlockState state)
-    {
-        return getMetaFromState(state);
+    public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list) {
+        for (int var4 = 0; var4 < EnumEggColor.values().length; ++var4) {
+            list.add(new ItemStack(this, 1, var4));
+        }
     }
 
 //    @Override
@@ -226,73 +181,76 @@ public class BlockSlimelingEgg extends Block implements ITileEntityProvider, ISh
 //    }
 
     @Override
-    public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list)
-    {
-        for (int var4 = 0; var4 < EnumEggColor.values().length; ++var4)
-        {
-            list.add(new ItemStack(this, 1, var4));
-        }
-    }
-
-    @Override
-    public TileEntity createNewTileEntity(World world, int meta)
-    {
+    public TileEntity createNewTileEntity(World world, int meta) {
         return new TileEntitySlimelingEgg();
     }
 
     @Override
-    public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player)
-    {
+    public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
         int metadata = state.getBlock().getMetaFromState(state);
 
-        if (metadata == 3)
-        {
+        if (metadata == 3) {
             return new ItemStack(Item.getItemFromBlock(this), 1, 0);
         }
-        if (metadata == 4)
-        {
+        if (metadata == 4) {
             return new ItemStack(Item.getItemFromBlock(this), 1, 1);
         }
-        if (metadata == 5)
-        {
+        if (metadata == 5) {
             return new ItemStack(Item.getItemFromBlock(this), 1, 2);
         }
         return super.getPickBlock(state, target, world, pos, player);
     }
 
     @Override
-    public String getShiftDescription(int meta)
-    {
+    public String getShiftDescription(int meta) {
         return GCCoreUtil.translate(this.getUnlocalizedName() + ".description");
     }
 
     @Override
-    public boolean showDescription(int meta)
-    {
+    public boolean showDescription(int meta) {
         return true;
     }
 
     @Override
-    public IBlockState getStateFromMeta(int meta)
-    {
+    public IBlockState getStateFromMeta(int meta) {
         return this.getDefaultState().withProperty(EGG_COLOR, EnumEggColor.values()[meta % 3]).withProperty(BROKEN, meta - 3 >= 0);
     }
 
     @Override
-    public int getMetaFromState(IBlockState state)
-    {
+    public int getMetaFromState(IBlockState state) {
         return ((EnumEggColor) state.getValue(EGG_COLOR)).getMeta() + (state.getValue(BROKEN) ? 3 : 0);
     }
 
     @Override
-    protected BlockStateContainer createBlockState()
-    {
+    protected BlockStateContainer createBlockState() {
         return new BlockStateContainer(this, EGG_COLOR, BROKEN);
     }
 
     @Override
-    public EnumSortCategoryBlock getCategory(int meta)
-    {
+    public EnumSortCategoryBlock getCategory(int meta) {
         return EnumSortCategoryBlock.EGG;
+    }
+
+    public enum EnumEggColor implements IStringSerializable {
+        RED(0, "red"),
+        BLUE(1, "blue"),
+        YELLOW(2, "yellow");
+
+        private final int meta;
+        private final String name;
+
+        private EnumEggColor(int meta, String name) {
+            this.meta = meta;
+            this.name = name;
+        }
+
+        public int getMeta() {
+            return this.meta;
+        }
+
+        @Override
+        public String getName() {
+            return this.name;
+        }
     }
 }

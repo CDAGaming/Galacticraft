@@ -26,10 +26,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Random;
 
-public class BlockMinerBase extends BlockTileGC implements IShiftDescription, ISortableBlock
-{
-    public BlockMinerBase(String assetName)
-    {
+public class BlockMinerBase extends BlockTileGC implements IShiftDescription, ISortableBlock {
+    public BlockMinerBase(String assetName) {
         super(Material.ROCK);
         this.blockHardness = 3.0F;
         this.setUnlocalizedName(assetName);
@@ -38,81 +36,68 @@ public class BlockMinerBase extends BlockTileGC implements IShiftDescription, IS
 
     @SideOnly(Side.CLIENT)
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
-    {
+    public CreativeTabs getCreativeTabToDisplayOn() {
         return GalacticraftCore.galacticraftBlocksTab;
     }
 
     @Override
-    public Item getItemDropped(IBlockState state, Random random, int par3)
-    {
+    public Item getItemDropped(IBlockState state, Random random, int par3) {
         return super.getItemDropped(state, random, par3);
     }
 
     @Override
-    public int damageDropped(IBlockState state)
-    {
+    public int damageDropped(IBlockState state) {
         return 0;
     }
 
     @Override
-    public int quantityDropped(IBlockState state, int fortune, Random random)
-    {
+    public int quantityDropped(IBlockState state, int fortune, Random random) {
         return 1;
     }
 
     @Override
-    public boolean isOpaqueCube(IBlockState state)
-    {
+    public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
 
     @Override
-    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face)
-    {
+    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
         return BlockFaceShape.UNDEFINED;
     }
 
     @Override
-    public TileEntity createTileEntity(World world, IBlockState metadata)
-    {
+    public TileEntity createTileEntity(World world, IBlockState metadata) {
         return new TileEntityMinerBaseSingle();
     }
 
     @Override
-    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand)
-    {
+    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
         return getStateFromMeta(0);
     }
 
     @Override
-    public boolean canPlaceBlockOnSide(World worldIn, BlockPos pos, EnumFacing side)
-    {
+    public boolean canPlaceBlockOnSide(World worldIn, BlockPos pos, EnumFacing side) {
         return true;
     }
 
     @Override
-    public String getShiftDescription(int meta)
-    {
+    public String getShiftDescription(int meta) {
         return GCCoreUtil.translate(this.getUnlocalizedName() + ".description");
     }
 
     @Override
-    public boolean showDescription(int meta)
-    {
+    public boolean showDescription(int meta) {
         return true;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public BlockRenderLayer getBlockLayer()
-    {
+    public BlockRenderLayer getBlockLayer() {
         return BlockRenderLayer.CUTOUT;
     }
 
     @Override
-    public EnumSortCategoryBlock getCategory(int meta)
-    {
+    public EnumSortCategoryBlock getCategory(int meta) {
         return EnumSortCategoryBlock.GENERAL;
     }
 }

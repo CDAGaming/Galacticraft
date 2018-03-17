@@ -4,22 +4,20 @@ import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.util.ClientUtil;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 
-public abstract class GuiStarBackground extends GuiScreen
-{
+public abstract class GuiStarBackground extends GuiScreen {
     private static final ResourceLocation backgroundTexture = new ResourceLocation(Constants.ASSET_PREFIX, "textures/gui/stars.png");
     private static final ResourceLocation blackTexture = new ResourceLocation(Constants.ASSET_PREFIX, "textures/gui/black.png");
 
-    public void drawBlackBackground()
-    {
+    public void drawBlackBackground() {
         final ScaledResolution var5 = ClientUtil.getScaledRes(this.mc, this.mc.displayWidth, this.mc.displayHeight);
         final int var6 = var5.getScaledWidth();
         final int var7 = var5.getScaledHeight();
@@ -43,8 +41,7 @@ public abstract class GuiStarBackground extends GuiScreen
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
     }
 
-    private void drawPanorama2(float par1)
-    {
+    private void drawPanorama2(float par1) {
         final Tessellator tess = Tessellator.getInstance();
         BufferBuilder worldRenderer = tess.getBuffer();
         GL11.glMatrixMode(GL11.GL_PROJECTION);
@@ -63,8 +60,7 @@ public abstract class GuiStarBackground extends GuiScreen
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
         final byte var5 = 1;
 
-        for (int var6 = 0; var6 < var5 * var5; ++var6)
-        {
+        for (int var6 = 0; var6 < var5 * var5; ++var6) {
             GL11.glPushMatrix();
             final float var7 = ((float) (var6 % var5) / (float) var5 - 0.5F) / 128.0F;
             final float var8 = ((float) (var6 / var5) / (float) var5 - 0.5F) / 128.0F;
@@ -73,12 +69,9 @@ public abstract class GuiStarBackground extends GuiScreen
             float mY;
             float mX;
 
-            if (Mouse.getY() < this.height)
-            {
+            if (Mouse.getY() < this.height) {
                 mY = (-this.height + Mouse.getY()) / 100F;
-            }
-            else
-            {
+            } else {
                 mY = (-this.height + Mouse.getY()) / 100F;
             }
 
@@ -86,47 +79,38 @@ public abstract class GuiStarBackground extends GuiScreen
 
             this.doCustomTranslation(0, var7, var8, var9, mX, mY);
 
-            for (int var10 = 0; var10 < 9; ++var10)
-            {
+            for (int var10 = 0; var10 < 9; ++var10) {
                 GL11.glPushMatrix();
 
-                if (var10 == 1)
-                {
+                if (var10 == 1) {
                     GL11.glTranslatef(1.96F, 0.0F, 0.0F);
                 }
 
-                if (var10 == 2)
-                {
+                if (var10 == 2) {
                     GL11.glTranslatef(-1.96F, 0.0F, 0.0F);
                 }
 
-                if (var10 == 3)
-                {
+                if (var10 == 3) {
                     GL11.glTranslatef(0.0F, 1.96F, 0.0F);
                 }
 
-                if (var10 == 4)
-                {
+                if (var10 == 4) {
                     GL11.glTranslatef(0.0F, -1.96F, 0.0F);
                 }
 
-                if (var10 == 5)
-                {
+                if (var10 == 5) {
                     GL11.glTranslatef(-1.96F, -1.96F, 0.0F);
                 }
 
-                if (var10 == 6)
-                {
+                if (var10 == 6) {
                     GL11.glTranslatef(-1.96F, 1.96F, 0.0F);
                 }
 
-                if (var10 == 7)
-                {
+                if (var10 == 7) {
                     GL11.glTranslatef(1.96F, -1.96F, 0.0F);
                 }
 
-                if (var10 == 8)
-                {
+                if (var10 == 8) {
                     GL11.glTranslatef(1.96F, 1.96F, 0.0F);
                 }
 
@@ -154,8 +138,7 @@ public abstract class GuiStarBackground extends GuiScreen
         GL11.glEnable(GL11.GL_DEPTH_TEST);
     }
 
-    private void drawPanorama(float par1)
-    {
+    private void drawPanorama(float par1) {
         final Tessellator tess = Tessellator.getInstance();
         BufferBuilder worldRenderer = tess.getBuffer();
         GL11.glMatrixMode(GL11.GL_PROJECTION);
@@ -174,8 +157,7 @@ public abstract class GuiStarBackground extends GuiScreen
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
         final byte var5 = 1;
 
-        for (int var6 = 0; var6 < var5 * var5; ++var6)
-        {
+        for (int var6 = 0; var6 < var5 * var5; ++var6) {
             GL11.glPushMatrix();
             final float var7 = ((float) (var6 % var5) / (float) var5 - 0.5F) / 64.0F;
             final float var8 = ((float) (var6 / var5) / (float) var5 - 0.5F) / 64.0F;
@@ -184,12 +166,9 @@ public abstract class GuiStarBackground extends GuiScreen
             float mY;
             float mX;
 
-            if (Mouse.getY() < this.height)
-            {
+            if (Mouse.getY() < this.height) {
                 mY = (-this.height + Mouse.getY()) / 100F;
-            }
-            else
-            {
+            } else {
                 mY = (-this.height + Mouse.getY()) / 100F;
             }
 
@@ -201,32 +180,26 @@ public abstract class GuiStarBackground extends GuiScreen
             GL11.glRotatef(-par1 * 0.005F, 0.0F, 1.0F, 0.0F);
             GL11.glRotatef(41, 0, 0, 1);
 
-            for (int var10 = 0; var10 < 6; ++var10)
-            {
+            for (int var10 = 0; var10 < 6; ++var10) {
                 GL11.glPushMatrix();
 
-                if (var10 == 1)
-                {
+                if (var10 == 1) {
                     GL11.glRotatef(90.0F, 0.0F, 1.0F, 0.0F);
                 }
 
-                if (var10 == 2)
-                {
+                if (var10 == 2) {
                     GL11.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);
                 }
 
-                if (var10 == 3)
-                {
+                if (var10 == 3) {
                     GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
                 }
 
-                if (var10 == 4)
-                {
+                if (var10 == 4) {
                     GL11.glRotatef(90.0F, 1.0F, 0.0F, 0.0F);
                 }
 
-                if (var10 == 5)
-                {
+                if (var10 == 5) {
                     GL11.glRotatef(-90.0F, 1.0F, 0.0F, 0.0F);
                 }
 
@@ -254,8 +227,7 @@ public abstract class GuiStarBackground extends GuiScreen
         GL11.glEnable(GL11.GL_DEPTH_TEST);
     }
 
-    private void rotateAndBlurSkybox()
-    {
+    private void rotateAndBlurSkybox() {
         this.mc.getTextureManager().bindTexture(GuiStarBackground.backgroundTexture);
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -265,8 +237,7 @@ public abstract class GuiStarBackground extends GuiScreen
         GL11.glColorMask(true, true, true, true);
     }
 
-    public void renderSkybox()
-    {
+    public void renderSkybox() {
         GL11.glViewport(0, 0, this.mc.displayWidth, this.mc.displayHeight);
         GL11.glPushMatrix();
         GL11.glScalef(1.0F, 0.0F, 1.0F);

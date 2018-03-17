@@ -15,8 +15,7 @@ import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class Tier1RocketRecipeCategory implements IRecipeCategory
-{
+public class Tier1RocketRecipeCategory implements IRecipeCategory {
     private static final ResourceLocation rocketGuiTexture = new ResourceLocation(Constants.ASSET_PREFIX, "textures/gui/rocketbench.png");
 
     @Nonnull
@@ -24,8 +23,7 @@ public class Tier1RocketRecipeCategory implements IRecipeCategory
     @Nonnull
     private final String localizedName;
 
-    public Tier1RocketRecipeCategory(IGuiHelper guiHelper)
-    {
+    public Tier1RocketRecipeCategory(IGuiHelper guiHelper) {
         this.background = guiHelper.createDrawable(rocketGuiTexture, 3, 4, 168, 130);
         this.localizedName = GCCoreUtil.translate("tile.rocket_workbench.name");
 
@@ -33,28 +31,24 @@ public class Tier1RocketRecipeCategory implements IRecipeCategory
 
     @Nonnull
     @Override
-    public String getUid()
-    {
+    public String getUid() {
         return RecipeCategories.ROCKET_T1_ID;
     }
 
     @Nonnull
     @Override
-    public String getTitle()
-    {
+    public String getTitle() {
         return this.localizedName;
     }
 
     @Nonnull
     @Override
-    public IDrawable getBackground()
-    {
+    public IDrawable getBackground() {
         return this.background;
     }
 
     @Override
-    public void setRecipe(IRecipeLayout recipeLayout, IRecipeWrapper recipeWrapper, IIngredients ingredients)
-    {
+    public void setRecipe(IRecipeLayout recipeLayout, IRecipeWrapper recipeWrapper, IIngredients ingredients) {
         IGuiItemStackGroup itemstacks = recipeLayout.getItemStacks();
 
         itemstacks.init(0, true, 44, 14);
@@ -80,8 +74,7 @@ public class Tier1RocketRecipeCategory implements IRecipeCategory
     }
 
     @Override
-    public String getModName()
-    {
+    public String getModName() {
         return GalacticraftCore.NAME;
     }
 }

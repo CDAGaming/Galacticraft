@@ -36,14 +36,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-public class EntityCreeperBoss extends EntityBossBase implements IEntityBreathable, IRangedAttackMob
-{
-    protected long ticks = 0;
+public class EntityCreeperBoss extends EntityBossBase implements IEntityBreathable, IRangedAttackMob {
     public int headsRemaining = 3;
+    protected long ticks = 0;
     private Entity targetEntity;
 
-    public EntityCreeperBoss(World par1World)
-    {
+    public EntityCreeperBoss(World par1World) {
         super(par1World);
         this.setSize(2.0F, 7.0F);
         this.isImmuneToFire = true;
@@ -57,34 +55,23 @@ public class EntityCreeperBoss extends EntityBossBase implements IEntityBreathab
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource damageSource, float damage)
-    {
-        if (damageSource.getDamageType().equals("fireball"))
-        {
-            if (this.isEntityInvulnerable(damageSource))
-            {
+    public boolean attackEntityFrom(DamageSource damageSource, float damage) {
+        if (damageSource.getDamageType().equals("fireball")) {
+            if (this.isEntityInvulnerable(damageSource)) {
                 return false;
-            }
-            else if (super.attackEntityFrom(damageSource, damage))
-            {
+            } else if (super.attackEntityFrom(damageSource, damage)) {
                 Entity entity = damageSource.getTrueSource();
 
-                if (this.getPassengers().contains(entity) && this.getRidingEntity() != entity)
-                {
-                    if (entity != this && entity instanceof EntityLivingBase)
-                    {
+                if (this.getPassengers().contains(entity) && this.getRidingEntity() != entity) {
+                    if (entity != this && entity instanceof EntityLivingBase) {
                         this.setAttackTarget((EntityLivingBase) entity);
                     }
 
                     return true;
-                }
-                else
-                {
+                } else {
                     return true;
                 }
-            }
-            else
-            {
+            } else {
                 return false;
             }
         }
@@ -93,40 +80,34 @@ public class EntityCreeperBoss extends EntityBossBase implements IEntityBreathab
     }
 
     @Override
-    protected void applyEntityAttributes()
-    {
+    protected void applyEntityAttributes() {
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(200.0F * ConfigManagerCore.dungeonBossHealthMod);
         this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.05F);
     }
 
     @Override
-    public void knockBack(Entity par1Entity, float par2, double par3, double par5)
-    {
+    public void knockBack(Entity par1Entity, float par2, double par3, double par5) {
     }
 
     @Override
-    public boolean canBePushed()
-    {
+    public boolean canBePushed() {
         return false;
     }
 
     @Override
-    protected SoundEvent getAmbientSound()
-    {
+    protected SoundEvent getAmbientSound() {
         return null;
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSourceIn)
-    {
+    protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
         this.playSound(GCSounds.bossOuch, this.getSoundVolume(), this.getSoundPitch() - 0.15F);
         return null;
     }
 
     @Override
-    protected SoundEvent getDeathSound()
-    {
+    protected SoundEvent getDeathSound() {
         return null;
     }
 
@@ -144,49 +125,36 @@ public class EntityCreeperBoss extends EntityBossBase implements IEntityBreathab
 //    }
 
     @Override
-    protected void onDeathUpdate()
-    {
+    protected void onDeathUpdate() {
         super.onDeathUpdate();
 
-        if (!this.world.isRemote)
-        {
-            if (this.deathTicks == 1)
-            {
-                GalacticraftCore.packetPipeline.sendToAllAround(new PacketSimple(EnumSimplePacket.C_PLAY_SOUND_BOSS_DEATH, GCCoreUtil.getDimensionID(this.world), new Object[] { getSoundPitch() - 0.1F }), new TargetPoint(GCCoreUtil.getDimensionID(this.world), this.posX, this.posY, this.posZ, 40.0D));
+        if (!this.world.isRemote) {
+            if (this.deathTicks == 1) {
+                GalacticraftCore.packetPipeline.sendToAllAround(new PacketSimple(EnumSimplePacket.C_PLAY_SOUND_BOSS_DEATH, GCCoreUtil.getDimensionID(this.world), new Object[]{getSoundPitch() - 0.1F}), new TargetPoint(GCCoreUtil.getDimensionID(this.world), this.posX, this.posY, this.posZ, 40.0D));
             }
         }
     }
 
     @Override
-    public void onLivingUpdate()
-    {
+    public void onLivingUpdate() {
         this.ticks++;
 
-        if (this.getHealth() <= 0)
-        {
+        if (this.getHealth() <= 0) {
             this.headsRemaining = 0;
-        }
-        else if (this.getHealth() <= this.getMaxHealth() / 3.0)
-        {
+        } else if (this.getHealth() <= this.getMaxHealth() / 3.0) {
             this.headsRemaining = 1;
-        }
-        else if (this.getHealth() <= 2 * (this.getMaxHealth() / 3.0))
-        {
+        } else if (this.getHealth() <= 2 * (this.getMaxHealth() / 3.0)) {
             this.headsRemaining = 2;
         }
 
         final EntityPlayer player = this.world.getClosestPlayer(this.posX, this.posY, this.posZ, 20.0, false);
 
-        if (player != null && !player.equals(this.targetEntity))
-        {
-            if (this.getDistanceSq(player) < 400.0D)
-            {
+        if (player != null && !player.equals(this.targetEntity)) {
+            if (this.getDistanceSq(player) < 400.0D) {
                 this.getNavigator().getPathToEntityLiving(player);
                 this.targetEntity = player;
             }
-        }
-        else
-        {
+        } else {
             this.targetEntity = null;
         }
 
@@ -194,57 +162,45 @@ public class EntityCreeperBoss extends EntityBossBase implements IEntityBreathab
     }
 
     @Override
-    protected Item getDropItem()
-    {
+    protected Item getDropItem() {
         return Items.ARROW;
     }
 
     @Override
-    public EntityItem entityDropItem(ItemStack par1ItemStack, float par2)
-    {
+    public EntityItem entityDropItem(ItemStack par1ItemStack, float par2) {
         final EntityItem entityitem = new EntityItem(this.world, this.posX, this.posY + par2, this.posZ, par1ItemStack);
         entityitem.motionY = -2.0D;
         entityitem.setDefaultPickupDelay();
-        if (this.captureDrops)
-        {
+        if (this.captureDrops) {
             this.capturedDrops.add(entityitem);
-        }
-        else
-        {
+        } else {
             this.world.spawnEntity(entityitem);
         }
         return entityitem;
     }
 
     @Override
-    protected void dropFewItems(boolean b, int i)
-    {
-        if (this.rand.nextInt(200) - i >= 5)
-        {
+    protected void dropFewItems(boolean b, int i) {
+        if (this.rand.nextInt(200) - i >= 5) {
             return;
         }
 
-        if (i > 0)
-        {
+        if (i > 0) {
             final ItemStack var2 = new ItemStack(Items.BOW);
             EnchantmentHelper.addRandomEnchantment(this.rand, var2, 5, false);
             this.entityDropItem(var2, 0.0F);
-        }
-        else
-        {
+        } else {
             this.dropItem(Items.BOW, 1);
         }
     }
 
     @Override
-    public boolean canBreath()
-    {
+    public boolean canBreath() {
         return true;
     }
 
     @Override
-    public ItemStack getGuaranteedLoot(Random rand)
-    {
+    public ItemStack getGuaranteedLoot(Random rand) {
         List<ItemStack> stackList = new LinkedList<>();
         stackList.addAll(GalacticraftRegistry.getDungeonLoot(2));
         boolean hasT3Rocket = false;
@@ -252,19 +208,13 @@ public class EntityCreeperBoss extends EntityBossBase implements IEntityBreathab
         // Check if player seems to have Tier 3 rocket or Astro Miner already - in that case we don't want more
         // (we don't really want him giving powerful schematics to his friends who are still on Overworld) 
         final EntityPlayer player = this.world.getClosestPlayer(this.posX, this.posY, this.posZ, 20.0, false);
-        if (player != null)
-        {
+        if (player != null) {
             GCPlayerStats stats = GCPlayerStats.get(player);
-            if (stats != null)
-            {
-                for (ISchematicPage page : stats.getUnlockedSchematics())
-                {
-                    if (page.getPageID() == ConfigManagerAsteroids.idSchematicRocketT3)
-                    {
+            if (stats != null) {
+                for (ISchematicPage page : stats.getUnlockedSchematics()) {
+                    if (page.getPageID() == ConfigManagerAsteroids.idSchematicRocketT3) {
                         hasT3Rocket = true;
-                    }
-                    else if (page.getPageID() == ConfigManagerAsteroids.idSchematicRocketT3 + 1)
-                    {
+                    } else if (page.getPageID() == ConfigManagerAsteroids.idSchematicRocketT3 + 1) {
                         hasAstroMiner = true;
                     }
                 }
@@ -274,25 +224,17 @@ public class EntityCreeperBoss extends EntityBossBase implements IEntityBreathab
         // (see MarsModule.init())
         //
         // Remove schematics which he already has
-        if (hasT3Rocket && hasAstroMiner)
-        {
+        if (hasT3Rocket && hasAstroMiner) {
             // (but do not remove both, otherwise the list is too short)
-            if (stackList.size() == 3)
-            {
+            if (stackList.size() == 3) {
                 stackList.remove(1 + rand.nextInt(2));
-            }
-            else
-            {
+            } else {
                 stackList.remove(2);
                 stackList.remove(1);
             }
-        }
-        else if (hasT3Rocket)
-        {
+        } else if (hasT3Rocket) {
             stackList.remove(1);
-        }
-        else if (hasAstroMiner)
-        {
+        } else if (hasAstroMiner) {
             stackList.remove(2);
         }
         // If he does not yet have the T3 rocket, limit the list size to 2 so 50% chance of getting it
@@ -302,8 +244,7 @@ public class EntityCreeperBoss extends EntityBossBase implements IEntityBreathab
     }
 
     @Override
-    public void attackEntityWithRangedAttack(EntityLivingBase entitylivingbase, float f)
-    {
+    public void attackEntityWithRangedAttack(EntityLivingBase entitylivingbase, float f) {
         this.world.playEvent(null, 1024, new BlockPos(this), 0);
         double d3 = this.posX;
         double d4 = this.posY + 5.5D;
@@ -320,26 +261,22 @@ public class EntityCreeperBoss extends EntityBossBase implements IEntityBreathab
     }
 
     @Override
-    public int getChestTier()
-    {
+    public int getChestTier() {
         return 2;
     }
 
     @Override
-    public void dropKey()
-    {
+    public void dropKey() {
         this.entityDropItem(new ItemStack(MarsItems.key, 1, 0), 0.5F);
     }
 
     @Override
-    public BossInfo.Color getHealthBarColor()
-    {
+    public BossInfo.Color getHealthBarColor() {
         return BossInfo.Color.YELLOW;
     }
 
     @Override
-    public void setSwingingArms(boolean swingingArms)
-    {
+    public void setSwingingArms(boolean swingingArms) {
         // TODO Auto-generated method stub
         //TODO for 1.12.2
     }

@@ -9,16 +9,13 @@ import net.minecraft.world.gen.structure.StructureBoundingBox;
 
 import java.util.Random;
 
-public class RoomEntranceVenus extends SizedPieceVenus
-{
+public class RoomEntranceVenus extends SizedPieceVenus {
     private final int range = 4;
 
-    public RoomEntranceVenus()
-    {
+    public RoomEntranceVenus() {
     }
 
-    public RoomEntranceVenus(World world, DungeonConfigurationVenus configuration, Random rand, int blockPosX, int blockPosZ)
-    {
+    public RoomEntranceVenus(World world, DungeonConfigurationVenus configuration, Random rand, int blockPosX, int blockPosZ) {
         super(configuration, rand.nextInt(4) + 6, rand.nextInt(2) + 5, rand.nextInt(4) + 6, EnumFacing.Plane.HORIZONTAL.random(rand));
         this.setCoordBaseMode(EnumFacing.SOUTH);
 
@@ -26,26 +23,21 @@ public class RoomEntranceVenus extends SizedPieceVenus
     }
 
     @Override
-    public boolean addComponentParts(World worldIn, Random randomIn, StructureBoundingBox structureBoundingBoxIn)
-    {
+    public boolean addComponentParts(World worldIn, Random randomIn, StructureBoundingBox structureBoundingBoxIn) {
         IBlockState block1;
 
         int maxLevel = 0;
 
-        for (int i = -range; i <= range; i++)
-        {
-            for (int k = -range; k <= range; k++)
-            {
+        for (int i = -range; i <= range; i++) {
+            for (int k = -range; k <= range; k++) {
                 int j = this.boundingBox.getYSize();
 
-                while (j >= 0)
-                {
+                while (j >= 0) {
                     j--;
 
                     Block block = getBlockStateFromPos(worldIn, i + range, j, k + range, boundingBox).getBlock();
 
-                    if (Blocks.AIR != block && block != null)
-                    {
+                    if (Blocks.AIR != block && block != null) {
                         break;
                     }
                 }
@@ -59,38 +51,28 @@ public class RoomEntranceVenus extends SizedPieceVenus
         int endX = range + this.sizeX / 2;
         int endZ = range + this.sizeZ / 2;
 
-        for (int i = startX; i <= endX; i++)
-        {
-            for (int j = 0; j <= this.sizeY; j++)
-            {
-                for (int k = startZ; k <= endZ; k++)
-                {
-                    if (i == startX || i == endX || j == 0 || j == this.sizeY || k == startZ || k == endZ)
-                    {
+        for (int i = startX; i <= endX; i++) {
+            for (int j = 0; j <= this.sizeY; j++) {
+                for (int k = startZ; k <= endZ; k++) {
+                    if (i == startX || i == endX || j == 0 || j == this.sizeY || k == startZ || k == endZ) {
                         this.setBlockState(worldIn, j == 0 || j == this.sizeY ? this.configuration.getBrickBlockFloor() : this.configuration.getBrickBlock(), i, j, k, boundingBox);
-                    }
-                    else
-                    {
+                    } else {
                         this.setBlockState(worldIn, Blocks.AIR.getDefaultState(), i, j, k, boundingBox);
                     }
                 }
             }
         }
 
-        for (int i = -range; i < range; i++)
-        {
-            for (int k = -range; k < range; k++)
-            {
+        for (int i = -range; i < range; i++) {
+            for (int k = -range; k < range; k++) {
                 final double xDev = i / 15D;
                 final double zDev = k / 15D;
                 final double distance = xDev * xDev + zDev * zDev;
                 final int depth = (int) Math.abs(0.5 / (distance + .00001D));
                 int helper = 0;
-                for (int j = maxLevel; j > 1 && helper <= depth; j--)
-                {
+                for (int j = maxLevel; j > 1 && helper <= depth; j--) {
                     block1 = this.getBlockStateFromPos(worldIn, i + range, j, k + range, boundingBox);
-                    if (block1 == this.configuration.getBrickBlockFloor() || j != this.sizeY)
-                    {
+                    if (block1 == this.configuration.getBrickBlockFloor() || j != this.sizeY) {
                         this.setBlockState(worldIn, Blocks.AIR.getDefaultState(), i + range, j, k + range, boundingBox);
                         helper++;
                     }
@@ -102,10 +84,8 @@ public class RoomEntranceVenus extends SizedPieceVenus
     }
 
     @Override
-    public PieceVenus getNextPiece(DungeonStartVenus startPiece, Random rand)
-    {
-        if (startPiece.attachedComponents.isEmpty())
-        {
+    public PieceVenus getNextPiece(DungeonStartVenus startPiece, Random rand) {
+        if (startPiece.attachedComponents.isEmpty()) {
             return getCorridor(rand, startPiece, 10, false);
         }
 
@@ -113,40 +93,38 @@ public class RoomEntranceVenus extends SizedPieceVenus
     }
 
     @Override
-    protected StructureBoundingBox getExtension(EnumFacing direction, int length, int width)
-    {
+    protected StructureBoundingBox getExtension(EnumFacing direction, int length, int width) {
         int blockX, blockZ, sizeX, sizeZ;
         int startX = this.boundingBox.minX + range - this.sizeX / 2;
         int startZ = this.boundingBox.minZ + range - this.sizeZ / 2;
         int endX = this.boundingBox.minX + range + this.sizeX / 2;
         int endZ = this.boundingBox.minZ + range + this.sizeZ / 2;
-        switch (direction)
-        {
-        case NORTH:
-            sizeX = width;
-            sizeZ = length;
-            blockX = startX + (endX - startX) / 2 - sizeX / 2;
-            blockZ = startZ - sizeZ;
-            break;
-        case EAST:
-            sizeX = length;
-            sizeZ = width;
-            blockX = endX;
-            blockZ = startZ + (endZ - startZ) / 2 - sizeZ / 2;
-            break;
-        case SOUTH:
-            sizeX = width;
-            sizeZ = length;
-            blockX = startX + (endX - startX) / 2 - sizeX / 2;
-            blockZ = endZ;
-            break;
-        case WEST:
-        default:
-            sizeX = length;
-            sizeZ = width;
-            blockX = startX - sizeX;
-            blockZ = startZ + (endZ - startZ) / 2 - sizeZ / 2;
-            break;
+        switch (direction) {
+            case NORTH:
+                sizeX = width;
+                sizeZ = length;
+                blockX = startX + (endX - startX) / 2 - sizeX / 2;
+                blockZ = startZ - sizeZ;
+                break;
+            case EAST:
+                sizeX = length;
+                sizeZ = width;
+                blockX = endX;
+                blockZ = startZ + (endZ - startZ) / 2 - sizeZ / 2;
+                break;
+            case SOUTH:
+                sizeX = width;
+                sizeZ = length;
+                blockX = startX + (endX - startX) / 2 - sizeX / 2;
+                blockZ = endZ;
+                break;
+            case WEST:
+            default:
+                sizeX = length;
+                sizeZ = width;
+                blockX = startX - sizeX;
+                blockZ = startZ + (endZ - startZ) / 2 - sizeZ / 2;
+                break;
         }
         return new StructureBoundingBox(blockX, blockZ, blockX + sizeX, blockZ + sizeZ);
     }

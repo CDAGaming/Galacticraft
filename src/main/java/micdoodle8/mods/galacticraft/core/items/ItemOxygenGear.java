@@ -17,64 +17,53 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemOxygenGear extends Item implements ISortableItem, IClickableItem
-{
-    public ItemOxygenGear(String assetName)
-    {
+public class ItemOxygenGear extends Item implements ISortableItem, IClickableItem {
+    public ItemOxygenGear(String assetName) {
         super();
         this.setUnlocalizedName(assetName);
     }
 
     @Override
-    public CreativeTabs getCreativeTab()
-    {
+    public CreativeTabs getCreativeTab() {
         return GalacticraftCore.galacticraftItemsTab;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public EnumRarity getRarity(ItemStack par1ItemStack)
-    {
+    public EnumRarity getRarity(ItemStack par1ItemStack) {
         return ClientProxyCore.galacticraftItem;
     }
 
     @Override
-    public EnumSortCategoryItem getCategory(int meta)
-    {
+    public EnumSortCategoryItem getCategory(int meta) {
         return EnumSortCategoryItem.GEAR;
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer player, EnumHand hand)
-    {
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer player, EnumHand hand) {
         ItemStack itemStack = player.getHeldItem(hand);
 
-        if (player instanceof EntityPlayerMP)
-        {
-            if (itemStack.getItem() instanceof IClickableItem)
-            {
-                itemStack = ((IClickableItem)itemStack.getItem()).onItemRightClick(itemStack, worldIn, player);
+        if (player instanceof EntityPlayerMP) {
+            if (itemStack.getItem() instanceof IClickableItem) {
+                itemStack = ((IClickableItem) itemStack.getItem()).onItemRightClick(itemStack, worldIn, player);
             }
 
-            if (itemStack.isEmpty())
-            {
+            if (itemStack.isEmpty()) {
                 return new ActionResult<>(EnumActionResult.SUCCESS, itemStack);
             }
         }
         return new ActionResult<>(EnumActionResult.PASS, itemStack);
     }
-    
-    public ItemStack onItemRightClick(ItemStack itemStack, World worldIn, EntityPlayer player)
-    {
+
+    public ItemStack onItemRightClick(ItemStack itemStack, World worldIn, EntityPlayer player) {
         GCPlayerStats stats = GCPlayerStats.get(player);
         ItemStack gear = stats.getExtendedInventory().getStackInSlot(1);
 
-        if (gear.isEmpty())
-        {
+        if (gear.isEmpty()) {
             stats.getExtendedInventory().setInventorySlotContents(1, itemStack.copy());
             itemStack = ItemStack.EMPTY;
         }
-        
+
         return itemStack;
     }
 }

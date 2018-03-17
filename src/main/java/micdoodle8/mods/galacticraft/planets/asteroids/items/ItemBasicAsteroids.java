@@ -15,17 +15,14 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
-import javax.annotation.Nullable;
-
-public class ItemBasicAsteroids extends Item implements ISortableItem
-{
-    public static String[] names = { "ingot_titanium", "engine_t2", "rocket_fins_t2", "shard_iron", "shard_titanium", "reinforced_plate_t3", "compressed_titanium", "thermal_cloth", "beam_core", "dust_titanium" };
+public class ItemBasicAsteroids extends Item implements ISortableItem {
+    public static String[] names = {"ingot_titanium", "engine_t2", "rocket_fins_t2", "shard_iron", "shard_titanium", "reinforced_plate_t3", "compressed_titanium", "thermal_cloth", "beam_core", "dust_titanium"};
 //    protected IIcon[] icons = new IIcon[ItemBasicAsteroids.names.length];
 
-    public ItemBasicAsteroids(String name)
-    {
+    public ItemBasicAsteroids(String name) {
         super();
         this.setMaxDamage(0);
         this.setHasSubtypes(true);
@@ -34,15 +31,13 @@ public class ItemBasicAsteroids extends Item implements ISortableItem
 
     @SideOnly(Side.CLIENT)
     @Override
-    public CreativeTabs getCreativeTab()
-    {
+    public CreativeTabs getCreativeTab() {
         return GalacticraftCore.galacticraftItemsTab;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public EnumRarity getRarity(ItemStack par1ItemStack)
-    {
+    public EnumRarity getRarity(ItemStack par1ItemStack) {
         return ClientProxyCore.galacticraftItem;
     }
 
@@ -70,22 +65,17 @@ public class ItemBasicAsteroids extends Item implements ISortableItem
     }*/
 
     @Override
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list)
-    {
-        if (tab == GalacticraftCore.galacticraftItemsTab || tab == CreativeTabs.SEARCH)
-        {
-            for (int i = 0; i < ItemBasicAsteroids.names.length; i++)
-            {
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list) {
+        if (tab == GalacticraftCore.galacticraftItemsTab || tab == CreativeTabs.SEARCH) {
+            for (int i = 0; i < ItemBasicAsteroids.names.length; i++) {
                 list.add(new ItemStack(this, 1, i));
             }
         }
     }
 
     @Override
-    public String getUnlocalizedName(ItemStack par1ItemStack)
-    {
-        if (ItemBasicAsteroids.names.length > par1ItemStack.getItemDamage())
-        {
+    public String getUnlocalizedName(ItemStack par1ItemStack) {
+        if (ItemBasicAsteroids.names.length > par1ItemStack.getItemDamage()) {
             return "item." + ItemBasicAsteroids.names[par1ItemStack.getItemDamage()];
         }
 
@@ -94,43 +84,36 @@ public class ItemBasicAsteroids extends Item implements ISortableItem
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack par1ItemStack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
-    {
-        if (par1ItemStack != null && par1ItemStack.getItemDamage() == 5)
-        {
+    public void addInformation(ItemStack par1ItemStack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+        if (par1ItemStack != null && par1ItemStack.getItemDamage() == 5) {
             tooltip.add(GCCoreUtil.translate("item.tier3.desc"));
         }
     }
 
     @Override
-    public int getMetadata(int par1)
-    {
+    public int getMetadata(int par1) {
         return par1;
     }
 
     @Override
-    public EnumSortCategoryItem getCategory(int meta)
-    {
-        switch (meta)
-        {
-        case 0:
-            return EnumSortCategoryItem.INGOT;
-        case 5:
-        case 6:
-            return EnumSortCategoryItem.PLATE;
+    public EnumSortCategoryItem getCategory(int meta) {
+        switch (meta) {
+            case 0:
+                return EnumSortCategoryItem.INGOT;
+            case 5:
+            case 6:
+                return EnumSortCategoryItem.PLATE;
         }
         return EnumSortCategoryItem.GENERAL;
     }
 
     @Override
-    public float getSmeltingExperience(ItemStack item)
-    {
-        switch (item.getItemDamage())
-        {
-        case 5:
-            return 2F;
-        case 6:
-            return 1F;
+    public float getSmeltingExperience(ItemStack item) {
+        switch (item.getItemDamage()) {
+            case 5:
+                return 2F;
+            case 6:
+                return 1F;
         }
         return -1F;
     }

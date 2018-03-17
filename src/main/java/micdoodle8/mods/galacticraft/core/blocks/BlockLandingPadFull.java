@@ -28,44 +28,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Random;
 
-public class BlockLandingPadFull extends BlockAdvancedTile implements IPartialSealableBlock
-{
+public class BlockLandingPadFull extends BlockAdvancedTile implements IPartialSealableBlock {
     public static final PropertyEnum<EnumLandingPadFullType> PAD_TYPE = PropertyEnum.create("type", EnumLandingPadFullType.class);
     private final AxisAlignedBB AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.1875D, 1.0D);
 
-    public enum EnumLandingPadFullType implements IStringSerializable
-    {
-        ROCKET_PAD(0, "rocket"),
-        BUGGY_PAD(1, "buggy");
-
-        private final int meta;
-        private final String name;
-
-        EnumLandingPadFullType(int meta, String name)
-        {
-            this.meta = meta;
-            this.name = name;
-        }
-
-        public int getMeta()
-        {
-            return this.meta;
-        }
-
-        public static EnumLandingPadFullType byMetadata(int meta)
-        {
-            return values()[meta];
-        }
-
-        @Override
-        public String getName()
-        {
-            return this.name;
-        }
-    }
-
-    public BlockLandingPadFull(String assetName)
-    {
+    public BlockLandingPadFull(String assetName) {
         super(Material.ROCK);
         this.setHardness(1.0F);
         this.setResistance(10.0F);
@@ -75,24 +42,20 @@ public class BlockLandingPadFull extends BlockAdvancedTile implements IPartialSe
     }
 
     @Override
-    public int damageDropped(IBlockState state)
-    {
+    public int damageDropped(IBlockState state) {
         return getMetaFromState(state);
     }
 
     @Override
-    public int quantityDropped(Random par1Random)
-    {
+    public int quantityDropped(Random par1Random) {
         return 9;
     }
 
     @Override
-    public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
-    {
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
         final TileEntity var9 = worldIn.getTileEntity(pos);
 
-        if (var9 instanceof IMultiBlock)
-        {
+        if (var9 instanceof IMultiBlock) {
             ((IMultiBlock) var9).onDestroy(var9);
         }
 
@@ -100,14 +63,12 @@ public class BlockLandingPadFull extends BlockAdvancedTile implements IPartialSe
     }
 
     @Override
-    public Item getItemDropped(IBlockState state, Random rand, int fortune)
-    {
+    public Item getItemDropped(IBlockState state, Random rand, int fortune) {
         return Item.getItemFromBlock(GCBlocks.landingPad);
     }
 
     @Override
-    public AxisAlignedBB getBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos)
-    {
+    public AxisAlignedBB getBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
 //        switch (getMetaFromState(blockState))
 //        {
 //        case 0:
@@ -122,14 +83,10 @@ public class BlockLandingPadFull extends BlockAdvancedTile implements IPartialSe
     }
 
     @Override
-    public boolean canPlaceBlockAt(World worldIn, BlockPos pos)
-    {
-        for (int x2 = -1; x2 < 2; ++x2)
-        {
-            for (int z2 = -1; z2 < 2; ++z2)
-            {
-                if (!super.canPlaceBlockAt(worldIn, new BlockPos(pos.getX() + x2, pos.getY(), pos.getZ() + z2)))
-                {
+    public boolean canPlaceBlockAt(World worldIn, BlockPos pos) {
+        for (int x2 = -1; x2 < 2; ++x2) {
+            for (int z2 = -1; z2 < 2; ++z2) {
+                if (!super.canPlaceBlockAt(worldIn, new BlockPos(pos.getX() + x2, pos.getY(), pos.getZ() + z2))) {
                     return false;
                 }
             }
@@ -140,86 +97,99 @@ public class BlockLandingPadFull extends BlockAdvancedTile implements IPartialSe
     }
 
     @Override
-    public boolean hasTileEntity(IBlockState state)
-    {
+    public boolean hasTileEntity(IBlockState state) {
         return true;
     }
 
     @Override
-    public TileEntity createTileEntity(World world, IBlockState state)
-    {
-        switch (getMetaFromState(state))
-        {
-        case 0:
-            return new TileEntityLandingPad();
-        case 1:
-            return new TileEntityBuggyFueler();
-        // case 2:
-        // return new GCCoreTileEntityCargoPad();
-        default:
-            return null;
+    public TileEntity createTileEntity(World world, IBlockState state) {
+        switch (getMetaFromState(state)) {
+            case 0:
+                return new TileEntityLandingPad();
+            case 1:
+                return new TileEntityBuggyFueler();
+            // case 2:
+            // return new GCCoreTileEntityCargoPad();
+            default:
+                return null;
         }
     }
 
     @Override
-    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)
-    {
+    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
         worldIn.notifyBlockUpdate(pos, state, state, 3);
     }
 
     @Override
-    public boolean isOpaqueCube(IBlockState state)
-    {
+    public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
 
     @Override
-    public boolean isFullCube(IBlockState state)
-    {
+    public boolean isFullCube(IBlockState state) {
         return false;
     }
 
     @Override
-    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face)
-    {
+    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
         return BlockFaceShape.UNDEFINED;
     }
 
     @SideOnly(Side.CLIENT)
     @Override
-    public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
-    {
+    public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
         return true;
     }
 
     @Override
-    public boolean isSealed(World worldIn, BlockPos pos, EnumFacing direction)
-    {
+    public boolean isSealed(World worldIn, BlockPos pos, EnumFacing direction) {
         return direction == EnumFacing.UP;
     }
 
     @Override
-    public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player)
-    {
+    public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
         int metadata = getMetaFromState(world.getBlockState(pos));
         return new ItemStack(Item.getItemFromBlock(GCBlocks.landingPad), 1, metadata);
     }
 
     @Override
-    public IBlockState getStateFromMeta(int meta)
-    {
+    public IBlockState getStateFromMeta(int meta) {
         return this.getDefaultState().withProperty(PAD_TYPE, EnumLandingPadFullType.byMetadata(meta));
     }
 
     @Override
-    public int getMetaFromState(IBlockState state)
-    {
+    public int getMetaFromState(IBlockState state) {
         return ((EnumLandingPadFullType) state.getValue(PAD_TYPE)).getMeta();
     }
 
     @Override
-    protected BlockStateContainer createBlockState()
-    {
+    protected BlockStateContainer createBlockState() {
         return new BlockStateContainer(this, PAD_TYPE);
+    }
+
+    public enum EnumLandingPadFullType implements IStringSerializable {
+        ROCKET_PAD(0, "rocket"),
+        BUGGY_PAD(1, "buggy");
+
+        private final int meta;
+        private final String name;
+
+        EnumLandingPadFullType(int meta, String name) {
+            this.meta = meta;
+            this.name = name;
+        }
+
+        public static EnumLandingPadFullType byMetadata(int meta) {
+            return values()[meta];
+        }
+
+        public int getMeta() {
+            return this.meta;
+        }
+
+        @Override
+        public String getName() {
+            return this.name;
+        }
     }
 }

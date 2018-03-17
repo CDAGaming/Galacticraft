@@ -3,18 +3,13 @@ package micdoodle8.mods.galacticraft.core;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Ordering;
-
 import mezz.jei.api.ingredients.IIngredientBlacklist;
 import micdoodle8.mods.galacticraft.core.items.*;
-import micdoodle8.mods.galacticraft.core.util.CompatibilityManager;
-import micdoodle8.mods.galacticraft.core.util.ConfigManagerCore;
-import micdoodle8.mods.galacticraft.core.util.EnumSortCategoryItem;
-import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import micdoodle8.mods.galacticraft.core.util.StackSorted;
+import micdoodle8.mods.galacticraft.core.util.*;
 import micdoodle8.mods.galacticraft.core.wrappers.PartialCanister;
+import net.minecraft.block.Block;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
@@ -24,15 +19,9 @@ import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.registries.IForgeRegistry;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-public class GCItems
-{
+public class GCItems {
     public static Item oxTankLight;
     public static Item oxTankMedium;
     public static Item oxTankHeavy;
@@ -79,14 +68,14 @@ public class GCItems
     public static Item itemBasicMoon;
     public static Item bucketOil;
     public static Item bucketFuel;
-//	public static Item cheeseBlock;
+    //	public static Item cheeseBlock;
     public static Item prelaunchChecklist;
     public static Item dungeonFinder;
     public static Item ic2compat;
     public static Item emergencyKit;
 
-    public static ArmorMaterial ARMOR_SENSOR_GLASSES = EnumHelper.addArmorMaterial("SENSORGLASSES", "", 200, new int[] { 0, 0, 0, 0 }, 0, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0.0F);
-    public static ArmorMaterial ARMOR_STEEL = EnumHelper.addArmorMaterial("steel", "", 30, new int[] { 3, 6, 8, 3 }, 9, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 1.0F);
+    public static ArmorMaterial ARMOR_SENSOR_GLASSES = EnumHelper.addArmorMaterial("SENSORGLASSES", "", 200, new int[]{0, 0, 0, 0}, 0, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0.0F);
+    public static ArmorMaterial ARMOR_STEEL = EnumHelper.addArmorMaterial("steel", "", 30, new int[]{3, 6, 8, 3}, 9, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 1.0F);
     public static ToolMaterial TOOL_STEEL = EnumHelper.addToolMaterial("steel", 3, 768, 5.0F, 2, 8);
 
     public static ArrayList<Item> hiddenItems = new ArrayList<Item>();
@@ -94,8 +83,7 @@ public class GCItems
     public static Map<EnumSortCategoryItem, List<StackSorted>> sortMapItems = Maps.newHashMap();
     public static HashMap<Item, Item> itemChanges = new HashMap<>(4, 1.0F);
 
-    public static void initItems()
-    {
+    public static void initItems() {
         GCItems.oxTankLight = new ItemOxygenTank(1, "oxygen_tank_light_full");
         GCItems.oxTankMedium = new ItemOxygenTank(2, "oxygen_tank_med_full");
         GCItems.oxTankHeavy = new ItemOxygenTank(3, "oxygen_tank_heavy_full");
@@ -144,7 +132,7 @@ public class GCItems
         GCItems.prelaunchChecklist = new ItemPreLaunchChecklist("prelaunch_checklist");
         GCItems.dungeonFinder = new ItemBase("dungeonfinder");
         GCItems.ic2compat = new ItemIC2Compat("ic2compat");
-        GCItems.emergencyKit = new ItemEmergencyKit("emergency_kit"); 
+        GCItems.emergencyKit = new ItemEmergencyKit("emergency_kit");
 
         GCItems.registerHarvestLevels();
 
@@ -153,16 +141,12 @@ public class GCItems
         GalacticraftCore.proxy.registerCanister(new PartialCanister(GCItems.oilCanister, Constants.MOD_ID_CORE, "oil_canister_partial", 7));
         GalacticraftCore.proxy.registerCanister(new PartialCanister(GCItems.fuelCanister, Constants.MOD_ID_CORE, "fuel_canister_partial", 7));
     }
-    
-    public static void oreDictRegistrations()
-    {
-        for (int i = 0; i < ItemBasic.names.length; i++)
-        {
-            if (ItemBasic.names[i].contains("ingot") || ItemBasic.names[i].contains("compressed") || ItemBasic.names[i].contains("wafer"))
-            {
+
+    public static void oreDictRegistrations() {
+        for (int i = 0; i < ItemBasic.names.length; i++) {
+            if (ItemBasic.names[i].contains("ingot") || ItemBasic.names[i].contains("compressed") || ItemBasic.names[i].contains("wafer")) {
                 String name = ItemBasic.names[i];
-                while (name.contains("_"))
-                {
+                while (name.contains("_")) {
                     int loc = name.indexOf("_");
                     name = name.substring(0, loc) + name.substring(loc + 1, loc + 2).toUpperCase() + name.substring(loc + 2, name.length());
                 }
@@ -172,13 +156,11 @@ public class GCItems
 
         OreDictionary.registerOre("compressedMeteoricIron", new ItemStack(GCItems.itemBasicMoon, 1, 1));
         OreDictionary.registerOre("ingotMeteoricIron", new ItemStack(GCItems.itemBasicMoon, 1, 0));
-        if (CompatibilityManager.useAluDust())
-        {
+        if (CompatibilityManager.useAluDust()) {
             OreDictionary.registerOre("dustAluminum", new ItemStack(GCItems.ic2compat, 1, 0));
             OreDictionary.registerOre("dustAluminium", new ItemStack(GCItems.ic2compat, 1, 0));
         }
-        if (CompatibilityManager.isIc2Loaded())
-        {
+        if (CompatibilityManager.isIc2Loaded()) {
             OreDictionary.registerOre("crushedAluminum", new ItemStack(GCItems.ic2compat, 1, 2));
             OreDictionary.registerOre("crushedPurifiedAluminum", new ItemStack(GCItems.ic2compat, 1, 1));
         }
@@ -187,8 +169,7 @@ public class GCItems
         GalacticraftCore.proxy.registerCanister(new PartialCanister(GCItems.fuelCanister, Constants.MOD_ID_CORE, "fuel_canister_partial", 7));
         OreDictionary.registerOre(ConfigManagerCore.otherModsSilicon, new ItemStack(GCItems.basicItem, 1, 2));
     }
-    
-    
+
 
     /**
      * Do not call this until after mod loading is complete
@@ -196,20 +177,15 @@ public class GCItems
      * until it services an FMLLoadCompleteEvent.
      * (Seriously?!)
      */
-    public static void hideItemsJEI(IIngredientBlacklist jeiHidden)
-    {
-        if (jeiHidden != null)
-        {
-            for (Item item : GCItems.hiddenItems)
-            {
+    public static void hideItemsJEI(IIngredientBlacklist jeiHidden) {
+        if (jeiHidden != null) {
+            for (Item item : GCItems.hiddenItems) {
                 jeiHidden.addIngredientToBlacklist(new ItemStack(item, 1, 0));
             }
 
-            for (Block block : GCBlocks.hiddenBlocks)
-            {
+            for (Block block : GCBlocks.hiddenBlocks) {
                 jeiHidden.addIngredientToBlacklist(new ItemStack(block, 1, 0));
-                if (block == GCBlocks.slabGCDouble)
-                {
+                if (block == GCBlocks.slabGCDouble) {
                     for (int j = 1; j < (GalacticraftCore.isPlanetsLoaded ? 7 : 4); j++)
                         jeiHidden.addIngredientToBlacklist(new ItemStack(block, 1, j));
                 }
@@ -217,18 +193,13 @@ public class GCItems
         }
     }
 
-    public static void finalizeSort()
-    {
+    public static void finalizeSort() {
         List<StackSorted> itemOrderListItems = Lists.newArrayList();
-        for (EnumSortCategoryItem type : EnumSortCategoryItem.values())
-        {
+        for (EnumSortCategoryItem type : EnumSortCategoryItem.values()) {
             List stackSorteds = sortMapItems.get(type);
-            if (stackSorteds != null)
-            {
+            if (stackSorteds != null) {
                 itemOrderListItems.addAll(stackSorteds);
-            }
-            else
-            {
+            } else {
                 System.out.println("ERROR: null sort stack: " + type.toString());
             }
         }
@@ -238,38 +209,30 @@ public class GCItems
         GalacticraftCore.galacticraftItemsTab.setTabSorter(tabSorterItems);
     }
 
-    public static void registerHarvestLevels()
-    {
+    public static void registerHarvestLevels() {
         GCItems.steelPickaxe.setHarvestLevel("pickaxe", 4);
         GCItems.steelAxe.setHarvestLevel("axe", 4);
         GCItems.steelSpade.setHarvestLevel("shovel", 4);
     }
 
-    public static void registerSorted(Item item)
-    {
-        if (item instanceof ISortableItem)
-        {
+    public static void registerSorted(Item item) {
+        if (item instanceof ISortableItem) {
             ISortableItem sortableItem = (ISortableItem) item;
             NonNullList<ItemStack> items = NonNullList.create();
             item.getSubItems(GalacticraftCore.galacticraftItemsTab, items);
-            for (ItemStack stack : items)
-            {
+            for (ItemStack stack : items) {
                 EnumSortCategoryItem categoryItem = sortableItem.getCategory(stack.getItemDamage());
-                if (!sortMapItems.containsKey(categoryItem))
-                {
+                if (!sortMapItems.containsKey(categoryItem)) {
                     sortMapItems.put(categoryItem, new ArrayList<>());
                 }
                 sortMapItems.get(categoryItem).add(new StackSorted(stack.getItem(), stack.getItemDamage()));
             }
-        }
-        else if (item.getCreativeTab() == GalacticraftCore.galacticraftItemsTab)
-        {
+        } else if (item.getCreativeTab() == GalacticraftCore.galacticraftItemsTab) {
             throw new RuntimeException(item.getClass() + " must inherit " + ISortableItem.class.getSimpleName() + "!");
         }
     }
 
-    public static void registerItems()
-    {
+    public static void registerItems() {
         GCItems.registerItem(GCItems.rocketTier1);
         GCItems.registerItem(GCItems.oxMask);
         GCItems.registerItem(GCItems.oxygenGear);
@@ -318,29 +281,25 @@ public class GCItems
         GCItems.registerItem(GCItems.prelaunchChecklist);
         GCItems.registerItem(GCItems.dungeonFinder);
         GCItems.registerItem(GCItems.emergencyKit);
-        
+
         GCItems.canisterTypes.add((ItemCanisterGeneric) GCItems.fuelCanister);
         GCItems.canisterTypes.add((ItemCanisterGeneric) GCItems.oilCanister);
-        
+
         if (CompatibilityManager.useAluDust()) GCItems.registerItem(GCItems.ic2compat);
     }
 
-    public static void registerItem(Item item)
-    {
+    public static void registerItem(Item item) {
         String name = item.getUnlocalizedName().substring(5);
-        if (item.getRegistryName() == null)
-        {
+        if (item.getRegistryName() == null) {
             item.setRegistryName(name);
         }
         GCCoreUtil.registerGalacticraftItem(name, item);
         GalacticraftCore.itemListTrue.add(item);
         GalacticraftCore.proxy.postRegisterItem(item);
     }
-    
-    public static void registerItems(IForgeRegistry<Item> registry)
-    {
-        for (ItemStack item : GalacticraftCore.itemList)
-        {
+
+    public static void registerItems(IForgeRegistry<Item> registry) {
+        for (ItemStack item : GalacticraftCore.itemList) {
             registry.register(item.getItem());
         }
     }

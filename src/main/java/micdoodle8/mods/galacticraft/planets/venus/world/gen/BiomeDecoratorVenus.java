@@ -5,15 +5,14 @@ import micdoodle8.mods.galacticraft.core.world.gen.WorldGenMinableMeta;
 import micdoodle8.mods.galacticraft.planets.venus.VenusBlocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeDecorator;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.BiomeDecorator;
 import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.util.Random;
 
-public class BiomeDecoratorVenus extends BiomeDecorator
-{
+public class BiomeDecoratorVenus extends BiomeDecorator {
     private WorldGenerator aluminumGen;
     private WorldGenerator copperGen;
     private WorldGenerator galenaGen;
@@ -22,8 +21,7 @@ public class BiomeDecoratorVenus extends BiomeDecorator
     private WorldGenerator tinGen;
     private World world;
 
-    public BiomeDecoratorVenus()
-    {
+    public BiomeDecoratorVenus() {
         this.aluminumGen = new WorldGenMinableMeta(VenusBlocks.venusBlock, 6, 6, true, VenusBlocks.venusBlock, 1);
         this.copperGen = new WorldGenMinableMeta(VenusBlocks.venusBlock, 6, 7, true, VenusBlocks.venusBlock, 1);
         this.galenaGen = new WorldGenMinableMeta(VenusBlocks.venusBlock, 6, 8, true, VenusBlocks.venusBlock, 1);
@@ -33,14 +31,10 @@ public class BiomeDecoratorVenus extends BiomeDecorator
     }
 
     @Override
-    public void decorate(World worldIn, Random random, Biome biome, BlockPos blockPos)
-    {
-        if (this.world != null)
-        {
+    public void decorate(World worldIn, Random random, Biome biome, BlockPos blockPos) {
+        if (this.world != null) {
             throw new RuntimeException("Already decorating!!");
-        }
-        else
-        {
+        } else {
             this.world = worldIn;
             this.chunkPos = blockPos;
             this.generateVenus(random);
@@ -48,17 +42,14 @@ public class BiomeDecoratorVenus extends BiomeDecorator
         }
     }
 
-    private void genStandardOre(int amountPerChunk, WorldGenerator worldGenerator, int minY, int maxY, Random random)
-    {
-        for (int var5 = 0; var5 < amountPerChunk; ++var5)
-        {
+    private void genStandardOre(int amountPerChunk, WorldGenerator worldGenerator, int minY, int maxY, Random random) {
+        for (int var5 = 0; var5 < amountPerChunk; ++var5) {
             BlockPos blockpos = this.chunkPos.add(random.nextInt(16), random.nextInt(maxY - minY) + minY, random.nextInt(16));
             worldGenerator.generate(this.world, random, blockpos);
         }
     }
 
-    private void generateVenus(Random random)
-    {
+    private void generateVenus(Random random) {
         MinecraftForge.EVENT_BUS.post(new GCCoreEventPopulate.Pre(this.world, random, chunkPos));
         this.genStandardOre(18, this.aluminumGen, 0, 60, random);
         this.genStandardOre(24, this.copperGen, 0, 60, random);

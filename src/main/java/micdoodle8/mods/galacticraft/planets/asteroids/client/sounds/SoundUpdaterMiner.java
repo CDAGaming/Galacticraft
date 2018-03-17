@@ -12,16 +12,14 @@ import net.minecraft.util.SoundCategory;
  *
  * @author micdoodle8, radfast
  */
-public class SoundUpdaterMiner extends MovingSound
-{
+public class SoundUpdaterMiner extends MovingSound {
     private final EntityPlayerSP thePlayer;
     private final EntityAstroMiner theRocket;
     private boolean soundStopped;
     private float targetVolume;
     private float targetPitch;
 
-    public SoundUpdaterMiner(EntityPlayerSP par1EntityPlayerSP, EntityAstroMiner par2Entity)
-    {
+    public SoundUpdaterMiner(EntityPlayerSP par1EntityPlayerSP, EntityAstroMiner par2Entity) {
         super(GCSounds.astroMiner, SoundCategory.AMBIENT);
         this.theRocket = par2Entity;
         this.thePlayer = par1EntityPlayerSP;
@@ -38,68 +36,49 @@ public class SoundUpdaterMiner extends MovingSound
      * Updates the JList with a new model.
      */
     @Override
-    public void update()
-    {
-        if (!this.theRocket.isDead)
-        {
-            if (this.theRocket.AIstate == EntityAstroMiner.AISTATE_ATBASE || this.theRocket.AIstate == EntityAstroMiner.AISTATE_DOCKING)
-            {
+    public void update() {
+        if (!this.theRocket.isDead) {
+            if (this.theRocket.AIstate == EntityAstroMiner.AISTATE_ATBASE || this.theRocket.AIstate == EntityAstroMiner.AISTATE_DOCKING) {
                 this.targetVolume = 0.6F;
                 this.targetPitch = 0.1F;
-            }
-            else
-            {
+            } else {
                 this.targetVolume = 1.0F;
                 this.targetPitch = 1.0F;
             }
-            if (this.volume < this.targetVolume)
-            {
+            if (this.volume < this.targetVolume) {
                 this.volume += 0.1F;
-                if (this.volume > this.targetVolume)
-                {
+                if (this.volume > this.targetVolume) {
                     this.volume = this.targetVolume;
                 }
-            }
-            else if (this.volume > this.targetVolume)
-            {
+            } else if (this.volume > this.targetVolume) {
                 this.volume -= 0.1F;
-                if (this.volume < this.targetVolume)
-                {
+                if (this.volume < this.targetVolume) {
                     this.volume = this.targetVolume;
                 }
             }
-            if (this.pitch < this.targetPitch)
-            {
+            if (this.pitch < this.targetPitch) {
                 this.pitch += 0.05F;
-                if (this.pitch > this.targetPitch)
-                {
+                if (this.pitch > this.targetPitch) {
                     this.pitch = this.targetPitch;
                 }
-            }
-            else if (this.pitch > this.targetPitch)
-            {
+            } else if (this.pitch > this.targetPitch) {
                 this.pitch -= 0.05F;
-                if (this.pitch < this.targetPitch)
-                {
+                if (this.pitch < this.targetPitch) {
                     this.pitch = this.targetPitch;
                 }
             }
             this.updateSoundLocation(this.theRocket);
-        }
-        else
-        {
+        } else {
             this.donePlaying = true;
         }
     }
 
-    public void stopRocketSound()
-    {
+    public void stopRocketSound() {
         this.donePlaying = true;
         this.soundStopped = true;
     }
 
-    public void updateSoundLocation(Entity e)
-    {
+    public void updateSoundLocation(Entity e) {
         this.xPosF = (float) e.posX;
         this.yPosF = (float) e.posY;
         this.zPosF = (float) e.posZ;

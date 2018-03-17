@@ -15,21 +15,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
-public class GuiOxygenStorageModule extends GuiContainerGC
-{
+public class GuiOxygenStorageModule extends GuiContainerGC {
     private static final ResourceLocation batteryBoxTexture = new ResourceLocation(Constants.ASSET_PREFIX, "textures/gui/oxygen_storage_module.png");
 
     private TileEntityOxygenStorageModule tileEntity;
 
-    public GuiOxygenStorageModule(InventoryPlayer par1InventoryPlayer, TileEntityOxygenStorageModule storageModule)
-    {
+    public GuiOxygenStorageModule(InventoryPlayer par1InventoryPlayer, TileEntityOxygenStorageModule storageModule) {
         super(new ContainerOxygenStorageModule(par1InventoryPlayer, storageModule));
         this.tileEntity = storageModule;
     }
 
     @Override
-    public void initGui()
-    {
+    public void initGui() {
         super.initGui();
         List<String> oxygenSlotDesc = new ArrayList<String>();
         oxygenSlotDesc.add(GCCoreUtil.translate("gui.oxygen_slot.desc.0"));
@@ -42,8 +39,7 @@ public class GuiOxygenStorageModule extends GuiContainerGC
      * the items)
      */
     @Override
-    protected void drawGuiContainerForegroundLayer(int par1, int par2)
-    {
+    protected void drawGuiContainerForegroundLayer(int par1, int par2) {
         String guiTitle = GCCoreUtil.translate("tile.machine2.6.name");
         this.fontRenderer.drawString(guiTitle, this.xSize / 2 - this.fontRenderer.getStringWidth(guiTitle) / 2, 6, 4210752);
         String displayJoules = (int) (this.tileEntity.getOxygenStored() + 0.5F) + " " + GCCoreUtil.translate("gui.message.of.name");
@@ -61,8 +57,7 @@ public class GuiOxygenStorageModule extends GuiContainerGC
      * items)
      */
     @Override
-    protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3)
-    {
+    protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3) {
         this.mc.renderEngine.bindTexture(GuiOxygenStorageModule.batteryBoxTexture);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 

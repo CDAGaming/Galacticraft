@@ -10,10 +10,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemBattery extends ItemElectricBase implements ISortableItem
-{
-    public ItemBattery(String assetName)
-    {
+public class ItemBattery extends ItemElectricBase implements ISortableItem {
+    public ItemBattery(String assetName) {
         super();
         this.setMaxStackSize(4);
         this.setUnlocalizedName(assetName);
@@ -21,35 +19,29 @@ public class ItemBattery extends ItemElectricBase implements ISortableItem
     }
 
     @Override
-    public CreativeTabs getCreativeTab()
-    {
+    public CreativeTabs getCreativeTab() {
         return GalacticraftCore.galacticraftItemsTab;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public EnumRarity getRarity(ItemStack par1ItemStack)
-    {
+    public EnumRarity getRarity(ItemStack par1ItemStack) {
         return ClientProxyCore.galacticraftItem;
     }
 
     @Override
-    public float getMaxElectricityStored(ItemStack itemStack)
-    {
+    public float getMaxElectricityStored(ItemStack itemStack) {
         return 15000;
     }
 
     @Override
-    public EnumSortCategoryItem getCategory(int meta)
-    {
+    public EnumSortCategoryItem getCategory(int meta) {
         return EnumSortCategoryItem.GENERAL;
     }
 
     @Override
-    public int getItemStackLimit(ItemStack stack)
-    {
-        if (stack.getItemDamage() < 100 || stack.hasTagCompound() && stack.getTagCompound().hasKey("electricity"))
-        {
+    public int getItemStackLimit(ItemStack stack) {
+        if (stack.getItemDamage() < 100 || stack.hasTagCompound() && stack.getTagCompound().hasKey("electricity")) {
             return 1;
         }
         return this.getItemStackLimit();

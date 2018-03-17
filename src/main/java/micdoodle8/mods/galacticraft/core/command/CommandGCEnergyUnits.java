@@ -13,19 +13,49 @@ import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 
-public class CommandGCEnergyUnits extends CommandBase
-{
+public class CommandGCEnergyUnits extends CommandBase {
+
+    public static void handleParamClientside(int param) {
+        if (param == 1) {
+            EnergyConfigHandler.displayEnergyUnitsBC = false;
+            EnergyConfigHandler.displayEnergyUnitsIC2 = false;
+            EnergyConfigHandler.displayEnergyUnitsMek = false;
+            EnergyConfigHandler.displayEnergyUnitsRF = false;
+            return;
+        }
+
+        if (param == 3 && EnergyConfigHandler.isIndustrialCraft2Loaded()) {
+            EnergyConfigHandler.displayEnergyUnitsBC = false;
+            EnergyConfigHandler.displayEnergyUnitsIC2 = true;
+            EnergyConfigHandler.displayEnergyUnitsMek = false;
+            EnergyConfigHandler.displayEnergyUnitsRF = false;
+            return;
+        }
+
+        if (param == 4 && EnergyConfigHandler.isMekanismLoaded()) {
+            EnergyConfigHandler.displayEnergyUnitsBC = false;
+            EnergyConfigHandler.displayEnergyUnitsIC2 = false;
+            EnergyConfigHandler.displayEnergyUnitsMek = true;
+            EnergyConfigHandler.displayEnergyUnitsRF = false;
+            return;
+        }
+
+        if (param == 5) {
+            EnergyConfigHandler.displayEnergyUnitsBC = false;
+            EnergyConfigHandler.displayEnergyUnitsIC2 = false;
+            EnergyConfigHandler.displayEnergyUnitsMek = false;
+            EnergyConfigHandler.displayEnergyUnitsRF = true;
+            return;
+        }
+    }
 
     @Override
-    public String getUsage(ICommandSender var1)
-    {
+    public String getUsage(ICommandSender var1) {
         String options = " [gJ";
-        if (EnergyConfigHandler.isIndustrialCraft2Loaded())
-        {
+        if (EnergyConfigHandler.isIndustrialCraft2Loaded()) {
             options = options + "|EU";
         }
-        if (EnergyConfigHandler.isMekanismLoaded())
-        {
+        if (EnergyConfigHandler.isMekanismLoaded()) {
             options = options + "|J";
         }
         options = options + "|RF";
@@ -33,58 +63,43 @@ public class CommandGCEnergyUnits extends CommandBase
     }
 
     @Override
-    public int getRequiredPermissionLevel()
-    {
+    public int getRequiredPermissionLevel() {
         return 0;
     }
 
     @Override
-    public boolean checkPermission(MinecraftServer server, ICommandSender sender)
-    {
+    public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
         return true;
     }
 
     @Override
-    public String getName()
-    {
+    public String getName() {
         return "gcenergyunits";
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-    {
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
         EntityPlayerMP playerBase = PlayerUtil.getPlayerBaseServerFromPlayerUsername(sender.getName(), true);
-        if (playerBase == null)
-        {
+        if (playerBase == null) {
             return;
         }
 
-        if (args.length == 1)
-        {
+        if (args.length == 1) {
             String param = args[0].toLowerCase();
-            if (param.length() <= 2)
-            {
+            if (param.length() <= 2) {
                 int paramvalue = 0;
-                if ("gj".equals(param))
-                {
+                if ("gj".equals(param)) {
                     paramvalue = 1;
-                }
-                else if ("eu".equals(param) && EnergyConfigHandler.isIndustrialCraft2Loaded())
-                {
+                } else if ("eu".equals(param) && EnergyConfigHandler.isIndustrialCraft2Loaded()) {
                     paramvalue = 3;
-                }
-                else if ("j".equals(param) && EnergyConfigHandler.isMekanismLoaded())
-                {
+                } else if ("j".equals(param) && EnergyConfigHandler.isMekanismLoaded()) {
                     paramvalue = 4;
-                }
-                else if ("rf".equals(param))
-                {
+                } else if ("rf".equals(param)) {
                     paramvalue = 5;
                 }
 
-                if (paramvalue > 0)
-                {
-                    GalacticraftCore.packetPipeline.sendTo(new PacketSimple(EnumSimplePacket.C_UPDATE_ENERGYUNITS, GCCoreUtil.getDimensionID(playerBase.world), new Object[] { paramvalue }), playerBase);
+                if (paramvalue > 0) {
+                    GalacticraftCore.packetPipeline.sendTo(new PacketSimple(EnumSimplePacket.C_UPDATE_ENERGYUNITS, GCCoreUtil.getDimensionID(playerBase.world), new Object[]{paramvalue}), playerBase);
                     return;
                 }
 
@@ -94,45 +109,5 @@ public class CommandGCEnergyUnits extends CommandBase
         }
 
         throw new WrongUsageException(GCCoreUtil.translateWithFormat("commands.gcenergyunits.no_units", this.getUsage(sender)), new Object[0]);
-    }
-
-
-    public static void handleParamClientside(int param)
-    {
-        if (param == 1)
-        {
-            EnergyConfigHandler.displayEnergyUnitsBC = false;
-            EnergyConfigHandler.displayEnergyUnitsIC2 = false;
-            EnergyConfigHandler.displayEnergyUnitsMek = false;
-            EnergyConfigHandler.displayEnergyUnitsRF = false;
-            return;
-        }
-
-        if (param == 3 && EnergyConfigHandler.isIndustrialCraft2Loaded())
-        {
-            EnergyConfigHandler.displayEnergyUnitsBC = false;
-            EnergyConfigHandler.displayEnergyUnitsIC2 = true;
-            EnergyConfigHandler.displayEnergyUnitsMek = false;
-            EnergyConfigHandler.displayEnergyUnitsRF = false;
-            return;
-        }
-
-        if (param == 4 && EnergyConfigHandler.isMekanismLoaded())
-        {
-            EnergyConfigHandler.displayEnergyUnitsBC = false;
-            EnergyConfigHandler.displayEnergyUnitsIC2 = false;
-            EnergyConfigHandler.displayEnergyUnitsMek = true;
-            EnergyConfigHandler.displayEnergyUnitsRF = false;
-            return;
-        }
-
-        if (param == 5)
-        {
-            EnergyConfigHandler.displayEnergyUnitsBC = false;
-            EnergyConfigHandler.displayEnergyUnitsIC2 = false;
-            EnergyConfigHandler.displayEnergyUnitsMek = false;
-            EnergyConfigHandler.displayEnergyUnitsRF = true;
-            return;
-        }
     }
 }

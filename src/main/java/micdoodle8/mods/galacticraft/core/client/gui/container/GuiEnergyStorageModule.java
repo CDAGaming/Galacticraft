@@ -13,14 +13,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiEnergyStorageModule extends GuiContainer
-{
+public class GuiEnergyStorageModule extends GuiContainer {
     private static final ResourceLocation batteryBoxTexture = new ResourceLocation(Constants.ASSET_PREFIX, "textures/gui/energy_storage_module.png");
 
     private TileEntityEnergyStorageModule tileEntity;
 
-    public GuiEnergyStorageModule(InventoryPlayer par1InventoryPlayer, TileEntityEnergyStorageModule batteryBox)
-    {
+    public GuiEnergyStorageModule(InventoryPlayer par1InventoryPlayer, TileEntityEnergyStorageModule batteryBox) {
         super(new ContainerEnergyStorageModule(par1InventoryPlayer, batteryBox));
         this.tileEntity = batteryBox;
     }
@@ -30,12 +28,10 @@ public class GuiEnergyStorageModule extends GuiContainer
      * the items)
      */
     @Override
-    protected void drawGuiContainerForegroundLayer(int par1, int par2)
-    {
+    protected void drawGuiContainerForegroundLayer(int par1, int par2) {
         this.fontRenderer.drawString(this.tileEntity.getName(), this.xSize / 2 - this.fontRenderer.getStringWidth(this.tileEntity.getName()) / 2, 6, 4210752);
         float energy = this.tileEntity.getEnergyStoredGC();
-        if (energy + 49 > this.tileEntity.getMaxEnergyStoredGC())
-        {
+        if (energy + 49 > this.tileEntity.getMaxEnergyStoredGC()) {
             energy = this.tileEntity.getMaxEnergyStoredGC();
         }
         String displayStr = EnergyDisplayHelper.getEnergyDisplayS(energy);
@@ -52,8 +48,7 @@ public class GuiEnergyStorageModule extends GuiContainer
      * items)
      */
     @Override
-    protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3)
-    {
+    protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3) {
         this.mc.renderEngine.bindTexture(GuiEnergyStorageModule.batteryBoxTexture);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 

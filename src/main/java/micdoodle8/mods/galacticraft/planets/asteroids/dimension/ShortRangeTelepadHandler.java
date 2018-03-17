@@ -12,53 +12,46 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.Map;
 
-public class ShortRangeTelepadHandler extends WorldSavedData
-{
+public class ShortRangeTelepadHandler extends WorldSavedData {
     public static final String saveDataID = "ShortRangeTelepads";
     private static Map<Integer, TelepadEntry> tileMap = Maps.newHashMap();
 
-    public ShortRangeTelepadHandler(String saveDataID)
-    {
+    public ShortRangeTelepadHandler(String saveDataID) {
         super(saveDataID);
     }
 
-    public static class TelepadEntry
-    {
-        public int dimensionID;
-        public BlockVec3 position;
+    public static void addShortRangeTelepad(TileEntityShortRangeTelepad telepad) {
+        if (!telepad.getWorld().isRemote) {
+            if (telepad.addressValid) {
+                TelepadEntry newEntry = new TelepadEntry(telepad.getWorld().provider.getDimension(), new BlockVec3(telepad));
+                TelepadEntry previous = tileMap.put(telepad.address, newEntry);
 
-        public TelepadEntry(int dimID, BlockVec3 position)
-        {
-            this.dimensionID = dimID;
-            this.position = position;
-        }
-
-        @Override
-        public int hashCode()
-        {
-            return new HashCodeBuilder().append(dimensionID).append(position.hashCode()).toHashCode();
-        }
-
-        @Override
-        public boolean equals(Object other)
-        {
-            if (other instanceof TelepadEntry)
-            {
-                return new EqualsBuilder().append(((TelepadEntry) other).dimensionID, this.dimensionID).append(((TelepadEntry) other).position, this.position).isEquals();
+                if (previous == null || !previous.equals(newEntry)) {
+                    AsteroidsTickHandlerServer.spaceRaceData.setDirty(true);
+                }
             }
-
-            return false;
         }
     }
 
+    public static void removeShortRangeTeleporter(TileEntityShortRangeTelepad telepad) {
+        if (!telepad.getWorld().isRemote) {
+            if (telepad.addressValid) {
+                tileMap.remove(telepad.address);
+                AsteroidsTickHandlerServer.spaceRaceData.setDirty(true);
+            }
+        }
+    }
+
+    public static TelepadEntry getLocationFromAddress(int address) {
+        return tileMap.get(address);
+    }
+
     @Override
-    public void readFromNBT(NBTTagCompound nbt)
-    {
+    public void readFromNBT(NBTTagCompound nbt) {
         NBTTagList tagList = nbt.getTagList("TelepadList", 10);
         tileMap.clear();
 
-        for (int i = 0; i < tagList.tagCount(); i++)
-        {
+        for (int i = 0; i < tagList.tagCount(); i++) {
             NBTTagCompound nbt2 = tagList.getCompoundTagAt(i);
             int address = nbt2.getInteger("Address");
             int dimID = nbt2.getInteger("DimID");
@@ -70,12 +63,10 @@ public class ShortRangeTelepadHandler extends WorldSavedData
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt)
-    {
+    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         NBTTagList tagList = new NBTTagList();
 
-        for (Map.Entry<Integer, TelepadEntry> e : tileMap.entrySet())
-        {
+        for (Map.Entry<Integer, TelepadEntry> e : tileMap.entrySet()) {
             NBTTagCompound nbt2 = new NBTTagCompound();
             nbt2.setInteger("Address", e.getKey());
             nbt2.setInteger("DimID", e.getValue().dimensionID);
@@ -89,37 +80,27 @@ public class ShortRangeTelepadHandler extends WorldSavedData
         return nbt;
     }
 
-    public static void addShortRangeTelepad(TileEntityShortRangeTelepad telepad)
-    {
-        if (!telepad.getWorld().isRemote)
-        {
-            if (telepad.addressValid)
-            {
-                TelepadEntry newEntry = new TelepadEntry(telepad.getWorld().provider.getDimension(), new BlockVec3(telepad));
-                TelepadEntry previous = tileMap.put(telepad.address, newEntry);
+    public static class TelepadEntry {
+        public int dimensionID;
+        public BlockVec3 position;
 
-                if (previous == null || !previous.equals(newEntry))
-                {
-                    AsteroidsTickHandlerServer.spaceRaceData.setDirty(true);
-                }
-            }
+        public TelepadEntry(int dimID, BlockVec3 position) {
+            this.dimensionID = dimID;
+            this.position = position;
         }
-    }
 
-    public static void removeShortRangeTeleporter(TileEntityShortRangeTelepad telepad)
-    {
-        if (!telepad.getWorld().isRemote)
-        {
-            if (telepad.addressValid)
-            {
-                tileMap.remove(telepad.address);
-                AsteroidsTickHandlerServer.spaceRaceData.setDirty(true);
-            }
+        @Override
+        public int hashCode() {
+            return new HashCodeBuilder().append(dimensionID).append(position.hashCode()).toHashCode();
         }
-    }
 
-    public static TelepadEntry getLocationFromAddress(int address)
-    {
-        return tileMap.get(address);
+        @Override
+        public boolean equals(Object other) {
+            if (other instanceof TelepadEntry) {
+                return new EqualsBuilder().append(((TelepadEntry) other).dimensionID, this.dimensionID).append(((TelepadEntry) other).position, this.position).isEquals();
+            }
+
+            return false;
+        }
     }
 }

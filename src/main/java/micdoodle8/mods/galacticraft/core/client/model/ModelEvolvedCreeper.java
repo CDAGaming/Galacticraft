@@ -7,12 +7,17 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class ModelEvolvedCreeper extends ModelBase
-{
+public class ModelEvolvedCreeper extends ModelBase {
+    public ModelRenderer head;
+    public ModelRenderer field_78133_b;
+    public ModelRenderer body;
+    public ModelRenderer leg1;
+    public ModelRenderer leg2;
+    public ModelRenderer leg3;
+    public ModelRenderer leg4;
     ModelRenderer leftOxygenTank;
     ModelRenderer rightOxygenTank;
     ModelRenderer tubeRight2;
@@ -31,21 +36,12 @@ public class ModelEvolvedCreeper extends ModelBase
     ModelRenderer tubeRight6;
     ModelRenderer tubeLeft8;
     ModelRenderer oxygenMask;
-    public ModelRenderer head;
-    public ModelRenderer field_78133_b;
-    public ModelRenderer body;
-    public ModelRenderer leg1;
-    public ModelRenderer leg2;
-    public ModelRenderer leg3;
-    public ModelRenderer leg4;
 
-    public ModelEvolvedCreeper()
-    {
+    public ModelEvolvedCreeper() {
         this(0.0F);
     }
 
-    public ModelEvolvedCreeper(float par1)
-    {
+    public ModelEvolvedCreeper(float par1) {
         this.textureWidth = 128;
         this.textureHeight = 64;
         this.leftOxygenTank = new ModelRenderer(this, 40, 20);
@@ -188,20 +184,17 @@ public class ModelEvolvedCreeper extends ModelBase
         this.leg4.setTextureSize(128, 64);
     }
 
-    private void setRotation(ModelRenderer model, float x, float y, float z)
-    {
+    private void setRotation(ModelRenderer model, float x, float y, float z) {
         model.rotateAngleX = x;
         model.rotateAngleY = y;
         model.rotateAngleZ = z;
     }
 
     @Override
-    public void render(Entity par1Entity, float par2, float par3, float par4, float par5, float par6, float par7)
-    {
+    public void render(Entity par1Entity, float par2, float par3, float par4, float par5, float par6, float par7) {
         this.setRotationAngles(par2, par3, par4, par5, par6, par7);
 
-        if (this.isChild)
-        {
+        if (this.isChild) {
             float f6 = 2.0F;
             GL11.glPushMatrix();
             GL11.glScalef(1.5F / f6, 1.5F / f6, 1.5F / f6);
@@ -235,9 +228,7 @@ public class ModelEvolvedCreeper extends ModelBase
             this.leg3.render(par7);
             this.leg4.render(par7);
             GL11.glPopMatrix();
-        }
-        else
-        {
+        } else {
             this.leftOxygenTank.render(par7);
             this.rightOxygenTank.render(par7);
             this.tubeRight2.render(par7);
@@ -265,8 +256,7 @@ public class ModelEvolvedCreeper extends ModelBase
         }
     }
 
-    public void setRotationAngles(float par1, float par2, float par3, float par4, float par5, float par6)
-    {
+    public void setRotationAngles(float par1, float par2, float par3, float par4, float par5, float par6) {
         this.oxygenMask.rotateAngleY = par4 / Constants.RADIANS_TO_DEGREES;
         this.oxygenMask.rotateAngleX = par5 / Constants.RADIANS_TO_DEGREES;
         this.head.rotateAngleY = par4 / Constants.RADIANS_TO_DEGREES;

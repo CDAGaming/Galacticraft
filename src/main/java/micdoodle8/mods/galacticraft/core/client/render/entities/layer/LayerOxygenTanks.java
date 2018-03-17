@@ -15,15 +15,13 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class LayerOxygenTanks implements LayerRenderer<AbstractClientPlayer>
-{
+public class LayerOxygenTanks implements LayerRenderer<AbstractClientPlayer> {
     private final RenderPlayer playerRenderer;
     public ModelRenderer[] greenOxygenTanks = new ModelRenderer[2];
     public ModelRenderer[] orangeOxygenTanks = new ModelRenderer[2];
     public ModelRenderer[] redOxygenTanks = new ModelRenderer[2];
 
-    public LayerOxygenTanks(RenderPlayer playerRendererIn)
-    {
+    public LayerOxygenTanks(RenderPlayer playerRendererIn) {
         this.playerRenderer = playerRendererIn;
         float scaleFactor = 0.0F;
         ModelPlayer modelPlayer = playerRendererIn.getMainModel();
@@ -57,14 +55,11 @@ public class LayerOxygenTanks implements LayerRenderer<AbstractClientPlayer>
     }
 
     @Override
-    public void doRenderLayer(AbstractClientPlayer player, float f5, float f6, float partialTicks, float f8, float f2, float f7, float scale)
-    {
-        if (!player.isInvisible())
-        {
+    public void doRenderLayer(AbstractClientPlayer player, float f5, float f6, float partialTicks, float f8, float f2, float f7, float scale) {
+        if (!player.isInvisible()) {
             PlayerGearData gearData = GalacticraftCore.proxy.getGearData(player);
 
-            if (gearData != null)
-            {
+            if (gearData != null) {
                 boolean wearingLeftTankGreen = gearData.getLeftTank() == Constants.GEAR_ID_OXYGEN_TANK_LIGHT;
                 boolean wearingLeftTankOrange = gearData.getLeftTank() == Constants.GEAR_ID_OXYGEN_TANK_MEDIUM;
                 boolean wearingLeftTankRed = gearData.getLeftTank() == Constants.GEAR_ID_OXYGEN_TANK_HEAVY || gearData.getLeftTank() == Constants.GEAR_ID_OXYGEN_TANK_INFINITE;
@@ -81,8 +76,7 @@ public class LayerOxygenTanks implements LayerRenderer<AbstractClientPlayer>
                 ModelPlayer.copyModelAngles(this.playerRenderer.getMainModel().bipedBody, this.redOxygenTanks[0]);
                 ModelPlayer.copyModelAngles(this.playerRenderer.getMainModel().bipedBody, this.redOxygenTanks[1]);
 
-                if (playerRenderer.getMainModel().isSneak)
-                {
+                if (playerRenderer.getMainModel().isSneak) {
                     this.greenOxygenTanks[0].rotationPointY = 2.0F;
                     this.greenOxygenTanks[1].rotationPointY = 2.0F;
                     this.greenOxygenTanks[0].rotationPointZ = 1.6F;
@@ -97,9 +91,7 @@ public class LayerOxygenTanks implements LayerRenderer<AbstractClientPlayer>
                     this.redOxygenTanks[1].rotationPointY = 2.0F;
                     this.redOxygenTanks[0].rotationPointZ = 1.6F;
                     this.redOxygenTanks[1].rotationPointZ = 1.6F;
-                }
-                else
-                {
+                } else {
                     this.greenOxygenTanks[0].rotationPointY = 0.5F;
                     this.greenOxygenTanks[1].rotationPointY = 0.5F;
                     this.greenOxygenTanks[0].rotationPointZ = 0.5F;
@@ -116,26 +108,22 @@ public class LayerOxygenTanks implements LayerRenderer<AbstractClientPlayer>
                     this.redOxygenTanks[1].rotationPointZ = 0.5F;
                 }
 
-                for (int i = 0; i < 2; ++i)
-                {
+                for (int i = 0; i < 2; ++i) {
                     GlStateManager.enableRescaleNormal();
                     GlStateManager.pushMatrix();
                     GlStateManager.translate(0.175F, 0.0F, 0.0F);
                     GlStateManager.translate(0.0F, 0.2F, 0.0F);
                     GlStateManager.translate(0.0F, 0.0F, 0.2F);
 
-                    if (wearingLeftTankRed)
-                    {
+                    if (wearingLeftTankRed) {
                         this.redOxygenTanks[0].render(scale);
                     }
 
-                    if (wearingLeftTankOrange)
-                    {
+                    if (wearingLeftTankOrange) {
                         this.orangeOxygenTanks[0].render(scale);
                     }
 
-                    if (wearingLeftTankGreen)
-                    {
+                    if (wearingLeftTankGreen) {
                         this.greenOxygenTanks[0].render(scale);
                     }
 
@@ -146,18 +134,15 @@ public class LayerOxygenTanks implements LayerRenderer<AbstractClientPlayer>
                     GlStateManager.translate(0.0F, 0.2F, 0.0F);
                     GlStateManager.translate(0.0F, 0.0F, 0.2F);
 
-                    if (wearingRightTankRed)
-                    {
+                    if (wearingRightTankRed) {
                         this.redOxygenTanks[1].render(scale);
                     }
 
-                    if (wearingRightTankOrange)
-                    {
+                    if (wearingRightTankOrange) {
                         this.orangeOxygenTanks[1].render(scale);
                     }
 
-                    if (wearingRightTankGreen)
-                    {
+                    if (wearingRightTankGreen) {
                         this.greenOxygenTanks[1].render(scale);
                     }
                     GlStateManager.color(1.0F, 1.0F, 1.0F);
@@ -168,8 +153,7 @@ public class LayerOxygenTanks implements LayerRenderer<AbstractClientPlayer>
     }
 
     @Override
-    public boolean shouldCombineTextures()
-    {
+    public boolean shouldCombineTextures() {
         return true;
     }
 }

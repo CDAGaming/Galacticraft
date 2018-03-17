@@ -6,8 +6,8 @@ import mezz.jei.api.IModRegistry;
 import mezz.jei.api.JEIPlugin;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
 import micdoodle8.mods.galacticraft.api.recipe.INasaWorkbenchRecipe;
-import micdoodle8.mods.galacticraft.core.client.jei.RecipeCategories;
 import micdoodle8.mods.galacticraft.core.GCBlocks;
+import micdoodle8.mods.galacticraft.core.client.jei.RecipeCategories;
 import micdoodle8.mods.galacticraft.planets.mars.blocks.MarsBlocks;
 import micdoodle8.mods.galacticraft.planets.mars.client.jei.cargorocket.CargoRocketRecipeCategory;
 import micdoodle8.mods.galacticraft.planets.mars.client.jei.cargorocket.CargoRocketRecipeMaker;
@@ -26,11 +26,9 @@ import net.minecraft.item.ItemStack;
 import javax.annotation.Nonnull;
 
 @JEIPlugin
-public class GalacticraftMarsJEI implements IModPlugin
-{
+public class GalacticraftMarsJEI implements IModPlugin {
     @Override
-    public void register(@Nonnull IModRegistry registry)
-    {
+    public void register(@Nonnull IModRegistry registry) {
         registry.handleRecipes(INasaWorkbenchRecipe.class, Tier2RocketRecipeWrapper::new, RecipeCategories.ROCKET_T2_ID);
         registry.handleRecipes(GasLiquefierRecipeWrapper.class, recipe -> recipe, RecipeCategories.GAS_LIQUEFIER_ID);
         registry.handleRecipes(INasaWorkbenchRecipe.class, CargoRocketRecipeWrapper::new, RecipeCategories.ROCKET_CARGO_ID);
@@ -47,8 +45,7 @@ public class GalacticraftMarsJEI implements IModPlugin
     }
 
     @Override
-    public void registerCategories(IRecipeCategoryRegistration registry)
-    {
+    public void registerCategories(IRecipeCategoryRegistration registry) {
         IGuiHelper guiHelper = registry.getJeiHelpers().getGuiHelper();
         registry.addRecipeCategories(new Tier2RocketRecipeCategory(guiHelper),
                 new GasLiquefierRecipeCategory(guiHelper),

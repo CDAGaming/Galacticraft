@@ -8,20 +8,18 @@ import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class TileEntityArclampRenderer extends TileEntitySpecialRenderer<TileEntityArclamp>
-{
+public class TileEntityArclampRenderer extends TileEntitySpecialRenderer<TileEntityArclamp> {
     public static final ResourceLocation lampTexture = new ResourceLocation(Constants.ASSET_PREFIX, "textures/misc/underoil.png");
     public static final ResourceLocation lightTexture = new ResourceLocation(Constants.ASSET_PREFIX, "textures/misc/light.png");
     private static IBakedModel lampMetal;
 
     @Override
-    public void render(TileEntityArclamp tileEntity, double d, double d1, double d2, float f, int par9, float alpha)
-    {
+    public void render(TileEntityArclamp tileEntity, double d, double d1, double d2, float f, int par9, float alpha) {
         this.updateModels();
         int side = tileEntity.getBlockMetadata();
         int metaFacing = tileEntity.facing;
@@ -32,57 +30,52 @@ public class TileEntityArclampRenderer extends TileEntitySpecialRenderer<TileEnt
         RenderHelper.enableStandardItemLighting();
         GlStateManager.enableRescaleNormal();
 
-        switch (side)
-        {
-        case 0:
-            break;
-        case 1:
-            GlStateManager.rotate(180F, 1F, 0, 0);
-            if (metaFacing < 2)
-            {
+        switch (side) {
+            case 0:
+                break;
+            case 1:
+                GlStateManager.rotate(180F, 1F, 0, 0);
+                if (metaFacing < 2) {
+                    metaFacing ^= 1;
+                }
+                break;
+            case 2:
+                GlStateManager.rotate(90F, 1F, 0, 0);
                 metaFacing ^= 1;
-            }
-            break;
-        case 2:
-            GlStateManager.rotate(90F, 1F, 0, 0);
-            metaFacing ^= 1;
-            break;
-        case 3:
-            GlStateManager.rotate(90F, -1F, 0, 0);
-            break;
-        case 4:
-            GlStateManager.rotate(90F, 0, 0, -1F);
-            metaFacing -= 2;
-            if (metaFacing < 0)
-            {
-                metaFacing = 1 - metaFacing;
-            }
-            break;
-        case 5:
-            GlStateManager.rotate(90F, 0, 0, 1F);
-            metaFacing += 2;
-            if (metaFacing > 3)
-            {
-                metaFacing = 5 - metaFacing;
-            }
-            break;
+                break;
+            case 3:
+                GlStateManager.rotate(90F, -1F, 0, 0);
+                break;
+            case 4:
+                GlStateManager.rotate(90F, 0, 0, -1F);
+                metaFacing -= 2;
+                if (metaFacing < 0) {
+                    metaFacing = 1 - metaFacing;
+                }
+                break;
+            case 5:
+                GlStateManager.rotate(90F, 0, 0, 1F);
+                metaFacing += 2;
+                if (metaFacing > 3) {
+                    metaFacing = 5 - metaFacing;
+                }
+                break;
         }
 
         GlStateManager.translate(0, -0.175F, 0);
 
-        switch (metaFacing)
-        {
-        case 0:
-            break;
-        case 1:
-            GlStateManager.rotate(180F, 0, 1F, 0);
-            break;
-        case 2:
-            GlStateManager.rotate(90F, 0, 1F, 0);
-            break;
-        case 3:
-            GlStateManager.rotate(270F, 0, 1F, 0);
-            break;
+        switch (metaFacing) {
+            case 0:
+                break;
+            case 1:
+                GlStateManager.rotate(180F, 0, 1F, 0);
+                break;
+            case 2:
+                GlStateManager.rotate(90F, 0, 1F, 0);
+                break;
+            case 3:
+                GlStateManager.rotate(270F, 0, 1F, 0);
+                break;
         }
 
         this.bindTexture(TileEntityArclampRenderer.lampTexture);
@@ -124,16 +117,11 @@ public class TileEntityArclampRenderer extends TileEntitySpecialRenderer<TileEnt
         GlStateManager.popMatrix();
     }
 
-    private void updateModels()
-    {
-        if (lampMetal == null)
-        {
-            try
-            {
+    private void updateModels() {
+        if (lampMetal == null) {
+            try {
                 lampMetal = ClientUtil.modelFromOBJ(new ResourceLocation(Constants.ASSET_PREFIX, "arclamp_metal.obj"));
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

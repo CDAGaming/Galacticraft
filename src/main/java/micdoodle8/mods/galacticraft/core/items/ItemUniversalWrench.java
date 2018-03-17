@@ -15,18 +15,16 @@ import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemUniversalWrench extends Item implements ISortableItem
-{
-    public ItemUniversalWrench(String assetName)
-    {
+public class ItemUniversalWrench extends Item implements ISortableItem {
+    public ItemUniversalWrench(String assetName) {
         super();
         this.setUnlocalizedName(assetName);
         this.setMaxStackSize(1);
@@ -35,87 +33,71 @@ public class ItemUniversalWrench extends Item implements ISortableItem
     }
 
     @Override
-    public CreativeTabs getCreativeTab()
-    {
+    public CreativeTabs getCreativeTab() {
         return GalacticraftCore.galacticraftItemsTab;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public EnumRarity getRarity(ItemStack par1ItemStack)
-    {
+    public EnumRarity getRarity(ItemStack par1ItemStack) {
         return ClientProxyCore.galacticraftItem;
     }
 
     @RuntimeInterface(clazz = "buildcraft.api.tools.IToolWrench", modID = CompatibilityManager.modidBuildcraft)
-    public boolean canWrench(EntityPlayer entityPlayer, BlockPos pos)
-    {
+    public boolean canWrench(EntityPlayer entityPlayer, BlockPos pos) {
         return true;
     }
 
     @RuntimeInterface(clazz = "buildcraft.api.tools.IToolWrench", modID = CompatibilityManager.modidBuildcraft)
-    public void wrenchUsed(EntityPlayer entityPlayer, BlockPos pos)
-    {
+    public void wrenchUsed(EntityPlayer entityPlayer, BlockPos pos) {
         ItemStack stack = entityPlayer.inventory.getCurrentItem();
 
-        if (!stack.isEmpty())
-        {
+        if (!stack.isEmpty()) {
             stack.damageItem(1, entityPlayer);
 
-            if (stack.getItemDamage() >= stack.getMaxDamage())
-            {
+            if (stack.getItemDamage() >= stack.getMaxDamage()) {
                 stack.shrink(1);
             }
 
-            if (stack.getCount() <= 0)
-            {
+            if (stack.getCount() <= 0) {
                 entityPlayer.inventory.setInventorySlotContents(entityPlayer.inventory.currentItem, ItemStack.EMPTY);
             }
         }
     }
 
     @Override
-    public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
-    {
+    public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         return EnumActionResult.PASS;
     }
 
     @Override
-    public boolean doesSneakBypassUse(ItemStack stack, IBlockAccess world, BlockPos pos, EntityPlayer player)
-    {
+    public boolean doesSneakBypassUse(ItemStack stack, IBlockAccess world, BlockPos pos, EntityPlayer player) {
         return true;
     }
 
     @Override
-    public void onCreated(ItemStack stack, World world, EntityPlayer player)
-    {
-        if (world.isRemote && player instanceof EntityPlayerSP)
-        {
+    public void onCreated(ItemStack stack, World world, EntityPlayer player) {
+        if (world.isRemote && player instanceof EntityPlayerSP) {
             ClientProxyCore.playerClientHandler.onBuild(3, (EntityPlayerSP) player);
         }
     }
 
     @Override
-    public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand)
-    {
-        if (world.isRemote || player.isSneaking())
-        {
+    public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
+        if (world.isRemote || player.isSneaking()) {
             return EnumActionResult.PASS;
         }
         IBlockState state = world.getBlockState(pos);
         Block blockID = state.getBlock();
 
-        if (blockID == Blocks.FURNACE || blockID == Blocks.LIT_FURNACE || blockID == Blocks.DISPENSER || blockID == Blocks.DROPPER)
-        {
+        if (blockID == Blocks.FURNACE || blockID == Blocks.LIT_FURNACE || blockID == Blocks.DISPENSER || blockID == Blocks.DROPPER) {
             int metadata = blockID.getMetaFromState(state);
 
             world.setBlockState(pos, blockID.getStateFromMeta(EnumFacing.getFront(metadata).rotateY().ordinal()), 3);
             this.wrenchUsed(player, pos);
 
             return EnumActionResult.SUCCESS;
-        }
-        else if (blockID == Blocks.HOPPER || blockID == Blocks.PISTON || blockID == Blocks.STICKY_PISTON)
-        {
+        } else if (blockID == Blocks.HOPPER || blockID == Blocks.PISTON || blockID == Blocks.STICKY_PISTON) {
             int metadata = blockID.getMetaFromState(state);
             int metaDir = ((metadata & 7) + 1) % 6;
             //DOWN->UP->NORTH->*EAST*->*SOUTH*->WEST
@@ -123,20 +105,15 @@ public class ItemUniversalWrench extends Item implements ISortableItem
             if (metaDir == 3) //after north
             {
                 metaDir = 5;
-            }
-            else if (metaDir == 0)
-            {
+            } else if (metaDir == 0) {
                 metaDir = 3;
-            }
-            else if (metaDir == 5)
-            {
+            } else if (metaDir == 5) {
                 metaDir = 0;
             }
-            if (blockID == Blocks.HOPPER && metaDir == 1)
-            {
+            if (blockID == Blocks.HOPPER && metaDir == 1) {
                 metaDir = 2;
             }
-                
+
             world.setBlockState(pos, blockID.getStateFromMeta((metadata & 8) + metaDir), 3);
             this.wrenchUsed(player, pos);
 
@@ -147,8 +124,7 @@ public class ItemUniversalWrench extends Item implements ISortableItem
     }
 
     @Override
-    public EnumSortCategoryItem getCategory(int meta)
-    {
+    public EnumSortCategoryItem getCategory(int meta) {
         return EnumSortCategoryItem.TOOLS;
     }
 }

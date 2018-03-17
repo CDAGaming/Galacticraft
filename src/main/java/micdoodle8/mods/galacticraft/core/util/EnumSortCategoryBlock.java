@@ -1,7 +1,6 @@
 package micdoodle8.mods.galacticraft.core.util;
 
-public enum EnumSortCategoryBlock
-{
+public enum EnumSortCategoryBlock {
     PAD,
     TRANSMITTER,
     MACHINE,

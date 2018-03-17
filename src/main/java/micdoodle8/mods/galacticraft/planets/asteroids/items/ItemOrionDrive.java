@@ -11,12 +11,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemOrionDrive extends Item implements ISortableItem
-{
+public class ItemOrionDrive extends Item implements ISortableItem {
 //    public IIcon[] icons;
 
-    public ItemOrionDrive(String assetName)
-    {
+    public ItemOrionDrive(String assetName) {
         super();
         this.setMaxDamage(0);
         this.setUnlocalizedName(assetName);
@@ -24,21 +22,18 @@ public class ItemOrionDrive extends Item implements ISortableItem
     }
 
     @Override
-    public CreativeTabs getCreativeTab()
-    {
+    public CreativeTabs getCreativeTab() {
         return GalacticraftCore.galacticraftItemsTab;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public EnumRarity getRarity(ItemStack par1ItemStack)
-    {
+    public EnumRarity getRarity(ItemStack par1ItemStack) {
         return ClientProxyCore.galacticraftItem;
     }
 
     @Override
-    public EnumSortCategoryItem getCategory(int meta)
-    {
+    public EnumSortCategoryItem getCategory(int meta) {
         return EnumSortCategoryItem.GENERAL;
     }
 }

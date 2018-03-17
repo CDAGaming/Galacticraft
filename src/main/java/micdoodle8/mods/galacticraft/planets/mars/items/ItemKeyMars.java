@@ -13,10 +13,8 @@ import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemKeyMars extends Item implements IKeyItem, ISortableItem
-{
-    public ItemKeyMars()
-    {
+public class ItemKeyMars extends Item implements IKeyItem, ISortableItem {
+    public ItemKeyMars() {
         super();
         this.setMaxStackSize(1);
         this.setMaxDamage(0);
@@ -25,48 +23,40 @@ public class ItemKeyMars extends Item implements IKeyItem, ISortableItem
 
     @SideOnly(Side.CLIENT)
     @Override
-    public CreativeTabs getCreativeTab()
-    {
+    public CreativeTabs getCreativeTab() {
         return GalacticraftCore.galacticraftItemsTab;
     }
 
     @Override
-    public String getUnlocalizedName(ItemStack itemStack)
-    {
+    public String getUnlocalizedName(ItemStack itemStack) {
         return "item.key.t2";
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public EnumRarity getRarity(ItemStack par1ItemStack)
-    {
+    public EnumRarity getRarity(ItemStack par1ItemStack) {
         return ClientProxyCore.galacticraftItem;
     }
 
     @Override
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list)
-    {
-        if (tab == GalacticraftCore.galacticraftItemsTab || tab == CreativeTabs.SEARCH)
-        {
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list) {
+        if (tab == GalacticraftCore.galacticraftItemsTab || tab == CreativeTabs.SEARCH) {
             list.add(new ItemStack(this, 1, 0));
         }
     }
 
     @Override
-    public int getMetadata(int par1)
-    {
+    public int getMetadata(int par1) {
         return par1;
     }
 
     @Override
-    public int getTier(ItemStack keyStack)
-    {
+    public int getTier(ItemStack keyStack) {
         return 2;
     }
 
     @Override
-    public EnumSortCategoryItem getCategory(int meta)
-    {
+    public EnumSortCategoryItem getCategory(int meta) {
         return EnumSortCategoryItem.KEYS;
     }
 }

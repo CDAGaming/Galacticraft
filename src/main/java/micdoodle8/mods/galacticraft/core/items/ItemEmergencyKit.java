@@ -22,12 +22,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-public class ItemEmergencyKit extends ItemDesc implements ISortableItem
-{
+public class ItemEmergencyKit extends ItemDesc implements ISortableItem {
     private static final int SIZE = 9;
 
-    public ItemEmergencyKit(String assetName)
-    {
+    public ItemEmergencyKit(String assetName) {
         super();
         this.setMaxDamage(0);
         this.setHasSubtypes(false);
@@ -35,42 +33,67 @@ public class ItemEmergencyKit extends ItemDesc implements ISortableItem
         this.setUnlocalizedName(assetName);
     }
 
+    public static ItemStack getContents(int slot) {
+        switch (slot) {
+            case 0:
+                return new ItemStack(GCItems.oxMask);
+            case 1:
+                return new ItemStack(GCItems.oxygenGear);
+            case 2:
+                return new ItemStack(GCItems.oxTankLight);
+            case 3:
+                return new ItemStack(GCItems.oxTankLight);
+            case 4:
+                return new ItemStack(GCItems.steelPickaxe);
+            case 5:
+                return new ItemStack(GCItems.basicItem, 1, 18);
+            case 6:
+                return PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), PotionTypes.HEALING);
+            case 7:
+                return PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), PotionTypes.LONG_NIGHT_VISION);
+            case 8:
+                return new ItemStack(GCItems.parachute, 1, 13);
+            default:
+                return null;
+        }
+    }
+
+    public static Object[] getRecipe() {
+        Object[] result = new Object[]{"EAB", "CID", "FGH", 'A', null, 'B', null, 'C', null, 'D', null, 'E', null, 'F', null, 'G', null, 'H', null, 'I', null};
+        for (int i = 0; i < SIZE; i++) {
+            result[i * 2 + 4] = getContents(i);
+        }
+        return result;
+    }
+
     @Override
-    public CreativeTabs getCreativeTab()
-    {
+    public CreativeTabs getCreativeTab() {
         return GalacticraftCore.galacticraftItemsTab;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public EnumRarity getRarity(ItemStack par1ItemStack)
-    {
+    public EnumRarity getRarity(ItemStack par1ItemStack) {
         return ClientProxyCore.galacticraftItem;
     }
 
     @Override
-    public EnumSortCategoryItem getCategory(int meta)
-    {
+    public EnumSortCategoryItem getCategory(int meta) {
         return EnumSortCategoryItem.GEAR;
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer player, EnumHand hand)
-    {
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer player, EnumHand hand) {
         ItemStack itemStack = player.getHeldItem(hand);
-        if (player instanceof EntityPlayerMP)
-        {
+        if (player instanceof EntityPlayerMP) {
             GCPlayerStats stats = GCPlayerStats.get(player);
-            
-            for (int i = 0; i < SIZE; i++)
-            {
+
+            for (int i = 0; i < SIZE; i++) {
                 ItemStack newGear = getContents(i);
-                if (newGear.getItem() instanceof IClickableItem)
-                {
-                    newGear = ((IClickableItem)newGear.getItem()).onItemRightClick(newGear, worldIn, player);
+                if (newGear.getItem() instanceof IClickableItem) {
+                    newGear = ((IClickableItem) newGear.getItem()).onItemRightClick(newGear, worldIn, player);
                 }
-                if (newGear.getCount() >= 1)
-                {
+                if (newGear.getCount() >= 1) {
                     ItemHandlerHelper.giveItemToPlayer(player, newGear, 0);
                 }
             }
@@ -80,43 +103,14 @@ public class ItemEmergencyKit extends ItemDesc implements ISortableItem
         }
         return new ActionResult<>(EnumActionResult.PASS, itemStack);
     }
-    
-    public static ItemStack getContents(int slot)
-    {
-        switch (slot)
-        {
-        case 0: return new ItemStack(GCItems.oxMask);
-        case 1: return new ItemStack(GCItems.oxygenGear);
-        case 2: return new ItemStack(GCItems.oxTankLight);
-        case 3: return new ItemStack(GCItems.oxTankLight);
-        case 4: return new ItemStack(GCItems.steelPickaxe);
-        case 5: return new ItemStack(GCItems.basicItem, 1, 18);
-        case 6: return PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), PotionTypes.HEALING);
-        case 7: return PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), PotionTypes.LONG_NIGHT_VISION);
-        case 8: return new ItemStack(GCItems.parachute, 1, 13);
-        default: return null;
-        }
-    }
-
-    public static Object[] getRecipe()
-    {
-        Object[] result = new Object[]{ "EAB", "CID", "FGH", 'A', null, 'B', null, 'C', null, 'D', null, 'E', null, 'F', null, 'G', null, 'H', null, 'I', null };
-        for (int i = 0; i < SIZE; i++)
-        {
-            result [i * 2 + 4] = getContents(i);
-        }        
-        return result;
-    }
 
     @Override
-    public String getShiftDescription(int meta)
-    {
+    public String getShiftDescription(int meta) {
         return GCCoreUtil.translate("item.emergency_kit.description");
     }
 
     @Override
-    public boolean showDescription(int meta)
-    {
+    public boolean showDescription(int meta) {
         return true;
     }
 }

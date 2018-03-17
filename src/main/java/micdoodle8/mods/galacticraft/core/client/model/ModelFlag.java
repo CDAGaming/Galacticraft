@@ -5,19 +5,17 @@ import micdoodle8.mods.galacticraft.api.world.IGalacticraftWorldProvider;
 import micdoodle8.mods.galacticraft.core.entities.EntityFlag;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import org.lwjgl.opengl.GL11;
 
-public class ModelFlag extends ModelBase
-{
+public class ModelFlag extends ModelBase {
     ModelRenderer base;
     ModelRenderer pole;
 
-    public ModelFlag()
-    {
+    public ModelFlag() {
         this.textureWidth = 128;
         this.textureHeight = 64;
         this.base = new ModelRenderer(this, 4, 0);
@@ -35,28 +33,23 @@ public class ModelFlag extends ModelBase
     }
 
     @Override
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
-    {
+    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
         super.render(entity, f, f1, f2, f3, f4, f5);
 
-        if (entity instanceof EntityFlag)
-        {
+        if (entity instanceof EntityFlag) {
             EntityFlag flag = (EntityFlag) entity;
             this.renderPole(flag, f5);
             this.renderFlag(flag, flag.ticksExisted);
         }
     }
 
-    public void renderPole(Entity entity, float f5)
-    {
+    public void renderPole(Entity entity, float f5) {
         this.base.render(f5);
         this.pole.render(f5);
     }
 
-    public void renderFlag(EntityFlag entity, float ticks)
-    {
-        if (entity.flagData != null)
-        {
+    public void renderFlag(EntityFlag entity, float ticks) {
+        if (entity.flagData != null) {
             GL11.glPushMatrix();
 
             GL11.glScalef(0.5F, 0.5F, 0.5F);
@@ -67,22 +60,18 @@ public class ModelFlag extends ModelBase
 
             float windLevel = 1.0F;
 
-            if (entity.world.provider instanceof IGalacticraftWorldProvider)
-            {
+            if (entity.world.provider instanceof IGalacticraftWorldProvider) {
                 windLevel = ((IGalacticraftWorldProvider) entity.world.provider).getWindLevel();
             }
 
-            for (int i = 0; i < entity.flagData.getWidth(); i++)
-            {
-                for (int j = 0; j < entity.flagData.getHeight(); j++)
-                {
+            for (int i = 0; i < entity.flagData.getWidth(); i++) {
+                for (int j = 0; j < entity.flagData.getHeight(); j++) {
                     GL11.glPushMatrix();
                     GL11.glTranslatef(0, -1.0F, 0);
                     float offset = 0.0F;
                     float offsetAhead = 0.0F;
 
-                    if (windLevel > 0)
-                    {
+                    if (windLevel > 0) {
                         offset = (float) (Math.sin(ticks / 2.0F + i * 50 + 3) / 25.0F) * i / 30.0F;
                         offsetAhead = (float) (Math.sin(ticks / 2.0F + (i + 1) * 50 + 3) / 25.0F) * (i + 1) / 30.0F;
                         offset *= windLevel;
@@ -118,8 +107,7 @@ public class ModelFlag extends ModelBase
         }
     }
 
-    private void setRotation(ModelRenderer model, float x, float y, float z)
-    {
+    private void setRotation(ModelRenderer model, float x, float y, float z) {
         model.rotateAngleX = x;
         model.rotateAngleY = y;
         model.rotateAngleZ = z;

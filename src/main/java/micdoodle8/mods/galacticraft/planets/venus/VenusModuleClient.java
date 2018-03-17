@@ -56,91 +56,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
-public class VenusModuleClient implements IPlanetsModuleClient
-{
+public class VenusModuleClient implements IPlanetsModuleClient {
     private static ModelResourceLocation sulphuricAcidLocation = new ModelResourceLocation(GalacticraftPlanets.TEXTURE_PREFIX + "sulphuric_acid", "fluid");
 
-    @Override
-    public void preInit(FMLPreInitializationEvent event)
-    {
-        MinecraftForge.EVENT_BUS.register(this);
-        RenderingRegistry.registerEntityRenderingHandler(EntityJuicer.class, (RenderManager manager) -> new RenderJuicer(manager));
-        RenderingRegistry.registerEntityRenderingHandler(EntityEntryPodVenus.class, (RenderManager manager) -> new RenderEntryPodVenus(manager));
-        RenderingRegistry.registerEntityRenderingHandler(EntitySpiderQueen.class, (RenderManager manager) -> new RenderSpiderQueen(manager));
-        RenderingRegistry.registerEntityRenderingHandler(EntityWebShot.class, (RenderManager manager) -> new RenderWebShot(manager));
-    }
-
-    private void addPlanetVariants(String name, String... variants)
-    {
-        Item itemBlockVariants = Item.REGISTRY.getObject(new ResourceLocation(Constants.MOD_ID_PLANETS, name));
-        ResourceLocation[] variants0 = new ResourceLocation[variants.length];
-        for (int i = 0; i < variants.length; ++i)
-        {
-            variants0[i] = new ResourceLocation(GalacticraftPlanets.TEXTURE_PREFIX + variants[i]);
-        }
-        ModelBakery.registerItemVariants(itemBlockVariants, variants0);
-    }
-
-    @Override
-    public void registerVariants()
-    {
-        addPlanetVariants("venus", "venus_rock_0", "venus_rock_1", "venus_rock_2", "venus_rock_3", "dungeon_brick_venus_1", "dungeon_brick_venus_2", "venus_ore_aluminum", "venus_ore_copper", "venus_ore_galena", "venus_ore_quartz", "venus_ore_silicon", "venus_ore_tin", "lead_block");
-        addPlanetVariants("thermal_padding_t2", "thermal_helm_t2", "thermal_chestplate_t2", "thermal_leggings_t2", "thermal_boots_t2");
-        addPlanetVariants("basic_item_venus", "shield_controller", "ingot_lead", "radioisotope_core", "thermal_fabric");
-        addPlanetVariants("web_torch", "web_torch_0", "web_torch_1");
-
-        Item sludge = Item.getItemFromBlock(VenusBlocks.sulphuricAcid);
-        ModelBakery.registerItemVariants(sludge, new ResourceLocation(GalacticraftPlanets.TEXTURE_PREFIX + "sulphuric_acid"));
-        ModelLoader.setCustomMeshDefinition(sludge, IItemMeshDefinitionCustom.create((ItemStack stack) -> sulphuricAcidLocation));
-        ModelLoader.setCustomStateMapper(VenusBlocks.sulphuricAcid, new StateMapperBase()
-        {
-            @Override
-            protected ModelResourceLocation getModelResourceLocation(IBlockState state)
-            {
-                return sulphuricAcidLocation;
-            }
-        });
-    }
-
-    @Override
-    public void init(FMLInitializationEvent event)
-    {
-        MinecraftForge.EVENT_BUS.register(new TickHandlerClientVenus());
-        VenusModuleClient.registerBlockRenderers();
-    }
-
-    @SubscribeEvent
-    @SideOnly(Side.CLIENT)
-    public void loadTextures(TextureStitchEvent.Pre event)
-    {
-        registerTexture(event, "pod_flame");
-        registerTexture(event, "web");
-    }
-
-    private void registerTexture(TextureStitchEvent.Pre event, String texture)
-    {
-        event.getMap().registerSprite(new ResourceLocation(GalacticraftPlanets.TEXTURE_PREFIX + "blocks/" + texture));
-    }
-
-    @SubscribeEvent
-    @SideOnly(Side.CLIENT)
-    public void onModelBakeEvent(ModelBakeEvent event)
-    {
-    }
-
-    private void replaceModelDefault(ModelBakeEvent event, String resLoc, String objLoc, List<String> visibleGroups, Class<? extends ModelTransformWrapper> clazz, IModelState parentState, String... variants)
-    {
-        ClientUtil.replaceModel(GalacticraftPlanets.ASSET_PREFIX, event, resLoc, objLoc, visibleGroups, clazz, parentState, variants);
-    }
-
-    @Override
-    public void postInit(FMLPostInitializationEvent event)
-    {
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTreasureChestVenus.class, new TileEntityTreasureChestRenderer());
-    }
-
-    public static void registerBlockRenderers()
-    {
+    public static void registerBlockRenderers() {
         ClientUtil.registerBlockJson(GalacticraftPlanets.TEXTURE_PREFIX, VenusBlocks.venusBlock, 0, "venus_rock_0");
         ClientUtil.registerBlockJson(GalacticraftPlanets.TEXTURE_PREFIX, VenusBlocks.venusBlock, 1, "venus_rock_1");
         ClientUtil.registerBlockJson(GalacticraftPlanets.TEXTURE_PREFIX, VenusBlocks.venusBlock, 2, "venus_rock_2");
@@ -174,20 +93,81 @@ public class VenusModuleClient implements IPlanetsModuleClient
     }
 
     @Override
-    public Object getGuiElement(Side side, int ID, EntityPlayer player, World world, int x, int y, int z)
-    {
-        if (side == Side.CLIENT)
-        {
+    public void preInit(FMLPreInitializationEvent event) {
+        MinecraftForge.EVENT_BUS.register(this);
+        RenderingRegistry.registerEntityRenderingHandler(EntityJuicer.class, (RenderManager manager) -> new RenderJuicer(manager));
+        RenderingRegistry.registerEntityRenderingHandler(EntityEntryPodVenus.class, (RenderManager manager) -> new RenderEntryPodVenus(manager));
+        RenderingRegistry.registerEntityRenderingHandler(EntitySpiderQueen.class, (RenderManager manager) -> new RenderSpiderQueen(manager));
+        RenderingRegistry.registerEntityRenderingHandler(EntityWebShot.class, (RenderManager manager) -> new RenderWebShot(manager));
+    }
+
+    private void addPlanetVariants(String name, String... variants) {
+        Item itemBlockVariants = Item.REGISTRY.getObject(new ResourceLocation(Constants.MOD_ID_PLANETS, name));
+        ResourceLocation[] variants0 = new ResourceLocation[variants.length];
+        for (int i = 0; i < variants.length; ++i) {
+            variants0[i] = new ResourceLocation(GalacticraftPlanets.TEXTURE_PREFIX + variants[i]);
+        }
+        ModelBakery.registerItemVariants(itemBlockVariants, variants0);
+    }
+
+    @Override
+    public void registerVariants() {
+        addPlanetVariants("venus", "venus_rock_0", "venus_rock_1", "venus_rock_2", "venus_rock_3", "dungeon_brick_venus_1", "dungeon_brick_venus_2", "venus_ore_aluminum", "venus_ore_copper", "venus_ore_galena", "venus_ore_quartz", "venus_ore_silicon", "venus_ore_tin", "lead_block");
+        addPlanetVariants("thermal_padding_t2", "thermal_helm_t2", "thermal_chestplate_t2", "thermal_leggings_t2", "thermal_boots_t2");
+        addPlanetVariants("basic_item_venus", "shield_controller", "ingot_lead", "radioisotope_core", "thermal_fabric");
+        addPlanetVariants("web_torch", "web_torch_0", "web_torch_1");
+
+        Item sludge = Item.getItemFromBlock(VenusBlocks.sulphuricAcid);
+        ModelBakery.registerItemVariants(sludge, new ResourceLocation(GalacticraftPlanets.TEXTURE_PREFIX + "sulphuric_acid"));
+        ModelLoader.setCustomMeshDefinition(sludge, IItemMeshDefinitionCustom.create((ItemStack stack) -> sulphuricAcidLocation));
+        ModelLoader.setCustomStateMapper(VenusBlocks.sulphuricAcid, new StateMapperBase() {
+            @Override
+            protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
+                return sulphuricAcidLocation;
+            }
+        });
+    }
+
+    @Override
+    public void init(FMLInitializationEvent event) {
+        MinecraftForge.EVENT_BUS.register(new TickHandlerClientVenus());
+        VenusModuleClient.registerBlockRenderers();
+    }
+
+    @SubscribeEvent
+    @SideOnly(Side.CLIENT)
+    public void loadTextures(TextureStitchEvent.Pre event) {
+        registerTexture(event, "pod_flame");
+        registerTexture(event, "web");
+    }
+
+    private void registerTexture(TextureStitchEvent.Pre event, String texture) {
+        event.getMap().registerSprite(new ResourceLocation(GalacticraftPlanets.TEXTURE_PREFIX + "blocks/" + texture));
+    }
+
+    @SubscribeEvent
+    @SideOnly(Side.CLIENT)
+    public void onModelBakeEvent(ModelBakeEvent event) {
+    }
+
+    private void replaceModelDefault(ModelBakeEvent event, String resLoc, String objLoc, List<String> visibleGroups, Class<? extends ModelTransformWrapper> clazz, IModelState parentState, String... variants) {
+        ClientUtil.replaceModel(GalacticraftPlanets.ASSET_PREFIX, event, resLoc, objLoc, visibleGroups, clazz, parentState, variants);
+    }
+
+    @Override
+    public void postInit(FMLPostInitializationEvent event) {
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTreasureChestVenus.class, new TileEntityTreasureChestRenderer());
+    }
+
+    @Override
+    public Object getGuiElement(Side side, int ID, EntityPlayer player, World world, int x, int y, int z) {
+        if (side == Side.CLIENT) {
             TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
 
-            if (ID == GuiIdsPlanets.MACHINE_VENUS)
-            {
-                if (tile instanceof TileEntityGeothermalGenerator)
-                {
+            if (ID == GuiIdsPlanets.MACHINE_VENUS) {
+                if (tile instanceof TileEntityGeothermalGenerator) {
                     return new GuiGeothermal(player.inventory, (TileEntityGeothermalGenerator) tile);
-                }
-                else if (tile instanceof TileEntityCrashedProbe)
-                {
+                } else if (tile instanceof TileEntityCrashedProbe) {
                     return new GuiCrashedProbe(player.inventory, (TileEntityCrashedProbe) tile);
                 }
             }
@@ -197,41 +177,34 @@ public class VenusModuleClient implements IPlanetsModuleClient
     }
 
     @Override
-    public void spawnParticle(String particleID, Vector3 position, Vector3 motion, Object... extraData)
-    {
+    public void spawnParticle(String particleID, Vector3 position, Vector3 motion, Object... extraData) {
         Minecraft mc = FMLClientHandler.instance().getClient();
 
-        if (mc != null && mc.getRenderViewEntity() != null && mc.effectRenderer != null)
-        {
+        if (mc != null && mc.getRenderViewEntity() != null && mc.effectRenderer != null) {
             double dX = mc.getRenderViewEntity().posX - position.x;
             double dY = mc.getRenderViewEntity().posY - position.y;
             double dZ = mc.getRenderViewEntity().posZ - position.z;
             Particle particle = null;
             double viewDistance = 64.0D;
 
-            if (particleID.equals("acidVapor"))
-            {
+            if (particleID.equals("acidVapor")) {
                 particle = new ParticleAcidVapor(mc.world, position.x, position.y, position.z, motion.x, motion.y, motion.z, 2.5F);
             }
 
-            if (dX * dX + dY * dY + dZ * dZ < viewDistance * viewDistance)
-            {
-                if (particleID.equals("acidExhaust"))
-                {
+            if (dX * dX + dY * dY + dZ * dZ < viewDistance * viewDistance) {
+                if (particleID.equals("acidExhaust")) {
                     particle = new ParticleAcidExhaust(mc.world, position.x, position.y, position.z, motion.x, motion.y, motion.z, 0.5F);
                 }
             }
 
-            if (particle != null)
-            {
+            if (particle != null) {
                 mc.effectRenderer.addEffect(particle);
             }
         }
     }
 
     @Override
-    public void getGuiIDs(List<Integer> idList)
-    {
+    public void getGuiIDs(List<Integer> idList) {
         idList.add(GuiIdsPlanets.MACHINE_VENUS);
     }
 }

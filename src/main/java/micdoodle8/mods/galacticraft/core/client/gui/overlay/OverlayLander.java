@@ -14,8 +14,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class OverlayLander extends Overlay
-{
+public class OverlayLander extends Overlay {
     private static Minecraft minecraft = FMLClientHandler.instance().getClient();
 
     private static long screenTicks;
@@ -23,8 +22,7 @@ public class OverlayLander extends Overlay
     /**
      * Render the GUI when player is in inventory
      */
-    public static void renderLanderOverlay()
-    {
+    public static void renderLanderOverlay() {
         OverlayLander.screenTicks++;
         final ScaledResolution scaledresolution = ClientUtil.getScaledRes(minecraft, OverlayLander.minecraft.displayWidth, OverlayLander.minecraft.displayHeight);
         final int width = scaledresolution.getScaledWidth();
@@ -35,8 +33,7 @@ public class OverlayLander extends Overlay
 
         GL11.glScalef(2.0F, 2.0F, 0.0F);
 
-        if (OverlayLander.minecraft.player.getRidingEntity().motionY < -2.0)
-        {
+        if (OverlayLander.minecraft.player.getRidingEntity().motionY < -2.0) {
             OverlayLander.minecraft.fontRenderer.drawString(GCCoreUtil.translate("gui.warning"), width / 4 - OverlayLander.minecraft.fontRenderer.getStringWidth(GCCoreUtil.translate("gui.warning")) / 2, height / 8 - 20, ColorUtil.to32BitColor(255, 255, 0, 0));
             final int alpha = (int) (255 * Math.sin(OverlayLander.screenTicks / 20.0F));
             final String press1 = GCCoreUtil.translate("gui.lander.warning2");
@@ -46,8 +43,7 @@ public class OverlayLander extends Overlay
 
         GL11.glPopMatrix();
 
-        if (OverlayLander.minecraft.player.getRidingEntity().motionY != 0.0D)
-        {
+        if (OverlayLander.minecraft.player.getRidingEntity().motionY != 0.0D) {
             String string = GCCoreUtil.translate("gui.lander.velocity") + ": " + Math.round(((EntityLander) OverlayLander.minecraft.player.getRidingEntity()).motionY * 1000) / 100.0D + " " + GCCoreUtil.translate("gui.lander.velocityu");
             int color = ColorUtil.to32BitColor(255, (int) Math.floor(Math.abs(OverlayLander.minecraft.player.getRidingEntity().motionY) * 51.0D), 255 - (int) Math.floor(Math.abs(OverlayLander.minecraft.player.getRidingEntity().motionY) * 51.0D), 0);
             OverlayLander.minecraft.fontRenderer.drawString(string, width / 2 - OverlayLander.minecraft.fontRenderer.getStringWidth(string) / 2, height / 3, color);

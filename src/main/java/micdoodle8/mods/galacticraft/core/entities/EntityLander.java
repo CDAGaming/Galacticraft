@@ -3,9 +3,9 @@ package micdoodle8.mods.galacticraft.core.entities;
 import micdoodle8.mods.galacticraft.api.entity.ICameraZoomEntity;
 import micdoodle8.mods.galacticraft.api.entity.IIgnoreShift;
 import micdoodle8.mods.galacticraft.api.vector.Vector3;
-import micdoodle8.mods.galacticraft.core.client.fx.ParticleLanderFlame;
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.GalacticraftCore;
+import micdoodle8.mods.galacticraft.core.client.fx.ParticleLanderFlame;
 import micdoodle8.mods.galacticraft.core.network.PacketSimple;
 import micdoodle8.mods.galacticraft.core.network.PacketSimple.EnumSimplePacket;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
@@ -25,151 +25,126 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-public class EntityLander extends EntityLanderBase implements IIgnoreShift, ICameraZoomEntity
-{
+public class EntityLander extends EntityLanderBase implements IIgnoreShift, ICameraZoomEntity {
     private double lastMotionY;
 
-    public EntityLander(World world)
-    {
+    public EntityLander(World world) {
         super(world);
         this.setSize(3.0F, 4.25F);
     }
 
-    public EntityLander(EntityPlayerMP player)
-    {
+    public EntityLander(EntityPlayerMP player) {
         super(player, 0.0F);
     }
 
     @Override
-    public double getMountedYOffset()
-    {
+    public double getMountedYOffset() {
         return 2.25;
     }
 
     @Override
-    public float getRotateOffset()
-    {
+    public float getRotateOffset() {
         return +0.0F;
     }
 
     @Override
-    public void onUpdate()
-    {
+    public void onUpdate() {
         super.onUpdate();
 
         this.lastMotionY = this.motionY;
     }
 
     @Override
-    protected void readEntityFromNBT(NBTTagCompound nbt)
-    {
+    protected void readEntityFromNBT(NBTTagCompound nbt) {
         super.readEntityFromNBT(nbt);
 
         this.lastMotionY = this.motionY;
     }
 
     @Override
-    protected void writeEntityToNBT(NBTTagCompound nbt)
-    {
+    protected void writeEntityToNBT(NBTTagCompound nbt) {
         super.writeEntityToNBT(nbt);
     }
 
     @Override
-    public String getName()
-    {
+    public String getName() {
         return GCCoreUtil.translate("container.lander.name");
     }
 
     @Override
-    public boolean hasCustomName()
-    {
+    public boolean hasCustomName() {
         return true;
     }
 
     @Override
-    public boolean processInitialInteract(EntityPlayer player, EnumHand hand)
-    {
-        if (this.world.isRemote)
-        {
-            if (!this.onGround)
-            {
+    public boolean processInitialInteract(EntityPlayer player, EnumHand hand) {
+        if (this.world.isRemote) {
+            if (!this.onGround) {
                 return false;
             }
 
-            if (!this.getPassengers().isEmpty())
-            {
+            if (!this.getPassengers().isEmpty()) {
                 this.removePassengers();
             }
 
             return true;
         }
 
-        if (this.getPassengers().isEmpty() && player instanceof EntityPlayerMP)
-        {
+        if (this.getPassengers().isEmpty() && player instanceof EntityPlayerMP) {
             GCCoreUtil.openParachestInv((EntityPlayerMP) player, this);
             return true;
-        }
-        else if (player instanceof EntityPlayerMP)
-        {
-            if (!this.onGround)
-            {
+        } else if (player instanceof EntityPlayerMP) {
+            if (!this.onGround) {
                 return false;
             }
 
             this.removePassengers();
             return true;
-        }
-        else
-        {
+        } else {
             return true;
         }
     }
 
     @Override
-    public boolean pressKey(int key)
-    {
-        if (this.onGround)
-        {
+    public boolean pressKey(int key) {
+        if (this.onGround) {
             return false;
         }
 
         float turnFactor = 2.0F;
         float angle = 45;
 
-        switch (key)
-        {
-        case 0:
-            this.rotationPitch = Math.min(Math.max(this.rotationPitch - 0.5F * turnFactor, -angle), angle);
-            return true;
-        case 1:
-            this.rotationPitch = Math.min(Math.max(this.rotationPitch + 0.5F * turnFactor, -angle), angle);
-            return true;
-        case 2:
-            this.rotationYaw -= 0.5F * turnFactor;
-            return true;
-        case 3:
-            this.rotationYaw += 0.5F * turnFactor;
-            return true;
-        case 4:
-            this.motionY = Math.min(this.motionY + 0.03F, this.posY < 90 ? -0.15 : -1.0);
-            return true;
-        case 5:
-            this.motionY = Math.min(this.motionY - 0.022F, -1.0);
-            return true;
+        switch (key) {
+            case 0:
+                this.rotationPitch = Math.min(Math.max(this.rotationPitch - 0.5F * turnFactor, -angle), angle);
+                return true;
+            case 1:
+                this.rotationPitch = Math.min(Math.max(this.rotationPitch + 0.5F * turnFactor, -angle), angle);
+                return true;
+            case 2:
+                this.rotationYaw -= 0.5F * turnFactor;
+                return true;
+            case 3:
+                this.rotationYaw += 0.5F * turnFactor;
+                return true;
+            case 4:
+                this.motionY = Math.min(this.motionY + 0.03F, this.posY < 90 ? -0.15 : -1.0);
+                return true;
+            case 5:
+                this.motionY = Math.min(this.motionY - 0.022F, -1.0);
+                return true;
         }
 
         return false;
     }
 
     @Override
-    public boolean shouldSpawnParticles()
-    {
+    public boolean shouldSpawnParticles() {
         return this.ticks > 40 && this.rotationPitch != 0.0000001F;
     }
 
     @Override
-    public Map<Vector3, Vector3> getParticleMap()
-    {
+    public Map<Vector3, Vector3> getParticleMap() {
         double sinPitch = Math.sin(this.rotationPitch / Constants.RADIANS_TO_DEGREES_D);
         final double x1 = 4 * Math.cos(this.rotationYaw / Constants.RADIANS_TO_DEGREES_D) * sinPitch;
         final double z1 = 4 * Math.sin(this.rotationYaw / Constants.RADIANS_TO_DEGREES_D) * sinPitch;
@@ -184,21 +159,17 @@ public class EntityLander extends EntityLanderBase implements IIgnoreShift, ICam
 
     @SideOnly(Side.CLIENT)
     @Override
-    public Particle getParticle(Random rand, double x, double y, double z, double motX, double motY, double motZ)
-    {
+    public Particle getParticle(Random rand, double x, double y, double z, double motX, double motY, double motZ) {
         EntityLivingBase passenger = this.getPassengers().isEmpty() || !(this.getPassengers().get(0) instanceof EntityLivingBase) ? null : (EntityLivingBase) this.getPassengers().get(0);
         return new ParticleLanderFlame(this.world, x, y, z, motX, motY, motZ, passenger);
     }
 
     @Override
-    public void tickInAir()
-    {
+    public void tickInAir() {
         super.tickInAir();
 
-        if (this.world.isRemote)
-        {
-            if (!this.onGround)
-            {
+        if (this.world.isRemote) {
+            if (!this.onGround) {
                 this.motionY -= 0.008D;
             }
 
@@ -211,25 +182,19 @@ public class EntityLander extends EntityLanderBase implements IIgnoreShift, ICam
     }
 
     @Override
-    public void tickOnGround()
-    {
+    public void tickOnGround() {
         //Signal switch off flames
         this.rotationPitch = 0.0000001F;
     }
 
     @Override
-    public void onGroundHit()
-    {
-        if (!this.world.isRemote)
-        {
-            if (Math.abs(this.lastMotionY) > 2.0D)
-            {
-                for (Entity entity : this.getPassengers())
-                {
+    public void onGroundHit() {
+        if (!this.world.isRemote) {
+            if (Math.abs(this.lastMotionY) > 2.0D) {
+                for (Entity entity : this.getPassengers()) {
                     entity.dismountRidingEntity();
-                    if (entity instanceof EntityPlayerMP)
-                    {
-                        GalacticraftCore.packetPipeline.sendTo(new PacketSimple(EnumSimplePacket.C_RESET_THIRD_PERSON, GCCoreUtil.getDimensionID(this.world), new Object[] {}), (EntityPlayerMP) entity);
+                    if (entity instanceof EntityPlayerMP) {
+                        GalacticraftCore.packetPipeline.sendTo(new PacketSimple(EnumSimplePacket.C_RESET_THIRD_PERSON, GCCoreUtil.getDimensionID(this.world), new Object[]{}), (EntityPlayerMP) entity);
                     }
                     entity.motionX = 0;
                     entity.motionY = 0;
@@ -245,15 +210,12 @@ public class EntityLander extends EntityLanderBase implements IIgnoreShift, ICam
     }
 
     @Override
-    public Vector3 getMotionVec()
-    {
-        if (this.onGround)
-        {
+    public Vector3 getMotionVec() {
+        if (this.onGround) {
             return new Vector3(0, 0, 0);
         }
 
-        if (this.ticks >= 40 && this.ticks < 45)
-        {
+        if (this.ticks >= 40 && this.ticks < 45) {
             this.motionY = this.getInitialMotionY();
         }
 
@@ -261,56 +223,47 @@ public class EntityLander extends EntityLanderBase implements IIgnoreShift, ICam
     }
 
     @Override
-    public float getCameraZoom()
-    {
+    public float getCameraZoom() {
         return 15;
     }
 
     @Override
-    public boolean defaultThirdPerson()
-    {
+    public boolean defaultThirdPerson() {
         return true;
     }
 
     @Override
-    public boolean shouldIgnoreShiftExit()
-    {
+    public boolean shouldIgnoreShiftExit() {
         return !this.onGround;
     }
 
     @Override
-    public double getInitialMotionY()
-    {
+    public double getInitialMotionY() {
         return -2.5D;
     }
 
     @Override
-    protected boolean canTriggerWalking()
-    {
+    protected boolean canTriggerWalking() {
         return false;
     }
 
     @Override
-    public AxisAlignedBB getCollisionBoundingBox()
-    {
+    public AxisAlignedBB getCollisionBoundingBox() {
         return null;
     }
 
     @Override
-    public AxisAlignedBB getCollisionBox(Entity par1Entity)
-    {
+    public AxisAlignedBB getCollisionBox(Entity par1Entity) {
         return null;
     }
 
     @Override
-    public boolean canBePushed()
-    {
+    public boolean canBePushed() {
         return false;
     }
 
     @Override
-    public boolean canBeCollidedWith()
-    {
+    public boolean canBeCollidedWith() {
         return !this.isDead;
     }
 }

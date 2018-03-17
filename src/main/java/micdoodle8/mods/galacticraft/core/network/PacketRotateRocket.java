@@ -5,19 +5,16 @@ import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 
-public class PacketRotateRocket extends PacketBase
-{
+public class PacketRotateRocket extends PacketBase {
     private int entityID;
     private float entityPitch;
     private float entityYaw;
 
-    public PacketRotateRocket()
-    {
+    public PacketRotateRocket() {
         super();
     }
 
-    public PacketRotateRocket(Entity rotateableEntity)
-    {
+    public PacketRotateRocket(Entity rotateableEntity) {
         super(GCCoreUtil.getDimensionID(rotateableEntity.world));
         this.entityID = rotateableEntity.getEntityId();
         this.entityPitch = rotateableEntity.rotationPitch;
@@ -25,8 +22,7 @@ public class PacketRotateRocket extends PacketBase
     }
 
     @Override
-    public void encodeInto(ByteBuf buffer)
-    {
+    public void encodeInto(ByteBuf buffer) {
         super.encodeInto(buffer);
         buffer.writeInt(this.entityID);
         buffer.writeFloat(this.entityPitch);
@@ -34,8 +30,7 @@ public class PacketRotateRocket extends PacketBase
     }
 
     @Override
-    public void decodeInto(ByteBuf buffer)
-    {
+    public void decodeInto(ByteBuf buffer) {
         super.decodeInto(buffer);
         this.entityID = buffer.readInt();
         this.entityPitch = buffer.readFloat();
@@ -43,18 +38,15 @@ public class PacketRotateRocket extends PacketBase
     }
 
     @Override
-    public void handleClientSide(EntityPlayer player)
-    {
+    public void handleClientSide(EntityPlayer player) {
 
     }
 
     @Override
-    public void handleServerSide(EntityPlayer player)
-    {
+    public void handleServerSide(EntityPlayer player) {
         Entity entity = player.world.getEntityByID(this.entityID);
 
-        if (entity != null)
-        {
+        if (entity != null) {
             entity.rotationPitch = this.entityPitch;
             entity.rotationYaw = this.entityYaw;
         }

@@ -16,136 +16,105 @@ import net.minecraft.util.text.TextComponentString;
 
 import java.util.*;
 
-public class CommandSpaceStationRemoveOwner extends CommandBase
-{
+public class CommandSpaceStationRemoveOwner extends CommandBase {
     @Override
-    public String getUsage(ICommandSender var1)
-    {
+    public String getUsage(ICommandSender var1) {
         return "/" + this.getName() + " <player>";
     }
 
     @Override
-    public int getRequiredPermissionLevel()
-    {
+    public int getRequiredPermissionLevel() {
         return 0;
     }
 
     @Override
-    public boolean checkPermission(MinecraftServer server, ICommandSender sender)
-    {
+    public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
         return true;
     }
 
     @Override
-    public String getName()
-    {
+    public String getName() {
         return "ssuninvite";
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-    {
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
         String var3 = null;
         EntityPlayerMP playerBase = null;
 
-        if (args.length > 0)
-        {
+        if (args.length > 0) {
             var3 = args[0];
 
-            try
-            {
+            try {
                 playerBase = PlayerUtil.getPlayerBaseServerFromPlayerUsername(sender.getName(), false);
 
-                if (playerBase != null)
-                {
+                if (playerBase != null) {
                     GCPlayerStats stats = GCPlayerStats.get(playerBase);
 
-                    if (stats.getSpaceStationDimensionData().isEmpty())
-                    {
+                    if (stats.getSpaceStationDimensionData().isEmpty()) {
                         throw new WrongUsageException(GCCoreUtil.translate("commands.ssinvite.not_found"), new Object[0]);
-                    }
-                    else
-                    {
-                        for (Map.Entry<Integer, Integer> e : stats.getSpaceStationDimensionData().entrySet())
-                        {
+                    } else {
+                        for (Map.Entry<Integer, Integer> e : stats.getSpaceStationDimensionData().entrySet()) {
                             final SpaceStationWorldData data = SpaceStationWorldData.getStationData(playerBase.world, e.getValue(), playerBase);
 
                             String str = null;
-                            for (String name : data.getAllowedPlayers())
-                            {
-                                if (name.equalsIgnoreCase(var3))
-                                {
+                            for (String name : data.getAllowedPlayers()) {
+                                if (name.equalsIgnoreCase(var3)) {
                                     str = name;
                                     break;
                                 }
                             }
 
-                            if (str != null)
-                            {
+                            if (str != null) {
                                 data.getAllowedPlayers().remove(str);
                                 data.markDirty();
-                            }
-                            else
-                            {
+                            } else {
                                 throw new CommandException(GCCoreUtil.translateWithFormat("commands.ssuninvite.no_player", "\"" + var3 + "\""), new Object[0]);
                             }
                         }
                     }
                 }
-            }
-            catch (final Exception var6)
-            {
+            } catch (final Exception var6) {
                 throw new CommandException(var6.getMessage(), new Object[0]);
             }
 
-        }
-        else
-        {
+        } else {
             throw new WrongUsageException(GCCoreUtil.translateWithFormat("commands.ssinvite.wrong_usage", this.getUsage(sender)), new Object[0]);
         }
 
-        if (playerBase != null)
-        {
+        if (playerBase != null) {
             playerBase.sendMessage(new TextComponentString(GCCoreUtil.translateWithFormat("gui.spacestation.removesuccess", var3)));
         }
     }
 
 
     @Override
-    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
-    {
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
         return args.length == 1 ? getListOfStringsMatchingLastWord(args, this.getPlayers(server, sender)) : null;
     }
 
-    protected String[] getPlayers(MinecraftServer server, ICommandSender sender)
-    {
+    protected String[] getPlayers(MinecraftServer server, ICommandSender sender) {
         EntityPlayerMP playerBase = PlayerUtil.getPlayerBaseServerFromPlayerUsername(sender.getName(), false);
 
-        if (playerBase != null)
-        {
+        if (playerBase != null) {
             GCPlayerStats stats = GCPlayerStats.get(playerBase);
-            if (!stats.getSpaceStationDimensionData().isEmpty())
-            {
+            if (!stats.getSpaceStationDimensionData().isEmpty()) {
                 String[] allNames = server.getOnlinePlayerNames();
                 //data.getAllowedPlayers may include some in lowercase
                 //Convert to correct case at least for those players who are online
                 HashSet<String> allowedNames = Sets.newHashSet();
 
-                for (Map.Entry<Integer, Integer> e : stats.getSpaceStationDimensionData().entrySet())
-                {
+                for (Map.Entry<Integer, Integer> e : stats.getSpaceStationDimensionData().entrySet()) {
                     final SpaceStationWorldData data = SpaceStationWorldData.getStationData(playerBase.world, e.getValue(), playerBase);
                     allowedNames.addAll(data.getAllowedPlayers());
                 }
 
                 Iterator<String> itName = allowedNames.iterator();
                 ArrayList<String> replaceNames = new ArrayList<String>();
-                while (itName.hasNext())
-                {
+                while (itName.hasNext()) {
                     String name = itName.next();
-                    for (String allEntry : allNames)
-                    {
-                        if (name.equalsIgnoreCase(allEntry))
-                        {
+                    for (String allEntry : allNames) {
+                        if (name.equalsIgnoreCase(allEntry)) {
                             itName.remove();
                             replaceNames.add(allEntry);
                         }
@@ -158,13 +127,12 @@ public class CommandSpaceStationRemoveOwner extends CommandBase
             }
         }
 
-        String[] returnvalue = { "" };
+        String[] returnvalue = {""};
         return returnvalue;
     }
 
     @Override
-    public boolean isUsernameIndex(String[] par1ArrayOfStr, int par2)
-    {
+    public boolean isUsernameIndex(String[] par1ArrayOfStr, int par2) {
         return par2 == 0;
     }
 }

@@ -18,23 +18,18 @@ import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.obj.OBJModel;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class TileEntityBeamReflectorRenderer extends TileEntitySpecialRenderer<TileEntityBeamReflector>
-{
+public class TileEntityBeamReflectorRenderer extends TileEntitySpecialRenderer<TileEntityBeamReflector> {
     private static OBJModel.OBJBakedModel reflectorModelBase;
     private static OBJModel.OBJBakedModel reflectorModelAxle;
     private static OBJModel.OBJBakedModel reflectorModelEnergyBlaster;
     private static OBJModel.OBJBakedModel reflectorModelRing;
 
-    private void updateModels()
-    {
-        if (reflectorModelBase == null)
-        {
-            try
-            {
+    private void updateModels() {
+        if (reflectorModelBase == null) {
+            try {
                 IModel model = OBJLoaderGC.instance.loadModel(new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "block/reflector.obj"));
                 Function<ResourceLocation, TextureAtlasSprite> spriteFunction = location -> Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(location.toString());
 
@@ -42,29 +37,23 @@ public class TileEntityBeamReflectorRenderer extends TileEntitySpecialRenderer<T
                 reflectorModelAxle = (OBJModel.OBJBakedModel) model.bake(new OBJModel.OBJState(ImmutableList.of("Axle"), false), DefaultVertexFormats.ITEM, spriteFunction);
                 reflectorModelEnergyBlaster = (OBJModel.OBJBakedModel) model.bake(new OBJModel.OBJState(ImmutableList.of("EnergyBlaster"), false), DefaultVertexFormats.ITEM, spriteFunction);
                 reflectorModelRing = (OBJModel.OBJBakedModel) model.bake(new OBJModel.OBJState(ImmutableList.of("Ring"), false), DefaultVertexFormats.ITEM, spriteFunction);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }
     }
 
     @Override
-    public void render(TileEntityBeamReflector tile, double d, double d1, double d2, float f, int i, float alpha)
-    {
+    public void render(TileEntityBeamReflector tile, double d, double d1, double d2, float f, int i, float alpha) {
         GlStateManager.disableRescaleNormal();
         GlStateManager.pushMatrix();
         GlStateManager.translate((float) d + 0.5F, (float) d1, (float) d2 + 0.5F);
         GlStateManager.scale(0.5F, 0.5F, 0.5F);
         this.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
-        if (Minecraft.isAmbientOcclusionEnabled())
-        {
+        if (Minecraft.isAmbientOcclusionEnabled()) {
             GlStateManager.shadeModel(GL11.GL_SMOOTH);
-        }
-        else
-        {
+        } else {
             GlStateManager.shadeModel(GL11.GL_FLAT);
         }
 

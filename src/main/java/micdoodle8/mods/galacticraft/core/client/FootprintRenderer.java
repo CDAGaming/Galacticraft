@@ -4,9 +4,9 @@ import micdoodle8.mods.galacticraft.api.vector.Vector3;
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import micdoodle8.mods.galacticraft.core.wrappers.Footprint;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -19,13 +19,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class FootprintRenderer
-{
-    public static Map<Long, List<Footprint>> footprints = new ConcurrentHashMap<Long, List<Footprint>>();
+public class FootprintRenderer {
     private static final ResourceLocation footprintTexture = new ResourceLocation(Constants.ASSET_PREFIX, "textures/misc/footprint.png");
+    public static Map<Long, List<Footprint>> footprints = new ConcurrentHashMap<Long, List<Footprint>>();
 
-    public static void renderFootprints(EntityPlayer player, float partialTicks)
-    {
+    public static void renderFootprints(EntityPlayer player, float partialTicks) {
         GL11.glPushMatrix();
         double interpPosX = player.lastTickPosX + (player.posX - player.lastTickPosX) * partialTicks;
         double interpPosY = player.lastTickPosY + (player.posY - player.lastTickPosY) * partialTicks;
@@ -49,12 +47,9 @@ public class FootprintRenderer
         float f10 = 0.4F;
         GL11.glAlphaFunc(GL11.GL_GREATER, 0.1F);
 
-        for (List<Footprint> footprintList : footprints.values())
-        {
-            for (Footprint footprint : footprintList)
-            {
-                if (footprint.dimension == GCCoreUtil.getDimensionID(player.world))
-                {
+        for (List<Footprint> footprintList : footprints.values()) {
+            for (Footprint footprint : footprintList) {
+                if (footprint.dimension == GCCoreUtil.getDimensionID(player.world)) {
                     GL11.glPushMatrix();
                     float ageScale = footprint.age / (float) Footprint.MAX_AGE;
                     BufferBuilder worldRenderer = tessellator.getBuffer();
@@ -86,12 +81,10 @@ public class FootprintRenderer
         GL11.glPopMatrix();
     }
 
-    public static void addFootprint(long chunkKey, Footprint footprint)
-    {
+    public static void addFootprint(long chunkKey, Footprint footprint) {
         List<Footprint> footprintList = footprints.get(chunkKey);
 
-        if (footprintList == null)
-        {
+        if (footprintList == null) {
             footprintList = new ArrayList<Footprint>();
         }
 
@@ -99,26 +92,21 @@ public class FootprintRenderer
         footprints.put(chunkKey, footprintList);
     }
 
-    public static void addFootprint(long chunkKey, int dimension, Vector3 position, float rotation, String owner)
-    {
+    public static void addFootprint(long chunkKey, int dimension, Vector3 position, float rotation, String owner) {
         addFootprint(chunkKey, new Footprint(dimension, position, rotation, owner));
     }
 
-    public static void setFootprints(long chunkKey, List<Footprint> prints)
-    {
+    public static void setFootprints(long chunkKey, List<Footprint> prints) {
         List<Footprint> footprintList = footprints.get(chunkKey);
 
-        if (footprintList == null)
-        {
+        if (footprintList == null) {
             footprintList = new ArrayList<Footprint>();
         }
 
         Iterator<Footprint> i = footprintList.iterator();
-        while (i.hasNext())
-        {
+        while (i.hasNext()) {
             Footprint print = i.next();
-            if (!print.owner.equals(FMLClientHandler.instance().getClient().player.getName()))
-            {
+            if (!print.owner.equals(FMLClientHandler.instance().getClient().player.getName())) {
                 i.remove();
             }
         }

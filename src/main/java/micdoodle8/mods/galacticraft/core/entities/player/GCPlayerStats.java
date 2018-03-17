@@ -16,10 +16,8 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.List;
 
-public abstract class GCPlayerStats
-{
-    public static GCPlayerStats get(Entity entity)
-    {
+public abstract class GCPlayerStats {
+    public static GCPlayerStats get(Entity entity) {
         return entity.getCapability(GCCapabilities.GC_STATS_CAPABILITY, null);
     }
 
@@ -320,14 +318,14 @@ public abstract class GCPlayerStats
     public abstract int getGlassColor3();
 
     public abstract IBlockState[] getPanelLightingBases();
-    
+
     public abstract int getPanelLightingColor();
 
     public abstract void setPanelLightingColor(int color);
 
     public abstract Object[] getMiscNetworkedStats();
 
-    public abstract void setSavedSpeed(float value);
-
     public abstract float getSavedSpeed();
+
+    public abstract void setSavedSpeed(float value);
 }

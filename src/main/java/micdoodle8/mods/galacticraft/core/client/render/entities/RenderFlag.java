@@ -13,28 +13,24 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class RenderFlag extends Render<EntityFlag>
-{
+public class RenderFlag extends Render<EntityFlag> {
     public static ResourceLocation flagTexture = new ResourceLocation(Constants.ASSET_PREFIX, "textures/model/flag.png");
 
     protected ModelFlag modelFlag;
 
-    public RenderFlag(RenderManager manager)
-    {
+    public RenderFlag(RenderManager manager) {
         super(manager);
         this.shadowSize = 1F;
         this.modelFlag = new ModelFlag();
     }
 
     @Override
-    protected ResourceLocation getEntityTexture(EntityFlag entity)
-    {
+    protected ResourceLocation getEntityTexture(EntityFlag entity) {
         return RenderFlag.flagTexture;
     }
 
     @Override
-    public void doRender(EntityFlag entity, double x, double y, double z, float entityYaw, float partialTicks)
-    {
+    public void doRender(EntityFlag entity, double x, double y, double z, float entityYaw, float partialTicks) {
         GlStateManager.disableRescaleNormal();
         GlStateManager.pushMatrix();
         long seed = entity.getEntityId() * 493286711L;
@@ -50,10 +46,9 @@ public class RenderFlag extends Render<EntityFlag>
         this.modelFlag.render(entity, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
         GlStateManager.popMatrix();
     }
-    
+
     @Override
-    public boolean shouldRender(EntityFlag lander, ICamera camera, double camX, double camY, double camZ)
-    {
+    public boolean shouldRender(EntityFlag lander, ICamera camera, double camX, double camY, double camZ) {
         AxisAlignedBB axisalignedbb = lander.getEntityBoundingBox().grow(1D, 2D, 1D);
         return lander.isInRangeToRender3d(camX, camY, camZ) && camera.isBoundingBoxInFrustum(axisalignedbb);
     }

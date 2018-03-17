@@ -10,8 +10,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraftforge.oredict.OreDictionary;
 
-public class VenusBlocks
-{
+public class VenusBlocks {
     public static Block venusBlock;
     public static Block spout;
     public static Block bossSpawner;
@@ -22,8 +21,7 @@ public class VenusBlocks
     public static Block crashedProbe;
     public static Block scorchedRock;
 
-    public static void initBlocks()
-    {
+    public static void initBlocks() {
         VenusBlocks.venusBlock = new BlockBasicVenus("venus");
         VenusBlocks.spout = new BlockSpout("spout");
         VenusBlocks.bossSpawner = new BlockBossSpawnerVenus("boss_spawner_venus");
@@ -39,18 +37,15 @@ public class VenusBlocks
         VenusBlocks.setHarvestLevels();
     }
 
-    private static void setHarvestLevel(Block block, String toolClass, int level, int meta)
-    {
+    private static void setHarvestLevel(Block block, String toolClass, int level, int meta) {
         block.setHarvestLevel(toolClass, level, block.getStateFromMeta(meta));
     }
 
-    private static void setHarvestLevel(Block block, String toolClass, int level)
-    {
+    private static void setHarvestLevel(Block block, String toolClass, int level) {
         block.setHarvestLevel(toolClass, level);
     }
 
-    public static void setHarvestLevels()
-    {
+    public static void setHarvestLevels() {
         setHarvestLevel(VenusBlocks.venusBlock, "pickaxe", 1, 0);
         setHarvestLevel(VenusBlocks.venusBlock, "pickaxe", 1, 1);
         setHarvestLevel(VenusBlocks.venusBlock, "pickaxe", 1, 2);
@@ -58,13 +53,11 @@ public class VenusBlocks
         setHarvestLevel(VenusBlocks.spout, "pickaxe", 1);
     }
 
-    public static void registerBlock(Block block, Class<? extends ItemBlock> itemClass)
-    {
+    public static void registerBlock(Block block, Class<? extends ItemBlock> itemClass) {
         GCBlocks.registerBlock(block, itemClass);
     }
 
-    public static void registerBlocks()
-    {
+    public static void registerBlocks() {
         registerBlock(VenusBlocks.venusBlock, ItemBlockBasicVenus.class);
         registerBlock(VenusBlocks.spout, ItemBlockGC.class);
         registerBlock(VenusBlocks.bossSpawner, ItemBlockGC.class);
@@ -75,8 +68,7 @@ public class VenusBlocks
         registerBlock(VenusBlocks.scorchedRock, ItemBlockGC.class);
     }
 
-    public static void oreDictRegistration()
-    {
+    public static void oreDictRegistration() {
         OreDictionary.registerOre("oreCopper", BlockBasicVenus.EnumBlockBasicVenus.ORE_COPPER.getItemStack());
         OreDictionary.registerOre("oreTin", BlockBasicVenus.EnumBlockBasicVenus.ORE_TIN.getItemStack());
         OreDictionary.registerOre("oreAluminum", BlockBasicVenus.EnumBlockBasicVenus.ORE_ALUMINUM.getItemStack());

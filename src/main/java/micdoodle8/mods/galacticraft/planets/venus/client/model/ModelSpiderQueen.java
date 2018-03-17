@@ -5,8 +5,7 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 
-public class ModelSpiderQueen extends ModelBase
-{
+public class ModelSpiderQueen extends ModelBase {
     ModelRendererGC head;
     ModelRendererGC body;
     ModelRendererGC[] leg1 = new ModelRendererGC[3];
@@ -24,8 +23,7 @@ public class ModelSpiderQueen extends ModelBase
 
     private float legLength0;
 
-    public ModelSpiderQueen()
-    {
+    public ModelSpiderQueen() {
         textureWidth = 64;
         textureHeight = 64;
 
@@ -222,8 +220,7 @@ public class ModelSpiderQueen extends ModelBase
         rearRight.mirror = true;
         setRotation(rearRight, 0F, 0F, 0F);
 
-        for (int i = 0; i < 2; ++i)
-        {
+        for (int i = 0; i < 2; ++i) {
             this.convertToChild(this.leg1[i], this.leg1[i + 1]);
             this.convertToChild(this.leg2[i], this.leg2[i + 1]);
             this.convertToChild(this.leg3[i], this.leg3[i + 1]);
@@ -237,8 +234,7 @@ public class ModelSpiderQueen extends ModelBase
         this.legLength0 = this.leg1[0].cubeList.get(0).posX2 - this.leg1[0].cubeList.get(0).posX1;
     }
 
-    private void convertToChild(ModelRendererGC parent, ModelRendererGC child)
-    {
+    private void convertToChild(ModelRendererGC parent, ModelRendererGC child) {
 //        // move child rotation point to be relative to parent
 //        child.rotationPointX -= parent.rotationPointX;
 //        child.rotationPointY -= parent.rotationPointY;
@@ -251,22 +247,19 @@ public class ModelSpiderQueen extends ModelBase
 //        parent.addChild(child);
     }
 
-    private void setRotation(ModelRendererGC model, float x, float y, float z)
-    {
+    private void setRotation(ModelRendererGC model, float x, float y, float z) {
         model.rotateAngleX = x;
         model.rotateAngleY = y;
         model.rotateAngleZ = z;
     }
 
     @Override
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
-    {
+    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
         super.render(entity, f, f1, f2, f3, f4, f5);
         this.setRotationAngles(f, f1, f2, f3, f4, f5, entity);
         head.render(f5);
         body.render(f5);
-        for (int i = 0; i < 3; ++i)
-        {
+        for (int i = 0; i < 3; ++i) {
             this.leg1[i].render(f5);
             this.leg2[i].render(f5);
             this.leg3[i].render(f5);
@@ -282,30 +275,26 @@ public class ModelSpiderQueen extends ModelBase
         rearRight.render(f5);
     }
 
-    private void copyLegAngles(float length, ModelRendererGC parent, ModelRendererGC child)
-    {
+    private void copyLegAngles(float length, ModelRendererGC parent, ModelRendererGC child) {
         child.rotationPointX = parent.rotationPointX + length * (MathHelper.cos(parent.rotateAngleZ) * MathHelper.cos(parent.rotateAngleY));
         child.rotationPointY = parent.rotationPointY + length * (MathHelper.sin(parent.rotateAngleZ));
         child.rotationPointZ = parent.rotationPointZ + (length) * (-MathHelper.sin(parent.rotateAngleY) * MathHelper.cos(parent.rotateAngleZ));
     }
 
-    private void copyLeftToRight(ModelRendererGC left, ModelRendererGC right)
-    {
+    private void copyLeftToRight(ModelRendererGC left, ModelRendererGC right) {
         right.rotateAngleX = left.rotateAngleX;
         right.rotateAngleY = -left.rotateAngleY;
         right.rotateAngleZ = left.rotateAngleZ;
     }
 
-    private void copyLeg1LeftToRight(ModelRendererGC left, ModelRendererGC right)
-    {
+    private void copyLeg1LeftToRight(ModelRendererGC left, ModelRendererGC right) {
         right.rotateAngleX = left.rotateAngleX;
         right.rotateAngleY = (float) (Math.PI - left.rotateAngleY);
         right.rotateAngleZ = left.rotateAngleZ;
     }
 
     @Override
-    public void setRotationAngles(float f1, float f2, float f3, float f4, float f5, float f6, Entity entityIn)
-    {
+    public void setRotationAngles(float f1, float f2, float f3, float f4, float f5, float f6, Entity entityIn) {
         float movement = f1;
         float increment = -1.0F;
         float offset = -0.4903446F;
@@ -328,28 +317,23 @@ public class ModelSpiderQueen extends ModelBase
 
         // Move legs up if they are being moved forward. dx/dy of cos(movement) is -sin(movement)
         movement = f1;
-        if (-MathHelper.sin(movement) * 0.2 > 0.0F)
-        {
+        if (-MathHelper.sin(movement) * 0.2 > 0.0F) {
             this.leg2[0].rotateAngleZ = -0.7330383F + -MathHelper.sin(movement) * updist;
         }
         movement += increment;
-        if (-MathHelper.sin(movement) * 0.2 > 0.0F)
-        {
+        if (-MathHelper.sin(movement) * 0.2 > 0.0F) {
             this.leg4[0].rotateAngleZ = -0.7330383F + -MathHelper.sin(movement) * updist;
         }
         movement += increment;
-        if (-MathHelper.sin(movement) * 0.2 > 0.0F)
-        {
+        if (-MathHelper.sin(movement) * 0.2 > 0.0F) {
             this.leg6[0].rotateAngleZ = -0.7330383F + -MathHelper.sin(movement) * updist;
         }
         movement += increment;
-        if (-MathHelper.sin(movement) * 0.2 > 0.0F)
-        {
+        if (-MathHelper.sin(movement) * 0.2 > 0.0F) {
             this.leg8[0].rotateAngleZ = -0.7330383F + -MathHelper.sin(movement) * updist;
         }
 
-        for (int i = 1; i < 3; ++i)
-        {
+        for (int i = 1; i < 3; ++i) {
             this.leg1[i].rotateAngleY = this.leg1[0].rotateAngleY;
             this.leg2[i].rotateAngleY = this.leg2[0].rotateAngleY;
             this.leg3[i].rotateAngleY = this.leg3[0].rotateAngleY;
@@ -378,15 +362,13 @@ public class ModelSpiderQueen extends ModelBase
 //            this.leg8[i].rotateAngleZ = this.leg8[0].rotateAngleZ;
         }
 
-        for (int i = 0; i < 1; ++i)
-        {
+        for (int i = 0; i < 1; ++i) {
             this.copyLeg1LeftToRight(this.leg2[i], this.leg1[i]);
             this.copyLeg1LeftToRight(this.leg4[i], this.leg3[i]);
             this.copyLeg1LeftToRight(this.leg6[i], this.leg5[i]);
             this.copyLeg1LeftToRight(this.leg8[i], this.leg7[i]);
         }
-        for (int i = 1; i < 2; ++i)
-        {
+        for (int i = 1; i < 2; ++i) {
             float length1a = 10.0F;
             float length1b = 10.0F;
             this.copyLegAngles(length1a, this.leg1[0], this.leg1[1]);

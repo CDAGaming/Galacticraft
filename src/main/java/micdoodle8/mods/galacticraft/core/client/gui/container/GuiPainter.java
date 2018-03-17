@@ -9,33 +9,29 @@ import micdoodle8.mods.galacticraft.core.tile.TileEntityPainter;
 import micdoodle8.mods.galacticraft.core.util.ColorUtil;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiPainter extends GuiContainerGC
-{
+public class GuiPainter extends GuiContainerGC {
     private static final ResourceLocation painterTexture = new ResourceLocation(Constants.ASSET_PREFIX, "textures/gui/painter.png");
 
     private TileEntityPainter tileEntity;
     private GuiButton buttonApplyPaint;
 
-    public GuiPainter(InventoryPlayer par1InventoryPlayer, TileEntityPainter tileEntity)
-    {
+    public GuiPainter(InventoryPlayer par1InventoryPlayer, TileEntityPainter tileEntity) {
         super(new ContainerPainter(par1InventoryPlayer, tileEntity));
         this.tileEntity = tileEntity;
     }
 
     @Override
-    public void initGui()
-    {
+    public void initGui() {
         super.initGui();
         this.buttonList.add(this.buttonApplyPaint = new GuiButton(0, this.width / 2 + 4, this.height / 2 - 40, 76, 20, GCCoreUtil.translate("gui.button.paintapply.name")));
         this.buttonList.add(this.buttonApplyPaint = new GuiButton(1, this.width / 2 - 80, this.height / 2 - 40, 76, 20, GCCoreUtil.translate("gui.button.paintmix.name")));
@@ -43,9 +39,8 @@ public class GuiPainter extends GuiContainerGC
     }
 
     @Override
-    protected void actionPerformed(GuiButton par1GuiButton)
-    {
-        GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_UPDATE_DISABLEABLE_BUTTON, GCCoreUtil.getDimensionID(this.mc.world), new Object[] { this.tileEntity.getPos(), par1GuiButton.id }));
+    protected void actionPerformed(GuiButton par1GuiButton) {
+        GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_UPDATE_DISABLEABLE_BUTTON, GCCoreUtil.getDimensionID(this.mc.world), new Object[]{this.tileEntity.getPos(), par1GuiButton.id}));
         tileEntity.buttonPressed(par1GuiButton.id, this.mc.player, Side.CLIENT);
     }
 
@@ -54,8 +49,7 @@ public class GuiPainter extends GuiContainerGC
      * the items)
      */
     @Override
-    protected void drawGuiContainerForegroundLayer(int par1, int par2)
-    {
+    protected void drawGuiContainerForegroundLayer(int par1, int par2) {
         this.fontRenderer.drawString(this.tileEntity.getName(), 45, 6, 4210752);
         String displayText = "";
 
@@ -67,8 +61,7 @@ public class GuiPainter extends GuiContainerGC
      * items)
      */
     @Override
-    protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3)
-    {
+    protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3) {
         this.mc.renderEngine.bindTexture(GuiPainter.painterTexture);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
@@ -86,10 +79,10 @@ public class GuiPainter extends GuiContainerGC
         int height = 18;
         int width = 18;
         worldrenderer.begin(7, DefaultVertexFormats.POSITION);
-        worldrenderer.pos((double)(x + 0F), (double)(y + height), (double)this.zLevel).endVertex();
-        worldrenderer.pos((double)(x + width), (double)(y + height), (double)this.zLevel).endVertex();
-        worldrenderer.pos((double)(x + width), (double)(y + 0), (double)this.zLevel).endVertex();
-        worldrenderer.pos((double)(x + 0F), (double)(y + 0), (double)this.zLevel).endVertex();
+        worldrenderer.pos((double) (x + 0F), (double) (y + height), (double) this.zLevel).endVertex();
+        worldrenderer.pos((double) (x + width), (double) (y + height), (double) this.zLevel).endVertex();
+        worldrenderer.pos((double) (x + width), (double) (y + 0), (double) this.zLevel).endVertex();
+        worldrenderer.pos((double) (x + 0F), (double) (y + 0), (double) this.zLevel).endVertex();
         tessellator.draw();
         GL11.glEnable(GL11.GL_TEXTURE_2D);
     }

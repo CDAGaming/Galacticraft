@@ -8,10 +8,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemBlockDummy extends ItemBlock
-{
-    public ItemBlockDummy(Block block)
-    {
+public class ItemBlockDummy extends ItemBlock {
+    public ItemBlockDummy(Block block) {
         super(block);
         this.setMaxDamage(0);
         this.setHasSubtypes(true);
@@ -25,52 +23,47 @@ public class ItemBlockDummy extends ItemBlock
 //    }
 
     @Override
-    public int getMetadata(int damage)
-    {
+    public int getMetadata(int damage) {
         return damage;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public EnumRarity getRarity(ItemStack par1ItemStack)
-    {
+    public EnumRarity getRarity(ItemStack par1ItemStack) {
         return ClientProxyCore.galacticraftItem;
     }
 
     @Override
-    public String getUnlocalizedName(ItemStack itemstack)
-    {
+    public String getUnlocalizedName(ItemStack itemstack) {
         int metadata = itemstack.getItemDamage();
         String blockName = "";
 
-        switch (metadata)
-        {
-        case 1:
-            blockName = "spaceStationBase";
-            break;
-        case 2:
-            blockName = "launchPad";
-            break;
-        case 3:
-            blockName = "nasaWorkbench";
-            break;
-        case 4:
-            blockName = "solar";
-            break;
-        case 5:
-            blockName = "cryogenicChamber";
-            break;
-        default:
-            blockName = null;
-            break;
+        switch (metadata) {
+            case 1:
+                blockName = "spaceStationBase";
+                break;
+            case 2:
+                blockName = "launchPad";
+                break;
+            case 3:
+                blockName = "nasaWorkbench";
+                break;
+            case 4:
+                blockName = "solar";
+                break;
+            case 5:
+                blockName = "cryogenicChamber";
+                break;
+            default:
+                blockName = null;
+                break;
         }
 
         return this.getBlock().getUnlocalizedName() + "." + blockName;
     }
 
     @Override
-    public String getUnlocalizedName()
-    {
+    public String getUnlocalizedName() {
         return this.getBlock().getUnlocalizedName() + ".0";
     }
 }

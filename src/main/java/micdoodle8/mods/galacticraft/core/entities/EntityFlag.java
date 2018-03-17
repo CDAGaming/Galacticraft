@@ -24,8 +24,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
-public class EntityFlag extends Entity
-{
+public class EntityFlag extends Entity {
     private static final DataParameter<String> OWNER = EntityDataManager.createKey(EntityFlag.class, DataSerializers.STRING);
     private static final DataParameter<Float> DAMAGE = EntityDataManager.createKey(EntityFlag.class, DataSerializers.FLOAT);
     private static final DataParameter<Integer> TYPE = EntityDataManager.createKey(EntityFlag.class, DataSerializers.VARINT);
@@ -36,15 +35,13 @@ public class EntityFlag extends Entity
     public boolean indestructable = false;
     public FlagData flagData;
 
-    public EntityFlag(World world)
-    {
+    public EntityFlag(World world) {
         super(world);
         this.setSize(0.4F, 3F);
         this.ignoreFrustumCheck = true;
     }
 
-    public EntityFlag(World par1World, double x, double y, double z, int dir)
-    {
+    public EntityFlag(World par1World, double x, double y, double z, int dir) {
         this(par1World);
         this.setFacingAngle(dir);
         this.setPosition(x, y, z);
@@ -54,41 +51,30 @@ public class EntityFlag extends Entity
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource par1DamageSource, float par2)
-    {
+    public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
         Entity e = par1DamageSource.getTrueSource();
         boolean flag = e instanceof EntityPlayer && ((EntityPlayer) e).capabilities.isCreativeMode;
 
-        if (!this.world.isRemote && !this.isDead && !this.indestructable)
-        {
-            if (this.isEntityInvulnerable(par1DamageSource))
-            {
+        if (!this.world.isRemote && !this.isDead && !this.indestructable) {
+            if (this.isEntityInvulnerable(par1DamageSource)) {
                 return false;
-            }
-            else
-            {
+            } else {
                 this.markVelocityChanged();
                 this.setDamage(this.getDamage() + par2 * 10);
                 this.world.playSound(null, this.posX, this.posY, this.posZ, SoundType.METAL.getBreakSound(), SoundCategory.BLOCKS, SoundType.METAL.getVolume(), SoundType.METAL.getPitch() + 1.0F);
 
-                if (e instanceof EntityPlayer && ((EntityPlayer) e).capabilities.isCreativeMode)
-                {
+                if (e instanceof EntityPlayer && ((EntityPlayer) e).capabilities.isCreativeMode) {
                     this.setDamage(100.0F);
                 }
 
-                if (flag || this.getDamage() > 40)
-                {
-                    if (!this.getPassengers().isEmpty())
-                    {
+                if (flag || this.getDamage() > 40) {
+                    if (!this.getPassengers().isEmpty()) {
                         this.removePassengers();
                     }
 
-                    if (flag)
-                    {
+                    if (flag) {
                         this.setDead();
-                    }
-                    else
-                    {
+                    } else {
                         this.setDead();
                         this.dropItemStack();
                     }
@@ -96,56 +82,46 @@ public class EntityFlag extends Entity
 
                 return true;
             }
-        }
-        else
-        {
+        } else {
             return true;
         }
     }
 
     @Override
-    public ItemStack getPickedResult(RayTraceResult target)
-    {
+    public ItemStack getPickedResult(RayTraceResult target) {
         return new ItemStack(GCItems.flag, 1, this.getType());
     }
 
-    public int getWidth()
-    {
+    public int getWidth() {
         return 25;
     }
 
-    public int getHeight()
-    {
+    public int getHeight() {
         return 40;
     }
 
     @Override
-    public boolean canBeCollidedWith()
-    {
+    public boolean canBeCollidedWith() {
         return true;
     }
 
     @Override
-    protected boolean canTriggerWalking()
-    {
+    protected boolean canTriggerWalking() {
         return false;
     }
 
     @Override
-    public AxisAlignedBB getCollisionBox(Entity par1Entity)
-    {
+    public AxisAlignedBB getCollisionBox(Entity par1Entity) {
         return par1Entity.getCollisionBoundingBox();
     }
 
     @Override
-    public boolean canBePushed()
-    {
+    public boolean canBePushed() {
         return false;
     }
 
     @Override
-    protected void entityInit()
-    {
+    protected void entityInit() {
         this.dataManager.register(OWNER, "");
         this.dataManager.register(DAMAGE, 0.0F);
         this.dataManager.register(TYPE, -1);
@@ -153,8 +129,7 @@ public class EntityFlag extends Entity
     }
 
     @Override
-    public void readEntityFromNBT(NBTTagCompound par1NBTTagCompound)
-    {
+    public void readEntityFromNBT(NBTTagCompound par1NBTTagCompound) {
         this.setOwner(par1NBTTagCompound.getString("Owner"));
         this.setType(par1NBTTagCompound.getInteger("Type"));
         this.indestructable = par1NBTTagCompound.getBoolean("Indestructable");
@@ -166,8 +141,7 @@ public class EntityFlag extends Entity
     }
 
     @Override
-    protected void writeEntityToNBT(NBTTagCompound par1NBTTagCompound)
-    {
+    protected void writeEntityToNBT(NBTTagCompound par1NBTTagCompound) {
         par1NBTTagCompound.setString("Owner", String.valueOf(this.getOwner()));
         par1NBTTagCompound.setInteger("Type", Integer.valueOf(this.getType()));
         par1NBTTagCompound.setBoolean("Indestructable", this.indestructable);
@@ -177,18 +151,15 @@ public class EntityFlag extends Entity
         par1NBTTagCompound.setDouble("TileZ", this.zPosition);
     }
 
-    public void dropItemStack()
-    {
+    public void dropItemStack() {
         this.entityDropItem(new ItemStack(GCItems.flag, 1, this.getType()), 0.0F);
     }
 
     @Override
-    public void onUpdate()
-    {
+    public void onUpdate() {
         super.onUpdate();
 
-        if ((this.ticksExisted - 1) % 20 == 0 && this.world.isRemote)
-        {
+        if ((this.ticksExisted - 1) % 20 == 0 && this.world.isRemote) {
             this.flagData = ClientUtil.updateFlagData(this.getOwner(), Minecraft.getMinecraft().player.getDistance(this) < 50.0D);
         }
 
@@ -196,15 +167,11 @@ public class EntityFlag extends Entity
         vec = vec.translate(new Vector3(0, -1, 0));
         final Block blockAt = vec.getBlock(this.world);
 
-        if (blockAt != null)
-        {
+        if (blockAt != null) {
             BlockPos pos = new BlockPos(vec.intX(), vec.intY(), vec.intZ());
-            if (blockAt instanceof BlockFence)
-            {
+            if (blockAt instanceof BlockFence) {
 
-            }
-            else if (blockAt.isAir(this.world.getBlockState(pos), this.world, pos))
-            {
+            } else if (blockAt.isAir(this.world.getBlockState(pos), this.world, pos)) {
                 this.motionY -= 0.02F;
             }
         }
@@ -213,53 +180,43 @@ public class EntityFlag extends Entity
     }
 
     @Override
-    public boolean processInitialInteract(EntityPlayer player, EnumHand hand)
-    {
-        if (!this.world.isRemote)
-        {
+    public boolean processInitialInteract(EntityPlayer player, EnumHand hand) {
+        if (!this.world.isRemote) {
             this.setFacingAngle(this.getFacingAngle() + 3);
         }
 
         return true;
     }
 
-    public void setOwner(String par1)
-    {
-        this.dataManager.set(OWNER, String.valueOf(par1));
-    }
-
-    public String getOwner()
-    {
+    public String getOwner() {
         return this.dataManager.get(OWNER);
     }
 
-    public void setDamage(float par1)
-    {
-        this.dataManager.set(DAMAGE, Float.valueOf(par1));
+    public void setOwner(String par1) {
+        this.dataManager.set(OWNER, String.valueOf(par1));
     }
 
-    public float getDamage()
-    {
+    public float getDamage() {
         return this.dataManager.get(DAMAGE);
     }
 
-    public void setType(int par1)
-    {
-        this.dataManager.set(TYPE, Integer.valueOf(par1));
+    public void setDamage(float par1) {
+        this.dataManager.set(DAMAGE, Float.valueOf(par1));
     }
 
-    public int getType()
-    {
+    public int getType() {
         return this.dataManager.get(TYPE);
     }
 
-    public void setFacingAngle(int par1)
-    {
-        this.dataManager.set(FACING_ANGLE, Integer.valueOf(par1));
+    public void setType(int par1) {
+        this.dataManager.set(TYPE, Integer.valueOf(par1));
     }
 
-    public int getFacingAngle()
-    {
+    public int getFacingAngle() {
         return this.dataManager.get(FACING_ANGLE);
+    }
+
+    public void setFacingAngle(int par1) {
+        this.dataManager.set(FACING_ANGLE, Integer.valueOf(par1));
     }
 }

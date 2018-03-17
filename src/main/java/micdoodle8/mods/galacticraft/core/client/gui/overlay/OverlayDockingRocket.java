@@ -12,8 +12,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class OverlayDockingRocket extends Overlay
-{
+public class OverlayDockingRocket extends Overlay {
     private static Minecraft minecraft = FMLClientHandler.instance().getClient();
 
     private static long screenTicks;
@@ -21,20 +20,17 @@ public class OverlayDockingRocket extends Overlay
     /**
      * Render the GUI when player is docking a vehicle
      */
-    public static void renderDockingOverlay()
-    {
+    public static void renderDockingOverlay() {
         OverlayDockingRocket.screenTicks++;
         final ScaledResolution scaledresolution = ClientUtil.getScaledRes(OverlayDockingRocket.minecraft, OverlayDockingRocket.minecraft.displayWidth, OverlayDockingRocket.minecraft.displayHeight);
         final int width = scaledresolution.getScaledWidth();
         final int height = scaledresolution.getScaledHeight();
         OverlayDockingRocket.minecraft.entityRenderer.setupOverlayRendering();
 
-        if (OverlayDockingRocket.minecraft.player.getRidingEntity() instanceof EntityAutoRocket)
-        {
+        if (OverlayDockingRocket.minecraft.player.getRidingEntity() instanceof EntityAutoRocket) {
             EntityAutoRocket rocket = (EntityAutoRocket) OverlayDockingRocket.minecraft.player.getRidingEntity();
 
-            if (rocket.launchPhase == EnumLaunchPhase.LANDING.ordinal() && rocket.targetVec != null)
-            {
+            if (rocket.launchPhase == EnumLaunchPhase.LANDING.ordinal() && rocket.targetVec != null) {
                 double dX = Math.round((rocket.posX - rocket.targetVec.getX()) * 100.0D) / 100.0D;
                 double dY = Math.round((rocket.posY - rocket.targetVec.getY()) * 100.0D) / 100.0D;
                 double dZ = Math.round((rocket.posZ - rocket.targetVec.getZ()) * 100.0D) / 100.0D;

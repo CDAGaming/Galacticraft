@@ -6,56 +6,45 @@ import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 
-public class InventoryRocketBench implements IInventoryDefaults
-{
-    public NonNullList<ItemStack> stacks;
+public class InventoryRocketBench implements IInventoryDefaults {
     private final int inventoryWidth;
     private final Container eventHandler;
+    public NonNullList<ItemStack> stacks;
 
-    public InventoryRocketBench(Container par1Container)
-    {
+    public InventoryRocketBench(Container par1Container) {
         final int size = 18;
         this.stacks = NonNullList.withSize(size, ItemStack.EMPTY);
         this.eventHandler = par1Container;
         this.inventoryWidth = 5;
     }
 
-    public ItemStack getStackInRowAndColumn(int par1, int par2)
-    {
-        if (par1 >= 0 && par1 < this.inventoryWidth)
-        {
+    public ItemStack getStackInRowAndColumn(int par1, int par2) {
+        if (par1 >= 0 && par1 < this.inventoryWidth) {
             final int var3 = par1 + par2 * this.inventoryWidth;
-            if (var3 >= 18)
-            {
+            if (var3 >= 18) {
                 return ItemStack.EMPTY;
             }
             return this.getStackInSlot(var3);
-        }
-        else
-        {
+        } else {
             return ItemStack.EMPTY;
         }
     }
 
     @Override
-    public int getSizeInventory()
-    {
+    public int getSizeInventory() {
         return this.stacks.size();
     }
 
     @Override
-    public ItemStack getStackInSlot(int index)
-    {
+    public ItemStack getStackInSlot(int index) {
         return this.stacks.get(index);
     }
 
     @Override
-    public ItemStack decrStackSize(int index, int count)
-    {
+    public ItemStack decrStackSize(int index, int count) {
         ItemStack itemstack = ItemStackHelper.getAndSplit(this.stacks, index, count);
 
-        if (!itemstack.isEmpty())
-        {
+        if (!itemstack.isEmpty()) {
             this.markDirty();
             this.eventHandler.onCraftMatrixChanged(this);
         }
@@ -64,22 +53,18 @@ public class InventoryRocketBench implements IInventoryDefaults
     }
 
     @Override
-    public ItemStack removeStackFromSlot(int index)
-    {
+    public ItemStack removeStackFromSlot(int index) {
         ItemStack oldstack = ItemStackHelper.getAndRemove(this.stacks, index);
-        if (!oldstack.isEmpty())
-        {
+        if (!oldstack.isEmpty()) {
             this.markDirty();
             this.eventHandler.onCraftMatrixChanged(this);
         }
-    	return oldstack;
+        return oldstack;
     }
 
     @Override
-    public void setInventorySlotContents(int index, ItemStack stack)
-    {
-        if (stack.getCount() > this.getInventoryStackLimit())
-        {
+    public void setInventorySlotContents(int index, ItemStack stack) {
+        if (stack.getCount() > this.getInventoryStackLimit()) {
             stack.setCount(this.getInventoryStackLimit());
         }
         this.stacks.set(index, stack);
@@ -88,12 +73,9 @@ public class InventoryRocketBench implements IInventoryDefaults
     }
 
     @Override
-    public boolean isEmpty()
-    {
-        for (ItemStack itemstack : this.stacks)
-        {
-            if (!itemstack.isEmpty())
-            {
+    public boolean isEmpty() {
+        for (ItemStack itemstack : this.stacks) {
+            if (!itemstack.isEmpty()) {
                 return false;
             }
         }
@@ -102,31 +84,26 @@ public class InventoryRocketBench implements IInventoryDefaults
     }
 
     @Override
-    public String getName()
-    {
+    public String getName() {
         return "container.crafting";
     }
 
     @Override
-    public int getInventoryStackLimit()
-    {
+    public int getInventoryStackLimit() {
         return 64;
     }
 
     @Override
-    public void markDirty()
-    {
+    public void markDirty() {
     }
 
     @Override
-    public boolean isUsableByPlayer(EntityPlayer par1EntityPlayer)
-    {
+    public boolean isUsableByPlayer(EntityPlayer par1EntityPlayer) {
         return true;
     }
 
     @Override
-    public boolean isItemValidForSlot(int i, ItemStack itemstack)
-    {
+    public boolean isItemValidForSlot(int i, ItemStack itemstack) {
         return false;
     }
 }

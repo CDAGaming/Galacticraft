@@ -29,15 +29,13 @@ import net.minecraft.world.World;
 
 import java.util.Random;
 
-public class BlockTelepadFake extends BlockAdvancedTile implements ITileEntityProvider
-{
+public class BlockTelepadFake extends BlockAdvancedTile implements ITileEntityProvider {
     public static final PropertyBool TOP = PropertyBool.create("top");
     public static final PropertyBool CONNECTABLE = PropertyBool.create("connectable");
     protected static final AxisAlignedBB AABB_TOP = new AxisAlignedBB(0.0F, 0.55F, 0.0F, 1.0F, 1.0F, 1.0F);
     protected static final AxisAlignedBB AABB_BOTTOM = new AxisAlignedBB(0.0F, 0.0F, 0.0F, 1.0F, 0.2F, 1.0F);
 
-    public BlockTelepadFake(String assetName)
-    {
+    public BlockTelepadFake(String assetName) {
         super(GCBlocks.machine);
         this.setSoundType(SoundType.METAL);
 //        this.setBlockTextureName(Constants.TEXTURE_PREFIX + assetName);
@@ -47,14 +45,12 @@ public class BlockTelepadFake extends BlockAdvancedTile implements ITileEntityPr
     }
 
     @Override
-    public boolean isOpaqueCube(IBlockState state)
-    {
+    public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
 
     @Override
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
-    {
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
         return state.getValue(TOP) ? AABB_TOP : AABB_BOTTOM;
     }
 
@@ -107,28 +103,23 @@ public class BlockTelepadFake extends BlockAdvancedTile implements ITileEntityPr
 //    }
 
     @Override
-    public boolean canDropFromExplosion(Explosion par1Explosion)
-    {
+    public boolean canDropFromExplosion(Explosion par1Explosion) {
         return false;
     }
 
-    public void makeFakeBlock(World worldObj, BlockPos pos, BlockPos mainBlock, IBlockState state)
-    {
+    public void makeFakeBlock(World worldObj, BlockPos pos, BlockPos mainBlock, IBlockState state) {
         worldObj.setBlockState(pos, state, 3);
         ((TileEntityTelepadFake) worldObj.getTileEntity(pos)).setMainBlock(mainBlock);
     }
 
     @Override
-    public float getBlockHardness(IBlockState blockState, World worldIn, BlockPos pos)
-    {
+    public float getBlockHardness(IBlockState blockState, World worldIn, BlockPos pos) {
         TileEntity tileEntity = worldIn.getTileEntity(pos);
 
-        if (tileEntity instanceof TileEntityTelepadFake)
-        {
+        if (tileEntity instanceof TileEntityTelepadFake) {
             BlockPos mainBlockPosition = ((TileEntityTelepadFake) tileEntity).mainBlockPosition;
 
-            if (mainBlockPosition != null)
-            {
+            if (mainBlockPosition != null) {
                 return worldIn.getBlockState(mainBlockPosition).getBlock().getBlockHardness(worldIn.getBlockState(mainBlockPosition), worldIn, mainBlockPosition);
             }
         }
@@ -137,12 +128,10 @@ public class BlockTelepadFake extends BlockAdvancedTile implements ITileEntityPr
     }
 
     @Override
-    public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
-    {
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
         TileEntity tileEntity = worldIn.getTileEntity(pos);
 
-        if (tileEntity instanceof TileEntityTelepadFake)
-        {
+        if (tileEntity instanceof TileEntityTelepadFake) {
             ((TileEntityTelepadFake) tileEntity).onBlockRemoval();
         }
 
@@ -150,59 +139,49 @@ public class BlockTelepadFake extends BlockAdvancedTile implements ITileEntityPr
     }
 
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
-    {
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         TileEntityTelepadFake tileEntity = (TileEntityTelepadFake) worldIn.getTileEntity(pos);
         return tileEntity.onActivated(playerIn);
     }
 
     @Override
-    public int quantityDropped(Random par1Random)
-    {
+    public int quantityDropped(Random par1Random) {
         return 0;
     }
 
     @Override
-    public EnumBlockRenderType getRenderType(IBlockState state)
-    {
+    public EnumBlockRenderType getRenderType(IBlockState state) {
         return EnumBlockRenderType.INVISIBLE;
     }
 
     @Override
-    public boolean isFullCube(IBlockState state)
-    {
+    public boolean isFullCube(IBlockState state) {
         return false;
     }
 
     @Override
-    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face)
-    {
+    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
         return BlockFaceShape.UNDEFINED;
     }
 
     @Override
-    public TileEntity createNewTileEntity(World var1, int meta)
-    {
+    public TileEntity createNewTileEntity(World var1, int meta) {
         return new TileEntityTelepadFake();
     }
 
     @Override
-    public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand)
-    {
+    public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand) {
     }
 
     @Override
-    public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player)
-    {
+    public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
         TileEntity tileEntity = world.getTileEntity(pos);
         BlockPos mainBlockPosition = ((TileEntityTelepadFake) tileEntity).mainBlockPosition;
 
-        if (mainBlockPosition != null)
-        {
+        if (mainBlockPosition != null) {
             Block mainBlockID = world.getBlockState(mainBlockPosition).getBlock();
 
-            if (Blocks.AIR != mainBlockID)
-            {
+            if (Blocks.AIR != mainBlockID) {
                 return mainBlockID.getPickBlock(world.getBlockState(mainBlockPosition), target, world, mainBlockPosition, player);
             }
         }
@@ -211,13 +190,11 @@ public class BlockTelepadFake extends BlockAdvancedTile implements ITileEntityPr
     }
 
     @Override
-    public EnumFacing getBedDirection(IBlockState state, IBlockAccess world, BlockPos pos)
-    {
+    public EnumFacing getBedDirection(IBlockState state, IBlockAccess world, BlockPos pos) {
         TileEntity tileEntity = world.getTileEntity(pos);
         BlockPos mainBlockPosition = ((TileEntityTelepadFake) tileEntity).mainBlockPosition;
 
-        if (mainBlockPosition != null)
-        {
+        if (mainBlockPosition != null) {
             return world.getBlockState(pos).getBlock().getBedDirection(world.getBlockState(mainBlockPosition), world, mainBlockPosition);
         }
 
@@ -225,13 +202,11 @@ public class BlockTelepadFake extends BlockAdvancedTile implements ITileEntityPr
     }
 
     @Override
-    public boolean isBed(IBlockState state, IBlockAccess world, BlockPos pos, Entity player)
-    {
+    public boolean isBed(IBlockState state, IBlockAccess world, BlockPos pos, Entity player) {
         TileEntity tileEntity = world.getTileEntity(pos);
         BlockPos mainBlockPosition = ((TileEntityTelepadFake) tileEntity).mainBlockPosition;
 
-        if (mainBlockPosition != null)
-        {
+        if (mainBlockPosition != null) {
             return world.getBlockState(pos).getBlock().isBed(world.getBlockState(mainBlockPosition), world, mainBlockPosition, player);
         }
 
@@ -239,32 +214,25 @@ public class BlockTelepadFake extends BlockAdvancedTile implements ITileEntityPr
     }
 
     @Override
-    public void setBedOccupied(IBlockAccess world, BlockPos pos, EntityPlayer player, boolean occupied)
-    {
+    public void setBedOccupied(IBlockAccess world, BlockPos pos, EntityPlayer player, boolean occupied) {
         TileEntity tileEntity = world.getTileEntity(pos);
         BlockPos mainBlockPosition = ((TileEntityTelepadFake) tileEntity).mainBlockPosition;
 
-        if (mainBlockPosition != null)
-        {
+        if (mainBlockPosition != null) {
             world.getBlockState(pos).getBlock().setBedOccupied(world, mainBlockPosition, player, occupied);
-        }
-        else
-        {
+        } else {
             super.setBedOccupied(world, pos, player, occupied);
         }
     }
 
     @Override
-    public boolean addHitEffects(IBlockState state, World worldObj, RayTraceResult target, ParticleManager manager)
-    {
+    public boolean addHitEffects(IBlockState state, World worldObj, RayTraceResult target, ParticleManager manager) {
         TileEntity tileEntity = worldObj.getTileEntity(target.getBlockPos());
 
-        if (tileEntity instanceof TileEntityTelepadFake)
-        {
+        if (tileEntity instanceof TileEntityTelepadFake) {
             BlockPos mainBlockPosition = ((TileEntityTelepadFake) tileEntity).mainBlockPosition;
 
-            if (mainBlockPosition != null)
-            {
+            if (mainBlockPosition != null) {
                 manager.addBlockHitEffects(mainBlockPosition, target);
             }
         }
@@ -273,20 +241,17 @@ public class BlockTelepadFake extends BlockAdvancedTile implements ITileEntityPr
     }
 
     @Override
-    protected BlockStateContainer createBlockState()
-    {
+    protected BlockStateContainer createBlockState() {
         return new BlockStateContainer(this, TOP, CONNECTABLE);
     }
 
     @Override
-    public IBlockState getStateFromMeta(int meta)
-    {
+    public IBlockState getStateFromMeta(int meta) {
         return this.getDefaultState().withProperty(TOP, meta % 2 == 1).withProperty(CONNECTABLE, meta > 1);
     }
 
     @Override
-    public int getMetaFromState(IBlockState state)
-    {
+    public int getMetaFromState(IBlockState state) {
         return (state.getValue(TOP) ? 1 : 0) + (state.getValue(CONNECTABLE) ? 2 : 0);
     }
 }

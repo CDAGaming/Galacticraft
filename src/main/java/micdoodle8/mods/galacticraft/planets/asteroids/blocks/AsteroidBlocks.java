@@ -11,8 +11,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
-public class AsteroidBlocks
-{
+public class AsteroidBlocks {
     public static Block blockWalkway;
     public static Block blockBasic;
     //	public static Block machineFrame;
@@ -25,8 +24,7 @@ public class AsteroidBlocks
     public static Block minerBaseFull;
     public static Block spaceWart;
 
-    public static void initBlocks()
-    {
+    public static void initBlocks() {
         AsteroidBlocks.blockWalkway = new BlockWalkway("walkway");
         AsteroidBlocks.blockBasic = new BlockBasicAsteroids("asteroids_block");
         AsteroidBlocks.beamReflector = new BlockBeamReflector("beam_reflector");
@@ -39,13 +37,11 @@ public class AsteroidBlocks
         AsteroidBlocks.spaceWart = new BlockSpaceWart("spacewart");
     }
 
-    public static void registerBlock(Block block, Class<? extends ItemBlock> itemClass)
-    {
+    public static void registerBlock(Block block, Class<? extends ItemBlock> itemClass) {
         GCBlocks.registerBlock(block, itemClass);
     }
 
-    public static void registerBlocks()
-    {
+    public static void registerBlocks() {
         registerBlock(AsteroidBlocks.blockBasic, ItemBlockAsteroids.class);
         registerBlock(AsteroidBlocks.blockWalkway, ItemBlockWalkway.class);
         registerBlock(AsteroidBlocks.beamReflector, ItemBlockDesc.class);
@@ -58,18 +54,15 @@ public class AsteroidBlocks
         registerBlock(AsteroidBlocks.spaceWart, null);
     }
 
-    private static void setHarvestLevel(Block block, String toolClass, int level, int meta)
-    {
+    private static void setHarvestLevel(Block block, String toolClass, int level, int meta) {
         block.setHarvestLevel(toolClass, level, block.getStateFromMeta(meta));
     }
 
-    private static void setHarvestLevel(Block block, String toolClass, int level)
-    {
+    private static void setHarvestLevel(Block block, String toolClass, int level) {
         block.setHarvestLevel(toolClass, level);
     }
 
-    public static void setHarvestLevels()
-    {
+    public static void setHarvestLevels() {
         setHarvestLevel(AsteroidBlocks.blockBasic, "pickaxe", 0, 0);   //Rock
         setHarvestLevel(AsteroidBlocks.blockBasic, "pickaxe", 0, 1);   //Rock
         setHarvestLevel(AsteroidBlocks.blockBasic, "pickaxe", 0, 2);   //Rock
@@ -78,8 +71,7 @@ public class AsteroidBlocks
         setHarvestLevel(AsteroidBlocks.blockBasic, "pickaxe", 2, 5);   //Iron
     }
 
-    public static void oreDictRegistration()
-    {
+    public static void oreDictRegistration() {
         OreDictionary.registerOre("oreAluminum", new ItemStack(AsteroidBlocks.blockBasic, 1, 3));
         OreDictionary.registerOre("oreAluminium", new ItemStack(AsteroidBlocks.blockBasic, 1, 3));
         OreDictionary.registerOre("oreNaturalAluminum", new ItemStack(AsteroidBlocks.blockBasic, 1, 3));

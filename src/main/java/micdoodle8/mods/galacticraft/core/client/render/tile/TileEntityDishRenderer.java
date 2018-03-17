@@ -9,13 +9,11 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.FMLClientHandler;
-
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 
-public class TileEntityDishRenderer extends TileEntitySpecialRenderer<TileEntityDish>
-{
+public class TileEntityDishRenderer extends TileEntitySpecialRenderer<TileEntityDish> {
     private static final ResourceLocation textureSupport = new ResourceLocation(Constants.ASSET_PREFIX, "textures/model/telesupport.png");
     private static final ResourceLocation textureFork = new ResourceLocation(Constants.ASSET_PREFIX, "textures/model/telefork.png");
     private static final ResourceLocation textureDish = new ResourceLocation(Constants.ASSET_PREFIX, "textures/model/teledish.png");
@@ -24,31 +22,25 @@ public class TileEntityDishRenderer extends TileEntitySpecialRenderer<TileEntity
     private static IBakedModel modelDish;
     private TextureManager renderEngine = FMLClientHandler.instance().getClient().renderEngine;
 
-    private void updateModels()
-    {
-        if (modelDish == null)
-        {
-            try
-            {
+    private void updateModels() {
+        if (modelDish == null) {
+            try {
                 modelDish = ClientUtil.modelFromOBJ(new ResourceLocation(Constants.ASSET_PREFIX, "teledish.obj"));
                 modelFork = ClientUtil.modelFromOBJ(new ResourceLocation(Constants.ASSET_PREFIX, "telefork.obj"));
                 modelSupport = ClientUtil.modelFromOBJ(new ResourceLocation(Constants.ASSET_PREFIX, "telesupport.obj"));
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
 
     @Override
-    public void render(TileEntityDish tile, double par2, double par4, double par6, float partialTickTime, int par9, float alpha)
-    {
+    public void render(TileEntityDish tile, double par2, double par4, double par6, float partialTickTime, int par9, float alpha) {
         this.updateModels();
         TileEntityDish dish = (TileEntityDish) tile;
         float hour = dish.rotation(partialTickTime) % 360F;
         float declination = dish.elevation(partialTickTime) % 360F;
-        
+
         final EntityPlayer player = FMLClientHandler.instance().getClient().player;
 
         GL11.glPushMatrix();

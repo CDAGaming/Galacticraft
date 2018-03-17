@@ -13,32 +13,25 @@ import net.minecraft.world.gen.structure.StructureStart;
 import java.util.List;
 import java.util.Random;
 
-public class MapGenDungeon extends MapGenStructure
-{
+public class MapGenDungeon extends MapGenStructure {
     private static boolean initialized;
-    private DungeonConfiguration configuration;
 
-    static
-    {
-        try
-        {
+    static {
+        try {
             MapGenDungeon.initiateStructures();
-        }
-        catch (Throwable e)
-        {
+        } catch (Throwable e) {
 
         }
     }
 
-    public MapGenDungeon(DungeonConfiguration configuration)
-    {
+    private DungeonConfiguration configuration;
+
+    public MapGenDungeon(DungeonConfiguration configuration) {
         this.configuration = configuration;
     }
 
-    public static void initiateStructures() throws Throwable
-    {
-        if (!MapGenDungeon.initialized)
-        {
+    public static void initiateStructures() throws Throwable {
+        if (!MapGenDungeon.initialized) {
             MapGenStructureIO.registerStructure(MapGenDungeon.Start.class, "MoonDungeon");
             MapGenStructureIO.registerStructureComponent(DungeonStart.class, "MoonDungeonStart");
             MapGenStructureIO.registerStructureComponent(Corridor.class, "MoonDungeonCorridor");
@@ -52,50 +45,31 @@ public class MapGenDungeon extends MapGenStructure
         MapGenDungeon.initialized = true;
     }
 
-    @Override
-    public String getStructureName()
-    {
-        return "GC_Dungeon";
-    }
-
-    @Override
-    protected boolean canSpawnStructureAtCoords(int chunkX, int chunkZ)
-    {
-        long dungeonPos = getDungeonPosForCoords(this.world, chunkX, chunkZ, ((IGalacticraftWorldProvider) this.world.provider).getDungeonSpacing());
-        int i = (int) (dungeonPos >> 32);
-        int j = (int) dungeonPos;  //Java automatically gives the 32 least significant bits
-        return i == chunkX && j == chunkZ;
-    }
-    
-    public static long getDungeonPosForCoords(World world, int chunkX, int chunkZ, int spacing)
-    {
+    public static long getDungeonPosForCoords(World world, int chunkX, int chunkZ, int spacing) {
         final int numChunks = spacing / 16;
-        if (chunkX < 0)
-        {
+        if (chunkX < 0) {
             chunkX -= numChunks - 1;
         }
 
-        if (chunkZ < 0)
-        {
+        if (chunkZ < 0) {
             chunkZ -= numChunks - 1;
         }
 
         int k = chunkX / numChunks;
         int l = chunkZ / numChunks;
-        long seed = (long)k * 341873128712L + (long)l * 132897987541L + world.getWorldInfo().getSeed() + (long)(10387340 + world.provider.getDimension());
+        long seed = (long) k * 341873128712L + (long) l * 132897987541L + world.getWorldInfo().getSeed() + (long) (10387340 + world.provider.getDimension());
         Random random = new Random();
         random.setSeed(seed);
         k = k * numChunks + random.nextInt(numChunks);
         l = l * numChunks + random.nextInt(numChunks);
         return (((long) k) << 32) + l;
     }
-    
+
     /**
      * This returns an angle between 0 and 360 degrees.  0 degrees means due North from the current (x, z) position
      * Only provides meaningful results in worlds with dungeon generation using this class!
      */
-    public static float directionToNearestDungeon(World world, double xpos, double zpos)
-    {
+    public static float directionToNearestDungeon(World world, double xpos, double zpos) {
         int spacing = ((IGalacticraftWorldProvider) world.provider).getDungeonSpacing();
         if (spacing == 0) return 0F;
         int x = MathHelper.floor(xpos);
@@ -107,18 +81,15 @@ public class MapGenDungeon extends MapGenStructure
         double nearestX = 0;
         double nearestZ = 0;
         double nearestDistance = Double.MAX_VALUE;
-        for (int cx = searchOffsetX - 1; cx < searchOffsetX + 1; cx++)
-        {
-            for (int cz = searchOffsetZ - 1; cz < searchOffsetZ + 1; cz++)
-            {
+        for (int cx = searchOffsetX - 1; cx < searchOffsetX + 1; cx++) {
+            for (int cz = searchOffsetZ - 1; cz < searchOffsetZ + 1; cz++) {
                 long dungeonPos = getDungeonPosForCoords(world, (x + cx * spacing) / 16, (z + cz * spacing) / 16, spacing);
                 int i = 2 + (((int) (dungeonPos >> 32)) << 4);
                 int j = 2 + (((int) dungeonPos) << 4);  //Java automatically gives the 32 least significant bits
                 double oX = i - xpos;
                 double oZ = j - zpos;
                 double distanceSq = oX * oX + oZ * oZ;
-                if (distanceSq < nearestDistance)
-                {
+                if (distanceSq < nearestDistance) {
                     nearestDistance = distanceSq;
                     nearestX = oX;
                     nearestZ = oZ;
@@ -130,35 +101,42 @@ public class MapGenDungeon extends MapGenStructure
     }
 
     @Override
-    protected StructureStart getStructureStart(int chunkX, int chunkZ)
-    {
+    public String getStructureName() {
+        return "GC_Dungeon";
+    }
+
+    @Override
+    protected boolean canSpawnStructureAtCoords(int chunkX, int chunkZ) {
+        long dungeonPos = getDungeonPosForCoords(this.world, chunkX, chunkZ, ((IGalacticraftWorldProvider) this.world.provider).getDungeonSpacing());
+        int i = (int) (dungeonPos >> 32);
+        int j = (int) dungeonPos;  //Java automatically gives the 32 least significant bits
+        return i == chunkX && j == chunkZ;
+    }
+
+    @Override
+    protected StructureStart getStructureStart(int chunkX, int chunkZ) {
         return new MapGenDungeon.Start(this.world, this.rand, chunkX, chunkZ, this.configuration);
     }
 
     @Override
-    public BlockPos getNearestStructurePos(World worldIn, BlockPos pos, boolean p_180706_3_)
-    {
+    public BlockPos getNearestStructurePos(World worldIn, BlockPos pos, boolean p_180706_3_) {
         return null;
     }
 
-    public static class Start extends StructureStart
-    {
+    public static class Start extends StructureStart {
         private DungeonConfiguration configuration;
 
-        public Start()
-        {
+        public Start() {
         }
 
-        public Start(World worldIn, Random rand, int chunkX, int chunkZ, DungeonConfiguration configuration)
-        {
+        public Start(World worldIn, Random rand, int chunkX, int chunkZ, DungeonConfiguration configuration) {
             super(chunkX, chunkZ);
             this.configuration = configuration;
             DungeonStart startPiece = new DungeonStart(worldIn, configuration, rand, (chunkX << 4) + 2, (chunkZ << 4) + 2);
             startPiece.buildComponent(startPiece, this.components, rand);
             List<StructureComponent> list = startPiece.attachedComponents;
 
-            while (!list.isEmpty())
-            {
+            while (!list.isEmpty()) {
                 int i = rand.nextInt(list.size());
                 StructureComponent structurecomponent = list.remove(i);
                 structurecomponent.buildComponent(startPiece, this.components, rand);

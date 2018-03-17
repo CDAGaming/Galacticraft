@@ -10,12 +10,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemMeteoricIron extends Item implements ISortableItem
-{
+public class ItemMeteoricIron extends Item implements ISortableItem {
 //    private final String iconName;
 
-    public ItemMeteoricIron(String assetName)
-    {
+    public ItemMeteoricIron(String assetName) {
         super();
 //        this.iconName = assetName;
         this.setUnlocalizedName(assetName);
@@ -29,21 +27,18 @@ public class ItemMeteoricIron extends Item implements ISortableItem
     }*/
 
     @Override
-    public CreativeTabs getCreativeTab()
-    {
+    public CreativeTabs getCreativeTab() {
         return GalacticraftCore.galacticraftItemsTab;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public EnumRarity getRarity(ItemStack par1ItemStack)
-    {
+    public EnumRarity getRarity(ItemStack par1ItemStack) {
         return ClientProxyCore.galacticraftItem;
     }
 
     @Override
-    public EnumSortCategoryItem getCategory(int meta)
-    {
+    public EnumSortCategoryItem getCategory(int meta) {
         return EnumSortCategoryItem.GENERAL;
     }
 }

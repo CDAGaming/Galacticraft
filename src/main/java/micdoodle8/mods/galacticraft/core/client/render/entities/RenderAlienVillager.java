@@ -9,40 +9,31 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class RenderAlienVillager extends RenderLiving<EntityAlienVillager>
-{
+public class RenderAlienVillager extends RenderLiving<EntityAlienVillager> {
     private static final ResourceLocation villagerTexture = new ResourceLocation(Constants.ASSET_PREFIX, "textures/model/villager.png");
-    private boolean texSwitch;
-    
     protected ModelAlienVillager villagerModel;
+    private boolean texSwitch;
 
-    public RenderAlienVillager(RenderManager manager)
-    {
+    public RenderAlienVillager(RenderManager manager) {
         super(manager, new ModelAlienVillager(0.0F), 0.5F);
         this.villagerModel = (ModelAlienVillager) this.mainModel;
     }
 
     @Override
-    protected void preRenderCallback(EntityAlienVillager villager, float par2)
-    {
+    protected void preRenderCallback(EntityAlienVillager villager, float par2) {
         float f1 = 0.9375F;
 
-        if (villager.getGrowingAge() < 0)
-        {
+        if (villager.getGrowingAge() < 0) {
             f1 = (float) (f1 * 0.5D);
             this.shadowSize = 0.25F;
-        }
-        else
-        {
+        } else {
             this.shadowSize = 0.5F;
         }
 
-        if (texSwitch)
-        {
+        if (texSwitch) {
             OverlaySensorGlasses.preRenderMobs();
         }
 
@@ -50,17 +41,14 @@ public class RenderAlienVillager extends RenderLiving<EntityAlienVillager>
     }
 
     @Override
-    protected ResourceLocation getEntityTexture(EntityAlienVillager par1Entity)
-    {
+    protected ResourceLocation getEntityTexture(EntityAlienVillager par1Entity) {
         return texSwitch ? OverlaySensorGlasses.altTexture : RenderAlienVillager.villagerTexture;
     }
 
     @Override
-    public void doRender(EntityAlienVillager villager, double par2, double par4, double par6, float par8, float par9)
-    {
+    public void doRender(EntityAlienVillager villager, double par2, double par4, double par6, float par8, float par9) {
         super.doRender(villager, par2, par4, par6, par8, par9);
-        if (OverlaySensorGlasses.overrideMobTexture())
-        {
+        if (OverlaySensorGlasses.overrideMobTexture()) {
             texSwitch = true;
             super.doRender(villager, par2, par4, par6, par8, par9);
             texSwitch = false;

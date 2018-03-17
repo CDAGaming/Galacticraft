@@ -10,20 +10,17 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
-public class RenderCreeperBoss extends RenderLiving<EntityCreeperBoss>
-{
+public class RenderCreeperBoss extends RenderLiving<EntityCreeperBoss> {
     private static final ResourceLocation creeperTexture = new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "textures/model/creeper.png");
     private static final ResourceLocation powerTexture = new ResourceLocation(Constants.ASSET_PREFIX, "textures/model/power.png");
     private final ModelBase creeperModel = new ModelCreeperBoss(2.0F);
 
-    public RenderCreeperBoss(RenderManager renderManager)
-    {
+    public RenderCreeperBoss(RenderManager renderManager) {
         super(renderManager, new ModelCreeperBoss(), 1.0F);
     }
 
     @Override
-    protected ResourceLocation getEntityTexture(EntityCreeperBoss entity)
-    {
+    protected ResourceLocation getEntityTexture(EntityCreeperBoss entity) {
         return RenderCreeperBoss.creeperTexture;
     }
 
@@ -64,15 +61,13 @@ public class RenderCreeperBoss extends RenderLiving<EntityCreeperBoss>
 //    }
 
     @Override
-    protected void preRenderCallback(EntityCreeperBoss par1EntityLiving, float par2)
-    {
+    protected void preRenderCallback(EntityCreeperBoss par1EntityLiving, float par2) {
         GL11.glScalef(4.0F, 4.0F, 4.0F);
         GL11.glRotatef((float) (Math.pow(par1EntityLiving.deathTicks, 2) / 5.0F + (Math.pow(par1EntityLiving.deathTicks, 2) / 5.0F - Math.pow(par1EntityLiving.deathTicks - 1, 2) / 5.0F) * par2), 0.0F, 1.0F, 0.0F);
     }
 
     @Override
-    protected int getColorMultiplier(EntityCreeperBoss par1EntityLivingBase, float par2, float par3)
-    {
+    protected int getColorMultiplier(EntityCreeperBoss par1EntityLivingBase, float par2, float par3) {
         return super.getColorMultiplier(par1EntityLivingBase, par2, par3);
     }
 

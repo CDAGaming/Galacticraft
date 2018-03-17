@@ -26,14 +26,11 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
-import javax.annotation.Nullable;
-
-public class ItemBuggy extends Item implements IHoldableItem, ISortableItem
-{
-    public ItemBuggy(String assetName)
-    {
+public class ItemBuggy extends Item implements IHoldableItem, ISortableItem {
+    public ItemBuggy(String assetName) {
         super();
         this.setUnlocalizedName(assetName);
         //this.setTextureName("arrow");
@@ -41,33 +38,27 @@ public class ItemBuggy extends Item implements IHoldableItem, ISortableItem
     }
 
     @Override
-    public CreativeTabs getCreativeTab()
-    {
+    public CreativeTabs getCreativeTab() {
         return GalacticraftCore.galacticraftItemsTab;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public EnumRarity getRarity(ItemStack par1ItemStack)
-    {
+    public EnumRarity getRarity(ItemStack par1ItemStack) {
         return ClientProxyCore.galacticraftItem;
     }
 
     @Override
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list)
-    {
-        if (tab == GalacticraftCore.galacticraftItemsTab || tab == CreativeTabs.SEARCH)
-        {
-            for (int i = 0; i < 4; i++)
-            {
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list) {
+        if (tab == GalacticraftCore.galacticraftItemsTab || tab == CreativeTabs.SEARCH) {
+            for (int i = 0; i < 4; i++) {
                 list.add(new ItemStack(this, 1, i));
             }
         }
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand hand)
-    {
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand hand) {
         ItemStack itemstack = playerIn.getHeldItem(hand);
         final float var4 = 1.0F;
         final float var5 = playerIn.prevRotationPitch + (playerIn.rotationPitch - playerIn.prevRotationPitch) * var4;
@@ -86,70 +77,55 @@ public class ItemBuggy extends Item implements IHoldableItem, ISortableItem
         final Vec3d var23 = var13.addVector(var18 * var21, var17 * var21, var20 * var21);
         final RayTraceResult var24 = worldIn.rayTraceBlocks(var13, var23, true);
 
-        if (var24 == null)
-        {
+        if (var24 == null) {
             return new ActionResult<>(EnumActionResult.PASS, itemstack);
-        }
-        else
-        {
+        } else {
             final Vec3d var25 = playerIn.getLook(var4);
             boolean var26 = false;
             final float var27 = 1.0F;
             final List<?> var28 = worldIn.getEntitiesWithinAABBExcludingEntity(playerIn, playerIn.getEntityBoundingBox().grow(var25.x * var21, var25.y * var21, var25.z * var21).expand(var27, var27, var27));
             int var29;
 
-            for (var29 = 0; var29 < var28.size(); ++var29)
-            {
+            for (var29 = 0; var29 < var28.size(); ++var29) {
                 final Entity var30 = (Entity) var28.get(var29);
 
-                if (var30.canBeCollidedWith())
-                {
+                if (var30.canBeCollidedWith()) {
                     final float var31 = var30.getCollisionBorderSize();
                     final AxisAlignedBB var32 = var30.getEntityBoundingBox().expand(var31, var31, var31);
 
-                    if (var32.contains(var13))
-                    {
+                    if (var32.contains(var13)) {
                         var26 = true;
                     }
                 }
             }
 
-            if (var26)
-            {
+            if (var26) {
                 return new ActionResult<>(EnumActionResult.PASS, itemstack);
-            }
-            else
-            {
-                if (var24.typeOfHit == RayTraceResult.Type.BLOCK)
-                {
+            } else {
+                if (var24.typeOfHit == RayTraceResult.Type.BLOCK) {
                     var29 = var24.getBlockPos().getX();
                     int var33 = var24.getBlockPos().getY();
                     final int var34 = var24.getBlockPos().getZ();
 
-                    if (worldIn.getBlockState(new BlockPos(var29, var33, var34)) == Blocks.SNOW)
-                    {
+                    if (worldIn.getBlockState(new BlockPos(var29, var33, var34)) == Blocks.SNOW) {
                         --var33;
                     }
 
                     final EntityBuggy var35 = new EntityBuggy(worldIn, var29 + 0.5F, var33 + 1.0F, var34 + 0.5F, itemstack.getItemDamage());
 
-                    if (!worldIn.getCollisionBoxes(var35, var35.getEntityBoundingBox().expand(-0.1D, -0.1D, -0.1D)).isEmpty())
-                    {
+                    if (!worldIn.getCollisionBoxes(var35, var35.getEntityBoundingBox().expand(-0.1D, -0.1D, -0.1D)).isEmpty()) {
                         return new ActionResult<>(EnumActionResult.PASS, itemstack);
                     }
 
-                    if (itemstack.hasTagCompound() && itemstack.getTagCompound().hasKey("BuggyFuel"))
-                    {
+                    if (itemstack.hasTagCompound() && itemstack.getTagCompound().hasKey("BuggyFuel")) {
                         var35.buggyFuelTank.setFluid(new FluidStack(GCFluids.fluidFuel, itemstack.getTagCompound().getInteger("BuggyFuel")));
                     }
 
-                    if (!worldIn.isRemote)
-                    {
+                    if (!worldIn.isRemote) {
                         worldIn.spawnEntity(var35);
                     }
 
-                    if (!playerIn.capabilities.isCreativeMode)
-                    {
+                    if (!playerIn.capabilities.isCreativeMode) {
                         itemstack.shrink(1);
                     }
                 }
@@ -161,40 +137,33 @@ public class ItemBuggy extends Item implements IHoldableItem, ISortableItem
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack par1ItemStack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
-    {
-        if (par1ItemStack.getItemDamage() != 0)
-        {
+    public void addInformation(ItemStack par1ItemStack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+        if (par1ItemStack.getItemDamage() != 0) {
             tooltip.add(GCCoreUtil.translate("gui.buggy.storage_space") + ": " + par1ItemStack.getItemDamage() * 18);
         }
 
-        if (par1ItemStack.hasTagCompound() && par1ItemStack.getTagCompound().hasKey("BuggyFuel"))
-        {
+        if (par1ItemStack.hasTagCompound() && par1ItemStack.getTagCompound().hasKey("BuggyFuel")) {
             tooltip.add(GCCoreUtil.translate("gui.message.fuel.name") + ": " + par1ItemStack.getTagCompound().getInteger("BuggyFuel") + " / " + EntityBuggy.tankCapacity);
         }
     }
 
     @Override
-    public boolean shouldHoldLeftHandUp(EntityPlayer player)
-    {
+    public boolean shouldHoldLeftHandUp(EntityPlayer player) {
         return true;
     }
 
     @Override
-    public boolean shouldHoldRightHandUp(EntityPlayer player)
-    {
+    public boolean shouldHoldRightHandUp(EntityPlayer player) {
         return true;
     }
 
     @Override
-    public boolean shouldCrouch(EntityPlayer player)
-    {
+    public boolean shouldCrouch(EntityPlayer player) {
         return true;
     }
 
     @Override
-    public EnumSortCategoryItem getCategory(int meta)
-    {
+    public EnumSortCategoryItem getCategory(int meta) {
         return EnumSortCategoryItem.GENERAL;
     }
 }

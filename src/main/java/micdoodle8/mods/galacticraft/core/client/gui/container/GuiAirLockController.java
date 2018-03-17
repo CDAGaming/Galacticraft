@@ -19,16 +19,14 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-
 import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
 
-public class GuiAirLockController extends GuiScreen implements ICheckBoxCallback, IDropboxCallback, ITextBoxCallback
-{
+public class GuiAirLockController extends GuiScreen implements ICheckBoxCallback, IDropboxCallback, ITextBoxCallback {
+    private static final ResourceLocation airLockControllerGui = new ResourceLocation(Constants.ASSET_PREFIX, "textures/gui/air_lock_controller.png");
     private final int xSize;
     private final int ySize;
-    private static final ResourceLocation airLockControllerGui = new ResourceLocation(Constants.ASSET_PREFIX, "textures/gui/air_lock_controller.png");
     private final TileEntityAirLockController controller;
     private GuiElementCheckbox checkboxRedstoneSignal;
     private GuiElementCheckbox checkboxPlayerDistance;
@@ -39,23 +37,21 @@ public class GuiAirLockController extends GuiScreen implements ICheckBoxCallback
     private GuiElementCheckbox checkboxHorizontalMode;
     private int cannotEditTimer;
 
-    public GuiAirLockController(TileEntityAirLockController controller)
-    {
+    public GuiAirLockController(TileEntityAirLockController controller) {
         this.controller = controller;
         this.ySize = 139;
         this.xSize = 181;
     }
 
     @Override
-    public void initGui()
-    {
+    public void initGui() {
         super.initGui();
         this.buttonList.clear();
         final int var5 = (this.width - this.xSize) / 2;
         final int var6 = (this.height - this.ySize) / 2;
         this.checkboxRedstoneSignal = new GuiElementCheckbox(0, this, this.width / 2 - 84, var6 + 18, GCCoreUtil.translate("gui.checkbox.redstone_signal.name"));
         this.checkboxPlayerDistance = new GuiElementCheckbox(1, this, this.width / 2 - 84, var6 + 33, GCCoreUtil.translate("gui.checkbox.player_within.name") + ": ");
-        String[] dropboxStrings = { GCCoreUtil.translate("gui.dropbox.player_distance.name.0"), GCCoreUtil.translate("gui.dropbox.player_distance.name.1"), GCCoreUtil.translate("gui.dropbox.player_distance.name.2"), GCCoreUtil.translate("gui.dropbox.player_distance.name.3") };
+        String[] dropboxStrings = {GCCoreUtil.translate("gui.dropbox.player_distance.name.0"), GCCoreUtil.translate("gui.dropbox.player_distance.name.1"), GCCoreUtil.translate("gui.dropbox.player_distance.name.2"), GCCoreUtil.translate("gui.dropbox.player_distance.name.3")};
         this.dropdownPlayerDistance = new GuiElementDropdown(2, this, var5 + 99, var6 + 32, dropboxStrings);
         this.checkboxOpenForPlayer = new GuiElementCheckbox(3, this, this.width / 2 - 68, var6 + 49, GCCoreUtil.translate("gui.checkbox.player_name.name") + ": ");
         this.textBoxPlayerToOpenFor = new GuiElementTextBox(4, this, this.width / 2 - 61, var6 + 64, 110, 15, "", false, 16, false);
@@ -71,12 +67,9 @@ public class GuiAirLockController extends GuiScreen implements ICheckBoxCallback
     }
 
     @Override
-    protected void keyTyped(char keyChar, int keyID) throws IOException
-    {
-        if (keyID != Keyboard.KEY_ESCAPE)
-        {
-            if (this.textBoxPlayerToOpenFor.keyTyped(keyChar, keyID))
-            {
+    protected void keyTyped(char keyChar, int keyID) throws IOException {
+        if (keyID != Keyboard.KEY_ESCAPE) {
+            if (this.textBoxPlayerToOpenFor.keyTyped(keyChar, keyID)) {
                 return;
             }
         }
@@ -85,27 +78,22 @@ public class GuiAirLockController extends GuiScreen implements ICheckBoxCallback
     }
 
     @Override
-    public boolean doesGuiPauseGame()
-    {
+    public boolean doesGuiPauseGame() {
         return false;
     }
 
     @Override
-    protected void actionPerformed(GuiButton par1GuiButton)
-    {
-        if (par1GuiButton.enabled)
-        {
-            switch (par1GuiButton.id)
-            {
-            case 0:
-                break;
+    protected void actionPerformed(GuiButton par1GuiButton) {
+        if (par1GuiButton.enabled) {
+            switch (par1GuiButton.id) {
+                case 0:
+                    break;
             }
         }
     }
 
     @Override
-    public void drawScreen(int par1, int par2, float par3)
-    {
+    public void drawScreen(int par1, int par2, float par3) {
         final int var5 = (this.width - this.xSize) / 2;
         final int var6 = (this.height - this.ySize) / 2;
 
@@ -117,8 +105,7 @@ public class GuiAirLockController extends GuiScreen implements ICheckBoxCallback
         String displayString = GCCoreUtil.translateWithFormat("gui.title.air_lock.name", this.controller.ownerName);
         this.fontRenderer.drawString(displayString, this.width / 2 - this.fontRenderer.getStringWidth(displayString) / 2, this.height / 2 - 65, 4210752);
 
-        if (this.cannotEditTimer > 0)
-        {
+        if (this.cannotEditTimer > 0) {
             this.fontRenderer.drawString(this.controller.ownerName, this.width / 2 - this.fontRenderer.getStringWidth(displayString) / 2, this.height / 2 - 65, this.cannotEditTimer % 30 < 15 ? ColorUtil.to32BitColor(255, 255, 100, 100) : 4210752);
             this.cannotEditTimer--;
         }
@@ -127,8 +114,7 @@ public class GuiAirLockController extends GuiScreen implements ICheckBoxCallback
         this.fontRenderer.drawString(displayString, this.width / 2 - this.fontRenderer.getStringWidth(displayString) / 2, this.height / 2 + 45, 4210752);
         displayString = EnumColor.RED + GCCoreUtil.translate("gui.status.air_lock_closed.name");
 
-        if (!this.controller.active)
-        {
+        if (!this.controller.active) {
             displayString = EnumColor.BRIGHT_GREEN + GCCoreUtil.translate("gui.status.air_lock_open.name");
         }
 
@@ -138,53 +124,43 @@ public class GuiAirLockController extends GuiScreen implements ICheckBoxCallback
     }
 
     @Override
-    public void onSelectionChanged(GuiElementCheckbox checkbox, boolean newSelected)
-    {
-        if (checkbox.equals(this.checkboxRedstoneSignal))
-        {
+    public void onSelectionChanged(GuiElementCheckbox checkbox, boolean newSelected) {
+        if (checkbox.equals(this.checkboxRedstoneSignal)) {
             this.controller.redstoneActivation = newSelected;
-            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_ON_ADVANCED_GUI_CLICKED_INT, GCCoreUtil.getDimensionID(mc.world), new Object[] { 0, this.controller.getPos(), this.controller.redstoneActivation ? 1 : 0 }));
+            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_ON_ADVANCED_GUI_CLICKED_INT, GCCoreUtil.getDimensionID(mc.world), new Object[]{0, this.controller.getPos(), this.controller.redstoneActivation ? 1 : 0}));
             // PacketDispatcher.sendPacketToServer(PacketUtil.createPacket(GalacticraftCore.CHANNEL,
             // EnumPacketServer.ON_ADVANCED_GUI_CLICKED_INT, new Object[] { 0,
             // this.controller.xCoord, this.controller.yCoord,
             // this.controller.zCoord, this.controller.redstoneActivation ? 1 :
             // 0 }));
-        }
-        else if (checkbox.equals(this.checkboxPlayerDistance))
-        {
+        } else if (checkbox.equals(this.checkboxPlayerDistance)) {
             this.controller.playerDistanceActivation = newSelected;
-            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_ON_ADVANCED_GUI_CLICKED_INT, GCCoreUtil.getDimensionID(mc.world), new Object[] { 1, this.controller.getPos(), this.controller.playerDistanceActivation ? 1 : 0 }));
+            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_ON_ADVANCED_GUI_CLICKED_INT, GCCoreUtil.getDimensionID(mc.world), new Object[]{1, this.controller.getPos(), this.controller.playerDistanceActivation ? 1 : 0}));
             // PacketDispatcher.sendPacketToServer(PacketUtil.createPacket(GalacticraftCore.CHANNEL,
             // EnumPacketServer.ON_ADVANCED_GUI_CLICKED_INT, new Object[] { 1,
             // this.controller.xCoord, this.controller.yCoord,
             // this.controller.zCoord, this.controller.playerDistanceActivation
             // ? 1 : 0 }));
-        }
-        else if (checkbox.equals(this.checkboxOpenForPlayer))
-        {
+        } else if (checkbox.equals(this.checkboxOpenForPlayer)) {
             this.controller.playerNameMatches = newSelected;
-            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_ON_ADVANCED_GUI_CLICKED_INT, GCCoreUtil.getDimensionID(mc.world), new Object[] { 3, this.controller.getPos(), this.controller.playerNameMatches ? 1 : 0 }));
+            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_ON_ADVANCED_GUI_CLICKED_INT, GCCoreUtil.getDimensionID(mc.world), new Object[]{3, this.controller.getPos(), this.controller.playerNameMatches ? 1 : 0}));
             // PacketDispatcher.sendPacketToServer(PacketUtil.createPacket(GalacticraftCore.CHANNEL,
             // EnumPacketServer.ON_ADVANCED_GUI_CLICKED_INT, new Object[] { 3,
             // this.controller.xCoord, this.controller.yCoord,
             // this.controller.zCoord, this.controller.playerNameMatches ? 1 : 0
             // }));
-        }
-        else if (checkbox.equals(this.checkboxInvertSelection))
-        {
+        } else if (checkbox.equals(this.checkboxInvertSelection)) {
             this.controller.invertSelection = newSelected;
-            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_ON_ADVANCED_GUI_CLICKED_INT, GCCoreUtil.getDimensionID(mc.world), new Object[] { 4, this.controller.getPos(), this.controller.invertSelection ? 1 : 0 }));
+            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_ON_ADVANCED_GUI_CLICKED_INT, GCCoreUtil.getDimensionID(mc.world), new Object[]{4, this.controller.getPos(), this.controller.invertSelection ? 1 : 0}));
             // PacketDispatcher.sendPacketToServer(PacketUtil.createPacket(GalacticraftCore.CHANNEL,
             // EnumPacketServer.ON_ADVANCED_GUI_CLICKED_INT, new Object[] { 4,
             // this.controller.xCoord, this.controller.yCoord,
             // this.controller.zCoord, this.controller.invertSelection ? 1 : 0
             // }));
-        }
-        else if (checkbox.equals(this.checkboxHorizontalMode))
-        {
+        } else if (checkbox.equals(this.checkboxHorizontalMode)) {
             this.controller.lastHorizontalModeEnabled = this.controller.horizontalModeEnabled;
             this.controller.horizontalModeEnabled = newSelected;
-            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_ON_ADVANCED_GUI_CLICKED_INT, GCCoreUtil.getDimensionID(mc.world), new Object[] { 5, this.controller.getPos(), this.controller.horizontalModeEnabled ? 1 : 0 }));
+            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_ON_ADVANCED_GUI_CLICKED_INT, GCCoreUtil.getDimensionID(mc.world), new Object[]{5, this.controller.getPos(), this.controller.horizontalModeEnabled ? 1 : 0}));
             // PacketDispatcher.sendPacketToServer(PacketUtil.createPacket(GalacticraftCore.CHANNEL,
             // EnumPacketServer.ON_ADVANCED_GUI_CLICKED_INT, new Object[] { 5,
             // this.controller.xCoord, this.controller.yCoord,
@@ -194,32 +170,21 @@ public class GuiAirLockController extends GuiScreen implements ICheckBoxCallback
     }
 
     @Override
-    public boolean canPlayerEdit(GuiElementCheckbox checkbox, EntityPlayer player)
-    {
+    public boolean canPlayerEdit(GuiElementCheckbox checkbox, EntityPlayer player) {
         return PlayerUtil.getName(player).equals(this.controller.ownerName);
     }
 
     @Override
-    public boolean getInitiallySelected(GuiElementCheckbox checkbox)
-    {
-        if (checkbox.equals(this.checkboxRedstoneSignal))
-        {
+    public boolean getInitiallySelected(GuiElementCheckbox checkbox) {
+        if (checkbox.equals(this.checkboxRedstoneSignal)) {
             return this.controller.redstoneActivation;
-        }
-        else if (checkbox.equals(this.checkboxPlayerDistance))
-        {
+        } else if (checkbox.equals(this.checkboxPlayerDistance)) {
             return this.controller.playerDistanceActivation;
-        }
-        else if (checkbox.equals(this.checkboxOpenForPlayer))
-        {
+        } else if (checkbox.equals(this.checkboxOpenForPlayer)) {
             return this.controller.playerNameMatches;
-        }
-        else if (checkbox.equals(this.checkboxInvertSelection))
-        {
+        } else if (checkbox.equals(this.checkboxInvertSelection)) {
             return this.controller.invertSelection;
-        }
-        else if (checkbox.equals(this.checkboxHorizontalMode))
-        {
+        } else if (checkbox.equals(this.checkboxHorizontalMode)) {
             return this.controller.horizontalModeEnabled;
         }
 
@@ -227,48 +192,39 @@ public class GuiAirLockController extends GuiScreen implements ICheckBoxCallback
     }
 
     @Override
-    public boolean canBeClickedBy(GuiElementDropdown dropdown, EntityPlayer player)
-    {
+    public boolean canBeClickedBy(GuiElementDropdown dropdown, EntityPlayer player) {
         return PlayerUtil.getName(player).equals(this.controller.ownerName);
     }
 
     @Override
-    public void onSelectionChanged(GuiElementDropdown dropdown, int selection)
-    {
-        if (dropdown.equals(this.dropdownPlayerDistance))
-        {
+    public void onSelectionChanged(GuiElementDropdown dropdown, int selection) {
+        if (dropdown.equals(this.dropdownPlayerDistance)) {
             this.controller.playerDistanceSelection = selection;
-            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_ON_ADVANCED_GUI_CLICKED_INT, GCCoreUtil.getDimensionID(mc.world), new Object[] { 2, this.controller.getPos(), this.controller.playerDistanceSelection }));
+            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_ON_ADVANCED_GUI_CLICKED_INT, GCCoreUtil.getDimensionID(mc.world), new Object[]{2, this.controller.getPos(), this.controller.playerDistanceSelection}));
         }
     }
 
     @Override
-    public int getInitialSelection(GuiElementDropdown dropdown)
-    {
+    public int getInitialSelection(GuiElementDropdown dropdown) {
         return this.controller.playerDistanceSelection;
     }
 
     @Override
-    public boolean canPlayerEdit(GuiElementTextBox textBox, EntityPlayer player)
-    {
+    public boolean canPlayerEdit(GuiElementTextBox textBox, EntityPlayer player) {
         return PlayerUtil.getName(player).equals(this.controller.ownerName);
     }
 
     @Override
-    public void onTextChanged(GuiElementTextBox textBox, String newText)
-    {
-        if (textBox.equals(this.textBoxPlayerToOpenFor))
-        {
+    public void onTextChanged(GuiElementTextBox textBox, String newText) {
+        if (textBox.equals(this.textBoxPlayerToOpenFor)) {
             this.controller.playerToOpenFor = newText != null ? newText : "";
-            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_ON_ADVANCED_GUI_CLICKED_STRING, GCCoreUtil.getDimensionID(mc.world), new Object[] { 0, this.controller.getPos(), this.controller.playerToOpenFor }));
+            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_ON_ADVANCED_GUI_CLICKED_STRING, GCCoreUtil.getDimensionID(mc.world), new Object[]{0, this.controller.getPos(), this.controller.playerToOpenFor}));
         }
     }
 
     @Override
-    public String getInitialText(GuiElementTextBox textBox)
-    {
-        if (textBox.equals(this.textBoxPlayerToOpenFor))
-        {
+    public String getInitialText(GuiElementTextBox textBox) {
+        if (textBox.equals(this.textBoxPlayerToOpenFor)) {
             return this.controller.playerToOpenFor;
         }
 
@@ -276,20 +232,17 @@ public class GuiAirLockController extends GuiScreen implements ICheckBoxCallback
     }
 
     @Override
-    public int getTextColor(GuiElementTextBox textBox)
-    {
+    public int getTextColor(GuiElementTextBox textBox) {
         return ColorUtil.to32BitColor(255, 200, 200, 200);
     }
 
     @Override
-    public void onIntruderInteraction()
-    {
+    public void onIntruderInteraction() {
         this.cannotEditTimer = 50;
     }
 
     @Override
-    public void onIntruderInteraction(GuiElementTextBox textBox)
-    {
+    public void onIntruderInteraction(GuiElementTextBox textBox) {
         this.cannotEditTimer = 50;
     }
 }

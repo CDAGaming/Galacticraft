@@ -5,16 +5,13 @@ import micdoodle8.mods.galacticraft.planets.venus.tile.TileEntityTreasureChestVe
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
-public class BlockTier3TreasureChest extends BlockTier1TreasureChest
-{
-    public BlockTier3TreasureChest(String assetName)
-    {
+public class BlockTier3TreasureChest extends BlockTier1TreasureChest {
+    public BlockTier3TreasureChest(String assetName) {
         super(assetName);
     }
 
     @Override
-    public TileEntity createNewTileEntity(World worldIn, int meta)
-    {
+    public TileEntity createNewTileEntity(World worldIn, int meta) {
         return new TileEntityTreasureChestVenus();
     }
 }

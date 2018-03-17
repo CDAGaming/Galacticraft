@@ -11,12 +11,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemHeavyNoseCone extends Item implements ISortableItem
-{
+public class ItemHeavyNoseCone extends Item implements ISortableItem {
 //    public IIcon[] icons;
 
-    public ItemHeavyNoseCone(String assetName)
-    {
+    public ItemHeavyNoseCone(String assetName) {
         super();
         this.setMaxDamage(0);
         this.setHasSubtypes(true);
@@ -31,15 +29,13 @@ public class ItemHeavyNoseCone extends Item implements ISortableItem
     }*/
 
     @Override
-    public CreativeTabs getCreativeTab()
-    {
+    public CreativeTabs getCreativeTab() {
         return GalacticraftCore.galacticraftItemsTab;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public EnumRarity getRarity(ItemStack par1ItemStack)
-    {
+    public EnumRarity getRarity(ItemStack par1ItemStack) {
         return ClientProxyCore.galacticraftItem;
     }
 
@@ -64,14 +60,12 @@ public class ItemHeavyNoseCone extends Item implements ISortableItem
     }*/
 
     @Override
-    public int getMetadata(int par1)
-    {
+    public int getMetadata(int par1) {
         return par1;
     }
 
     @Override
-    public EnumSortCategoryItem getCategory(int meta)
-    {
+    public EnumSortCategoryItem getCategory(int meta) {
         return EnumSortCategoryItem.GENERAL;
     }
 }

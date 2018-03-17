@@ -5,8 +5,7 @@ import net.minecraft.util.EnumFacing;
 /**
  * Applied to all TileEntities that can interact with oxygen.
  */
-public interface IOxygenReceiver extends IConnector
-{
+public interface IOxygenReceiver extends IConnector {
     boolean shouldPullOxygen();
 
     /**

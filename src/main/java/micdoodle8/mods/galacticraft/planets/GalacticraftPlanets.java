@@ -31,35 +31,52 @@ import net.minecraftforge.fml.relauncher.Side;
 import powercrystals.minefactoryreloaded.api.FactoryRegistry;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 @Mod(modid = Constants.MOD_ID_PLANETS, name = GalacticraftPlanets.NAME, version = Constants.COMBINEDVERSION, useMetadata = true, acceptedMinecraftVersions = Constants.MCVERSION, dependencies = "required-after:" + Constants.MOD_ID_CORE + ";", guiFactory = "micdoodle8.mods.galacticraft.planets.ConfigGuiFactoryPlanets")
-public class GalacticraftPlanets
-{
+public class GalacticraftPlanets {
     public static final String NAME = "Galacticraft Planets";
-    private File GCPlanetsSource;
-
-    @Instance(Constants.MOD_ID_PLANETS)
-    public static GalacticraftPlanets instance;
-
-    public static List<IPlanetsModule> commonModules = new ArrayList<IPlanetsModule>();
-    public static List<IPlanetsModuleClient> clientModules = new ArrayList<IPlanetsModuleClient>();
-
     public static final String ASSET_PREFIX = "galacticraftplanets";
     public static final String TEXTURE_PREFIX = ASSET_PREFIX + ":";
-
+    @Instance(Constants.MOD_ID_PLANETS)
+    public static GalacticraftPlanets instance;
+    public static List<IPlanetsModule> commonModules = new ArrayList<IPlanetsModule>();
+    public static List<IPlanetsModuleClient> clientModules = new ArrayList<IPlanetsModuleClient>();
     @SidedProxy(clientSide = "micdoodle8.mods.galacticraft.planets.PlanetsProxyClient", serverSide = "micdoodle8.mods.galacticraft.planets.PlanetsProxy")
     public static PlanetsProxy proxy;
-
     public static Map<String, List<String>> propOrder = new TreeMap<>();
+    private File GCPlanetsSource;
+
+    public static void spawnParticle(String particleID, Vector3 position, Vector3 motion, Object... extraData) {
+        for (IPlanetsModuleClient module : GalacticraftPlanets.clientModules) {
+            module.spawnParticle(particleID, position, motion, extraData);
+        }
+    }
+
+    public static List<IConfigElement> getConfigElements() {
+        List<IConfigElement> list = new ArrayList<IConfigElement>();
+
+        //Get the last planet to be configured only, as all will reference and re-use the same planets.conf config file
+        IPlanetsModule module = GalacticraftPlanets.commonModules.get(GalacticraftPlanets.commonModules.size() - 1);
+        list.addAll(new ConfigElement(module.getConfiguration().getCategory(Constants.CONFIG_CATEGORY_ENTITIES)).getChildElements());
+        list.addAll(new ConfigElement(module.getConfiguration().getCategory(Constants.CONFIG_CATEGORY_ACHIEVEMENTS)).getChildElements());
+        list.addAll(new ConfigElement(module.getConfiguration().getCategory(Constants.CONFIG_CATEGORY_GENERAL)).getChildElements());
+        list.addAll(new ConfigElement(module.getConfiguration().getCategory(Constants.CONFIG_CATEGORY_WORLDGEN)).getChildElements());
+        list.addAll(new ConfigElement(module.getConfiguration().getCategory(Constants.CONFIG_CATEGORY_DIMENSIONS)).getChildElements());
+        list.addAll(new ConfigElement(module.getConfiguration().getCategory(Constants.CONFIG_CATEGORY_SCHEMATIC)).getChildElements());
+
+        return list;
+    }
+
+    public static void finishProp(Property prop, String currentCat) {
+        if (propOrder.get(currentCat) == null) {
+            propOrder.put(currentCat, new ArrayList<String>());
+        }
+        propOrder.get(currentCat).add(prop.getName());
+    }
 
     @EventHandler
-    public void preInit(FMLPreInitializationEvent event)
-    {
+    public void preInit(FMLPreInitializationEvent event) {
         GCPlanetsSource = event.getSourceFile();
         this.initModInfo(event.getModMetadata());
         MinecraftForge.EVENT_BUS.register(this);
@@ -68,8 +85,7 @@ public class GalacticraftPlanets
         File oldMarsConf = new File(event.getModConfigurationDirectory(), "Galacticraft/mars.conf");
         File newPlanetsConf = new File(event.getModConfigurationDirectory(), "Galacticraft/planets.conf");
         boolean update = false;
-        if (oldMarsConf.exists())
-        {
+        if (oldMarsConf.exists()) {
             oldMarsConf.renameTo(newPlanetsConf);
             update = true;
         }
@@ -86,114 +102,67 @@ public class GalacticraftPlanets
     }
 
     @EventHandler
-    public void init(FMLInitializationEvent event)
-    {
+    public void init(FMLInitializationEvent event) {
         GalacticraftPlanets.proxy.init(event);
         NetworkRegistry.INSTANCE.registerGuiHandler(GalacticraftPlanets.instance, GalacticraftPlanets.proxy);
     }
 
     @EventHandler
-    public void postInit(FMLPostInitializationEvent event)
-    {
+    public void postInit(FMLPostInitializationEvent event) {
         GalacticraftPlanets.proxy.postInit(event);
         TileEntityDeconstructor.initialiseRecipeListPlanets();
         try {
-        	if (CompatibilityManager.isMFRLoaded)
-        	{
-        		FactoryRegistry.sendMessage("registerSpawnHandler", new MFRSpawnHandlerSlimeling());
-        	}
-        } catch (Exception e)
-        {
-        	GCLog.severe("Error when attempting to register Slimeling auto-spawnhandler in MFR");
-        	GCLog.exception(e);
+            if (CompatibilityManager.isMFRLoaded) {
+                FactoryRegistry.sendMessage("registerSpawnHandler", new MFRSpawnHandlerSlimeling());
+            }
+        } catch (Exception e) {
+            GCLog.severe("Error when attempting to register Slimeling auto-spawnhandler in MFR");
+            GCLog.exception(e);
         }
 
         if (event.getSide() == Side.SERVER) this.loadLanguagePlanets("en_US");
     }
 
-    public void loadLanguagePlanets(String lang)
-    {
+    public void loadLanguagePlanets(String lang) {
         GCCoreUtil.loadLanguage(lang, GalacticraftPlanets.ASSET_PREFIX, GCPlanetsSource);
     }
 
     @EventHandler
-    public void serverStarting(FMLServerStartingEvent event)
-    {
+    public void serverStarting(FMLServerStartingEvent event) {
         GalacticraftPlanets.proxy.serverStarting(event);
     }
 
     @EventHandler
-    public void serverInit(FMLServerStartedEvent event)
-    {
+    public void serverInit(FMLServerStartedEvent event) {
         GalacticraftPlanets.proxy.serverInit(event);
     }
 
-    public static void spawnParticle(String particleID, Vector3 position, Vector3 motion, Object... extraData)
-    {
-        for (IPlanetsModuleClient module : GalacticraftPlanets.clientModules)
-        {
-            module.spawnParticle(particleID, position, motion, extraData);
-        }
-    }
-
-    public static List<IConfigElement> getConfigElements()
-    {
-        List<IConfigElement> list = new ArrayList<IConfigElement>();
-        
-        //Get the last planet to be configured only, as all will reference and re-use the same planets.conf config file
-        IPlanetsModule module = GalacticraftPlanets.commonModules.get(GalacticraftPlanets.commonModules.size() - 1);
-        list.addAll(new ConfigElement(module.getConfiguration().getCategory(Constants.CONFIG_CATEGORY_ENTITIES)).getChildElements());
-        list.addAll(new ConfigElement(module.getConfiguration().getCategory(Constants.CONFIG_CATEGORY_ACHIEVEMENTS)).getChildElements());
-        list.addAll(new ConfigElement(module.getConfiguration().getCategory(Constants.CONFIG_CATEGORY_GENERAL)).getChildElements());
-        list.addAll(new ConfigElement(module.getConfiguration().getCategory(Constants.CONFIG_CATEGORY_WORLDGEN)).getChildElements());
-        list.addAll(new ConfigElement(module.getConfiguration().getCategory(Constants.CONFIG_CATEGORY_DIMENSIONS)).getChildElements());
-        list.addAll(new ConfigElement(module.getConfiguration().getCategory(Constants.CONFIG_CATEGORY_SCHEMATIC)).getChildElements());
-
-        return list;
-    }
-
     @SubscribeEvent
-    public void onConfigChanged(ConfigChangedEvent event)
-    {
-        if (event.getModID().equals(Constants.MOD_ID_PLANETS))
-        {
+    public void onConfigChanged(ConfigChangedEvent event) {
+        if (event.getModID().equals(Constants.MOD_ID_PLANETS)) {
             this.configSyncStart();
-            for (IPlanetsModule module : GalacticraftPlanets.commonModules)
-            {
+            for (IPlanetsModule module : GalacticraftPlanets.commonModules) {
                 module.syncConfig();
             }
             this.configSyncEnd(false);
         }
     }
 
-    private void configSyncEnd(boolean load)
-    {
+    private void configSyncEnd(boolean load) {
         //Cleanup older GC config files
         ConfigManagerCore.cleanConfig(ConfigManagerMars.config, propOrder);
 
         //Always save - this is last to be called both at load time and at mid-game
-        if (ConfigManagerMars.config.hasChanged())
-        {
+        if (ConfigManagerMars.config.hasChanged()) {
             ConfigManagerMars.config.save();
         }
     }
 
-    private void configSyncStart()
-    {
+    private void configSyncStart() {
         propOrder.clear();
     }
 
-    public static void finishProp(Property prop, String currentCat)
-    {
-        if (propOrder.get(currentCat) == null)
-        {
-            propOrder.put(currentCat, new ArrayList<String>());
-        }
-        propOrder.get(currentCat).add(prop.getName());
-    }
-
-    private void initModInfo(ModMetadata info)
-    {
+    private void initModInfo(ModMetadata info) {
         info.autogenerated = false;
         info.modId = Constants.MOD_ID_PLANETS;
         info.name = GalacticraftPlanets.NAME;

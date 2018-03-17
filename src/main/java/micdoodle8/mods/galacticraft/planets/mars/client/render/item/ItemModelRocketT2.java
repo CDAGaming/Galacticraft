@@ -5,25 +5,20 @@ import micdoodle8.mods.galacticraft.core.wrappers.ModelTransformWrapper;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraftforge.common.model.TRSRTransformation;
-
 import org.lwjgl.Sys;
 
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Quat4f;
 import javax.vecmath.Vector3f;
 
-public class ItemModelRocketT2 extends ModelTransformWrapper
-{
-    public ItemModelRocketT2(IBakedModel modelToWrap)
-    {
+public class ItemModelRocketT2 extends ModelTransformWrapper {
+    public ItemModelRocketT2(IBakedModel modelToWrap) {
         super(modelToWrap);
     }
 
     @Override
-    protected Matrix4f getTransformForPerspective(TransformType cameraTransformType)
-    {
-        if (cameraTransformType == TransformType.GUI)
-        {
+    protected Matrix4f getTransformForPerspective(TransformType cameraTransformType) {
+        if (cameraTransformType == TransformType.GUI) {
             Vector3f trans = new Vector3f(-0.12F, 0.0F, -0.12F);
             Matrix4f ret = new Matrix4f();
             ret.setIdentity();
@@ -60,8 +55,7 @@ public class ItemModelRocketT2 extends ModelTransformWrapper
             return ret;
         }
 
-        if (cameraTransformType == TransformType.FIRST_PERSON_RIGHT_HAND || cameraTransformType == TransformType.FIRST_PERSON_LEFT_HAND)
-        {
+        if (cameraTransformType == TransformType.FIRST_PERSON_RIGHT_HAND || cameraTransformType == TransformType.FIRST_PERSON_LEFT_HAND) {
             Vector3f trans = new Vector3f(0.5F, 4.2F, -3.6F);
             Matrix4f ret = new Matrix4f();
             ret.setIdentity();
@@ -88,8 +82,7 @@ public class ItemModelRocketT2 extends ModelTransformWrapper
             return ret;
         }
 
-        if (cameraTransformType == TransformType.THIRD_PERSON_RIGHT_HAND || cameraTransformType == TransformType.THIRD_PERSON_LEFT_HAND)
-        {
+        if (cameraTransformType == TransformType.THIRD_PERSON_RIGHT_HAND || cameraTransformType == TransformType.THIRD_PERSON_LEFT_HAND) {
             Vector3f trans = new Vector3f(0.0F, -3.9F, 1.45F);
             Matrix4f ret = new Matrix4f();
             ret.setIdentity();
@@ -116,8 +109,7 @@ public class ItemModelRocketT2 extends ModelTransformWrapper
             return ret;
         }
 
-        if (cameraTransformType == TransformType.GROUND)
-        {
+        if (cameraTransformType == TransformType.GROUND) {
             Matrix4f ret = new Matrix4f();
             ret.setIdentity();
             Matrix4f mul = new Matrix4f();
@@ -129,8 +121,7 @@ public class ItemModelRocketT2 extends ModelTransformWrapper
             ret.mul(mul);
             return ret;
         }
-        if (cameraTransformType == TransformType.FIXED)
-        {
+        if (cameraTransformType == TransformType.FIXED) {
             Matrix4f ret = new Matrix4f();
             ret.setIdentity();
             Matrix4f mul = new Matrix4f();

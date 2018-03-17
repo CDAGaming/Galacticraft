@@ -8,11 +8,9 @@ import net.minecraft.world.gen.feature.WorldGenerator;
 
 import java.util.Random;
 
-public class WorldGenSpaceStation extends WorldGenerator
-{
+public class WorldGenSpaceStation extends WorldGenerator {
     @Override
-    public boolean generate(World world, Random rand, BlockPos pos)
-    {
+    public boolean generate(World world, Random rand, BlockPos pos) {
         world.setBlockState(pos.add(0, 0, 0), GCBlocks.basicBlock.getStateFromMeta(4), 2);
         world.setBlockState(pos.add(0, 0, 1), GCBlocks.basicBlock.getStateFromMeta(4), 2);
         world.setBlockState(pos.add(0, 0, 2), GCBlocks.basicBlock.getStateFromMeta(4), 2);

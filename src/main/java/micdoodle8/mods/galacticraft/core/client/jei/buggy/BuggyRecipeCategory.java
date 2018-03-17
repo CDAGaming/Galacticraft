@@ -15,8 +15,7 @@ import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class BuggyRecipeCategory implements IRecipeCategory
-{
+public class BuggyRecipeCategory implements IRecipeCategory {
     private static final ResourceLocation buggyGuiTexture = new ResourceLocation(Constants.ASSET_PREFIX, "textures/gui/buggybench.png");
 
     @Nonnull
@@ -24,8 +23,7 @@ public class BuggyRecipeCategory implements IRecipeCategory
     @Nonnull
     private final String localizedName;
 
-    public BuggyRecipeCategory(IGuiHelper guiHelper)
-    {
+    public BuggyRecipeCategory(IGuiHelper guiHelper) {
         this.background = guiHelper.createDrawable(buggyGuiTexture, 3, 4, 168, 130);
         this.localizedName = GCCoreUtil.translate("tile.rocket_workbench.name");
 
@@ -33,28 +31,24 @@ public class BuggyRecipeCategory implements IRecipeCategory
 
     @Nonnull
     @Override
-    public String getUid()
-    {
+    public String getUid() {
         return RecipeCategories.BUGGY_ID;
     }
 
     @Nonnull
     @Override
-    public String getTitle()
-    {
+    public String getTitle() {
         return this.localizedName;
     }
 
     @Nonnull
     @Override
-    public IDrawable getBackground()
-    {
+    public IDrawable getBackground() {
         return this.background;
     }
 
     @Override
-    public void setRecipe(IRecipeLayout recipeLayout, IRecipeWrapper recipeWrapper, IIngredients ingredients)
-    {
+    public void setRecipe(IRecipeLayout recipeLayout, IRecipeWrapper recipeWrapper, IIngredients ingredients) {
         IGuiItemStackGroup itemstacks = recipeLayout.getItemStacks();
 
         itemstacks.init(0, true, 35, 36);
@@ -83,8 +77,7 @@ public class BuggyRecipeCategory implements IRecipeCategory
     }
 
     @Override
-    public String getModName()
-    {
+    public String getModName() {
         return GalacticraftCore.NAME;
     }
 }

@@ -13,17 +13,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 @SideOnly(Side.CLIENT)
-public class ParticleOxygen extends Particle
-{
+public class ParticleOxygen extends Particle {
+    private static long tick = -1L;
+    private static Map<BlockPos, Integer> cacheLighting = new HashMap<>();
     private final float portalParticleScale;
     private final double portalPosX;
     private final double portalPosY;
     private final double portalPosZ;
-    private static long tick = -1L;
-    private static Map<BlockPos, Integer> cacheLighting = new HashMap<>();
 
-    public ParticleOxygen(World par1World, Vector3 position, Vector3 motion, Vector3 color)
-    {
+    public ParticleOxygen(World par1World, Vector3 position, Vector3 motion, Vector3 color) {
         super(par1World, position.x, position.y, position.z, motion.x, motion.y, motion.z);
         this.motionX = motion.x;
         this.motionY = motion.y;
@@ -41,8 +39,7 @@ public class ParticleOxygen extends Particle
     }
 
     @Override
-    public void renderParticle(BufferBuilder worldRendererIn, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ)
-    {
+    public void renderParticle(BufferBuilder worldRendererIn, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
         float var8 = (this.particleAge + partialTicks) / this.particleMaxAge;
         var8 = 1.0F - var8;
         var8 *= var8;
@@ -52,22 +49,17 @@ public class ParticleOxygen extends Particle
     }
 
     @Override
-    public int getBrightnessForRender(float par1)
-    {
+    public int getBrightnessForRender(float par1) {
         long time = this.world.getWorldTime();
-        if (time > tick)
-        {
+        if (time > tick) {
             cacheLighting.clear();
             tick = time;
         }
         BlockPos blockpos = new BlockPos(this.posX, this.posY + 0.17, this.posZ);
         int var2;
-        if (cacheLighting.containsKey(blockpos))
-        {
+        if (cacheLighting.containsKey(blockpos)) {
             var2 = cacheLighting.get(blockpos);
-        }
-        else
-        {
+        } else {
             var2 = this.world.isBlockLoaded(blockpos) ? this.world.getCombinedLight(blockpos, 0) : 0;
             cacheLighting.put(blockpos, var2);
         }
@@ -78,8 +70,7 @@ public class ParticleOxygen extends Particle
         int var5 = var2 >> 16 & 255;
         var5 += (int) (var3 * 15.0F * 16.0F);
 
-        if (var5 > 240)
-        {
+        if (var5 > 240) {
             var5 = 240;
         }
 
@@ -96,8 +87,7 @@ public class ParticleOxygen extends Particle
 //    }
 
     @Override
-    public void onUpdate()
-    {
+    public void onUpdate() {
         this.prevPosX = this.posX;
         this.prevPosY = this.posY;
         this.prevPosZ = this.posZ;
@@ -109,8 +99,7 @@ public class ParticleOxygen extends Particle
         this.posY = this.portalPosY + this.motionY * var1 + (1.0F - var2);
         this.posZ = this.portalPosZ + this.motionZ * var1;
 
-        if (this.particleAge++ >= this.particleMaxAge)
-        {
+        if (this.particleAge++ >= this.particleMaxAge) {
             this.setExpired();
         }
     }

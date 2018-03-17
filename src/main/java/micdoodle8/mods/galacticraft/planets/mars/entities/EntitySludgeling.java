@@ -20,10 +20,8 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class EntitySludgeling extends EntityMob implements IEntityBreathable
-{
-    public EntitySludgeling(World par1World)
-    {
+public class EntitySludgeling extends EntityMob implements IEntityBreathable {
+    public EntitySludgeling(World par1World) {
         super(par1World);
         this.setSize(0.3F, 0.2F);
         this.tasks.taskEntries.clear();
@@ -39,55 +37,46 @@ public class EntitySludgeling extends EntityMob implements IEntityBreathable
     }
 
     @Override
-    public boolean canBreatheUnderwater()
-    {
+    public boolean canBreatheUnderwater() {
         return true;
     }
 
     @Override
-    protected void applyEntityAttributes()
-    {
+    protected void applyEntityAttributes() {
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(7.0D);
         this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(1.0F);
     }
 
     @Override
-    protected boolean canTriggerWalking()
-    {
+    protected boolean canTriggerWalking() {
         return false;
     }
 
     @Override
-    protected SoundEvent getAmbientSound()
-    {
+    protected SoundEvent getAmbientSound() {
         return SoundEvents.ENTITY_SILVERFISH_AMBIENT;
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSourceIn)
-    {
+    protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
         return SoundEvents.ENTITY_SILVERFISH_HURT;
     }
 
     @Override
-    protected SoundEvent getDeathSound()
-    {
+    protected SoundEvent getDeathSound() {
         return SoundEvents.ENTITY_SILVERFISH_DEATH;
     }
 
-    public EntityPlayer getClosestEntityToAttack(double par1, double par3, double par5, double par7)
-    {
+    public EntityPlayer getClosestEntityToAttack(double par1, double par3, double par5, double par7) {
         double var9 = -1.0D;
         EntityPlayer var11 = null;
 
-        for (int var12 = 0; var12 < this.world.loadedEntityList.size(); ++var12)
-        {
+        for (int var12 = 0; var12 < this.world.loadedEntityList.size(); ++var12) {
             EntityPlayer var13 = (EntityPlayer) this.world.loadedEntityList.get(var12);
             double var14 = var13.getDistanceSq(par1, par3, par5);
 
-            if ((par7 < 0.0D || var14 < par7 * par7) && (var9 == -1.0D || var14 < var9))
-            {
+            if ((par7 < 0.0D || var14 < par7 * par7) && (var9 == -1.0D || var14 < var9)) {
                 var9 = var14;
                 var11 = var13;
             }
@@ -97,53 +86,43 @@ public class EntitySludgeling extends EntityMob implements IEntityBreathable
     }
 
     @Override
-    protected void playStepSound(BlockPos pos, Block block)
-    {
+    protected void playStepSound(BlockPos pos, Block block) {
         this.playSound(SoundEvents.ENTITY_SILVERFISH_STEP, 0.15F, 1.0F);
     }
 
     @Override
-    protected Item getDropItem()
-    {
+    protected Item getDropItem() {
         return Item.getItemFromBlock(Blocks.AIR);
     }
 
     @Override
-    public void onUpdate()
-    {
+    public void onUpdate() {
         this.renderYawOffset = this.rotationYaw;
         super.onUpdate();
     }
 
     @Override
-    protected boolean isValidLightLevel()
-    {
+    protected boolean isValidLightLevel() {
         return true;
     }
 
     @Override
-    public boolean getCanSpawnHere()
-    {
-        if (super.getCanSpawnHere())
-        {
+    public boolean getCanSpawnHere() {
+        if (super.getCanSpawnHere()) {
             EntityPlayer var1 = this.world.getClosestPlayerToEntity(this, 5.0D);
             return var1 == null;
-        }
-        else
-        {
+        } else {
             return false;
         }
     }
 
     @Override
-    public EnumCreatureAttribute getCreatureAttribute()
-    {
+    public EnumCreatureAttribute getCreatureAttribute() {
         return EnumCreatureAttribute.ARTHROPOD;
     }
 
     @Override
-    public boolean canBreath()
-    {
+    public boolean canBreath() {
         return true;
     }
 }

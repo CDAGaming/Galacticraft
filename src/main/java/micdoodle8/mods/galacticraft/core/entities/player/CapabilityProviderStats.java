@@ -8,29 +8,24 @@ import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 
 import java.lang.ref.WeakReference;
 
-public class CapabilityProviderStats implements ICapabilitySerializable<NBTTagCompound>
-{
+public class CapabilityProviderStats implements ICapabilitySerializable<NBTTagCompound> {
     private EntityPlayerMP owner;
     private GCPlayerStats statsCapability;
 
-    public CapabilityProviderStats(EntityPlayerMP owner)
-    {
+    public CapabilityProviderStats(EntityPlayerMP owner) {
         this.owner = owner;
         this.statsCapability = GCCapabilities.GC_STATS_CAPABILITY.getDefaultInstance();
         this.statsCapability.setPlayer(new WeakReference<>(this.owner));
     }
 
     @Override
-    public boolean hasCapability(Capability<?> capability, EnumFacing facing)
-    {
+    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
         return capability == GCCapabilities.GC_STATS_CAPABILITY;
     }
 
     @Override
-    public <T> T getCapability(Capability<T> capability, EnumFacing facing)
-    {
-        if (GCCapabilities.GC_STATS_CAPABILITY != null && capability == GCCapabilities.GC_STATS_CAPABILITY)
-        {
+    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+        if (GCCapabilities.GC_STATS_CAPABILITY != null && capability == GCCapabilities.GC_STATS_CAPABILITY) {
             return GCCapabilities.GC_STATS_CAPABILITY.cast(statsCapability);
         }
 
@@ -38,16 +33,14 @@ public class CapabilityProviderStats implements ICapabilitySerializable<NBTTagCo
     }
 
     @Override
-    public NBTTagCompound serializeNBT()
-    {
+    public NBTTagCompound serializeNBT() {
         NBTTagCompound nbt = new NBTTagCompound();
         statsCapability.saveNBTData(nbt);
         return nbt;
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound nbt)
-    {
+    public void deserializeNBT(NBTTagCompound nbt) {
         statsCapability.loadNBTData(nbt);
     }
 }

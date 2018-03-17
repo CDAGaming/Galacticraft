@@ -6,13 +6,11 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
-public class GuiElementTexturedButton extends GuiButton
-{
+public class GuiElementTexturedButton extends GuiButton {
     private final ResourceLocation texture;
     private final int bWidth, bHeight;
 
-    public GuiElementTexturedButton(int par1, int par2, int par3, int par4, int par5, ResourceLocation texture, int width, int height)
-    {
+    public GuiElementTexturedButton(int par1, int par2, int par3, int par4, int par5, ResourceLocation texture, int width, int height) {
         super(par1, par2, par3, par4, par5, "");
         this.texture = texture;
         this.bWidth = width;
@@ -20,10 +18,8 @@ public class GuiElementTexturedButton extends GuiButton
     }
 
     @Override
-    public void drawButton(Minecraft par1Minecraft, int par2, int par3, float partial)
-    {
-        if (this.visible)
-        {
+    public void drawButton(Minecraft par1Minecraft, int par2, int par3, float partial) {
+        if (this.visible) {
             final FontRenderer var4 = par1Minecraft.fontRenderer;
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             this.hovered = par2 >= this.x && par3 >= this.y && par2 < this.x + this.width && par3 < this.y + this.height;
@@ -33,12 +29,9 @@ public class GuiElementTexturedButton extends GuiButton
             this.mouseDragged(par1Minecraft, par2, par3);
             int var6 = 14737632;
 
-            if (!this.enabled)
-            {
+            if (!this.enabled) {
                 var6 = -6250336;
-            }
-            else if (this.hovered)
-            {
+            } else if (this.hovered) {
                 var6 = 16777120;
             }
 

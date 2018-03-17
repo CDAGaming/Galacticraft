@@ -23,65 +23,50 @@ import net.minecraftforge.client.model.obj.OBJModel;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class LayerFrequencyModule implements LayerRenderer<AbstractClientPlayer>
-{
+public class LayerFrequencyModule implements LayerRenderer<AbstractClientPlayer> {
     private final RenderPlayer playerRenderer;
     private OBJModel.OBJBakedModel moduleModel;
     private OBJModel.OBJBakedModel radarModel;
 
-    public LayerFrequencyModule(RenderPlayer playerRendererIn)
-    {
+    public LayerFrequencyModule(RenderPlayer playerRendererIn) {
         this.playerRenderer = playerRendererIn;
     }
 
-    private void updateModels()
-    {
-        if (this.moduleModel == null)
-        {
-            try
-            {
+    private void updateModels() {
+        if (this.moduleModel == null) {
+            try {
                 IModel model = OBJLoaderGC.instance.loadModel(new ResourceLocation(Constants.ASSET_PREFIX, "frequency_module.obj"));
                 Function<ResourceLocation, TextureAtlasSprite> spriteFunction = location -> Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(location.toString());
                 this.moduleModel = (OBJModel.OBJBakedModel) model.bake(new OBJModel.OBJState(ImmutableList.of("Main"), false), DefaultVertexFormats.ITEM, spriteFunction);
                 this.radarModel = (OBJModel.OBJBakedModel) model.bake(new OBJModel.OBJState(ImmutableList.of("Radar"), false), DefaultVertexFormats.ITEM, spriteFunction);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }
     }
 
     @Override
-    public void doRenderLayer(AbstractClientPlayer player, float f5, float f6, float partialTicks, float f8, float f2, float f7, float scale)
-    {
-        if (!player.isInvisible())
-        {
+    public void doRenderLayer(AbstractClientPlayer player, float f5, float f6, float partialTicks, float f8, float f2, float f7, float scale) {
+        if (!player.isInvisible()) {
             PlayerGearData gearData = GalacticraftCore.proxy.getGearData(player);
 
-            if (gearData != null)
-            {
+            if (gearData != null) {
                 boolean wearingModule = gearData.getFrequencyModule() != GCPlayerHandler.GEAR_NOT_PRESENT;
                 boolean wearingHelmet = gearData.getMask() != GCPlayerHandler.GEAR_NOT_PRESENT;
                 FMLClientHandler.instance().getClient().renderEngine.bindTexture(ModelPlayerGC.playerTexture);
 
-                if (wearingModule)
-                {
+                if (wearingModule) {
                     this.updateModels();
                     GlStateManager.enableRescaleNormal();
                     GlStateManager.pushMatrix();
                     Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
-                    if (Minecraft.isAmbientOcclusionEnabled())
-                    {
+                    if (Minecraft.isAmbientOcclusionEnabled()) {
                         GlStateManager.shadeModel(GL11.GL_SMOOTH);
-                    }
-                    else
-                    {
+                    } else {
                         GlStateManager.shadeModel(GL11.GL_FLAT);
                     }
 
@@ -91,12 +76,9 @@ public class LayerFrequencyModule implements LayerRenderer<AbstractClientPlayer>
                     GlStateManager.rotate((float) (this.playerRenderer.getMainModel().bipedHeadwear.rotateAngleX * Constants.RADIANS_TO_DEGREES), 1, 0, 0);
                     GlStateManager.scale(0.3F, 0.3F, 0.3F);
 
-                    if (wearingHelmet)
-                    {
+                    if (wearingHelmet) {
                         GlStateManager.translate(-1.1F, player.isSneaking() ? 0.35F : 1.2F, 0);
-                    }
-                    else
-                    {
+                    } else {
                         GlStateManager.translate(-0.9F, player.isSneaking() ? 0.1F : 0.9F, 0);
                     }
 
@@ -114,8 +96,7 @@ public class LayerFrequencyModule implements LayerRenderer<AbstractClientPlayer>
     }
 
     @Override
-    public boolean shouldCombineTextures()
-    {
+    public boolean shouldCombineTextures() {
         return true;
     }
 }

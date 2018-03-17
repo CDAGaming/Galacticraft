@@ -1,5 +1,7 @@
 {
-    "variants": {
-        "normal": { "model": "galacticraftplanets:miner_base" }
+  "variants": {
+    "normal": {
+      "model": "galacticraftplanets:miner_base"
     }
+  }
 }

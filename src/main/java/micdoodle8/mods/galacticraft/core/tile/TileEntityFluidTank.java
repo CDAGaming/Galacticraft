@@ -32,41 +32,33 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class TileEntityFluidTank extends TileEntityAdvanced implements IFluidHandlerWrapper
-{
+public class TileEntityFluidTank extends TileEntityAdvanced implements IFluidHandlerWrapper {
     public FluidTankGC fluidTank = new FluidTankGC(16000, this);
     public boolean updateClient = false;
     private DelayTimer delayTimer = new DelayTimer(1);
     private AxisAlignedBB renderAABB;
 
-    public void onBreak()
-    {
-        if (fluidTank.getFluidAmount() > 0)
-        {
+    public void onBreak() {
+        if (fluidTank.getFluidAmount() > 0) {
             FluidEvent.fireEvent(new FluidEvent.FluidSpilledEvent(fluidTank.getFluid(), world, pos));
-            if (!this.world.isRemote && fluidTank.getFluidAmount() > 1000)
-            {
+            if (!this.world.isRemote && fluidTank.getFluidAmount() > 1000) {
                 Block b = fluidTank.getFluid().getFluid().getBlock();
-                if (!(b == null || b instanceof BlockAir))
-                {
-                	TickHandlerServer.scheduleNewBlockChange(GCCoreUtil.getDimensionID(this.world), new ScheduledBlockChange(pos, b.getStateFromMeta(0), 3));
+                if (!(b == null || b instanceof BlockAir)) {
+                    TickHandlerServer.scheduleNewBlockChange(GCCoreUtil.getDimensionID(this.world), new ScheduledBlockChange(pos, b.getStateFromMeta(0), 3));
                 }
             }
         }
     }
 
     @Override
-    public void update()
-    {
+    public void update() {
         super.update();
 
-        if (fluidTank.getFluid() != null)
-        {
+        if (fluidTank.getFluid() != null) {
             moveFluidDown();
         }
 
-        if (!this.world.isRemote && updateClient && delayTimer.markTimeIfDelay(this.world))
-        {
+        if (!this.world.isRemote && updateClient && delayTimer.markTimeIfDelay(this.world)) {
             PacketDynamic packet = new PacketDynamic(this);
             GalacticraftCore.packetPipeline.sendToAllAround(packet, new NetworkRegistry.TargetPoint(GCCoreUtil.getDimensionID(this.world), getPos().getX(), getPos().getY(), getPos().getZ(), this.getPacketRange()));
             this.updateClient = false;
@@ -74,10 +66,8 @@ public class TileEntityFluidTank extends TileEntityAdvanced implements IFluidHan
     }
 
     @Override
-    public int fill(EnumFacing from, FluidStack resource, boolean doFill)
-    {
-        if (resource == null)
-        {
+    public int fill(EnumFacing from, FluidStack resource, boolean doFill) {
+        if (resource == null) {
             return 0;
         }
 
@@ -86,16 +76,13 @@ public class TileEntityFluidTank extends TileEntityAdvanced implements IFluidHan
         TileEntityFluidTank toFill = getLastTank();
 
         FluidStack fluid = toFill.fluidTank.getFluid();
-        if (fluid != null && fluid.amount > 0 && !fluid.isFluidEqual(copy))
-        {
+        if (fluid != null && fluid.amount > 0 && !fluid.isFluidEqual(copy)) {
             return 0;
         }
 
-        while (toFill != null && copy.amount > 0)
-        {
+        while (toFill != null && copy.amount > 0) {
             int used = toFill.fluidTank.fill(copy, doFill);
-            if (used > 0)
-            {
+            if (used > 0) {
                 toFill.updateClient = true;
             }
             copy.amount -= used;
@@ -107,75 +94,58 @@ public class TileEntityFluidTank extends TileEntityAdvanced implements IFluidHan
     }
 
     @Override
-    public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain)
-    {
-        if (resource == null)
-        {
+    public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain) {
+        if (resource == null) {
             return null;
         }
         TileEntityFluidTank last = getLastTank();
-        if (!resource.isFluidEqual(last.fluidTank.getFluid()))
-        {
+        if (!resource.isFluidEqual(last.fluidTank.getFluid())) {
             return null;
         }
         return drain(from, resource.amount, doDrain);
     }
 
     @Override
-    public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain)
-    {
+    public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain) {
         TileEntityFluidTank last = getLastTank();
         FluidStack stack = last.fluidTank.drain(maxDrain, doDrain);
-        if (doDrain && stack != null && stack.amount > 0)
-        {
+        if (doDrain && stack != null && stack.amount > 0) {
             last.updateClient = true;
         }
         return stack;
     }
 
     @Override
-    public boolean canFill(EnumFacing from, Fluid fluid)
-    {
+    public boolean canFill(EnumFacing from, Fluid fluid) {
         return fluidTank.getFluid() == null || fluidTank.getFluid().getFluid() == null || fluid == null || fluidTank.getFluid().getFluid() == fluid;
     }
 
     @Override
-    public boolean canDrain(EnumFacing from, Fluid fluid)
-    {
+    public boolean canDrain(EnumFacing from, Fluid fluid) {
         return fluid == null || fluidTank.getFluid() != null && fluidTank.getFluid().getFluid() == fluid;
     }
 
     @Override
-    public FluidTankInfo[] getTankInfo(EnumFacing from)
-    {
+    public FluidTankInfo[] getTankInfo(EnumFacing from) {
         FluidTank compositeTank = new FluidTank(fluidTank.getCapacity());
         TileEntityFluidTank last = getLastTank();
 
-        if (last != null && last.fluidTank.getFluid() != null)
-        {
+        if (last != null && last.fluidTank.getFluid() != null) {
             compositeTank.setFluid(last.fluidTank.getFluid().copy());
-        }
-        else
-        {
-            return new FluidTankInfo[] { compositeTank.getInfo() };
+        } else {
+            return new FluidTankInfo[]{compositeTank.getInfo()};
         }
 
         int capacity = last.fluidTank.getCapacity();
         last = getNextTank(last.getPos());
 
-        while (last != null)
-        {
+        while (last != null) {
             FluidStack fluid = last.fluidTank.getFluid();
-            if (fluid == null || fluid.amount == 0)
-            {
+            if (fluid == null || fluid.amount == 0) {
 
-            }
-            else if (!compositeTank.getFluid().isFluidEqual(fluid))
-            {
+            } else if (!compositeTank.getFluid().isFluidEqual(fluid)) {
                 break;
-            }
-            else
-            {
+            } else {
                 compositeTank.getFluid().amount += fluid.amount;
             }
 
@@ -184,18 +154,15 @@ public class TileEntityFluidTank extends TileEntityAdvanced implements IFluidHan
         }
 
         compositeTank.setCapacity(capacity);
-        return new FluidTankInfo[] { compositeTank.getInfo() };
+        return new FluidTankInfo[]{compositeTank.getInfo()};
     }
 
-    public void moveFluidDown()
-    {
+    public void moveFluidDown() {
         TileEntityFluidTank next = getPreviousTank(this.getPos());
-        if (next != null)
-        {
+        if (next != null) {
             int used = next.fluidTank.fill(fluidTank.getFluid(), true);
 
-            if (used > 0)
-            {
+            if (used > 0) {
                 this.updateClient = true;
                 next.updateClient = true;
                 fluidTank.drain(used, true);
@@ -203,19 +170,14 @@ public class TileEntityFluidTank extends TileEntityAdvanced implements IFluidHan
         }
     }
 
-    public TileEntityFluidTank getLastTank()
-    {
+    public TileEntityFluidTank getLastTank() {
         TileEntityFluidTank lastTank = this;
 
-        while (true)
-        {
+        while (true) {
             TileEntityFluidTank tank = getPreviousTank(lastTank.getPos());
-            if (tank != null)
-            {
+            if (tank != null) {
                 lastTank = tank;
-            }
-            else
-            {
+            } else {
                 break;
             }
         }
@@ -223,33 +185,27 @@ public class TileEntityFluidTank extends TileEntityAdvanced implements IFluidHan
         return lastTank;
     }
 
-    public TileEntityFluidTank getNextTank(BlockPos current)
-    {
+    public TileEntityFluidTank getNextTank(BlockPos current) {
         TileEntity above = this.world.getTileEntity(current.up());
-        if (above instanceof TileEntityFluidTank)
-        {
+        if (above instanceof TileEntityFluidTank) {
             return (TileEntityFluidTank) above;
         }
         return null;
     }
 
-    public TileEntityFluidTank getPreviousTank(BlockPos current)
-    {
+    public TileEntityFluidTank getPreviousTank(BlockPos current) {
         TileEntity below = this.world.getTileEntity(current.down());
-        if (below instanceof TileEntityFluidTank)
-        {
+        if (below instanceof TileEntityFluidTank) {
             return (TileEntityFluidTank) below;
         }
         return null;
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt)
-    {
+    public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
 
-        if (nbt.hasKey("fuelTank"))
-        {
+        if (nbt.hasKey("fuelTank")) {
             this.fluidTank.readFromNBT(nbt.getCompoundTag("fuelTank"));
         }
 
@@ -257,26 +213,22 @@ public class TileEntityFluidTank extends TileEntityAdvanced implements IFluidHan
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt)
-    {
+    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
 
-        if (this.fluidTank.getFluid() != null)
-        {
+        if (this.fluidTank.getFluid() != null) {
             nbt.setTag("fuelTank", this.fluidTank.writeToNBT(new NBTTagCompound()));
         }
         return nbt;
     }
 
     @Override
-    public NBTTagCompound getUpdateTag()
-    {
+    public NBTTagCompound getUpdateTag() {
         return this.writeToNBT(new NBTTagCompound());
     }
 
     @Override
-    public SPacketUpdateTileEntity getUpdatePacket()
-    {
+    public SPacketUpdateTileEntity getUpdatePacket() {
         NBTTagCompound nbt = new NBTTagCompound();
         nbt.setString("net-type", "desc-packet");
         PacketDynamic packet = new PacketDynamic(this);
@@ -291,47 +243,35 @@ public class TileEntityFluidTank extends TileEntityAdvanced implements IFluidHan
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt)
-    {
-        if (!this.world.isRemote)
-        {
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+        if (!this.world.isRemote) {
             return;
         }
-        if (pkt.getNbtCompound() == null)
-        {
+        if (pkt.getNbtCompound() == null) {
             throw new RuntimeException("[GC] Missing NBTTag compound!");
         }
         NBTTagCompound nbt = pkt.getNbtCompound();
-        try
-        {
-            if ("desc-packet".equals(nbt.getString("net-type")))
-            {
+        try {
+            if ("desc-packet".equals(nbt.getString("net-type"))) {
                 byte[] bytes = nbt.getByteArray("net-data");
                 ByteBuf data = Unpooled.wrappedBuffer(bytes);
                 PacketDynamic packet = new PacketDynamic();
                 packet.decodeInto(data);
                 packet.handleClientSide(FMLClientHandler.instance().getClientPlayerEntity());
             }
-        }
-        catch (Throwable t)
-        {
+        } catch (Throwable t) {
             throw new RuntimeException("[GC] Failed to read a packet! (" + nbt.getTag("net-type") + ", " + nbt.getTag("net-data"), t);
         }
     }
 
     @Override
-    public void addExtraNetworkedData(List<Object> networkedList)
-    {
-        if (!this.world.isRemote)
-        {
-            if (fluidTank == null)
-            {
+    public void addExtraNetworkedData(List<Object> networkedList) {
+        if (!this.world.isRemote) {
+            if (fluidTank == null) {
                 networkedList.add(0);
                 networkedList.add("");
                 networkedList.add(0);
-            }
-            else
-            {
+            } else {
                 networkedList.add(fluidTank.getCapacity());
                 networkedList.add(fluidTank.getFluid() == null ? "" : fluidTank.getFluid().getFluid().getName());
                 networkedList.add(fluidTank.getFluidAmount());
@@ -340,21 +280,16 @@ public class TileEntityFluidTank extends TileEntityAdvanced implements IFluidHan
     }
 
     @Override
-    public void readExtraNetworkedData(ByteBuf buffer)
-    {
-        if (this.world.isRemote)
-        {
+    public void readExtraNetworkedData(ByteBuf buffer) {
+        if (this.world.isRemote) {
             int capacity = buffer.readInt();
             String fluidName = ByteBufUtils.readUTF8String(buffer);
             FluidTankGC fluidTank = new FluidTankGC(capacity, this);
             int amount = buffer.readInt();
 
-            if (fluidName.equals(""))
-            {
+            if (fluidName.equals("")) {
                 fluidTank.setFluid(null);
-            }
-            else
-            {
+            } else {
                 Fluid fluid = FluidRegistry.getFluid(fluidName);
                 fluidTank.setFluid(new FluidStack(fluid, amount));
             }
@@ -364,54 +299,45 @@ public class TileEntityFluidTank extends TileEntityAdvanced implements IFluidHan
     }
 
     @Override
-    public double getPacketRange()
-    {
+    public double getPacketRange() {
         return 40;
     }
 
     @Override
-    public int getPacketCooldown()
-    {
+    public int getPacketCooldown() {
         return 1;
     }
 
     @Override
-    public boolean isNetworkedTile()
-    {
+    public boolean isNetworkedTile() {
         return false;
     }
 
     @Override
-    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
-    {
+    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
         return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
     }
 
     @Nullable
     @Override
-    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
-    {
-        if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
-        {
+    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+        if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
             return (T) new FluidHandlerWrapper(this, facing);
         }
         return super.getCapability(capability, facing);
     }
 
     @SideOnly(Side.CLIENT)
-    public AxisAlignedBB getRenderBoundingBox()
-    {
-        if (this.renderAABB == null)
-        {
+    public AxisAlignedBB getRenderBoundingBox() {
+        if (this.renderAABB == null) {
             this.renderAABB = new AxisAlignedBB(pos, pos.add(1, 1, 1));
         }
         return this.renderAABB;
     }
-    
+
     @Override
     @SideOnly(Side.CLIENT)
-    public double getMaxRenderDistanceSquared()
-    {
+    public double getMaxRenderDistanceSquared() {
         return Constants.RENDERDISTANCE_MEDIUM;
     }
 }

@@ -5,8 +5,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 
 import java.util.ArrayList;
 
-public interface IStatsClientCapability
-{
+public interface IStatsClientCapability {
     void setGravity(EnumGravity newGravity);
 
     boolean isUsingParachute();

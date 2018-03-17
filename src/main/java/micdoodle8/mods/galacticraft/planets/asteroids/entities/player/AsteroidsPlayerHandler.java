@@ -9,31 +9,24 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
 
-public class AsteroidsPlayerHandler
-{
+public class AsteroidsPlayerHandler {
     @SubscribeEvent
-    public void onPlayerLogin(PlayerLoggedInEvent event)
-    {
-        if (event.player instanceof EntityPlayerMP)
-        {
+    public void onPlayerLogin(PlayerLoggedInEvent event) {
+        if (event.player instanceof EntityPlayerMP) {
             this.onPlayerLogin((EntityPlayerMP) event.player);
         }
     }
 
     @SubscribeEvent
-    public void onPlayerLogout(PlayerLoggedOutEvent event)
-    {
-        if (event.player instanceof EntityPlayerMP)
-        {
+    public void onPlayerLogout(PlayerLoggedOutEvent event) {
+        if (event.player instanceof EntityPlayerMP) {
             this.onPlayerLogout((EntityPlayerMP) event.player);
         }
     }
 
     @SubscribeEvent
-    public void onPlayerRespawn(PlayerRespawnEvent event)
-    {
-        if (event.player instanceof EntityPlayerMP)
-        {
+    public void onPlayerRespawn(PlayerRespawnEvent event) {
+        if (event.player instanceof EntityPlayerMP) {
             this.onPlayerRespawn((EntityPlayerMP) event.player);
         }
     }
@@ -47,31 +40,24 @@ public class AsteroidsPlayerHandler
 //        }
 //    }
 
-    private void onPlayerLogin(EntityPlayerMP player)
-    {
+    private void onPlayerLogin(EntityPlayerMP player) {
     }
 
-    private void onPlayerLogout(EntityPlayerMP player)
-    {
+    private void onPlayerLogout(EntityPlayerMP player) {
 
     }
 
-    private void onPlayerRespawn(EntityPlayerMP player)
-    {
+    private void onPlayerRespawn(EntityPlayerMP player) {
     }
 
-    public void onPlayerUpdate(EntityPlayerMP player)
-    {
-        if (!player.world.isRemote && player.world.provider instanceof WorldProviderAsteroids)
-        {
+    public void onPlayerUpdate(EntityPlayerMP player) {
+        if (!player.world.isRemote && player.world.provider instanceof WorldProviderAsteroids) {
             final int f = 50;
 
-            if (player.world.rand.nextInt(f) == 0 && player.posY < 260D)
-            {
+            if (player.world.rand.nextInt(f) == 0 && player.posY < 260D) {
                 final EntityPlayer closestPlayer = player.world.getClosestPlayerToEntity(player, 100);
 
-                if (closestPlayer == null || closestPlayer.getEntityId() <= player.getEntityId())
-                {
+                if (closestPlayer == null || closestPlayer.getEntityId() <= player.getEntityId()) {
                     double x, y, z;
                     double motX, motY, motZ;
                     double r = player.world.rand.nextInt(60) + 30D;

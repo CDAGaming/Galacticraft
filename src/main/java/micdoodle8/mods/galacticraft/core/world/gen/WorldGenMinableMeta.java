@@ -10,22 +10,17 @@ import net.minecraft.world.gen.feature.WorldGenMinable;
 
 import java.util.Random;
 
-public class WorldGenMinableMeta extends WorldGenMinable
-{
+public class WorldGenMinableMeta extends WorldGenMinable {
     private final Block minableBlockId;
 
     private final int numberOfBlocks;
 
     private final int metadata;
-
+    private final Block fillerID;
+    private final int fillerMetadata;
     private boolean usingMetadata = false;
 
-    private final Block fillerID;
-
-    private final int fillerMetadata;
-
-    public WorldGenMinableMeta(Block placeBlock, int blockCount, int placeMeta, boolean metaActive, Block replaceBlock, int replaceMeta)
-    {
+    public WorldGenMinableMeta(Block placeBlock, int blockCount, int placeMeta, boolean metaActive, Block replaceBlock, int replaceMeta) {
         super(placeBlock.getStateFromMeta(placeMeta), blockCount, BlockMatcher.forBlock(replaceBlock));
         this.minableBlockId = placeBlock;
         this.numberOfBlocks = blockCount;
@@ -36,8 +31,7 @@ public class WorldGenMinableMeta extends WorldGenMinable
     }
 
     @Override
-    public boolean generate(World worldIn, Random rand, BlockPos position)
-    {
+    public boolean generate(World worldIn, Random rand, BlockPos position) {
         float f = rand.nextFloat() * (float) Math.PI;
         float sinFvalue = MathHelper.sin(f) * (float) this.numberOfBlocks / 8.0F;
         float cosFvalue = MathHelper.cos(f) * (float) this.numberOfBlocks / 8.0F;
@@ -53,9 +47,8 @@ public class WorldGenMinableMeta extends WorldGenMinable
         final IBlockState oreState = this.minableBlockId.getStateFromMeta(this.usingMetadata ? this.metadata : 0);
         float concentricRadius = this.numberOfBlocks;
         double size = (rand.nextDouble() * (double) this.numberOfBlocks + 1D) / 16.0D;
-        
-        for (int i = 0; i < this.numberOfBlocks; ++i)
-        {
+
+        for (int i = 0; i < this.numberOfBlocks; ++i) {
             float f1 = (float) i / concentricRadius;
             double centreX = clumpXa + clumpXb * (double) f1;
             double centreY = clumpYa + clumpYb * (double) f1;
@@ -72,30 +65,23 @@ public class WorldGenMinableMeta extends WorldGenMinable
             centreY -= 0.5D;
             centreZ -= 0.5D;
 
-            for (int x = xmin; x <= xmax; ++x)
-            {
+            for (int x = xmin; x <= xmax; ++x) {
                 double dx = ((double) x - centreX) / sizeXZ;
 
-                if (dx * dx < 1.0D)
-                {
-                    for (int y = ymin; y <= ymax; ++y)
-                    {
+                if (dx * dx < 1.0D) {
+                    for (int y = ymin; y <= ymax; ++y) {
                         double dy = ((double) y - centreY) / sizeY;
-                        double xySquared = dx * dx + dy * dy; 
+                        double xySquared = dx * dx + dy * dy;
 
-                        if (xySquared < 1.0D)
-                        {
-                            for (int z = zmin; z <= zmax; ++z)
-                            {
+                        if (xySquared < 1.0D) {
+                            for (int z = zmin; z <= zmax; ++z) {
                                 double dz = ((double) z - centreZ) / sizeXZ;
 
-                                if (xySquared + dz * dz < 1.0D)
-                                {
+                                if (xySquared + dz * dz < 1.0D) {
                                     BlockPos blockpos = new BlockPos(x, y, z);
                                     IBlockState state = worldIn.getBlockState(blockpos);
 
-                                    if (state.getBlock() == this.fillerID && state.getBlock().getMetaFromState(state) == this.fillerMetadata)
-                                    {
+                                    if (state.getBlock() == this.fillerID && state.getBlock().getMetaFromState(state) == this.fillerMetadata) {
                                         worldIn.setBlockState(blockpos, oreState, 2);
                                     }
                                 }

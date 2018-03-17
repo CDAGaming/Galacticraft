@@ -18,8 +18,7 @@ import org.lwjgl.opengl.GL11;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GuiSolar extends GuiContainerGC
-{
+public class GuiSolar extends GuiContainerGC {
     private static final ResourceLocation solarGuiTexture = new ResourceLocation(Constants.ASSET_PREFIX, "textures/gui/solar.png");
 
     private final TileEntitySolar solarPanel;
@@ -27,8 +26,7 @@ public class GuiSolar extends GuiContainerGC
     private GuiButton buttonEnableSolar;
     private GuiElementInfoRegion electricInfoRegion = new GuiElementInfoRegion((this.width - this.xSize) / 2 + 107, (this.height - this.ySize) / 2 + 101, 56, 9, new ArrayList<String>(), this.width, this.height, this);
 
-    public GuiSolar(InventoryPlayer par1InventoryPlayer, TileEntitySolar solarPanel)
-    {
+    public GuiSolar(InventoryPlayer par1InventoryPlayer, TileEntitySolar solarPanel) {
         super(new ContainerSolar(par1InventoryPlayer, solarPanel));
         this.solarPanel = solarPanel;
         this.ySize = 201;
@@ -36,19 +34,16 @@ public class GuiSolar extends GuiContainerGC
     }
 
     @Override
-    protected void actionPerformed(GuiButton par1GuiButton)
-    {
-        switch (par1GuiButton.id)
-        {
-        case 0:
-            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_UPDATE_DISABLEABLE_BUTTON, GCCoreUtil.getDimensionID(this.mc.world), new Object[] { this.solarPanel.getPos(), 0 }));
-            break;
+    protected void actionPerformed(GuiButton par1GuiButton) {
+        switch (par1GuiButton.id) {
+            case 0:
+                GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_UPDATE_DISABLEABLE_BUTTON, GCCoreUtil.getDimensionID(this.mc.world), new Object[]{this.solarPanel.getPos(), 0}));
+                break;
         }
     }
 
     @Override
-    public void initGui()
-    {
+    public void initGui() {
         super.initGui();
         List<String> electricityDesc = new ArrayList<String>();
         electricityDesc.add(GCCoreUtil.translate("gui.energy_storage.desc.0"));
@@ -71,8 +66,7 @@ public class GuiSolar extends GuiContainerGC
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int par1, int par2)
-    {
+    protected void drawGuiContainerForegroundLayer(int par1, int par2) {
         int offsetY = 35;
         this.buttonEnableSolar.enabled = this.solarPanel.disableCooldown == 0;
         this.buttonEnableSolar.displayString = !this.solarPanel.getDisabled(0) ? GCCoreUtil.translate("gui.button.disable.name") : GCCoreUtil.translate("gui.button.enable.name");
@@ -90,35 +84,28 @@ public class GuiSolar extends GuiContainerGC
         this.fontRenderer.drawString(GCCoreUtil.translate("container.inventory"), 8, this.ySize - 94, 4210752);
     }
 
-    private String getStatus()
-    {
-        if (this.solarPanel.getDisabled(0))
-        {
+    private String getStatus() {
+        if (this.solarPanel.getDisabled(0)) {
             return EnumColor.ORANGE + GCCoreUtil.translate("gui.status.disabled.name");
         }
 
-        if (!this.solarPanel.getWorld().isDaytime())
-        {
+        if (!this.solarPanel.getWorld().isDaytime()) {
             return EnumColor.DARK_RED + GCCoreUtil.translate("gui.status.blockedfully.name");
         }
 
-        if (this.solarPanel.getWorld().isRaining() || this.solarPanel.getWorld().isThundering())
-        {
+        if (this.solarPanel.getWorld().isRaining() || this.solarPanel.getWorld().isThundering()) {
             return EnumColor.DARK_RED + GCCoreUtil.translate("gui.status.raining.name");
         }
 
-        if (this.solarPanel.solarStrength == 0)
-        {
+        if (this.solarPanel.solarStrength == 0) {
             return EnumColor.DARK_RED + GCCoreUtil.translate("gui.status.blockedfully.name");
         }
 
-        if (this.solarPanel.solarStrength < 9)
-        {
+        if (this.solarPanel.solarStrength < 9) {
             return EnumColor.DARK_RED + GCCoreUtil.translate("gui.status.blockedpartial.name");
         }
 
-        if (this.solarPanel.generateWatts > 0)
-        {
+        if (this.solarPanel.generateWatts > 0) {
             return EnumColor.DARK_GREEN + GCCoreUtil.translate("gui.status.collectingenergy.name");
         }
 
@@ -126,8 +113,7 @@ public class GuiSolar extends GuiContainerGC
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3)
-    {
+    protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3) {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.mc.getTextureManager().bindTexture(GuiSolar.solarGuiTexture);
         final int var5 = (this.width - this.xSize) / 2;
@@ -140,13 +126,11 @@ public class GuiSolar extends GuiContainerGC
 //		electricityDesc.add(EnumColor.YELLOW + GCCoreUtil.translate("gui.energy_storage.desc.1") + ((int) Math.floor(this.solarPanel.getEnergyStoredGC()) + " / " + (int) Math.floor(this.solarPanel.getMaxEnergyStoredGC())));
         this.electricInfoRegion.tooltipStrings = electricityDesc;
 
-        if (this.solarPanel.getEnergyStoredGC() > 0)
-        {
+        if (this.solarPanel.getEnergyStoredGC() > 0) {
             this.drawTexturedModalRect(var5 + 83, var6 + 24, 176, 0, 11, 10);
         }
 
-        if (this.solarPanel.solarStrength > 0)
-        {
+        if (this.solarPanel.solarStrength > 0) {
             this.drawTexturedModalRect(var5 + 48, var6 + 21, 176, 10, 16, 16);
         }
 

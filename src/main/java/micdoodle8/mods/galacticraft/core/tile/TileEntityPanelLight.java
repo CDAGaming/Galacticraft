@@ -1,9 +1,6 @@
 package micdoodle8.mods.galacticraft.core.tile;
 
 import io.netty.buffer.ByteBuf;
-
-import java.util.ArrayList;
-
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.GCBlocks;
 import micdoodle8.mods.galacticraft.core.GalacticraftCore;
@@ -27,52 +24,79 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class TileEntityPanelLight extends TileEntity implements IPacketReceiver
-{
-    public int meta;
-    private IBlockState superState;
+import java.util.ArrayList;
+
+public class TileEntityPanelLight extends TileEntity implements IPacketReceiver {
     private static IBlockState defaultLook = GalacticraftCore.isPlanetsLoaded ? AsteroidBlocks.blockBasic.getStateFromMeta(6) : GCBlocks.basicBlock.getStateFromMeta(4);
+    public int meta;
     public int color = 0xf0f0e0;
+    private IBlockState superState;
     @SideOnly(Side.CLIENT)
     private AxisAlignedBB renderAABB;
 
-    public TileEntityPanelLight()
-    {
+    public TileEntityPanelLight() {
     }
 
-    public void initialise(int type, EnumFacing facing, EntityPlayer player, boolean isRemote, IBlockState superStateClient)
-    {
+    /**
+     * Reads a blockstate from the given tag.  In MC1.10+ use NBTUtil instead!
+     */
+    public static IBlockState readBlockState(NBTTagCompound tag) {
+        if (!tag.hasKey("Name", 8)) {
+            return Blocks.AIR.getDefaultState();
+        } else {
+            Block block = (Block) Block.REGISTRY.getObject(new ResourceLocation(tag.getString("Name")));
+
+            if (tag.hasKey("Meta")) {
+                int meta = tag.getInteger("Meta");
+                if (meta >= 0 && meta < 16) {
+                    return block.getStateFromMeta(meta);
+                }
+            }
+
+            return block.getDefaultState();
+        }
+    }
+
+    /**
+     * Writes the given blockstate to the given tag.  In MC1.10+ use NBTUtil instead!
+     */
+    public static NBTTagCompound writeBlockState(NBTTagCompound tag, IBlockState state) {
+        tag.setString("Name", ((ResourceLocation) Block.REGISTRY.getNameForObject(state.getBlock())).toString());
+        tag.setInteger("Meta", state.getBlock().getMetaFromState(state));
+        return tag;
+    }
+
+    public static IBlockState readBlockState(String name, Integer meta) {
+        Block block = (Block) Block.REGISTRY.getObject(new ResourceLocation(name));
+        if (block == null) {
+            return Blocks.AIR.getDefaultState();
+        }
+        return block.getStateFromMeta(meta);
+    }
+
+    public void initialise(int type, EnumFacing facing, EntityPlayer player, boolean isRemote, IBlockState superStateClient) {
         this.meta = facing.ordinal();
-        if (isRemote)
-        {
+        if (isRemote) {
             this.superState = superStateClient;
             this.color = BlockPanelLighting.color;
-        }
-        else
-        {
+        } else {
             GCPlayerStats stats = GCPlayerStats.get(player);
             this.superState = stats.getPanelLightingBases()[type];
             this.color = stats.getPanelLightingColor();
         }
     }
 
-    
-    public IBlockState getBaseBlock()
-    {
-        if (this.superState != null && this.superState.getBlock() == Blocks.AIR)
-        {
+    public IBlockState getBaseBlock() {
+        if (this.superState != null && this.superState.getBlock() == Blocks.AIR) {
             this.superState = null;
         }
         return this.superState == null ? defaultLook : this.superState;
     }
 
-    public BlockPanelLighting.PanelType getType()
-    {
-        if (this.world != null)
-        {
+    public BlockPanelLighting.PanelType getType() {
+        if (this.world != null) {
             IBlockState b = this.world.getBlockState(this.pos);
-            if (b.getBlock() instanceof BlockPanelLighting)
-            {
+            if (b.getBlock() instanceof BlockPanelLighting) {
                 return (PanelType) b.getValue(BlockPanelLighting.TYPE);
             }
         }
@@ -81,10 +105,8 @@ public class TileEntityPanelLight extends TileEntity implements IPacketReceiver
 
     @Override
     @SideOnly(Side.CLIENT)
-    public AxisAlignedBB getRenderBoundingBox()
-    {
-        if (this.renderAABB == null)
-        {
+    public AxisAlignedBB getRenderBoundingBox() {
+        if (this.renderAABB == null) {
             this.renderAABB = new AxisAlignedBB(pos, pos.add(1, 1, 1));
         }
         return this.renderAABB;
@@ -92,36 +114,30 @@ public class TileEntityPanelLight extends TileEntity implements IPacketReceiver
 
     @Override
     @SideOnly(Side.CLIENT)
-    public double getMaxRenderDistanceSquared()
-    {
+    public double getMaxRenderDistanceSquared() {
         return Constants.RENDERDISTANCE_LONG;
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt)
-    {
+    public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
 
         this.meta = nbt.getInteger("meta");
-        if (nbt.hasKey("col"))
-        {
+        if (nbt.hasKey("col")) {
             this.color = nbt.getInteger("col");
         }
         NBTTagCompound tag = nbt.getCompoundTag("sust");
-        if (!tag.hasNoTags())
-        {
+        if (!tag.hasNoTags()) {
             this.superState = readBlockState(tag);
         }
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt)
-    {
+    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
         nbt.setInteger("meta", this.meta);
         nbt.setInteger("col", this.color);
-        if (this.superState != null)
-        {
+        if (this.superState != null) {
             NBTTagCompound tag = new NBTTagCompound();
             writeBlockState(tag, this.superState);
             nbt.setTag("sust", tag);
@@ -130,117 +146,57 @@ public class TileEntityPanelLight extends TileEntity implements IPacketReceiver
     }
 
     @Override
-    public NBTTagCompound getUpdateTag()
-    {
+    public NBTTagCompound getUpdateTag() {
         return this.writeToNBT(new NBTTagCompound());
     }
 
-    /**
-     * Reads a blockstate from the given tag.  In MC1.10+ use NBTUtil instead!
-     */
-    public static IBlockState readBlockState(NBTTagCompound tag)
-    {
-        if (!tag.hasKey("Name", 8))
-        {
-            return Blocks.AIR.getDefaultState();
-        }
-        else
-        {
-            Block block = (Block)Block.REGISTRY.getObject(new ResourceLocation(tag.getString("Name")));
-
-            if (tag.hasKey("Meta"))
-            {
-                int meta = tag.getInteger("Meta");
-                if (meta >= 0 && meta < 16)
-                {
-                    return block.getStateFromMeta(meta);
-                }
-            }
-
-            return block.getDefaultState();
-        }
-    }
-    
-    /**
-     * Writes the given blockstate to the given tag.  In MC1.10+ use NBTUtil instead!
-     */
-    public static NBTTagCompound writeBlockState(NBTTagCompound tag, IBlockState state)
-    {
-        tag.setString("Name", ((ResourceLocation)Block.REGISTRY.getNameForObject(state.getBlock())).toString());
-        tag.setInteger("Meta", state.getBlock().getMetaFromState(state));
-        return tag;
-    }
-
-    public static IBlockState readBlockState(String name, Integer meta)
-    {
-        Block block = (Block)Block.REGISTRY.getObject(new ResourceLocation(name));
-        if (block == null)
-        {
-            return Blocks.AIR.getDefaultState();
-        }
-        return block.getStateFromMeta(meta);
-    }
-
     @Override
-    public void onLoad()
-    {
-        if (this.world.isRemote)
-        {
+    public void onLoad() {
+        if (this.world.isRemote) {
             //Request any networked information from server on first client update
             GalacticraftCore.packetPipeline.sendToServer(new PacketDynamic(this));
         }
     }
-    
+
     @Override
-    public void getNetworkedData(ArrayList<Object> sendData)
-    {
-        if (this.world.isRemote)
-        {
+    public void getNetworkedData(ArrayList<Object> sendData) {
+        if (this.world.isRemote) {
             return;
         }
 
-        sendData.add((byte)this.meta);
+        sendData.add((byte) this.meta);
         sendData.add(this.color);
-        if (this.superState != null)
-        {
-            Block block = this.superState.getBlock(); 
-            if (block == Blocks.AIR)
-            {
+        if (this.superState != null) {
+            Block block = this.superState.getBlock();
+            if (block == Blocks.AIR) {
                 this.superState = null;
                 return;
             }
-           
-            sendData.add(((ResourceLocation)Block.REGISTRY.getNameForObject(block)).toString());
+
+            sendData.add(((ResourceLocation) Block.REGISTRY.getNameForObject(block)).toString());
             sendData.add((byte) block.getMetaFromState(this.superState));
         }
     }
 
     @Override
-    public void decodePacketdata(ByteBuf buffer)
-    {
-        if (this.world.isRemote)
-        {
-            try
-            {
+    public void decodePacketdata(ByteBuf buffer) {
+        if (this.world.isRemote) {
+            try {
                 this.meta = buffer.readByte();
                 this.color = buffer.readInt();
-                if (buffer.readableBytes() > 0)
-                {
+                if (buffer.readableBytes() > 0) {
                     String name = ByteBufUtils.readUTF8String(buffer);
                     int otherMeta = buffer.readByte();
                     this.superState = readBlockState(name, otherMeta);
                     this.world.markBlockRangeForRenderUpdate(this.pos, this.pos);
                 }
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public boolean getEnabled()
-    {
+    public boolean getEnabled() {
         return !RedstoneUtil.isBlockReceivingRedstone(this.world, this.getPos());
     }
 }

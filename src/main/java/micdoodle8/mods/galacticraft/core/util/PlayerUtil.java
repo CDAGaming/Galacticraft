@@ -1,7 +1,6 @@
 package micdoodle8.mods.galacticraft.core.util;
 
 import com.mojang.authlib.GameProfile;
-
 import micdoodle8.mods.galacticraft.core.GalacticraftCore;
 import micdoodle8.mods.galacticraft.core.network.PacketSimple;
 import micdoodle8.mods.galacticraft.core.network.PacketSimple.EnumSimplePacket;
@@ -19,38 +18,28 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
-public class PlayerUtil
-{
+public class PlayerUtil {
     public static HashMap<String, GameProfile> knownSkins = new HashMap<>();
 
-    public static EntityPlayerMP getPlayerForUsernameVanilla(MinecraftServer server, String username)
-    {
+    public static EntityPlayerMP getPlayerForUsernameVanilla(MinecraftServer server, String username) {
         return server.getPlayerList().getPlayerByUsername(username);
     }
 
-    public static EntityPlayerMP getPlayerBaseServerFromPlayerUsername(String username, boolean ignoreCase)
-    {
+    public static EntityPlayerMP getPlayerBaseServerFromPlayerUsername(String username, boolean ignoreCase) {
         MinecraftServer server = GCCoreUtil.getServer();
         return getPlayerBaseServerFromPlayerUsername(server, username, ignoreCase);
     }
 
-    public static EntityPlayerMP getPlayerBaseServerFromPlayerUsername(MinecraftServer server, String username, boolean ignoreCase)
-    {
-        if (server != null)
-        {
-            if (ignoreCase)
-            {
+    public static EntityPlayerMP getPlayerBaseServerFromPlayerUsername(MinecraftServer server, String username, boolean ignoreCase) {
+        if (server != null) {
+            if (ignoreCase) {
                 return getPlayerForUsernameVanilla(server, username);
-            }
-            else
-            {
+            } else {
                 Iterator iterator = server.getPlayerList().getPlayers().iterator();
                 EntityPlayerMP entityplayermp;
 
-                do
-                {
-                    if (!iterator.hasNext())
-                    {
+                do {
+                    if (!iterator.hasNext()) {
                         return null;
                     }
 
@@ -67,15 +56,12 @@ public class PlayerUtil
         return null;
     }
 
-    public static EntityPlayerMP getPlayerBaseServerFromPlayer(EntityPlayer player, boolean ignoreCase)
-    {
-        if (player == null)
-        {
+    public static EntityPlayerMP getPlayerBaseServerFromPlayer(EntityPlayer player, boolean ignoreCase) {
+        if (player == null) {
             return null;
         }
 
-        if (player instanceof EntityPlayerMP)
-        {
+        if (player instanceof EntityPlayerMP) {
             return (EntityPlayerMP) player;
         }
 
@@ -83,12 +69,10 @@ public class PlayerUtil
     }
 
     @SideOnly(Side.CLIENT)
-    public static EntityPlayerSP getPlayerBaseClientFromPlayer(EntityPlayer player, boolean ignoreCase)
-    {
+    public static EntityPlayerSP getPlayerBaseClientFromPlayer(EntityPlayer player, boolean ignoreCase) {
         EntityPlayerSP clientPlayer = FMLClientHandler.instance().getClientPlayerEntity();
 
-        if (clientPlayer == null && player != null)
-        {
+        if (clientPlayer == null && player != null) {
             GCLog.severe("Warning: Could not find player base client instance for player " + PlayerUtil.getName(player));
         }
 
@@ -96,29 +80,23 @@ public class PlayerUtil
     }
 
     @SideOnly(Side.CLIENT)
-    public static GameProfile getOtherPlayerProfile(String name)
-    {
+    public static GameProfile getOtherPlayerProfile(String name) {
         return knownSkins.get(name);
     }
 
     @SideOnly(Side.CLIENT)
-    public static GameProfile makeOtherPlayerProfile(String strName, String strUUID)
-    {
+    public static GameProfile makeOtherPlayerProfile(String strName, String strUUID) {
         GameProfile profile = null;
-        for (Object e : FMLClientHandler.instance().getWorldClient().getLoadedEntityList())
-        {
-            if (e instanceof AbstractClientPlayer)
-            {
+        for (Object e : FMLClientHandler.instance().getWorldClient().getLoadedEntityList()) {
+            if (e instanceof AbstractClientPlayer) {
                 GameProfile gp2 = ((AbstractClientPlayer) e).getGameProfile();
-                if (gp2.getName().equals(strName))
-                {
+                if (gp2.getName().equals(strName)) {
                     profile = gp2;
                     break;
                 }
             }
         }
-        if (profile == null)
-        {
+        if (profile == null) {
             UUID uuid = strUUID.isEmpty() ? UUID.randomUUID() : UUID.fromString(strUUID);
             profile = new GameProfile(uuid, strName);
         }
@@ -128,58 +106,48 @@ public class PlayerUtil
     }
 
     @SideOnly(Side.CLIENT)
-    public static GameProfile getSkinForName(String strName, String strUUID, int dimID)
-    {
+    public static GameProfile getSkinForName(String strName, String strUUID, int dimID) {
         GameProfile profile = FMLClientHandler.instance().getClientPlayerEntity().getGameProfile();
-        if (!strName.equals(profile.getName()))
-        {
+        if (!strName.equals(profile.getName())) {
             profile = PlayerUtil.getOtherPlayerProfile(strName);
-            if (profile == null)
-            {
+            if (profile == null) {
                 profile = PlayerUtil.makeOtherPlayerProfile(strName, strUUID);
             }
-            if (!profile.getProperties().containsKey("textures"))
-            {
-                GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_REQUEST_PLAYERSKIN, dimID, new Object[] { strName }));
+            if (!profile.getProperties().containsKey("textures")) {
+                GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_REQUEST_PLAYERSKIN, dimID, new Object[]{strName}));
             }
         }
         return profile;
     }
-    
-    public static EntityPlayerMP getPlayerByUUID(UUID theUUID)
-    {
+
+    public static EntityPlayerMP getPlayerByUUID(UUID theUUID) {
         List<EntityPlayerMP> players = PlayerUtil.getPlayersOnline();
         EntityPlayerMP entityplayermp;
-        for (int i = players.size() - 1; i >= 0; --i)
-        {
+        for (int i = players.size() - 1; i >= 0; --i) {
             entityplayermp = (EntityPlayerMP) players.get(i);
 
-            if (entityplayermp.getUniqueID().equals(theUUID))
-            {
+            if (entityplayermp.getUniqueID().equals(theUUID)) {
                 return entityplayermp;
             }
         }
         return null;
     }
-    
-    
-    public static List<EntityPlayerMP> getPlayersOnline()
-    {
+
+
+    public static List<EntityPlayerMP> getPlayersOnline() {
         return GCCoreUtil.getServer().getPlayerList().getPlayers();
     }
 
 
-    public static boolean isPlayerOnline(EntityPlayerMP player)
-    {
+    public static boolean isPlayerOnline(EntityPlayerMP player) {
         return player.mcServer.getPlayerList().getPlayers().contains(player);
     }
-    
-    public static String getName(EntityPlayer player)
-    {
+
+    public static String getName(EntityPlayer player) {
         if (player == null) return null;
-        
+
         if (player.getGameProfile() == null) return null;
-        
+
         return player.getGameProfile().getName();
     }
 }

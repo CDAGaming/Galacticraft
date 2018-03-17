@@ -1,17 +1,7 @@
 package micdoodle8.mods.galacticraft.core.client.jei;
 
-import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.IJeiRuntime;
-import mezz.jei.api.IModPlugin;
-import mezz.jei.api.IModRegistry;
-import mezz.jei.api.IRecipeRegistry;
-import mezz.jei.api.JEIPlugin;
-import mezz.jei.api.recipe.IRecipeCategory;
-import mezz.jei.api.recipe.IRecipeCategoryRegistration;
-import mezz.jei.api.recipe.IRecipeWrapper;
-import mezz.jei.api.recipe.IRecipeWrapperFactory;
-import mezz.jei.api.recipe.IStackHelper;
-import mezz.jei.api.recipe.VanillaRecipeCategoryUid;
+import mezz.jei.api.*;
+import mezz.jei.api.recipe.*;
 import micdoodle8.mods.galacticraft.api.recipe.CompressorRecipes;
 import micdoodle8.mods.galacticraft.api.recipe.INasaWorkbenchRecipe;
 import micdoodle8.mods.galacticraft.api.recipe.ShapedRecipesGC;
@@ -42,25 +32,55 @@ import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 
+import javax.annotation.Nonnull;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.annotation.Nonnull;
-
 @JEIPlugin
-public class GalacticraftJEI implements IModPlugin
-{
+public class GalacticraftJEI implements IModPlugin {
+    public static List<IRecipeWrapper> hidden = new LinkedList<>();
     private static IModRegistry registryCached = null;
     private static IRecipeRegistry recipesCached = null;
-    
     private static boolean hiddenSteel = false;
     private static boolean hiddenAdventure = false;
-    public static List<IRecipeWrapper> hidden = new LinkedList<>();
     private static IRecipeCategory ingotCompressorCategory;
 
+    public static void updateHidden(boolean hideSteel, boolean hideAdventure) {
+        boolean changeHidden = false;
+        if (hideSteel != hiddenSteel) {
+            hiddenSteel = hideSteel;
+            changeHidden = true;
+        }
+        if (hideAdventure != hiddenAdventure) {
+            hiddenAdventure = hideAdventure;
+            changeHidden = true;
+        }
+        if (changeHidden && recipesCached != null) {
+            unhide();
+            List<IRecipe> toHide = CompressorRecipes.getRecipeListHidden(hideSteel, hideAdventure);
+            hidden.clear();
+            List<IRecipeWrapper> allRW = recipesCached.getRecipeWrappers(ingotCompressorCategory);
+            for (IRecipe recipe : toHide) {
+                hidden.add(recipesCached.getRecipeWrapper(recipe, RecipeCategories.INGOT_COMPRESSOR_ID));
+            }
+            hide();
+        }
+    }
+
+    private static void hide() {
+        for (IRecipeWrapper wrapper : hidden) {
+            recipesCached.hideRecipe(wrapper);
+        }
+    }
+
+    private static void unhide() {
+        for (IRecipeWrapper wrapper : hidden) {
+            recipesCached.unhideRecipe(wrapper);
+        }
+    }
+
     @Override
-    public void register(@Nonnull IModRegistry registry)
-    {
+    public void register(@Nonnull IModRegistry registry) {
         registryCached = registry;
         IStackHelper stackHelper = registry.getJeiHelpers().getStackHelper();
 
@@ -94,8 +114,7 @@ public class GalacticraftJEI implements IModPlugin
     }
 
     @Override
-    public void registerCategories(IRecipeCategoryRegistration registry)
-    {
+    public void registerCategories(IRecipeCategoryRegistration registry) {
         IGuiHelper guiHelper = registry.getJeiHelpers().getGuiHelper();
         ingotCompressorCategory = new IngotCompressorRecipeCategory(guiHelper);
         registry.addRecipeCategories(new Tier1RocketRecipeCategory(guiHelper),
@@ -106,19 +125,15 @@ public class GalacticraftJEI implements IModPlugin
                 new RefineryRecipeCategory(guiHelper));
     }
 
-    private void addInformationPages(IModRegistry registry)
-    {
+    private void addInformationPages(IModRegistry registry) {
         registry.addIngredientInfo(new ItemStack(GCBlocks.oxygenPipe), ItemStack.class, GCCoreUtil.translate("jei.fluid_pipe.info"));
         registry.addIngredientInfo(new ItemStack(GCBlocks.fuelLoader), ItemStack.class, GCCoreUtil.translate("jei.fuel_loader.info"));
         registry.addIngredientInfo(new ItemStack(GCBlocks.oxygenCollector), ItemStack.class, GCCoreUtil.translate("jei.oxygen_collector.info"));
         registry.addIngredientInfo(new ItemStack(GCBlocks.oxygenDistributor), ItemStack.class, GCCoreUtil.translate("jei.oxygen_distributor.info"));
         registry.addIngredientInfo(new ItemStack(GCBlocks.oxygenSealer), ItemStack.class, GCCoreUtil.translate("jei.oxygen_sealer.info"));
-        if (CompatibilityManager.isAppEngLoaded())
-        {
-            registry.addIngredientInfo(new ItemStack(GCBlocks.machineBase2), ItemStack.class, new String [] { GCCoreUtil.translate("jei.electric_compressor.info"), GCCoreUtil.translate("jei.electric_compressor.appeng.info") });
-        }
-        else
-        {
+        if (CompatibilityManager.isAppEngLoaded()) {
+            registry.addIngredientInfo(new ItemStack(GCBlocks.machineBase2), ItemStack.class, new String[]{GCCoreUtil.translate("jei.electric_compressor.info"), GCCoreUtil.translate("jei.electric_compressor.appeng.info")});
+        } else {
             registry.addIngredientInfo(new ItemStack(GCBlocks.machineBase2), ItemStack.class, GCCoreUtil.translate("jei.electric_compressor.info"));
         }
         registry.addIngredientInfo(new ItemStack(GCBlocks.crafting), ItemStack.class, GCCoreUtil.translate("jei.magnetic_crafting.info"));
@@ -127,51 +142,7 @@ public class GalacticraftJEI implements IModPlugin
     }
 
     @Override
-    public void onRuntimeAvailable(IJeiRuntime rt)
-    {
+    public void onRuntimeAvailable(IJeiRuntime rt) {
         recipesCached = rt.getRecipeRegistry();
-    }
-
-    public static void updateHidden(boolean hideSteel, boolean hideAdventure)
-    {
-        boolean changeHidden = false;
-        if (hideSteel != hiddenSteel)
-        {
-            hiddenSteel = hideSteel;
-            changeHidden = true;
-        }
-        if (hideAdventure != hiddenAdventure)
-        {
-            hiddenAdventure = hideAdventure;
-            changeHidden = true;
-        }
-        if (changeHidden && recipesCached != null)
-        {
-            unhide();
-            List<IRecipe> toHide = CompressorRecipes.getRecipeListHidden(hideSteel, hideAdventure);
-            hidden.clear();
-            List<IRecipeWrapper> allRW = recipesCached.getRecipeWrappers(ingotCompressorCategory);
-            for (IRecipe recipe : toHide)
-            {
-                hidden.add(recipesCached.getRecipeWrapper(recipe, RecipeCategories.INGOT_COMPRESSOR_ID));
-            }
-            hide();
-        }
-    }
-    
-    private static void hide()
-    {
-        for (IRecipeWrapper wrapper : hidden)
-        {
-            recipesCached.hideRecipe(wrapper);
-        }
-    }
-
-    private static void unhide()
-    {
-        for (IRecipeWrapper wrapper : hidden)
-        {
-            recipesCached.unhideRecipe(wrapper);
-        }
     }
 }

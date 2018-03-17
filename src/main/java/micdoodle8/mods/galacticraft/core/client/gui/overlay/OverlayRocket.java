@@ -5,10 +5,10 @@ import micdoodle8.mods.galacticraft.core.proxy.ClientProxyCore;
 import micdoodle8.mods.galacticraft.core.util.ClientUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
@@ -17,21 +17,17 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class OverlayRocket extends Overlay
-{
+public class OverlayRocket extends Overlay {
     private static Minecraft minecraft = FMLClientHandler.instance().getClient();
 
     /**
      * Render the GUI when player is in inventory
      */
-    public static void renderSpaceshipOverlay(ResourceLocation guiTexture)
-    {
-        if (guiTexture == null)
-        {
+    public static void renderSpaceshipOverlay(ResourceLocation guiTexture) {
+        if (guiTexture == null) {
             return;
         }
 
@@ -68,8 +64,7 @@ public class OverlayRocket extends Overlay
 
         Entity rocket = OverlayRocket.minecraft.player.getRidingEntity();
         float headOffset = 0;
-        if (rocket instanceof EntityTier1Rocket)
-        {
+        if (rocket instanceof EntityTier1Rocket) {
             headOffset = 5F;
         }
         Render spaceshipRender = (Render) minecraft.getRenderManager().entityRenderMap.get(rocket.getClass());
@@ -97,12 +92,9 @@ public class OverlayRocket extends Overlay
         GlStateManager.rotate(180F, 1, 0, 0);
         GlStateManager.rotate(90F, 0, 1, 0);
 
-        try
-        {
+        try {
             spaceshipRender.doRender(rocket.getClass().getConstructor(World.class).newInstance(OverlayRocket.minecraft.player.world), 0, 0, 0, 0, 0);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

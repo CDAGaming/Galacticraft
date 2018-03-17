@@ -20,12 +20,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemThermalPadding extends Item implements IItemThermal, ISortableItem
-{
-    public static String[] names = { "thermal_helm", "thermal_chestplate", "thermal_leggings", "thermal_boots", "thermal_helm0", "thermal_chestplate0", "thermal_leggings0", "thermal_boots0" };
+public class ItemThermalPadding extends Item implements IItemThermal, ISortableItem {
+    public static String[] names = {"thermal_helm", "thermal_chestplate", "thermal_leggings", "thermal_boots", "thermal_helm0", "thermal_chestplate0", "thermal_leggings0", "thermal_boots0"};
 
-    public ItemThermalPadding(String assetName)
-    {
+    public ItemThermalPadding(String assetName) {
         super();
         this.setMaxDamage(0);
         this.setHasSubtypes(true);
@@ -35,35 +33,28 @@ public class ItemThermalPadding extends Item implements IItemThermal, ISortableI
 
     @Override
     @SideOnly(Side.CLIENT)
-    public EnumRarity getRarity(ItemStack par1ItemStack)
-    {
+    public EnumRarity getRarity(ItemStack par1ItemStack) {
         return ClientProxyCore.galacticraftItem;
     }
 
     @SideOnly(Side.CLIENT)
     @Override
-    public CreativeTabs getCreativeTab()
-    {
+    public CreativeTabs getCreativeTab() {
         return GalacticraftCore.galacticraftItemsTab;
     }
 
     @Override
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list)
-    {
-        if (tab == GalacticraftCore.galacticraftItemsTab || tab == CreativeTabs.SEARCH)
-        {
-            for (int i = 0; i < ItemThermalPadding.names.length / 2; i++)
-            {
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list) {
+        if (tab == GalacticraftCore.galacticraftItemsTab || tab == CreativeTabs.SEARCH) {
+            for (int i = 0; i < ItemThermalPadding.names.length / 2; i++) {
                 list.add(new ItemStack(this, 1, i));
             }
         }
     }
 
     @Override
-    public String getUnlocalizedName(ItemStack par1ItemStack)
-    {
-        if (names.length > par1ItemStack.getItemDamage())
-        {
+    public String getUnlocalizedName(ItemStack par1ItemStack) {
+        if (names.length > par1ItemStack.getItemDamage()) {
             return "item." + ItemThermalPadding.names[par1ItemStack.getItemDamage()];
         }
 
@@ -71,70 +62,53 @@ public class ItemThermalPadding extends Item implements IItemThermal, ISortableI
     }
 
     @Override
-    public int getMetadata(int par1)
-    {
+    public int getMetadata(int par1) {
         return par1;
     }
 
     @Override
-    public int getThermalStrength()
-    {
+    public int getThermalStrength() {
         return 1;
     }
 
     @Override
-    public boolean isValidForSlot(ItemStack stack, int armorSlot)
-    {
+    public boolean isValidForSlot(ItemStack stack, int armorSlot) {
         return stack.getItemDamage() == armorSlot;
     }
 
     @Override
-    public EnumSortCategoryItem getCategory(int meta)
-    {
+    public EnumSortCategoryItem getCategory(int meta) {
         return EnumSortCategoryItem.ARMOR;
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer player, EnumHand hand)
-    {
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer player, EnumHand hand) {
         ItemStack itemStack = player.getHeldItem(hand);
 
-        if (player instanceof EntityPlayerMP)
-        {
+        if (player instanceof EntityPlayerMP) {
             GCPlayerStats stats = GCPlayerStats.get(player);
             ItemStack gear = stats.getExtendedInventory().getStackInSlot(6);
             ItemStack gear1 = stats.getExtendedInventory().getStackInSlot(7);
             ItemStack gear2 = stats.getExtendedInventory().getStackInSlot(8);
             ItemStack gear3 = stats.getExtendedInventory().getStackInSlot(9);
 
-            if (itemStack.getItemDamage() == 0)
-            {
-                if (gear.isEmpty())
-                {
+            if (itemStack.getItemDamage() == 0) {
+                if (gear.isEmpty()) {
                     stats.getExtendedInventory().setInventorySlotContents(6, itemStack.copy());
                     itemStack.setCount(0);
                 }
-            }
-            else if (itemStack.getItemDamage() == 1)
-            {
-                if (gear1.isEmpty())
-                {
+            } else if (itemStack.getItemDamage() == 1) {
+                if (gear1.isEmpty()) {
                     stats.getExtendedInventory().setInventorySlotContents(7, itemStack.copy());
                     itemStack.setCount(0);
                 }
-            }
-            else if (itemStack.getItemDamage() == 2)
-            {
-                if (gear2.isEmpty())
-                {
+            } else if (itemStack.getItemDamage() == 2) {
+                if (gear2.isEmpty()) {
                     stats.getExtendedInventory().setInventorySlotContents(8, itemStack.copy());
                     itemStack.setCount(0);
                 }
-            }
-            else if (itemStack.getItemDamage() == 3)
-            {
-                if (gear3.isEmpty())
-                {
+            } else if (itemStack.getItemDamage() == 3) {
+                if (gear3.isEmpty()) {
                     stats.getExtendedInventory().setInventorySlotContents(9, itemStack.copy());
                     itemStack.setCount(0);
                 }

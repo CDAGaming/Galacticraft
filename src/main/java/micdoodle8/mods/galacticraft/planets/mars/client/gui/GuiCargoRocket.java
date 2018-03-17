@@ -24,14 +24,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
-public class GuiCargoRocket extends GuiContainerGC
-{
+public class GuiCargoRocket extends GuiContainerGC {
     private static ResourceLocation[] rocketTextures = new ResourceLocation[4];
 
-    static
-    {
-        for (int i = 0; i < 4; i++)
-        {
+    static {
+        for (int i = 0; i < 4; i++) {
             GuiCargoRocket.rocketTextures[i] = new ResourceLocation(Constants.ASSET_PREFIX, "textures/gui/rocket_" + i * 18 + ".png");
         }
     }
@@ -41,13 +38,11 @@ public class GuiCargoRocket extends GuiContainerGC
     private EntityCargoRocket rocket;
     private GuiButton launchButton;
 
-    public GuiCargoRocket(IInventory par1IInventory, EntityCargoRocket rocket)
-    {
+    public GuiCargoRocket(IInventory par1IInventory, EntityCargoRocket rocket) {
         this(par1IInventory, rocket, rocket.rocketType);
     }
 
-    public GuiCargoRocket(IInventory par1IInventory, EntityCargoRocket rocket, EnumRocketType rocketType)
-    {
+    public GuiCargoRocket(IInventory par1IInventory, EntityCargoRocket rocket, EnumRocketType rocketType) {
         super(new ContainerRocketInventory(par1IInventory, rocket, rocketType, FMLClientHandler.instance().getClient().player));
         this.upperChestInventory = par1IInventory;
         this.rocket = rocket;
@@ -57,21 +52,18 @@ public class GuiCargoRocket extends GuiContainerGC
     }
 
     @Override
-    protected void actionPerformed(GuiButton button)
-    {
-        switch (button.id)
-        {
-        case 0:
-            GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleMars(EnumSimplePacketMars.S_UPDATE_CARGO_ROCKET_STATUS, GCCoreUtil.getDimensionID(mc.world), new Object[] { this.rocket.getEntityId(), 0 }));
-            break;
-        default:
-            break;
+    protected void actionPerformed(GuiButton button) {
+        switch (button.id) {
+            case 0:
+                GalacticraftCore.packetPipeline.sendToServer(new PacketSimpleMars(EnumSimplePacketMars.S_UPDATE_CARGO_ROCKET_STATUS, GCCoreUtil.getDimensionID(mc.world), new Object[]{this.rocket.getEntityId(), 0}));
+                break;
+            default:
+                break;
         }
     }
 
     @Override
-    public void initGui()
-    {
+    public void initGui() {
         super.initGui();
         final int var6 = (this.height - this.ySize) / 2;
         final int var7 = (this.width - this.xSize) / 2;
@@ -84,14 +76,10 @@ public class GuiCargoRocket extends GuiContainerGC
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int par1, int par2)
-    {
-        if (this.rocket.rocketType.getInventorySpace() == 2)
-        {
+    protected void drawGuiContainerForegroundLayer(int par1, int par2) {
+        if (this.rocket.rocketType.getInventorySpace() == 2) {
             this.fontRenderer.drawString(GCCoreUtil.translate(this.upperChestInventory.getName()), 8, 76 + (this.rocket.rocketType.getInventorySpace() - 20) / 9 * 18, 4210752);
-        }
-        else
-        {
+        } else {
             this.fontRenderer.drawString(GCCoreUtil.translate(this.upperChestInventory.getName()), 8, 89 + (this.rocket.rocketType.getInventorySpace() - 20) / 9 * 18, 4210752);
         }
 
@@ -104,45 +92,38 @@ public class GuiCargoRocket extends GuiContainerGC
         str = GCCoreUtil.translate("gui.message.status.name") + ":";
         this.fontRenderer.drawString(str, 40 - this.fontRenderer.getStringWidth(str) / 2, 9, 4210752);
 
-        String[] spltString = { "" };
+        String[] spltString = {""};
         String colour = EnumColor.YELLOW.toString();
 
-        if (this.rocket.statusMessageCooldown == 0 || this.rocket.statusMessage == null)
-        {
+        if (this.rocket.statusMessageCooldown == 0 || this.rocket.statusMessage == null) {
             spltString = new String[2];
             spltString[0] = GCCoreUtil.translate("gui.cargorocket.status.waiting.0");
             spltString[1] = GCCoreUtil.translate("gui.cargorocket.status.waiting.1");
 
-            if (this.rocket.launchPhase != EnumLaunchPhase.UNIGNITED.ordinal())
-            {
+            if (this.rocket.launchPhase != EnumLaunchPhase.UNIGNITED.ordinal()) {
                 spltString = new String[2];
                 spltString[0] = GCCoreUtil.translate("gui.cargorocket.status.launched.0");
                 spltString[1] = GCCoreUtil.translate("gui.cargorocket.status.launched.1");
                 this.launchButton.enabled = false;
             }
-        }
-        else
-        {
+        } else {
             spltString = this.rocket.statusMessage.split("#");
             colour = this.rocket.statusColour;
         }
 
         int y = 2;
-        for (String splitString : spltString)
-        {
+        for (String splitString : spltString) {
             this.fontRenderer.drawString(colour + splitString, 35 - this.fontRenderer.getStringWidth(splitString) / 2, 9 * y, 4210752);
             y++;
         }
 
-        if (this.rocket.statusValid && this.rocket.statusMessageCooldown > 0 && this.rocket.statusMessageCooldown < 4)
-        {
+        if (this.rocket.statusValid && this.rocket.statusMessageCooldown > 0 && this.rocket.statusMessageCooldown < 4) {
             this.mc.displayGuiScreen(null);
         }
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3)
-    {
+    protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3) {
         this.mc.getTextureManager().bindTexture(GuiCargoRocket.rocketTextures[(this.rocketType.getInventorySpace() - 2) / 18]);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 

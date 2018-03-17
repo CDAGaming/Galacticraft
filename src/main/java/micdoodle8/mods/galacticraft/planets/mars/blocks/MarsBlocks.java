@@ -12,8 +12,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
-public class MarsBlocks
-{
+public class MarsBlocks {
     public static Block marsBlock;
     public static Block blockSludge;
     public static Block vine;
@@ -26,8 +25,7 @@ public class MarsBlocks
     public static Block marsBricksStairs;
     public static Block bossSpawner;
 
-    public static void initBlocks()
-    {
+    public static void initBlocks() {
         MarsBlocks.marsBlock = new BlockBasicMars("mars").setHardness(2.2F);
         MarsBlocks.vine = new BlockCavernousVine("cavern_vines").setHardness(0.1F);
         MarsBlocks.rock = new BlockSlimelingEgg("slimeling_egg").setHardness(0.75F);
@@ -45,18 +43,15 @@ public class MarsBlocks
         MarsBlocks.setHarvestLevels();
     }
 
-    private static void setHarvestLevel(Block block, String toolClass, int level, int meta)
-    {
+    private static void setHarvestLevel(Block block, String toolClass, int level, int meta) {
         block.setHarvestLevel(toolClass, level, block.getStateFromMeta(meta));
     }
 
-    private static void setHarvestLevel(Block block, String toolClass, int level)
-    {
+    private static void setHarvestLevel(Block block, String toolClass, int level) {
         block.setHarvestLevel(toolClass, level);
     }
 
-    public static void setHarvestLevels()
-    {
+    public static void setHarvestLevels() {
         setHarvestLevel(MarsBlocks.marsBlock, "pickaxe", 1, 0); //Copper ore
         setHarvestLevel(MarsBlocks.marsBlock, "pickaxe", 1, 1); //Tin ore
         setHarvestLevel(MarsBlocks.marsBlock, "pickaxe", 3, 2); //Desh ore
@@ -72,13 +67,11 @@ public class MarsBlocks
 //        setHarvestLevel(MarsBlocks.marsBricksStairs, "pickaxe", 3);
     }
 
-    public static void registerBlock(Block block, Class<? extends ItemBlock> itemClass)
-    {
+    public static void registerBlock(Block block, Class<? extends ItemBlock> itemClass) {
         GCBlocks.registerBlock(block, itemClass);
     }
 
-    public static void registerBlocks()
-    {
+    public static void registerBlocks() {
         registerBlock(MarsBlocks.treasureChestTier2, ItemBlockDesc.class);
         registerBlock(MarsBlocks.marsBlock, ItemBlockMars.class);
         registerBlock(MarsBlocks.vine, ItemBlockDesc.class);
@@ -91,8 +84,7 @@ public class MarsBlocks
         registerBlock(MarsBlocks.marsBricksStairs, ItemBlockGC.class);
     }
 
-    public static void oreDictRegistration()
-    {
+    public static void oreDictRegistration() {
         OreDictionary.registerOre("oreCopper", new ItemStack(MarsBlocks.marsBlock, 1, 0));
         OreDictionary.registerOre("oreTin", new ItemStack(MarsBlocks.marsBlock, 1, 1));
         OreDictionary.registerOre("oreIron", new ItemStack(MarsBlocks.marsBlock, 1, 3));

@@ -5,16 +5,13 @@ import micdoodle8.mods.galacticraft.planets.mars.tile.TileEntityDungeonSpawnerMa
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
-public class BlockBossSpawnerMars extends BlockBossSpawner
-{
-    public BlockBossSpawnerMars(String assetName)
-    {
+public class BlockBossSpawnerMars extends BlockBossSpawner {
+    public BlockBossSpawnerMars(String assetName) {
         super(assetName);
     }
 
     @Override
-    public TileEntity createNewTileEntity(World worldIn, int meta)
-    {
+    public TileEntity createNewTileEntity(World worldIn, int meta) {
         return new TileEntityDungeonSpawnerMars();
     }
 }

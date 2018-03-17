@@ -11,15 +11,13 @@ import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemCanister extends Item implements ISortableItem
-{
-    public static final String[] names = { "tin", // 0
-            "copper" }; // 1
+public class ItemCanister extends Item implements ISortableItem {
+    public static final String[] names = {"tin", // 0
+            "copper"}; // 1
 
 //    protected IIcon[] icons;
 
-    public ItemCanister(String assetName)
-    {
+    public ItemCanister(String assetName) {
         super();
         this.setMaxDamage(0);
         this.setHasSubtypes(true);
@@ -28,15 +26,13 @@ public class ItemCanister extends Item implements ISortableItem
     }
 
     @Override
-    public CreativeTabs getCreativeTab()
-    {
+    public CreativeTabs getCreativeTab() {
         return GalacticraftCore.galacticraftItemsTab;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public EnumRarity getRarity(ItemStack par1ItemStack)
-    {
+    public EnumRarity getRarity(ItemStack par1ItemStack) {
         return ClientProxyCore.galacticraftItem;
     }
 
@@ -54,8 +50,7 @@ public class ItemCanister extends Item implements ISortableItem
     }*/
 
     @Override
-    public String getUnlocalizedName(ItemStack itemStack)
-    {
+    public String getUnlocalizedName(ItemStack itemStack) {
         return this.getUnlocalizedName() + "." + ItemCanister.names[itemStack.getItemDamage()];
     }
 
@@ -71,26 +66,21 @@ public class ItemCanister extends Item implements ISortableItem
     }*/
 
     @Override
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list)
-    {
-        if (tab == GalacticraftCore.galacticraftItemsTab || tab == CreativeTabs.SEARCH)
-        {
-            for (int i = 0; i < 2; i++)
-            {
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list) {
+        if (tab == GalacticraftCore.galacticraftItemsTab || tab == CreativeTabs.SEARCH) {
+            for (int i = 0; i < 2; i++) {
                 list.add(new ItemStack(this, 1, i));
             }
         }
     }
 
     @Override
-    public int getMetadata(int par1)
-    {
+    public int getMetadata(int par1) {
         return par1;
     }
 
     @Override
-    public EnumSortCategoryItem getCategory(int meta)
-    {
+    public EnumSortCategoryItem getCategory(int meta) {
         return EnumSortCategoryItem.CANISTER;
     }
 }

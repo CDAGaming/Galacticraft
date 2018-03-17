@@ -59,8 +59,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 
-public class AsteroidsModule implements IPlanetsModule
-{
+public class AsteroidsModule implements IPlanetsModule {
     public static Planet planetAsteroids;
 
     public static AsteroidsPlayerHandler playerHandler;
@@ -74,11 +73,9 @@ public class AsteroidsModule implements IPlanetsModule
     public static Fluid fluidAtmosphericGases;
     //public static Fluid fluidCO2Gas;
 
-    private Fluid registerFluid(String fluidName, int density, int viscosity, int temperature, boolean gaseous)
-    {
+    private Fluid registerFluid(String fluidName, int density, int viscosity, int temperature, boolean gaseous) {
         Fluid returnFluid = FluidRegistry.getFluid(fluidName);
-        if (returnFluid == null)
-        {
+        if (returnFluid == null) {
             ResourceLocation texture = new ResourceLocation(GalacticraftPlanets.TEXTURE_PREFIX + "blocks/fluids/" + fluidName);
             FluidRegistry.registerFluid(new Fluid(fluidName, texture, texture).setDensity(density).setViscosity(viscosity).setTemperature(temperature).setGaseous(gaseous));
             returnFluid = FluidRegistry.getFluid(fluidName);
@@ -87,8 +84,7 @@ public class AsteroidsModule implements IPlanetsModule
     }
 
     @Override
-    public void preInit(FMLPreInitializationEvent event)
-    {
+    public void preInit(FMLPreInitializationEvent event) {
         AsteroidsModule.planetAsteroids = new Planet("asteroids").setParentSolarSystem(GalacticraftCore.solarSystemSol);
 
         playerHandler = new AsteroidsPlayerHandler();
@@ -127,7 +123,7 @@ public class AsteroidsModule implements IPlanetsModule
 
         AsteroidsModule.planetAsteroids.setBiomeInfo(BiomeAsteroids.asteroid);
         //This enables Endermen on Asteroids in Asteroids Challenge mode
-        ((BiomeAsteroids)BiomeAsteroids.asteroid).resetMonsterListByMode(ConfigManagerCore.challengeMobDropsAndSpawning);
+        ((BiomeAsteroids) BiomeAsteroids.asteroid).resetMonsterListByMode(ConfigManagerCore.challengeMobDropsAndSpawning);
         //TODO: could also increase mob spawn frequency in Hard Mode on various dimensions e.g. Mars and Venus?
 
 //        FluidContainerRegistry.registerFluidContainer(new FluidContainerData(new FluidStack(AsteroidsModule.fluidMethaneGas, 1000), new ItemStack(AsteroidsItems.methaneCanister, 1, 1), new ItemStack(GCItems.oilCanister, 1, ItemCanisterGeneric.EMPTY)));
@@ -136,8 +132,7 @@ public class AsteroidsModule implements IPlanetsModule
     }
 
     @Override
-    public void init(FMLInitializationEvent event)
-    {
+    public void init(FMLInitializationEvent event) {
         AsteroidBlocks.oreDictRegistration();
         AsteroidsItems.oreDictRegistrations();
 
@@ -257,71 +252,59 @@ public class AsteroidsModule implements IPlanetsModule
     }
 
     @Override
-    public void postInit(FMLPostInitializationEvent event)
-    {
+    public void postInit(FMLPostInitializationEvent event) {
         GCPlanetDimensions.ASTEROIDS = WorldUtil.getDimensionTypeById(ConfigManagerAsteroids.dimensionIDAsteroids);
     }
 
     @Override
-    public void serverStarting(FMLServerStartingEvent event)
-    {
+    public void serverStarting(FMLServerStartingEvent event) {
         event.registerServerCommand(new CommandGCAstroMiner());
         ChunkProviderAsteroids.reset();
     }
 
     @Override
-    public void serverInit(FMLServerStartedEvent event)
-    {
+    public void serverInit(FMLServerStartedEvent event) {
         AsteroidsTickHandlerServer.restart();
     }
 
     @Override
-    public void getGuiIDs(List<Integer> idList)
-    {
+    public void getGuiIDs(List<Integer> idList) {
         idList.add(GuiIdsPlanets.MACHINE_ASTEROIDS);
     }
 
     @Override
-    public Object getGuiElement(Side side, int ID, EntityPlayer player, World world, int x, int y, int z)
-    {
-        if (side == Side.SERVER)
-        {
+    public Object getGuiElement(Side side, int ID, EntityPlayer player, World world, int x, int y, int z) {
+        if (side == Side.SERVER) {
             TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
 
-            switch (ID)
-            {
-            case GuiIdsPlanets.MACHINE_ASTEROIDS:
+            switch (ID) {
+                case GuiIdsPlanets.MACHINE_ASTEROIDS:
 
-                if (tile instanceof TileEntityShortRangeTelepad)
-                {
-                    return new ContainerShortRangeTelepad(player.inventory, ((TileEntityShortRangeTelepad) tile), player);
-                }
-                if (tile instanceof TileEntityMinerBase)
-                {
-                    return new ContainerAstroMinerDock(player.inventory, (TileEntityMinerBase) tile);
-                }
+                    if (tile instanceof TileEntityShortRangeTelepad) {
+                        return new ContainerShortRangeTelepad(player.inventory, ((TileEntityShortRangeTelepad) tile), player);
+                    }
+                    if (tile instanceof TileEntityMinerBase) {
+                        return new ContainerAstroMinerDock(player.inventory, (TileEntityMinerBase) tile);
+                    }
 
-                break;
+                    break;
             }
         }
 
         return null;
     }
 
-    private void registerEntities()
-    {
+    private void registerEntities() {
         this.registerCreatures();
         this.registerNonMobEntities();
         this.registerTileEntities();
     }
 
-    private void registerCreatures()
-    {
+    private void registerCreatures() {
 
     }
 
-    private void registerNonMobEntities()
-    {
+    private void registerNonMobEntities() {
         MarsModule.registerGalacticraftNonMobEntity(EntitySmallAsteroid.class, "small_asteroid", 150, 3, true);
         MarsModule.registerGalacticraftNonMobEntity(EntityGrapple.class, "grapple_hook", 150, 1, true);
         MarsModule.registerGalacticraftNonMobEntity(EntityTier3Rocket.class, "rocket_t3", 150, 1, false);
@@ -329,19 +312,14 @@ public class AsteroidsModule implements IPlanetsModule
         MarsModule.registerGalacticraftNonMobEntity(EntityAstroMiner.class, "astro_miner", 80, 1, true);
     }
 
-    private void registerMicroBlocks()
-    {
-        try
-        {
+    private void registerMicroBlocks() {
+        try {
             Class<?> clazz = Class.forName("codechicken.microblock.MicroMaterialRegistry");
-            if (clazz != null)
-            {
+            if (clazz != null) {
                 Method registerMethod = null;
                 Method[] methodz = clazz.getMethods();
-                for (Method m : methodz)
-                {
-                    if (m.getName().equals("registerMaterial"))
-                    {
+                for (Method m : methodz) {
+                    if (m.getName().equals("registerMaterial")) {
                         registerMethod = m;
                         break;
                     }
@@ -352,14 +330,11 @@ public class AsteroidsModule implements IPlanetsModule
                 registerMethod.invoke(null, clazzbm.getConstructor(Block.class, int.class).newInstance(AsteroidBlocks.blockBasic, 2), "tile.asteroids_block.asteroid_rock_2");
                 registerMethod.invoke(null, clazzbm.getConstructor(Block.class, int.class).newInstance(AsteroidBlocks.blockDenseIce, 0), "tile.dense_ice");
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
         }
     }
 
-    private void registerTileEntities()
-    {
+    private void registerTileEntities() {
         GameRegistry.registerTileEntity(TileEntityBeamReflector.class, "GC Beam Reflector");
         GameRegistry.registerTileEntity(TileEntityBeamReceiver.class, "GC Beam Receiver");
         GameRegistry.registerTileEntity(TileEntityShortRangeTelepad.class, "GC Short Range Telepad");
@@ -369,14 +344,12 @@ public class AsteroidsModule implements IPlanetsModule
     }
 
     @Override
-    public Configuration getConfiguration()
-    {
+    public Configuration getConfiguration() {
         return ConfigManagerAsteroids.config;
     }
 
     @Override
-    public void syncConfig()
-    {
+    public void syncConfig() {
         ConfigManagerAsteroids.syncConfig(false, false);
     }
 }

@@ -19,94 +19,77 @@ import net.minecraft.world.World;
 import java.util.Map;
 import java.util.Random;
 
-public class EntityEntryPod extends EntityLanderBase implements IScaleableFuelLevel, ICameraZoomEntity, IIgnoreShift
-{
-    public EntityEntryPod(World var1)
-    {
+public class EntityEntryPod extends EntityLanderBase implements IScaleableFuelLevel, ICameraZoomEntity, IIgnoreShift {
+    public EntityEntryPod(World var1) {
         super(var1);
         this.setSize(1.5F, 3.0F);
     }
 
-    public EntityEntryPod(EntityPlayerMP player)
-    {
+    public EntityEntryPod(EntityPlayerMP player) {
         super(player, 0.0F);
         this.setSize(1.5F, 3.0F);
     }
 
     @Override
-    public double getInitialMotionY()
-    {
+    public double getInitialMotionY() {
         return -0.5F;
     }
 
     @Override
-    public double getMountedYOffset()
-    {
+    public double getMountedYOffset() {
         return this.height - 2.0D;
     }
 
     @Override
-    public float getRotateOffset()
-    {
+    public float getRotateOffset() {
         //Signal no rotate
         return -20.0F;
     }
-    
+
     @Override
-    public boolean shouldSpawnParticles()
-    {
+    public boolean shouldSpawnParticles() {
         return false;
     }
 
     @Override
-    public Map<Vector3, Vector3> getParticleMap()
-    {
+    public Map<Vector3, Vector3> getParticleMap() {
         return null;
     }
 
     @Override
-    public Particle getParticle(Random rand, double x, double y, double z, double motX, double motY, double motZ)
-    {
+    public Particle getParticle(Random rand, double x, double y, double z, double motX, double motY, double motZ) {
         return null;
     }
 
     @Override
-    public void tickOnGround()
-    {
+    public void tickOnGround() {
 
     }
 
     @Override
-    public void tickInAir()
-    {
+    public void tickInAir() {
         super.tickInAir();
 
-        if (this.world.isRemote)
-        {
-            if (!this.onGround)
-            {
+        if (this.world.isRemote) {
+            if (!this.onGround) {
                 this.motionY -= 0.002D;
             }
         }
     }
 
     @Override
-    public void onGroundHit()
-    {
+    public void onGroundHit() {
         BlockPos pos = new BlockPos(this).up(2);
         this.world.setBlockState(pos, GCBlocks.brightAir.getDefaultState(), 2);
     }
 
     @Override
-    public Vector3 getMotionVec()
-    {
-        if (this.onGround)
-        {
+    public Vector3 getMotionVec() {
+        if (this.onGround) {
             return new Vector3(0, 0, 0);
         }
 
-        if (this.ticks >= 40 && this.ticks < 45)
-        {
+        if (this.ticks >= 40 && this.ticks < 45) {
             this.motionY = this.getInitialMotionY();
         }
 
@@ -114,107 +97,86 @@ public class EntityEntryPod extends EntityLanderBase implements IScaleableFuelLe
     }
 
     @Override
-    public float getCameraZoom()
-    {
+    public float getCameraZoom() {
         return 15.0F;
     }
 
     @Override
-    public boolean defaultThirdPerson()
-    {
+    public boolean defaultThirdPerson() {
         return true;
     }
 
     @Override
-    public boolean pressKey(int key)
-    {
+    public boolean pressKey(int key) {
         return false;
     }
 
     @Override
-    public String getName()
-    {
+    public String getName() {
         return GCCoreUtil.translate("container.entry_pod.name");
     }
 
     @Override
-    public boolean hasCustomName()
-    {
+    public boolean hasCustomName() {
         return true;
     }
 
     @Override
-    protected boolean canTriggerWalking()
-    {
+    protected boolean canTriggerWalking() {
         return false;
     }
 
     @Override
-    public AxisAlignedBB getCollisionBoundingBox()
-    {
+    public AxisAlignedBB getCollisionBoundingBox() {
         return null;
     }
 
     @Override
-    public AxisAlignedBB getCollisionBox(Entity par1Entity)
-    {
+    public AxisAlignedBB getCollisionBox(Entity par1Entity) {
         return null;
     }
 
     @Override
-    public boolean canBePushed()
-    {
+    public boolean canBePushed() {
         return false;
     }
 
     @Override
-    public boolean canBeCollidedWith()
-    {
+    public boolean canBeCollidedWith() {
         return !this.isDead;
     }
 
     @Override
-    public boolean processInitialInteract(EntityPlayer player, EnumHand hand)
-    {
-        if (this.world.isRemote)
-        {
-            if (!this.onGround)
-            {
+    public boolean processInitialInteract(EntityPlayer player, EnumHand hand) {
+        if (this.world.isRemote) {
+            if (!this.onGround) {
                 return false;
             }
 
-            if (!this.getPassengers().isEmpty())
-            {
+            if (!this.getPassengers().isEmpty()) {
                 this.removePassengers();
             }
 
             return true;
         }
 
-        if (this.getPassengers().isEmpty() && player instanceof EntityPlayerMP)
-        {
+        if (this.getPassengers().isEmpty() && player instanceof EntityPlayerMP) {
             GCCoreUtil.openParachestInv((EntityPlayerMP) player, this);
             return true;
-        }
-        else if (player instanceof EntityPlayerMP)
-        {
-            if (!this.onGround)
-            {
+        } else if (player instanceof EntityPlayerMP) {
+            if (!this.onGround) {
                 return false;
             }
 
             this.removePassengers();
             return true;
-        }
-        else
-        {
+        } else {
             return true;
         }
     }
 
     @Override
-    public boolean shouldIgnoreShiftExit()
-    {
+    public boolean shouldIgnoreShiftExit() {
         return !this.onGround;
     }
 }

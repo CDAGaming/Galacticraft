@@ -12,32 +12,25 @@ import net.minecraft.world.gen.structure.StructureStart;
 import java.util.List;
 import java.util.Random;
 
-public class MapGenDungeonVenus extends MapGenStructure
-{
+public class MapGenDungeonVenus extends MapGenStructure {
     private static boolean initialized;
-    private DungeonConfigurationVenus configuration;
 
-    static
-    {
-        try
-        {
+    static {
+        try {
             MapGenDungeonVenus.initiateStructures();
-        }
-        catch (Throwable e)
-        {
+        } catch (Throwable e) {
 
         }
     }
 
-    public MapGenDungeonVenus(DungeonConfigurationVenus configuration)
-    {
+    private DungeonConfigurationVenus configuration;
+
+    public MapGenDungeonVenus(DungeonConfigurationVenus configuration) {
         this.configuration = configuration;
     }
 
-    public static void initiateStructures() throws Throwable
-    {
-        if (!MapGenDungeonVenus.initialized)
-        {
+    public static void initiateStructures() throws Throwable {
+        if (!MapGenDungeonVenus.initialized) {
             MapGenStructureIO.registerStructure(MapGenDungeonVenus.Start.class, "VenusDungeon");
             MapGenStructureIO.registerStructureComponent(DungeonStartVenus.class, "VenusDungeonStart");
             MapGenStructureIO.registerStructureComponent(CorridorVenus.class, "VenusDungeonCorridor");
@@ -52,14 +45,12 @@ public class MapGenDungeonVenus extends MapGenStructure
     }
 
     @Override
-    public String getStructureName()
-    {
+    public String getStructureName() {
         return "GC_Dungeon_Venus";
     }
 
     @Override
-    protected boolean canSpawnStructureAtCoords(int chunkX, int chunkZ)
-    {
+    protected boolean canSpawnStructureAtCoords(int chunkX, int chunkZ) {
         long dungeonPos = MapGenDungeon.getDungeonPosForCoords(this.world, chunkX, chunkZ, ((IGalacticraftWorldProvider) this.world.provider).getDungeonSpacing());
         int i = (int) (dungeonPos >> 32);
         int j = (int) dungeonPos;
@@ -67,35 +58,29 @@ public class MapGenDungeonVenus extends MapGenStructure
     }
 
     @Override
-    protected StructureStart getStructureStart(int chunkX, int chunkZ)
-    {
+    protected StructureStart getStructureStart(int chunkX, int chunkZ) {
         return new MapGenDungeonVenus.Start(this.world, this.rand, chunkX, chunkZ, this.configuration);
     }
 
     @Override
-    public BlockPos getNearestStructurePos(World worldIn, BlockPos pos, boolean p_180706_3_)
-    {
+    public BlockPos getNearestStructurePos(World worldIn, BlockPos pos, boolean p_180706_3_) {
         return null;
     }
 
-    public static class Start extends StructureStart
-    {
+    public static class Start extends StructureStart {
         private DungeonConfigurationVenus configuration;
 
-        public Start()
-        {
+        public Start() {
         }
 
-        public Start(World worldIn, Random rand, int chunkX, int chunkZ, DungeonConfigurationVenus configuration)
-        {
+        public Start(World worldIn, Random rand, int chunkX, int chunkZ, DungeonConfigurationVenus configuration) {
             super(chunkX, chunkZ);
             this.configuration = configuration;
             DungeonStartVenus startPiece = new DungeonStartVenus(worldIn, configuration, rand, (chunkX << 4) + 2, (chunkZ << 4) + 2);
             startPiece.buildComponent(startPiece, this.components, rand);
             List<StructureComponent> list = startPiece.attachedComponents;
 
-            while (!list.isEmpty())
-            {
+            while (!list.isEmpty()) {
                 int i = rand.nextInt(list.size());
                 StructureComponent structurecomponent = list.remove(i);
                 structurecomponent.buildComponent(startPiece, this.components, rand);

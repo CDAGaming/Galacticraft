@@ -15,8 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.oredict.OreDictionary;
 
-public class AsteroidsItems
-{
+public class AsteroidsItems {
     public static Item grapple;
     public static Item tier3Rocket;
     public static Item astroMiner;
@@ -41,10 +40,9 @@ public class AsteroidsItems
     public static Item strangeSeed;
 
     public static Item.ToolMaterial TOOL_TITANIUM = EnumHelper.addToolMaterial("titanium", 4, 760, 14.0F, 4.0F, 16);
-    public static ItemArmor.ArmorMaterial ARMOR_TITANIUM = EnumHelper.addArmorMaterial("titanium", "", 26, new int[] { 5, 7, 10, 5 }, 20, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 1.0F);
+    public static ItemArmor.ArmorMaterial ARMOR_TITANIUM = EnumHelper.addArmorMaterial("titanium", "", 26, new int[]{5, 7, 10, 5}, 20, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 1.0F);
 
-    public static void initItems()
-    {
+    public static void initItems() {
         AsteroidsItems.grapple = new ItemGrappleHook("grapple");
         AsteroidsItems.tier3Rocket = new ItemTier3Rocket("rocket_t3");
         AsteroidsItems.astroMiner = new ItemAstroMiner("astro_miner");
@@ -77,8 +75,7 @@ public class AsteroidsItems
         GalacticraftCore.proxy.registerCanister(new PartialCanister(AsteroidsItems.canisterLN2, Constants.MOD_ID_PLANETS, "canister_partial_ln2", 7));
     }
 
-    public static void oreDictRegistrations()
-    {
+    public static void oreDictRegistrations() {
         OreDictionary.registerOre("compressedTitanium", new ItemStack(AsteroidsItems.basicItem, 1, 6));
         OreDictionary.registerOre("ingotTitanium", new ItemStack(AsteroidsItems.basicItem, 1, 0));
         OreDictionary.registerOre("shardTitanium", new ItemStack(AsteroidsItems.basicItem, 1, 4));
@@ -86,15 +83,13 @@ public class AsteroidsItems
         OreDictionary.registerOre("dustTitanium", new ItemStack(AsteroidsItems.basicItem, 1, 9));
     }
 
-    public static void registerHarvestLevels()
-    {
+    public static void registerHarvestLevels() {
         AsteroidsItems.titaniumPickaxe.setHarvestLevel("pickaxe", 5);
         AsteroidsItems.titaniumAxe.setHarvestLevel("axe", 5);
         AsteroidsItems.titaniumSpade.setHarvestLevel("shovel", 5);
     }
 
-    private static void registerItems()
-    {
+    private static void registerItems() {
         registerItem(AsteroidsItems.grapple);
         registerItem(AsteroidsItems.tier3Rocket);
         registerItem(AsteroidsItems.astroMiner);
@@ -117,16 +112,15 @@ public class AsteroidsItems
         registerItem(AsteroidsItems.titaniumHoe);
         registerItem(AsteroidsItems.titaniumSword);
         registerItem(AsteroidsItems.strangeSeed);
-        
+
         ARMOR_TITANIUM.setRepairItem(new ItemStack(AsteroidsItems.basicItem, 1, 0));
-        
+
         GCItems.canisterTypes.add((ItemCanisterGeneric) AsteroidsItems.canisterLOX);
         GCItems.canisterTypes.add((ItemCanisterGeneric) AsteroidsItems.methaneCanister);
         GCItems.canisterTypes.add((ItemCanisterGeneric) AsteroidsItems.canisterLN2);
     }
 
-    public static void registerItem(Item item)
-    {
+    public static void registerItem(Item item) {
         String name = item.getUnlocalizedName().substring(5);
         GCCoreUtil.registerGalacticraftItem(name, item);
         GalacticraftCore.itemListTrue.add(item);

@@ -19,14 +19,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
-public class GuiRocketInventory extends GuiContainerGC
-{
+public class GuiRocketInventory extends GuiContainerGC {
     private static ResourceLocation[] rocketTextures = new ResourceLocation[4];
 
-    static
-    {
-        for (int i = 0; i < 4; i++)
-        {
+    static {
+        for (int i = 0; i < 4; i++) {
             GuiRocketInventory.rocketTextures[i] = new ResourceLocation(Constants.ASSET_PREFIX, "textures/gui/rocket_" + i * 18 + ".png");
         }
     }
@@ -34,8 +31,7 @@ public class GuiRocketInventory extends GuiContainerGC
     private final IInventory upperChestInventory;
     private final EnumRocketType rocketType;
 
-    public GuiRocketInventory(IInventory par1IInventory, IInventory par2IInventory, EnumRocketType rocketType)
-    {
+    public GuiRocketInventory(IInventory par1IInventory, IInventory par2IInventory, EnumRocketType rocketType) {
         super(new ContainerRocketInventory(par1IInventory, par2IInventory, rocketType, FMLClientHandler.instance().getClient().player));
         this.upperChestInventory = par1IInventory;
         this.allowUserInput = false;
@@ -44,8 +40,7 @@ public class GuiRocketInventory extends GuiContainerGC
     }
 
     @Override
-    public void initGui()
-    {
+    public void initGui() {
         super.initGui();
         List<String> fuelTankDesc = new ArrayList<String>();
         fuelTankDesc.add(GCCoreUtil.translate("gui.fuel_tank.desc.0"));
@@ -54,14 +49,12 @@ public class GuiRocketInventory extends GuiContainerGC
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int par1, int par2)
-    {
+    protected void drawGuiContainerForegroundLayer(int par1, int par2) {
         this.fontRenderer.drawString(GCCoreUtil.translate("gui.message.fuel.name"), 8, 2 + 3, 4210752);
 
         this.fontRenderer.drawString(GCCoreUtil.translate(this.upperChestInventory.getName()), 8, 34 + 2 + 3, 4210752);
 
-        if (this.mc.player != null && this.mc.player.getRidingEntity() != null && this.mc.player.getRidingEntity() instanceof EntitySpaceshipBase)
-        {
+        if (this.mc.player != null && this.mc.player.getRidingEntity() != null && this.mc.player.getRidingEntity() instanceof EntitySpaceshipBase) {
             this.fontRenderer.drawString(GCCoreUtil.translate("gui.message.fuel.name") + ":", 125, 15 + 3, 4210752);
             final double percentage = ((EntitySpaceshipBase) this.mc.player.getRidingEntity()).getScaledFuelLevel(100);
             final String color = percentage > 80.0D ? EnumColor.BRIGHT_GREEN.getCode() : percentage > 40.0D ? EnumColor.ORANGE.getCode() : EnumColor.RED.getCode();
@@ -71,8 +64,7 @@ public class GuiRocketInventory extends GuiContainerGC
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3)
-    {
+    protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3) {
         this.mc.getTextureManager().bindTexture(GuiRocketInventory.rocketTextures[(this.rocketType.getInventorySpace() - 2) / 18]);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
@@ -80,8 +72,7 @@ public class GuiRocketInventory extends GuiContainerGC
         final int var6 = (this.height - this.ySize) / 2;
         this.drawTexturedModalRect(var5, var6, 0, 0, 176, this.ySize);
 
-        if (this.mc.player != null && this.mc.player.getRidingEntity() != null && this.mc.player.getRidingEntity() instanceof EntitySpaceshipBase)
-        {
+        if (this.mc.player != null && this.mc.player.getRidingEntity() != null && this.mc.player.getRidingEntity() instanceof EntitySpaceshipBase) {
             final int fuelLevel = ((EntitySpaceshipBase) this.mc.player.getRidingEntity()).getScaledFuelLevel(38);
 
             this.drawTexturedModalRect((this.width - this.xSize) / 2 + (((EntityTieredRocket) this.mc.player.getRidingEntity()).rocketType.getInventorySpace() == 2 ? 71 : 72), (this.height - this.ySize) / 2 + 45 - fuelLevel, 176, 38 - fuelLevel, 42, fuelLevel);

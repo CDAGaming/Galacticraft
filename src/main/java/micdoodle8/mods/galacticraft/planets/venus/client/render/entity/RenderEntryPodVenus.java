@@ -2,7 +2,6 @@ package micdoodle8.mods.galacticraft.planets.venus.client.render.entity;
 
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
-
 import micdoodle8.mods.galacticraft.core.client.model.OBJLoaderGC;
 import micdoodle8.mods.galacticraft.core.util.ClientUtil;
 import micdoodle8.mods.galacticraft.core.util.ColorUtil;
@@ -23,42 +22,33 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.obj.OBJModel;
-
 import org.lwjgl.opengl.GL11;
 
-public class RenderEntryPodVenus extends Render<EntityEntryPodVenus>
-{
+public class RenderEntryPodVenus extends Render<EntityEntryPodVenus> {
+    protected ModelBalloonParachute parachuteModel = new ModelBalloonParachute();
     private OBJModel.OBJBakedModel modelEntryPod;
     private OBJModel.OBJBakedModel modelFlame;
-    protected ModelBalloonParachute parachuteModel = new ModelBalloonParachute();
 
-    public RenderEntryPodVenus(RenderManager manager)
-    {
+    public RenderEntryPodVenus(RenderManager manager) {
         super(manager);
     }
 
-    private void updateModels()
-    {
-        if (modelEntryPod == null)
-        {
-            try
-            {
+    private void updateModels() {
+        if (modelEntryPod == null) {
+            try {
                 IModel model = OBJLoaderGC.instance.loadModel(new ResourceLocation(GalacticraftPlanets.ASSET_PREFIX, "pod_flame.obj"));
                 Function<ResourceLocation, TextureAtlasSprite> spriteFunction = location -> Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(location.toString());
 
                 modelEntryPod = (OBJModel.OBJBakedModel) model.bake(new OBJModel.OBJState(ImmutableList.of("PodBody"), false), DefaultVertexFormats.ITEM, spriteFunction);
                 modelFlame = (OBJModel.OBJBakedModel) model.bake(new OBJModel.OBJState(ImmutableList.of("Flame_Sphere"), false), DefaultVertexFormats.ITEM, spriteFunction);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }
     }
 
     @Override
-    public void doRender(EntityEntryPodVenus entityEntryPod, double x, double y, double z, float entityYaw, float partialTicks)
-    {
+    public void doRender(EntityEntryPodVenus entityEntryPod, double x, double y, double z, float entityYaw, float partialTicks) {
         GlStateManager.disableRescaleNormal();
         GlStateManager.pushMatrix();
         final float var24 = entityEntryPod.prevRotationPitch + (entityEntryPod.rotationPitch - entityEntryPod.prevRotationPitch) * partialTicks;
@@ -76,8 +66,7 @@ public class RenderEntryPodVenus extends Render<EntityEntryPodVenus>
         GlStateManager.scale(0.65F, 0.6F, 0.65F);
         ClientUtil.drawBakedModel(modelEntryPod);
 
-        if (entityEntryPod.posY > 382.0F)
-        {
+        if (entityEntryPod.posY > 382.0F) {
             RenderHelper.disableStandardItemLighting();
             OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
             GlStateManager.disableLighting();
@@ -104,8 +93,7 @@ public class RenderEntryPodVenus extends Render<EntityEntryPodVenus>
             RenderHelper.enableStandardItemLighting();
         }
 
-        if (entityEntryPod.getGroundPosY() != null && entityEntryPod.posY - entityEntryPod.getGroundPosY() > 5.0F && entityEntryPod.posY <= 242.0F)
-        {
+        if (entityEntryPod.getGroundPosY() != null && entityEntryPod.posY - entityEntryPod.getGroundPosY() > 5.0F && entityEntryPod.posY <= 242.0F) {
             GlStateManager.pushMatrix();
             GlStateManager.translate(-1.4F, 1.5F, -0.3F);
             GlStateManager.scale(2.5F, 3.0F, 2.5F);
@@ -116,14 +104,12 @@ public class RenderEntryPodVenus extends Render<EntityEntryPodVenus>
     }
 
     @Override
-    protected ResourceLocation getEntityTexture(EntityEntryPodVenus entityEntryPod)
-    {
+    protected ResourceLocation getEntityTexture(EntityEntryPodVenus entityEntryPod) {
         return new ResourceLocation("missing");
     }
-    
+
     @Override
-    public boolean shouldRender(EntityEntryPodVenus lander, ICamera camera, double camX, double camY, double camZ)
-    {
+    public boolean shouldRender(EntityEntryPodVenus lander, ICamera camera, double camX, double camY, double camZ) {
         AxisAlignedBB axisalignedbb = lander.getEntityBoundingBox().grow(1D, 2D, 1D);
         return lander.isInRangeToRender3d(camX, camY, camZ) && camera.isBoundingBoxInFrustum(axisalignedbb);
     }

@@ -8,14 +8,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
 
-public class StructureVillageStartMoon extends StructureStart
-{
-    public StructureVillageStartMoon()
-    {
+public class StructureVillageStartMoon extends StructureStart {
+    public StructureVillageStartMoon() {
     }
 
-    public StructureVillageStartMoon(World par1World, Random par2Random, int par3, int par4, int par5)
-    {
+    public StructureVillageStartMoon(World par1World, Random par2Random, int par3, int par4, int par5) {
         super(par3, par4);
 
         final ArrayList<StructureVillagePieceWeightMoon> var6 = StructureVillagePiecesMoon.getStructureVillageWeightedPieceList(par2Random, par5);
@@ -26,18 +23,14 @@ public class StructureVillageStartMoon extends StructureStart
         final ArrayList<Object> var9 = var7.field_74932_i;
         int var10;
 
-        while (!var8.isEmpty() || !var9.isEmpty())
-        {
+        while (!var8.isEmpty() || !var9.isEmpty()) {
             StructureComponent var11;
 
-            if (var8.isEmpty())
-            {
+            if (var8.isEmpty()) {
                 var10 = par2Random.nextInt(var9.size());
                 var11 = (StructureComponent) var9.remove(var10);
                 var11.buildComponent(var7, this.components, par2Random);
-            }
-            else
-            {
+            } else {
                 var10 = par2Random.nextInt(var8.size());
                 var11 = (StructureComponent) var8.remove(var10);
                 var11.buildComponent(var7, this.components, par2Random);
@@ -48,12 +41,10 @@ public class StructureVillageStartMoon extends StructureStart
         var10 = 0;
         final Iterator<StructureComponent> var13 = this.components.iterator();
 
-        while (var13.hasNext())
-        {
+        while (var13.hasNext()) {
             final StructureComponent var12 = var13.next();
 
-            if (!(var12 instanceof StructureComponentVillageRoadPiece))
-            {
+            if (!(var12 instanceof StructureComponentVillageRoadPiece)) {
                 ++var10;
             }
         }
@@ -64,8 +55,7 @@ public class StructureVillageStartMoon extends StructureStart
      * than 2 non-road components
      */
     @Override
-    public boolean isSizeableStructure()
-    {
+    public boolean isSizeableStructure() {
         return true;
     }
 }

@@ -32,8 +32,7 @@ import java.util.EnumSet;
 import java.util.LinkedList;
 import java.util.List;
 
-public class TileEntityDish extends TileBaseUniversalElectrical implements IMultiBlock, IDisableableMachine, IInventoryDefaults, ISidedInventory, IConnector
-{
+public class TileEntityDish extends TileBaseUniversalElectrical implements IMultiBlock, IDisableableMachine, IInventoryDefaults, ISidedInventory, IConnector {
     public float targetAngle;
     public float currentAngle;
     @NetworkedField(targetSide = Side.CLIENT)
@@ -45,36 +44,29 @@ public class TileEntityDish extends TileBaseUniversalElectrical implements IMult
     private boolean initialised = false;
     private AxisAlignedBB renderAABB;
 
-    public TileEntityDish()
-    {
+    public TileEntityDish() {
         this.storage.setMaxExtract(100);
         this.setTierGC(1);
     }
-    
-    public float rotation(float partial)
-    {
+
+    public float rotation(float partial) {
         return (this.ticks + partial) / 12;
     }
 
-    public float elevation(float partial)
-    {
+    public float elevation(float partial) {
         return (MathHelper.sin(rotation(partial) / 40) + 1.0F) * 22.5F;
     }
 
     @Override
-    public void update()
-    {
+    public void update() {
         super.update();
 
-        if (!this.initialised)
-        {
+        if (!this.initialised) {
             this.initialised = this.initialiseMultiTiles(this.getPos(), this.world);
         }
 
-        if (!this.world.isRemote)
-        {
-            if (this.disableCooldown > 0)
-            {
+        if (!this.world.isRemote) {
+            if (this.disableCooldown > 0) {
                 this.disableCooldown--;
             }
         }
@@ -85,22 +77,15 @@ public class TileEntityDish extends TileBaseUniversalElectrical implements IMult
         celestialAngle %= 360;
 
         {
-            if (celestialAngle > 30 && celestialAngle < 150)
-            {
+            if (celestialAngle > 30 && celestialAngle < 150) {
                 float difference = this.targetAngle - celestialAngle;
 
                 this.targetAngle -= difference / 20.0F;
-            }
-            else if (!this.world.isDaytime() || this.world.isRaining() || this.world.isThundering())
-            {
+            } else if (!this.world.isDaytime() || this.world.isRaining() || this.world.isThundering()) {
                 this.targetAngle = 77.5F + 180.0F;
-            }
-            else if (celestialAngle < 50)
-            {
+            } else if (celestialAngle < 50) {
                 this.targetAngle = 50;
-            }
-            else if (celestialAngle > 150)
-            {
+            } else if (celestialAngle > 150) {
                 this.targetAngle = 150;
             }
         }
@@ -110,23 +95,18 @@ public class TileEntityDish extends TileBaseUniversalElectrical implements IMult
         this.currentAngle += difference / 20.0F;
     }
 
-    protected boolean initialiseMultiTiles(BlockPos pos, World world)
-    {
+    protected boolean initialiseMultiTiles(BlockPos pos, World world) {
         //Client can create its own fake blocks and tiles - no need for networking in 1.8+
         if (world.isRemote) this.onCreate(world, pos);
-        
+
         List<BlockPos> positions = new ArrayList<>();
         this.getPositions(pos, positions);
         boolean result = true;
-        for (BlockPos vecToAdd : positions)
-        {
+        for (BlockPos vecToAdd : positions) {
             TileEntity tile = world.getTileEntity(vecToAdd);
-            if (tile instanceof TileEntityMulti)
-            {
+            if (tile instanceof TileEntityMulti) {
                 ((TileEntityMulti) tile).mainBlockPosition = pos;
-            }
-            else
-            {
+            } else {
                 result = false;
             }
         }
@@ -134,108 +114,86 @@ public class TileEntityDish extends TileBaseUniversalElectrical implements IMult
     }
 
     @Override
-    public boolean onActivated(EntityPlayer entityPlayer)
-    {
+    public boolean onActivated(EntityPlayer entityPlayer) {
         return false; // TODO
 //        return this.getBlockType().onBlockActivated(this.world, this.getPos(), this.world.getBlockState(this.getPos()), entityPlayer, EnumFacing.DOWN, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ());
     }
 
     @Override
-    public void onCreate(World world, BlockPos placedPosition)
-    {
+    public void onCreate(World world, BlockPos placedPosition) {
         List<BlockPos> positions = new LinkedList<>();
         this.getPositions(placedPosition, positions);
         ((BlockMulti) GCBlocks.fakeBlock).makeFakeBlock(world, positions, placedPosition, this.getMultiType());
     }
 
     @Override
-    public BlockMulti.EnumBlockMultiType getMultiType()
-    {
+    public BlockMulti.EnumBlockMultiType getMultiType() {
         return EnumBlockMultiType.DISH_LARGE;
     }
-    
+
     @Override
-    public void getPositions(BlockPos placedPosition, List<BlockPos> positions)
-    {
+    public void getPositions(BlockPos placedPosition, List<BlockPos> positions) {
         int buildHeight = this.world.getHeight() - 1;
         int y = placedPosition.getY();
 
-        if (++y > buildHeight)
-        {
+        if (++y > buildHeight) {
             return;
         }
         positions.add(new BlockPos(placedPosition.getX(), y, placedPosition.getZ()));
 
-        if (++y > buildHeight)
-        {
+        if (++y > buildHeight) {
             return;
         }
         positions.add(new BlockPos(placedPosition.getX(), y, placedPosition.getZ()));
 
-        if (++y > buildHeight)
-        {
+        if (++y > buildHeight) {
             return;
         }
         positions.add(new BlockPos(placedPosition.getX(), y, placedPosition.getZ()));
 
-        if (++y > buildHeight)
-        {
+        if (++y > buildHeight) {
             return;
         }
-        for (int x = -1; x < 2; x++)
-        {
-            for (int z = -1; z < 2; z++)
-            {
+        for (int x = -1; x < 2; x++) {
+            for (int z = -1; z < 2; z++) {
                 positions.add(new BlockPos(placedPosition.getX() + x, y, placedPosition.getZ() + z));
             }
         }
 
-        if (++y > buildHeight)
-        {
+        if (++y > buildHeight) {
             return;
         }
-        for (int x = -1; x < 2; x++)
-        {
-            for (int z = -1; z < 2; z++)
-            {
+        for (int x = -1; x < 2; x++) {
+            for (int z = -1; z < 2; z++) {
                 positions.add(new BlockPos(placedPosition.getX() + x, y, placedPosition.getZ() + z));
             }
         }
 
-        if (++y > buildHeight)
-        {
+        if (++y > buildHeight) {
             return;
         }
-        for (int x = -3; x < 4; x++)
-        {
-            for (int z = -3; z < 4; z++)
-            {
+        for (int x = -3; x < 4; x++) {
+            for (int z = -3; z < 4; z++) {
                 if (Math.abs(x) + Math.abs(z) == 6) continue;
                 positions.add(new BlockPos(placedPosition.getX() + x, y, placedPosition.getZ() + z));
             }
         }
 
-        if (++y > buildHeight)
-        {
+        if (++y > buildHeight) {
             return;
         }
-        for (int x = -3; x < 4; x++)
-        {
-            for (int z = -3; z < 4; z++)
-            {
+        for (int x = -3; x < 4; x++) {
+            for (int z = -3; z < 4; z++) {
                 if (Math.abs(x) + Math.abs(z) == 6) continue;
                 positions.add(new BlockPos(placedPosition.getX() + x, y, placedPosition.getZ() + z));
             }
         }
 
-        if (++y > buildHeight)
-        {
+        if (++y > buildHeight) {
             return;
         }
-        for (int x = -2; x < 3; x++)
-        {
-            for (int z = -2; z < 3; z++)
-            {
+        for (int x = -2; x < 3; x++) {
+            for (int z = -2; z < 3; z++) {
                 if (Math.abs(x) + Math.abs(z) == 4) continue;
                 positions.add(new BlockPos(placedPosition.getX() + x, y, placedPosition.getZ() + z));
             }
@@ -244,20 +202,16 @@ public class TileEntityDish extends TileBaseUniversalElectrical implements IMult
     }
 
     @Override
-    public void onDestroy(TileEntity callingBlock)
-    {
+    public void onDestroy(TileEntity callingBlock) {
         final BlockPos thisBlock = getPos();
         List<BlockPos> positions = new LinkedList<>();
         this.getPositions(thisBlock, positions);
 
-        for (BlockPos pos : positions)
-        {
+        for (BlockPos pos : positions) {
             IBlockState stateAt = this.world.getBlockState(pos);
 
-            if (stateAt.getBlock() == GCBlocks.fakeBlock && (EnumBlockMultiType) stateAt.getValue(BlockMulti.MULTI_TYPE) == EnumBlockMultiType.DISH_LARGE)
-            {
-                if (this.world.isRemote && this.world.rand.nextDouble() < 0.05D)
-                {
+            if (stateAt.getBlock() == GCBlocks.fakeBlock && (EnumBlockMultiType) stateAt.getValue(BlockMulti.MULTI_TYPE) == EnumBlockMultiType.DISH_LARGE) {
+                if (this.world.isRemote && this.world.rand.nextDouble() < 0.05D) {
                     FMLClientHandler.instance().getClient().effectRenderer.addBlockDestroyEffects(pos, this.world.getBlockState(pos));
                 }
                 this.world.setBlockToAir(pos);
@@ -267,8 +221,7 @@ public class TileEntityDish extends TileBaseUniversalElectrical implements IMult
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt)
-    {
+    public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
         this.storage.setCapacity(nbt.getFloat("maxEnergy"));
         this.currentAngle = nbt.getFloat("currentAngle");
@@ -283,8 +236,7 @@ public class TileEntityDish extends TileBaseUniversalElectrical implements IMult
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt)
-    {
+    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
         nbt.setFloat("maxEnergy", this.getMaxEnergyStoredGC());
         nbt.setFloat("currentAngle", this.currentAngle);
@@ -298,17 +250,14 @@ public class TileEntityDish extends TileBaseUniversalElectrical implements IMult
     }
 
     @Override
-    public EnumSet<EnumFacing> getElectricalInputDirections()
-    {
+    public EnumSet<EnumFacing> getElectricalInputDirections() {
         return EnumSet.noneOf(EnumFacing.class);
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public AxisAlignedBB getRenderBoundingBox()
-    {
-        if (this.renderAABB == null)
-        {
+    public AxisAlignedBB getRenderBoundingBox() {
+        if (this.renderAABB == null) {
             this.renderAABB = new AxisAlignedBB(pos.add(-3, 0, -3), pos.add(3, 8, 3));
         }
         return this.renderAABB;
@@ -316,8 +265,7 @@ public class TileEntityDish extends TileBaseUniversalElectrical implements IMult
 
     @Override
     @SideOnly(Side.CLIENT)
-    public double getMaxRenderDistanceSquared()
-    {
+    public double getMaxRenderDistanceSquared() {
         return Constants.RENDERDISTANCE_MEDIUM;
     }
 
@@ -328,52 +276,43 @@ public class TileEntityDish extends TileBaseUniversalElectrical implements IMult
 //    }
 
     @Override
-    public String getName()
-    {
+    public String getName() {
         //TODO
         return "";
     }
 
     @Override
-    public void setDisabled(int index, boolean disabled)
-    {
-        if (this.disableCooldown == 0)
-        {
+    public void setDisabled(int index, boolean disabled) {
+        if (this.disableCooldown == 0) {
             this.disabled = disabled;
             this.disableCooldown = 20;
         }
     }
 
     @Override
-    public boolean getDisabled(int index)
-    {
+    public boolean getDisabled(int index) {
         return this.disabled;
     }
 
-    public int getScaledElecticalLevel(int i)
-    {
+    public int getScaledElecticalLevel(int i) {
         return (int) Math.floor(this.getEnergyStoredGC() * i / this.getMaxEnergyStoredGC());
     }
 
     @Override
-    public int getSizeInventory()
-    {
+    public int getSizeInventory() {
         return this.stacks.size();
     }
 
     @Override
-    public ItemStack getStackInSlot(int var1)
-    {
+    public ItemStack getStackInSlot(int var1) {
         return this.stacks.get(var1);
     }
 
     @Override
-    public ItemStack decrStackSize(int index, int count)
-    {
+    public ItemStack decrStackSize(int index, int count) {
         ItemStack itemstack = ItemStackHelper.getAndSplit(this.stacks, index, count);
 
-        if (!itemstack.isEmpty())
-        {
+        if (!itemstack.isEmpty()) {
             this.markDirty();
         }
 
@@ -381,23 +320,19 @@ public class TileEntityDish extends TileBaseUniversalElectrical implements IMult
     }
 
     @Override
-    public ItemStack removeStackFromSlot(int index)
-    {
+    public ItemStack removeStackFromSlot(int index) {
         ItemStack oldstack = ItemStackHelper.getAndRemove(this.stacks, index);
-        if (!oldstack.isEmpty())
-        {
-        	this.markDirty();
+        if (!oldstack.isEmpty()) {
+            this.markDirty();
         }
-    	return oldstack;
+        return oldstack;
     }
 
     @Override
-    public void setInventorySlotContents(int index, ItemStack stack)
-    {
+    public void setInventorySlotContents(int index, ItemStack stack) {
         this.stacks.set(index, stack);
 
-        if (stack.getCount() > this.getInventoryStackLimit())
-        {
+        if (stack.getCount() > this.getInventoryStackLimit()) {
             stack.setCount(this.getInventoryStackLimit());
         }
 
@@ -405,12 +340,9 @@ public class TileEntityDish extends TileBaseUniversalElectrical implements IMult
     }
 
     @Override
-    public boolean isEmpty()
-    {
-        for (ItemStack itemstack : this.stacks)
-        {
-            if (!itemstack.isEmpty())
-            {
+    public boolean isEmpty() {
+        for (ItemStack itemstack : this.stacks) {
+            if (!itemstack.isEmpty()) {
                 return false;
             }
         }
@@ -419,38 +351,32 @@ public class TileEntityDish extends TileBaseUniversalElectrical implements IMult
     }
 
     @Override
-    public int getInventoryStackLimit()
-    {
+    public int getInventoryStackLimit() {
         return 64;
     }
 
     @Override
-    public boolean isUsableByPlayer(EntityPlayer par1EntityPlayer)
-    {
+    public boolean isUsableByPlayer(EntityPlayer par1EntityPlayer) {
         return this.world.getTileEntity(this.getPos()) == this && par1EntityPlayer.getDistanceSq(this.getPos().getX() + 0.5D, this.getPos().getY() + 0.5D, this.getPos().getZ() + 0.5D) <= 64.0D;
     }
 
     @Override
-    public int[] getSlotsForFace(EnumFacing side)
-    {
-        return new int[] { 0 };
+    public int[] getSlotsForFace(EnumFacing side) {
+        return new int[]{0};
     }
 
     @Override
-    public boolean canInsertItem(int slotID, ItemStack itemstack, EnumFacing side)
-    {
+    public boolean canInsertItem(int slotID, ItemStack itemstack, EnumFacing side) {
         return this.isItemValidForSlot(slotID, itemstack);
     }
 
     @Override
-    public boolean canExtractItem(int slotID, ItemStack itemstack, EnumFacing side)
-    {
+    public boolean canExtractItem(int slotID, ItemStack itemstack, EnumFacing side) {
         return slotID == 0;
     }
 
     @Override
-    public boolean isItemValidForSlot(int slotID, ItemStack itemstack)
-    {
+    public boolean isItemValidForSlot(int slotID, ItemStack itemstack) {
         return slotID == 0 && ItemElectricBase.isElectricItem(itemstack.getItem());
     }
 }

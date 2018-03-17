@@ -4,15 +4,12 @@ import net.minecraft.world.gen.layer.GenLayer;
 import net.minecraft.world.gen.layer.GenLayerVoronoiZoom;
 import net.minecraft.world.gen.layer.GenLayerZoom;
 
-public abstract class GenLayerVenus extends GenLayer
-{
-    public GenLayerVenus(long l)
-    {
+public abstract class GenLayerVenus extends GenLayer {
+    public GenLayerVenus(long l) {
         super(l);
     }
 
-    public static GenLayer[] createWorld(long l)
-    {
+    public static GenLayer[] createWorld(long l) {
         GenLayer biomes = new GenLayerVenusBiomes(l);
         biomes = new GenLayerZoom(1000L, biomes);
 //        biomes = new GenLayerVenusSurround(500L, biomes);
@@ -23,6 +20,6 @@ public abstract class GenLayerVenus extends GenLayer
         biomes.initWorldGenSeed(l);
         genLayerVeronoiZoom.initWorldGenSeed(l);
 
-        return new GenLayer[] { biomes, genLayerVeronoiZoom };
+        return new GenLayer[]{biomes, genLayerVeronoiZoom};
     }
 }

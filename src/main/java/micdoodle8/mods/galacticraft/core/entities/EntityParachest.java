@@ -28,15 +28,13 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class EntityParachest extends Entity implements IPacketReceiver
-{
+public class EntityParachest extends Entity implements IPacketReceiver {
     public NonNullList<ItemStack> cargo;
     public int fuelLevel;
-    private boolean placedChest;
     public EnumDyeColor color = EnumDyeColor.WHITE;
+    private boolean placedChest;
 
-    public EntityParachest(World world, NonNullList<ItemStack> cargo, int fuelLevel)
-    {
+    public EntityParachest(World world, NonNullList<ItemStack> cargo, int fuelLevel) {
         this(world);
         this.cargo = NonNullList.withSize(cargo.size(), ItemStack.EMPTY);
         Collections.copy(this.cargo, cargo);
@@ -44,23 +42,19 @@ public class EntityParachest extends Entity implements IPacketReceiver
         this.fuelLevel = fuelLevel;
     }
 
-    public EntityParachest(World world)
-    {
+    public EntityParachest(World world) {
         super(world);
         this.setSize(1.0F, 1.0F);
     }
 
     @Override
-    protected void entityInit()
-    {
+    protected void entityInit() {
     }
 
     @Override
-    protected void readEntityFromNBT(NBTTagCompound nbt)
-    {
+    protected void readEntityFromNBT(NBTTagCompound nbt) {
         int size = 56;
-        if (nbt.hasKey("CargoLength"))
-        {
+        if (nbt.hasKey("CargoLength")) {
             size = nbt.getInteger("CargoLength");
         }
         this.cargo = NonNullList.withSize(size, ItemStack.EMPTY);
@@ -70,15 +64,13 @@ public class EntityParachest extends Entity implements IPacketReceiver
         this.placedChest = nbt.getBoolean("placedChest");
         this.fuelLevel = nbt.getInteger("FuelLevel");
 
-        if (nbt.hasKey("color"))
-        {
+        if (nbt.hasKey("color")) {
             this.color = EnumDyeColor.byDyeDamage(nbt.getInteger("color"));
         }
     }
 
     @Override
-    protected void writeEntityToNBT(NBTTagCompound nbt)
-    {
+    protected void writeEntityToNBT(NBTTagCompound nbt) {
         if (world.isRemote) return;
         nbt.setInteger("CargoLength", this.cargo.size());
         ItemStackHelper.saveAllItems(nbt, this.cargo);
@@ -89,14 +81,10 @@ public class EntityParachest extends Entity implements IPacketReceiver
     }
 
     @Override
-    public void onUpdate()
-    {
-        if (!this.placedChest)
-        {
-            if (this.onGround && !this.world.isRemote)
-            {
-                for (int i = 0; i < 100; i++)
-                {
+    public void onUpdate() {
+        if (!this.placedChest) {
+            if (this.onGround && !this.world.isRemote) {
+                for (int i = 0; i < 100; i++) {
                     final int x = MathHelper.floor(this.posX);
                     final int y = MathHelper.floor(this.posY);
                     final int z = MathHelper.floor(this.posZ);
@@ -105,17 +93,12 @@ public class EntityParachest extends Entity implements IPacketReceiver
                     IBlockState state = this.world.getBlockState(pos);
                     Block block = state.getBlock();
 
-                    if (block.getMaterial(state).isReplaceable())
-                    {
-                        if (this.placeChest(pos))
-                        {
+                    if (block.getMaterial(state).isReplaceable()) {
+                        if (this.placeChest(pos)) {
                             this.setDead();
                             return;
-                        }
-                        else if (this.cargo != null)
-                        {
-                            for (final ItemStack stack : this.cargo)
-                            {
+                        } else if (this.cargo != null) {
+                            for (final ItemStack stack : this.cargo) {
                                 final EntityItem e = new EntityItem(this.world, this.posX, this.posY, this.posZ, stack);
                                 this.world.spawnEntity(e);
                             }
@@ -125,36 +108,29 @@ public class EntityParachest extends Entity implements IPacketReceiver
                     }
                 }
 
-                if (this.cargo != null)
-                {
-                    for (final ItemStack stack : this.cargo)
-                    {
+                if (this.cargo != null) {
+                    for (final ItemStack stack : this.cargo) {
                         final EntityItem e = new EntityItem(this.world, this.posX, this.posY, this.posZ, stack);
                         this.world.spawnEntity(e);
                     }
                 }
-            }
-            else
-            {
+            } else {
                 this.motionY = -0.35;
             }
 
             this.move(MoverType.SELF, 0, this.motionY, 0);
         }
 
-        if (!this.world.isRemote && this.ticksExisted % 5 == 0)
-        {
+        if (!this.world.isRemote && this.ticksExisted % 5 == 0) {
             GalacticraftCore.packetPipeline.sendToAllAround(new PacketDynamic(this), new NetworkRegistry.TargetPoint(GCCoreUtil.getDimensionID(this.world), this.posX, this.posY, this.posZ, 64.0));
         }
     }
 
-    private boolean placeChest(BlockPos pos)
-    {
+    private boolean placeChest(BlockPos pos) {
         this.world.setBlockState(pos, GCBlocks.parachest.getDefaultState(), 3);
         final TileEntity te = this.world.getTileEntity(pos);
 
-        if (te instanceof TileEntityParaChest && this.cargo != null)
-        {
+        if (te instanceof TileEntityParaChest && this.cargo != null) {
             final TileEntityParaChest chest = (TileEntityParaChest) te;
 
             chest.stacks = NonNullList.withSize(this.cargo.size() + 1, ItemStack.EMPTY);
@@ -174,19 +150,15 @@ public class EntityParachest extends Entity implements IPacketReceiver
     }
 
     @Override
-    public void getNetworkedData(ArrayList<Object> sendData)
-    {
-        if (!this.world.isRemote)
-        {
+    public void getNetworkedData(ArrayList<Object> sendData) {
+        if (!this.world.isRemote) {
             sendData.add(this.color.getDyeDamage());
         }
     }
 
     @Override
-    public void decodePacketdata(ByteBuf buffer)
-    {
-        if (this.world.isRemote)
-        {
+    public void decodePacketdata(ByteBuf buffer) {
+        if (this.world.isRemote) {
             this.color = EnumDyeColor.byDyeDamage(buffer.readInt());
         }
     }

@@ -11,13 +11,11 @@ import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemMoon extends ItemDesc implements ISortableItem
-{
-    public static String[] names = { "meteoric_iron_ingot", "compressed_meteoric_iron", "lunar_sapphire" };
+public class ItemMoon extends ItemDesc implements ISortableItem {
+    public static String[] names = {"meteoric_iron_ingot", "compressed_meteoric_iron", "lunar_sapphire"};
 //    protected IIcon[] icons = new IIcon[ItemMoon.names.length];
 
-    public ItemMoon(String str)
-    {
+    public ItemMoon(String str) {
         super();
         this.setMaxDamage(0);
         this.setHasSubtypes(true);
@@ -48,22 +46,17 @@ public class ItemMoon extends ItemDesc implements ISortableItem
     }*/
 
     @Override
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list)
-    {
-        if (tab == GalacticraftCore.galacticraftItemsTab || tab == CreativeTabs.SEARCH)
-        {
-            for (int i = 0; i < ItemMoon.names.length; i++)
-            {
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list) {
+        if (tab == GalacticraftCore.galacticraftItemsTab || tab == CreativeTabs.SEARCH) {
+            for (int i = 0; i < ItemMoon.names.length; i++) {
                 list.add(new ItemStack(this, 1, i));
             }
         }
     }
 
     @Override
-    public String getUnlocalizedName(ItemStack par1ItemStack)
-    {
-        if (names.length > par1ItemStack.getItemDamage())
-        {
+    public String getUnlocalizedName(ItemStack par1ItemStack) {
+        if (names.length > par1ItemStack.getItemDamage()) {
             return "item." + ItemMoon.names[par1ItemStack.getItemDamage()];
         }
 
@@ -71,43 +64,36 @@ public class ItemMoon extends ItemDesc implements ISortableItem
     }
 
     @Override
-    public int getMetadata(int par1)
-    {
+    public int getMetadata(int par1) {
         return par1;
     }
 
     @Override
-    public CreativeTabs getCreativeTab()
-    {
+    public CreativeTabs getCreativeTab() {
         return GalacticraftCore.galacticraftItemsTab;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public EnumRarity getRarity(ItemStack par1ItemStack)
-    {
+    public EnumRarity getRarity(ItemStack par1ItemStack) {
         return ClientProxyCore.galacticraftItem;
     }
 
     @Override
-    public EnumSortCategoryItem getCategory(int meta)
-    {
-        switch (meta)
-        {
-        case 0:
-            return EnumSortCategoryItem.INGOT;
-        case 2:
-            return EnumSortCategoryItem.GENERAL;
-        default:
-            return EnumSortCategoryItem.PLATE;
+    public EnumSortCategoryItem getCategory(int meta) {
+        switch (meta) {
+            case 0:
+                return EnumSortCategoryItem.INGOT;
+            case 2:
+                return EnumSortCategoryItem.GENERAL;
+            default:
+                return EnumSortCategoryItem.PLATE;
         }
     }
 
     @Override
-    public String getShiftDescription(int meta)
-    {
-        if (meta == 2)
-        {
+    public String getShiftDescription(int meta) {
+        if (meta == 2) {
             return GCCoreUtil.translate("item.lunar_sapphire.description");
         }
 
@@ -115,18 +101,15 @@ public class ItemMoon extends ItemDesc implements ISortableItem
     }
 
     @Override
-    public boolean showDescription(int meta)
-    {
+    public boolean showDescription(int meta) {
         return meta == 2;
     }
 
     @Override
-    public float getSmeltingExperience(ItemStack item)
-    {
-        switch (item.getItemDamage())
-        {
-        case 1:
-            return 1F;
+    public float getSmeltingExperience(ItemStack item) {
+        switch (item.getItemDamage()) {
+            case 1:
+                return 1F;
         }
         return -1F;
     }

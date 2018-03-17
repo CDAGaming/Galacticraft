@@ -1,8 +1,5 @@
 package micdoodle8.mods.galacticraft.core.tile;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import micdoodle8.mods.galacticraft.core.GCBlocks;
 import micdoodle8.mods.galacticraft.core.blocks.BlockMulti;
 import micdoodle8.mods.galacticraft.core.blocks.BlockMulti.EnumBlockMultiType;
@@ -12,33 +9,30 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class TileEntitySpaceStationBase extends TileEntityMulti implements IMultiBlock
-{
-    public TileEntitySpaceStationBase()
-    {
+import java.util.LinkedList;
+import java.util.List;
+
+public class TileEntitySpaceStationBase extends TileEntityMulti implements IMultiBlock {
+    private boolean initialised;
+
+    public TileEntitySpaceStationBase() {
         super(null);
     }
 
-    private boolean initialised;
-
     @Override
-    public void update()
-    {
-        if (!this.initialised)
-        {
+    public void update() {
+        if (!this.initialised) {
             this.initialised = this.initialiseMultiTiles(this.getPos(), this.world);
         }
     }
 
     @Override
-    public boolean onActivated(EntityPlayer entityPlayer)
-    {
+    public boolean onActivated(EntityPlayer entityPlayer) {
         return false;
     }
 
     @Override
-    public void onCreate(World world, BlockPos placedPosition)
-    {
+    public void onCreate(World world, BlockPos placedPosition) {
         this.mainBlockPosition = placedPosition;
         this.markDirty();
 
@@ -48,20 +42,16 @@ public class TileEntitySpaceStationBase extends TileEntityMulti implements IMult
     }
 
     @Override
-    public BlockMulti.EnumBlockMultiType getMultiType()
-    {
+    public BlockMulti.EnumBlockMultiType getMultiType() {
         return EnumBlockMultiType.SPACE_STATION_BASE;
     }
 
     @Override
-    public void getPositions(BlockPos placedPosition, List<BlockPos> positions)
-    {
+    public void getPositions(BlockPos placedPosition, List<BlockPos> positions) {
         int buildHeight = this.world.getHeight() - 1;
 
-        for (int y = 1; y < 3; y++)
-        {
-            if (placedPosition.getY() + y > buildHeight)
-            {
+        for (int y = 1; y < 3; y++) {
+            if (placedPosition.getY() + y > buildHeight) {
                 return;
             }
             positions.add(new BlockPos(placedPosition.getX(), placedPosition.getY() + y, placedPosition.getZ()));
@@ -69,18 +59,15 @@ public class TileEntitySpaceStationBase extends TileEntityMulti implements IMult
     }
 
     @Override
-    public void onDestroy(TileEntity callingBlock)
-    {
+    public void onDestroy(TileEntity callingBlock) {
         final BlockPos thisBlock = getPos();
         List<BlockPos> positions = new LinkedList<>();
         this.getPositions(thisBlock, positions);
 
-        for (BlockPos pos : positions)
-        {
+        for (BlockPos pos : positions) {
             IBlockState stateAt = this.world.getBlockState(pos);
 
-            if (stateAt.getBlock() == GCBlocks.fakeBlock && (EnumBlockMultiType) stateAt.getValue(BlockMulti.MULTI_TYPE) == EnumBlockMultiType.SPACE_STATION_BASE)
-            {
+            if (stateAt.getBlock() == GCBlocks.fakeBlock && (EnumBlockMultiType) stateAt.getValue(BlockMulti.MULTI_TYPE) == EnumBlockMultiType.SPACE_STATION_BASE) {
                 this.world.setBlockToAir(pos);
             }
         }

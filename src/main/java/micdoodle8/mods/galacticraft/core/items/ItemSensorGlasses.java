@@ -17,51 +17,43 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemSensorGlasses extends ItemArmor implements ISortableItem
-{
-    public ItemSensorGlasses(String assetName)
-    {
+public class ItemSensorGlasses extends ItemArmor implements ISortableItem {
+    public ItemSensorGlasses(String assetName) {
         super(GCItems.ARMOR_SENSOR_GLASSES, 0, EntityEquipmentSlot.HEAD);
         this.setUnlocalizedName(assetName);
         //this.setTextureName(Constants.TEXTURE_PREFIX + assetName);
     }
 
     @Override
-    public boolean isEnchantable(ItemStack stack)
-    {
+    public boolean isEnchantable(ItemStack stack) {
         return false;
     }
 
     @Override
-    public CreativeTabs getCreativeTab()
-    {
+    public CreativeTabs getCreativeTab() {
         return GalacticraftCore.galacticraftItemsTab;
     }
 
     @Override
-    public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type)
-    {
+    public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
         return Constants.TEXTURE_PREFIX + "textures/model/armor/sensor_1.png";
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public EnumRarity getRarity(ItemStack par1ItemStack)
-    {
+    public EnumRarity getRarity(ItemStack par1ItemStack) {
         return ClientProxyCore.galacticraftItem;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void renderHelmetOverlay(ItemStack stack, EntityPlayer player, ScaledResolution resolution, float partialTicks)
-    {
+    public void renderHelmetOverlay(ItemStack stack, EntityPlayer player, ScaledResolution resolution, float partialTicks) {
         OverlaySensorGlasses.renderSensorGlassesMain(stack, player, resolution, partialTicks);
         OverlaySensorGlasses.renderSensorGlassesValueableBlocks(stack, player, resolution, partialTicks);
     }
 
     @Override
-    public EnumSortCategoryItem getCategory(int meta)
-    {
+    public EnumSortCategoryItem getCategory(int meta) {
         return EnumSortCategoryItem.GEAR;
     }
 }

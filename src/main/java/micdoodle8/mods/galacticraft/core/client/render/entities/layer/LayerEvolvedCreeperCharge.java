@@ -10,21 +10,17 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class LayerEvolvedCreeperCharge implements LayerRenderer<EntityEvolvedCreeper>
-{
+public class LayerEvolvedCreeperCharge implements LayerRenderer<EntityEvolvedCreeper> {
     private final RenderEvolvedCreeper render;
     private final ModelEvolvedCreeper creeperModel = new ModelEvolvedCreeper(2.0F);
 
-    public LayerEvolvedCreeperCharge(RenderEvolvedCreeper render)
-    {
+    public LayerEvolvedCreeperCharge(RenderEvolvedCreeper render) {
         this.render = render;
     }
 
     @Override
-    public void doRenderLayer(EntityEvolvedCreeper entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale)
-    {
-        if (entity.getPowered())
-        {
+    public void doRenderLayer(EntityEvolvedCreeper entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+        if (entity.getPowered()) {
             boolean flag = entity.isInvisible();
             GlStateManager.depthMask(!flag);
             this.render.bindTexture(new ResourceLocation("textures/entity/creeper/creeper_armor.png"));
@@ -50,8 +46,7 @@ public class LayerEvolvedCreeperCharge implements LayerRenderer<EntityEvolvedCre
     }
 
     @Override
-    public boolean shouldCombineTextures()
-    {
+    public boolean shouldCombineTextures() {
         return false;
     }
 }

@@ -29,11 +29,16 @@ import net.minecraft.world.gen.NoiseGeneratorPerlin;
 import java.util.List;
 import java.util.Random;
 
-public class ChunkProviderVenus extends ChunkProviderBase
-{
+public class ChunkProviderVenus extends ChunkProviderBase {
     public static final IBlockState BLOCK_FILL = VenusBlocks.venusBlock.getDefaultState().withProperty(BlockBasicVenus.BASIC_TYPE_VENUS, BlockBasicVenus.EnumBlockBasicVenus.ROCK_HARD);
 
     private final BiomeDecoratorVenus biomeDecoratorVenus = new BiomeDecoratorVenus();
+    private final Gradient noiseGenSmooth1;
+    private final double[] terrainCalcs;
+    private final float[] parabolicField;
+    private final MapGenDungeonVenus dungeonGenerator = new MapGenDungeonVenus(new DungeonConfigurationVenus(VenusBlocks.venusBlock.getDefaultState().withProperty(BlockBasicVenus.BASIC_TYPE_VENUS, BlockBasicVenus.EnumBlockBasicVenus.DUNGEON_BRICK_1),
+            VenusBlocks.venusBlock.getDefaultState().withProperty(BlockBasicVenus.BASIC_TYPE_VENUS, BlockBasicVenus.EnumBlockBasicVenus.DUNGEON_BRICK_2),
+            30, 8, 16, 7, 7, RoomBossVenus.class, RoomTreasureVenus.class));
     private Random rand;
     private NoiseGeneratorOctaves noiseGen1;
     private NoiseGeneratorOctaves noiseGen2;
@@ -42,11 +47,8 @@ public class ChunkProviderVenus extends ChunkProviderBase
     private NoiseGeneratorOctaves noiseGen5;
     private NoiseGeneratorOctaves noiseGen6;
     private NoiseGeneratorOctaves mobSpawnerNoise;
-    private final Gradient noiseGenSmooth1;
     private World world;
     private WorldType worldType;
-    private final double[] terrainCalcs;
-    private final float[] parabolicField;
     private double[] stoneNoise = new double[256];
     private MapGenBaseMeta caveGenerator = new MapGenCaveVenus();
     private MapGenBaseMeta lavaCaveGenerator = new MapGenLavaVenus();
@@ -55,12 +57,8 @@ public class ChunkProviderVenus extends ChunkProviderBase
     private double[] octaves2;
     private double[] octaves3;
     private double[] octaves4;
-    private final MapGenDungeonVenus dungeonGenerator = new MapGenDungeonVenus(new DungeonConfigurationVenus(VenusBlocks.venusBlock.getDefaultState().withProperty(BlockBasicVenus.BASIC_TYPE_VENUS, BlockBasicVenus.EnumBlockBasicVenus.DUNGEON_BRICK_1),
-            VenusBlocks.venusBlock.getDefaultState().withProperty(BlockBasicVenus.BASIC_TYPE_VENUS, BlockBasicVenus.EnumBlockBasicVenus.DUNGEON_BRICK_2),
-            30, 8, 16, 7, 7, RoomBossVenus.class, RoomTreasureVenus.class));
 
-    public ChunkProviderVenus(World worldIn, long seed, boolean mapFeaturesEnabled)
-    {
+    public ChunkProviderVenus(World worldIn, long seed, boolean mapFeaturesEnabled) {
         this.world = worldIn;
         this.worldType = worldIn.getWorldInfo().getTerrainType();
         this.rand = new Random(seed);
@@ -75,10 +73,8 @@ public class ChunkProviderVenus extends ChunkProviderBase
         this.terrainCalcs = new double[825];
         this.parabolicField = new float[25];
 
-        for (int i = -2; i <= 2; ++i)
-        {
-            for (int j = -2; j <= 2; ++j)
-            {
+        for (int i = -2; i <= 2; ++i) {
+            for (int j = -2; j <= 2; ++j) {
                 float f = 10.0F / MathHelper.sqrt((float) (i * i + j * j) + 0.2F);
                 this.parabolicField[i + 2 + (j + 2) * 5] = f;
             }
@@ -94,26 +90,22 @@ public class ChunkProviderVenus extends ChunkProviderBase
         this.mobSpawnerNoise = (NoiseGeneratorOctaves) noiseGens[6];
     }
 
-    private void setBlocksInChunk(int chunkX, int chunkZ, ChunkPrimer primer)
-    {
+    private void setBlocksInChunk(int chunkX, int chunkZ, ChunkPrimer primer) {
         this.noiseGenSmooth1.setFrequency(0.015F);
         this.biomesForGeneration = this.world.getBiomeProvider().getBiomesForGeneration(this.biomesForGeneration, chunkX * 4 - 2, chunkZ * 4 - 2, 10, 10);
         this.createLandPerBiome(chunkX * 4, chunkZ * 4);
 
-        for (int i = 0; i < 4; ++i)
-        {
+        for (int i = 0; i < 4; ++i) {
             int j = i * 5;
             int k = (i + 1) * 5;
 
-            for (int l = 0; l < 4; ++l)
-            {
+            for (int l = 0; l < 4; ++l) {
                 int i1 = (j + l) * 33;
                 int j1 = (j + l + 1) * 33;
                 int k1 = (k + l) * 33;
                 int l1 = (k + l + 1) * 33;
 
-                for (int i2 = 0; i2 < 32; ++i2)
-                {
+                for (int i2 = 0; i2 < 32; ++i2) {
                     double d0 = 0.125D;
                     double d1 = this.terrainCalcs[i1 + i2];
                     double d2 = this.terrainCalcs[j1 + i2];
@@ -124,24 +116,20 @@ public class ChunkProviderVenus extends ChunkProviderBase
                     double d7 = (this.terrainCalcs[k1 + i2 + 1] - d3) * d0;
                     double d8 = (this.terrainCalcs[l1 + i2 + 1] - d4) * d0;
 
-                    for (int j2 = 0; j2 < 8; ++j2)
-                    {
+                    for (int j2 = 0; j2 < 8; ++j2) {
                         double d9 = 0.25D;
                         double d10 = d1;
                         double d11 = d2;
                         double d12 = (d3 - d1) * d9;
                         double d13 = (d4 - d2) * d9;
 
-                        for (int k2 = 0; k2 < 4; ++k2)
-                        {
+                        for (int k2 = 0; k2 < 4; ++k2) {
                             double d14 = 0.25D;
                             double d16 = (d11 - d10) * d14;
                             double lvt_45_1_ = d10 - d16;
 
-                            for (int l2 = 0; l2 < 4; ++l2)
-                            {
-                                if ((lvt_45_1_ += d16) > this.noiseGenSmooth1.getNoise(chunkX * 16 + (i * 4 + k2), chunkZ * 16 + (l * 4 + l2)) * 20.0)
-                                {
+                            for (int l2 = 0; l2 < 4; ++l2) {
+                                if ((lvt_45_1_ += d16) > this.noiseGenSmooth1.getNoise(chunkX * 16 + (i * 4 + k2), chunkZ * 16 + (l * 4 + l2)) * 20.0) {
                                     primer.setBlockState(i * 4 + k2, i2 * 8 + j2, l * 4 + l2, BLOCK_FILL);
                                 }
                             }
@@ -160,15 +148,12 @@ public class ChunkProviderVenus extends ChunkProviderBase
         }
     }
 
-    private void replaceBlocksForBiome(int p_180517_1_, int p_180517_2_, ChunkPrimer p_180517_3_, Biome[] p_180517_4_)
-    {
+    private void replaceBlocksForBiome(int p_180517_1_, int p_180517_2_, ChunkPrimer p_180517_3_, Biome[] p_180517_4_) {
         double d0 = 0.03125D;
         this.stoneNoise = this.noiseGen4.getRegion(this.stoneNoise, (double) (p_180517_1_ * 16), (double) (p_180517_2_ * 16), 16, 16, d0 * 2.0D, d0 * 2.0D, 1.0D);
 
-        for (int i = 0; i < 16; ++i)
-        {
-            for (int j = 0; j < 16; ++j)
-            {
+        for (int i = 0; i < 16; ++i) {
+            for (int j = 0; j < 16; ++j) {
                 Biome biomegenbase = p_180517_4_[j + i * 16];
                 biomegenbase.genTerrainBlocks(this.world, this.rand, p_180517_3_, p_180517_1_ * 16 + i, p_180517_2_ * 16 + j, this.stoneNoise[j + i * 16]);
             }
@@ -176,8 +161,7 @@ public class ChunkProviderVenus extends ChunkProviderBase
     }
 
     @Override
-    public Chunk generateChunk(int x, int z)
-    {
+    public Chunk generateChunk(int x, int z) {
         this.rand.setSeed((long) x * 341873128712L + (long) z * 132897987541L);
         ChunkPrimer chunkprimer = new ChunkPrimer();
         this.setBlocksInChunk(x, z, chunkprimer);
@@ -193,8 +177,7 @@ public class ChunkProviderVenus extends ChunkProviderBase
         Chunk chunk = new Chunk(this.world, chunkprimer, x, z);
         byte[] abyte = chunk.getBiomeArray();
 
-        for (int i = 0; i < abyte.length; ++i)
-        {
+        for (int i = 0; i < abyte.length; ++i) {
             abyte[i] = (byte) Biome.getIdForBiome(this.biomesForGeneration[i]);
         }
 
@@ -202,8 +185,7 @@ public class ChunkProviderVenus extends ChunkProviderBase
         return chunk;
     }
 
-    private void createLandPerBiome(int x, int z)
-    {
+    private void createLandPerBiome(int x, int z) {
         this.octaves4 = this.noiseGen6.generateNoiseOctaves(this.octaves4, x, z, 5, 5, 2000.0, 2000.0, 0.5);
         this.octaves1 = this.noiseGen3.generateNoiseOctaves(this.octaves1, x, 0, z, 5, 33, 5, 8.555150000000001D, 4.277575000000001D, 8.555150000000001D);
         this.octaves2 = this.noiseGen1.generateNoiseOctaves(this.octaves2, x, 0, z, 5, 33, 5, 684.412D, 684.412D, 684.412D);
@@ -211,34 +193,28 @@ public class ChunkProviderVenus extends ChunkProviderBase
         int i = 0;
         int j = 0;
 
-        for (int k = 0; k < 5; ++k)
-        {
-            for (int l = 0; l < 5; ++l)
-            {
+        for (int k = 0; k < 5; ++k) {
+            for (int l = 0; l < 5; ++l) {
                 float f2 = 0.0F;
                 float f3 = 0.0F;
                 float f4 = 0.0F;
                 int i1 = 2;
                 Biome biomegenbase = this.biomesForGeneration[k + 2 + (l + 2) * 10];
 
-                for (int j1 = -i1; j1 <= i1; ++j1)
-                {
-                    for (int k1 = -i1; k1 <= i1; ++k1)
-                    {
+                for (int j1 = -i1; j1 <= i1; ++j1) {
+                    for (int k1 = -i1; k1 <= i1; ++k1) {
                         Biome biomegenbase1 = this.biomesForGeneration[k + j1 + 2 + (l + k1 + 2) * 10];
                         float f5 = biomegenbase1.getBaseHeight();
                         float f6 = biomegenbase1.getHeightVariation();
 
-                        if (this.worldType == WorldType.AMPLIFIED && f5 > 0.0F)
-                        {
+                        if (this.worldType == WorldType.AMPLIFIED && f5 > 0.0F) {
                             f5 = 1.0F + f5 * 2.0F;
                             f6 = 1.0F + f6 * 4.0F;
                         }
 
                         float f7 = this.parabolicField[j1 + 2 + (k1 + 2) * 5] / (f5 + 2.0F);
 
-                        if (biomegenbase1.getBaseHeight() > biomegenbase.getBaseHeight())
-                        {
+                        if (biomegenbase1.getBaseHeight() > biomegenbase.getBaseHeight()) {
                             f7 /= 2.0F;
                         }
 
@@ -254,29 +230,23 @@ public class ChunkProviderVenus extends ChunkProviderBase
                 f3 = (f3 * 4.0F - 1.0F) / 8.0F;
                 double d7 = this.octaves4[j] / 4000.0D;
 
-                if (d7 < 0.0D)
-                {
+                if (d7 < 0.0D) {
                     d7 = -d7 * 0.3D;
                 }
 
                 d7 = d7 * 3.0D - 2.0D;
 
-                if (d7 < 0.0D)
-                {
+                if (d7 < 0.0D) {
                     d7 = d7 / 2.0D;
 
-                    if (d7 < -1.0D)
-                    {
+                    if (d7 < -1.0D) {
                         d7 = -1.0D;
                     }
 
                     d7 = d7 / 1.4D;
                     d7 = d7 / 2.0D;
-                }
-                else
-                {
-                    if (d7 > 1.0D)
-                    {
+                } else {
+                    if (d7 > 1.0D) {
                         d7 = 1.0D;
                     }
 
@@ -290,12 +260,10 @@ public class ChunkProviderVenus extends ChunkProviderBase
                 d8 = d8 * 8.5 / 8.0D;
                 double d0 = 8.5 + d8 * 4.0D;
 
-                for (int l1 = 0; l1 < 33; ++l1)
-                {
+                for (int l1 = 0; l1 < 33; ++l1) {
                     double d1 = ((double) l1 - d0) * 12.0 * 128.0D / 256.0D / d9;
 
-                    if (d1 < 0.0D)
-                    {
+                    if (d1 < 0.0D) {
                         d1 *= 4.0D;
                     }
 
@@ -305,8 +273,7 @@ public class ChunkProviderVenus extends ChunkProviderBase
 //                    double d5 = MathHelper.clampedLerp(d2, d3, d4) - d1;
                     double d5 = d3 - d1;
 
-                    if (l1 > 29)
-                    {
+                    if (l1 > 29) {
                         double d6 = (double) ((float) (l1 - 29) / 3.0F);
                         d5 = d5 * (1.0D - d6) + -10.0D * d6;
                     }
@@ -319,8 +286,7 @@ public class ChunkProviderVenus extends ChunkProviderBase
     }
 
     @Override
-    public void populate(int x, int z)
-    {
+    public void populate(int x, int z) {
         BlockFalling.fallInstantly = true;
         int i = x * 16;
         int j = z * 16;
@@ -330,10 +296,9 @@ public class ChunkProviderVenus extends ChunkProviderBase
         long k = this.rand.nextLong() / 2L * 2L + 1L;
         long l = this.rand.nextLong() / 2L * 2L + 1L;
         this.rand.setSeed((long) x * k + (long) z * l ^ this.world.getSeed());
-        boolean isValley = biomegenbase instanceof BiomeAdaptive && ((BiomeAdaptive)biomegenbase).isInstance(BiomeGenVenusValley.class);
+        boolean isValley = biomegenbase instanceof BiomeAdaptive && ((BiomeAdaptive) biomegenbase).isInstance(BiomeGenVenusValley.class);
 
-        if (this.rand.nextInt(isValley ? 3 : 10) == 0)
-        {
+        if (this.rand.nextInt(isValley ? 3 : 10) == 0) {
             int i2 = this.rand.nextInt(16) + 8;
             int l2 = this.rand.nextInt(this.rand.nextInt(248) + 8);
             int k3 = this.rand.nextInt(16) + 8;
@@ -342,18 +307,14 @@ public class ChunkProviderVenus extends ChunkProviderBase
         }
 
 
-        if (isValley)
-        {
-            if (this.rand.nextInt(5) == 0)
-            {
+        if (isValley) {
+            if (this.rand.nextInt(5) == 0) {
                 int i2 = this.rand.nextInt(16) + 8;
                 int k3 = this.rand.nextInt(16) + 8;
                 int l2 = this.world.getTopSolidOrLiquidBlock(blockpos.add(i2, 0, k3)).getY() - 10 - this.rand.nextInt(5);
 
                 (new WorldGenVaporPool()).generate(this.world, this.rand, blockpos.add(i2, l2, k3));
-            }
-            else if (this.rand.nextInt(190) == 0)
-            {
+            } else if (this.rand.nextInt(190) == 0) {
                 int i2 = this.rand.nextInt(16) + 8;
                 int k3 = this.rand.nextInt(16) + 8;
                 int l2 = this.world.getTopSolidOrLiquidBlock(blockpos.add(i2, 0, k3)).getY();
@@ -371,16 +332,14 @@ public class ChunkProviderVenus extends ChunkProviderBase
     }
 
     @Override
-    public List<Biome.SpawnListEntry> getPossibleCreatures(EnumCreatureType creatureType, BlockPos pos)
-    {
+    public List<Biome.SpawnListEntry> getPossibleCreatures(EnumCreatureType creatureType, BlockPos pos) {
         Biome biomegenbase = this.world.getBiome(pos);
 
         return biomegenbase.getSpawnableList(creatureType);
     }
 
     @Override
-    public void recreateStructures(Chunk chunk, int x, int z)
-    {
+    public void recreateStructures(Chunk chunk, int x, int z) {
         this.dungeonGenerator.generate(this.world, x, z, null);
     }
 }

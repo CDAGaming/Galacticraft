@@ -9,16 +9,13 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
-import javax.annotation.Nullable;
-
-public class ItemFuelCanister extends ItemCanisterGeneric implements ISortableItem
-{
+public class ItemFuelCanister extends ItemCanisterGeneric implements ISortableItem {
 //    protected IIcon[] icons = new IIcon[7];
 
-    public ItemFuelCanister(String assetName)
-    {
+    public ItemFuelCanister(String assetName) {
         super(assetName);
         this.setAllowedFluid(ConfigManagerCore.useOldFuelFluidID ? "fuelgc" : "fuel");
 //        this.setTextureName(Constants.TEXTURE_PREFIX + assetName);
@@ -35,10 +32,8 @@ public class ItemFuelCanister extends ItemCanisterGeneric implements ISortableIt
     }*/
 
     @Override
-    public String getUnlocalizedName(ItemStack itemStack)
-    {
-        if (itemStack.getItemDamage() == 1)
-        {
+    public String getUnlocalizedName(ItemStack itemStack) {
+        if (itemStack.getItemDamage() == 1) {
             return "item.fuel_canister";
         }
 
@@ -60,17 +55,14 @@ public class ItemFuelCanister extends ItemCanisterGeneric implements ISortableIt
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack par1ItemStack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
-    {
-        if (par1ItemStack.getMaxDamage() - par1ItemStack.getItemDamage() > 0)
-        {
+    public void addInformation(ItemStack par1ItemStack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+        if (par1ItemStack.getMaxDamage() - par1ItemStack.getItemDamage() > 0) {
             tooltip.add(GCCoreUtil.translate("gui.message.fuel.name") + ": " + (par1ItemStack.getMaxDamage() - par1ItemStack.getItemDamage()));
         }
     }
 
     @Override
-    public EnumSortCategoryItem getCategory(int meta)
-    {
+    public EnumSortCategoryItem getCategory(int meta) {
         return EnumSortCategoryItem.CANISTER;
     }
 }

@@ -7,10 +7,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemFuel extends Item
-{
-    public ItemFuel(String assetName)
-    {
+public class ItemFuel extends Item {
+    public ItemFuel(String assetName) {
         super();
         this.setUnlocalizedName(assetName);
     }
@@ -24,8 +22,7 @@ public class ItemFuel extends Item
 
     @Override
     @SideOnly(Side.CLIENT)
-    public EnumRarity getRarity(ItemStack par1ItemStack)
-    {
+    public EnumRarity getRarity(ItemStack par1ItemStack) {
         return ClientProxyCore.galacticraftItem;
     }
 }

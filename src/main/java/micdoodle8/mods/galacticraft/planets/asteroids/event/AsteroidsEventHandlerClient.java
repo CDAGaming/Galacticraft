@@ -19,29 +19,22 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
 import org.lwjgl.opengl.GL11;
 
-public class AsteroidsEventHandlerClient
-{
+public class AsteroidsEventHandlerClient {
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
-    public void onClientTick(ClientTickEvent event)
-    {
+    public void onClientTick(ClientTickEvent event) {
         Minecraft minecraft = Minecraft.getMinecraft();
         WorldClient world = minecraft.world;
 
-        if (world != null)
-        {
-            if (world.provider instanceof WorldProviderAsteroids)
-            {
-                if (world.provider.getSkyRenderer() == null)
-                {
+        if (world != null) {
+            if (world.provider instanceof WorldProviderAsteroids) {
+                if (world.provider.getSkyRenderer() == null) {
                     world.provider.setSkyRenderer(new SkyProviderAsteroids((IGalacticraftWorldProvider) world.provider));
                 }
 
-                if (world.provider.getCloudRenderer() == null)
-                {
+                if (world.provider.getCloudRenderer() == null) {
                     world.provider.setCloudRenderer(new CloudRenderer());
                 }
             }
@@ -50,16 +43,11 @@ public class AsteroidsEventHandlerClient
 
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
-    public void onRingRender(CelestialBodyRenderEvent.CelestialRingRenderEvent.Pre renderEvent)
-    {
-        if (renderEvent.celestialBody.equals(AsteroidsModule.planetAsteroids))
-        {
-            if (FMLClientHandler.instance().getClient().currentScreen instanceof GuiCelestialSelection)
-            {
+    public void onRingRender(CelestialBodyRenderEvent.CelestialRingRenderEvent.Pre renderEvent) {
+        if (renderEvent.celestialBody.equals(AsteroidsModule.planetAsteroids)) {
+            if (FMLClientHandler.instance().getClient().currentScreen instanceof GuiCelestialSelection) {
                 GL11.glColor4f(0.7F, 0.0F, 0.0F, 0.5F);
-            }
-            else
-            {
+            } else {
                 GL11.glColor4f(0.3F, 0.1F, 0.1F, 1.0F);
             }
             renderEvent.setCanceled(true);
@@ -76,8 +64,7 @@ public class AsteroidsEventHandlerClient
             float y = 0;
 
             float temp;
-            for (int i = 0; i < 90; i++)
-            {
+            for (int i = 0; i < 90; i++) {
                 GL11.glVertex2f(x, y);
 
                 temp = x;
@@ -91,8 +78,7 @@ public class AsteroidsEventHandlerClient
             x = min * renderEvent.celestialBody.getRelativeDistanceFromCenter().unScaledDistance;
             y = 0;
 
-            for (int i = 0; i < 90; i++)
-            {
+            for (int i = 0; i < 90; i++) {
                 GL11.glVertex2f(x, y);
 
                 temp = x;
@@ -109,8 +95,7 @@ public class AsteroidsEventHandlerClient
             float x2 = max * renderEvent.celestialBody.getRelativeDistanceFromCenter().unScaledDistance;
             float y2 = 0;
 
-            for (int i = 0; i < 90; i++)
-            {
+            for (int i = 0; i < 90; i++) {
                 GL11.glVertex2f(x2, y2);
                 GL11.glVertex2f(x, y);
 
@@ -131,18 +116,15 @@ public class AsteroidsEventHandlerClient
 
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
-    public void onBodyRender(CelestialBodyRenderEvent.Pre renderEvent)
-    {
-        if (renderEvent.celestialBody.equals(AsteroidsModule.planetAsteroids))
-        {
+    public void onBodyRender(CelestialBodyRenderEvent.Pre renderEvent) {
+        if (renderEvent.celestialBody.equals(AsteroidsModule.planetAsteroids)) {
             GL11.glRotatef(ClientUtil.getMilliseconds() / 10.0F % 360, 0, 0, 1);
         }
     }
 
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
-    public void onSpecialRender(EventSpecialRender event)
-    {
+    public void onSpecialRender(EventSpecialRender event) {
         NetworkRenderer.renderNetworks(FMLClientHandler.instance().getClient().world, event.partialTicks);
     }
 }

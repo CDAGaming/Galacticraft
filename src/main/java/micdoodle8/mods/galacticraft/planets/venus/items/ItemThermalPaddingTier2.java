@@ -22,16 +22,13 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
-import javax.annotation.Nullable;
+public class ItemThermalPaddingTier2 extends Item implements IItemThermal, ISortableItem {
+    public static String[] names = {"thermal_helm_t2", "thermal_chestplate_t2", "thermal_leggings_t2", "thermal_boots_t2"};
 
-public class ItemThermalPaddingTier2 extends Item implements IItemThermal, ISortableItem
-{
-    public static String[] names = { "thermal_helm_t2", "thermal_chestplate_t2", "thermal_leggings_t2", "thermal_boots_t2" };
-
-    public ItemThermalPaddingTier2(String assetName)
-    {
+    public ItemThermalPaddingTier2(String assetName) {
         super();
         this.setMaxDamage(0);
         this.setHasSubtypes(true);
@@ -41,41 +38,33 @@ public class ItemThermalPaddingTier2 extends Item implements IItemThermal, ISort
 
     @Override
     @SideOnly(Side.CLIENT)
-    public EnumRarity getRarity(ItemStack par1ItemStack)
-    {
+    public EnumRarity getRarity(ItemStack par1ItemStack) {
         return ClientProxyCore.galacticraftItem;
     }
 
     @SideOnly(Side.CLIENT)
     @Override
-    public CreativeTabs getCreativeTab()
-    {
+    public CreativeTabs getCreativeTab() {
         return GalacticraftCore.galacticraftItemsTab;
     }
 
     @Override
-    public void addInformation(ItemStack par1ItemStack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
-    {
+    public void addInformation(ItemStack par1ItemStack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
         tooltip.add(GCCoreUtil.translate("item.tier2.desc"));
     }
 
     @Override
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems)
-    {
-        if (tab == GalacticraftCore.galacticraftItemsTab || tab == CreativeTabs.SEARCH)
-        {
-            for (int i = 0; i < ItemThermalPaddingTier2.names.length; i++)
-            {
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
+        if (tab == GalacticraftCore.galacticraftItemsTab || tab == CreativeTabs.SEARCH) {
+            for (int i = 0; i < ItemThermalPaddingTier2.names.length; i++) {
                 subItems.add(new ItemStack(this, 1, i));
             }
         }
     }
 
     @Override
-    public String getUnlocalizedName(ItemStack par1ItemStack)
-    {
-        if (names.length > par1ItemStack.getItemDamage())
-        {
+    public String getUnlocalizedName(ItemStack par1ItemStack) {
+        if (names.length > par1ItemStack.getItemDamage()) {
             return "item." + ItemThermalPaddingTier2.names[par1ItemStack.getItemDamage()];
         }
 
@@ -83,70 +72,53 @@ public class ItemThermalPaddingTier2 extends Item implements IItemThermal, ISort
     }
 
     @Override
-    public int getMetadata(int par1)
-    {
+    public int getMetadata(int par1) {
         return par1;
     }
 
     @Override
-    public int getThermalStrength()
-    {
+    public int getThermalStrength() {
         return 2;
     }
 
     @Override
-    public boolean isValidForSlot(ItemStack stack, int armorSlot)
-    {
+    public boolean isValidForSlot(ItemStack stack, int armorSlot) {
         return stack.getItemDamage() == armorSlot;
     }
 
     @Override
-    public EnumSortCategoryItem getCategory(int meta)
-    {
+    public EnumSortCategoryItem getCategory(int meta) {
         return EnumSortCategoryItem.ARMOR;
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer player, EnumHand hand)
-    {
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer player, EnumHand hand) {
         ItemStack itemStack = player.getHeldItem(hand);
 
-        if (player instanceof EntityPlayerMP)
-        {
+        if (player instanceof EntityPlayerMP) {
             GCPlayerStats stats = GCPlayerStats.get(player);
             ItemStack gear = stats.getExtendedInventory().getStackInSlot(6);
             ItemStack gear1 = stats.getExtendedInventory().getStackInSlot(7);
             ItemStack gear2 = stats.getExtendedInventory().getStackInSlot(8);
             ItemStack gear3 = stats.getExtendedInventory().getStackInSlot(9);
 
-            if (itemStack.getItemDamage() == 0)
-            {
-                if (gear == null)
-                {
+            if (itemStack.getItemDamage() == 0) {
+                if (gear == null) {
                     stats.getExtendedInventory().setInventorySlotContents(6, itemStack.copy());
                     itemStack.setCount(0);
                 }
-            }
-            else if (itemStack.getItemDamage() == 1)
-            {
-                if (gear1 == null)
-                {
+            } else if (itemStack.getItemDamage() == 1) {
+                if (gear1 == null) {
                     stats.getExtendedInventory().setInventorySlotContents(7, itemStack.copy());
                     itemStack.setCount(0);
                 }
-            }
-            else if (itemStack.getItemDamage() == 2)
-            {
-                if (gear2 == null)
-                {
+            } else if (itemStack.getItemDamage() == 2) {
+                if (gear2 == null) {
                     stats.getExtendedInventory().setInventorySlotContents(8, itemStack.copy());
                     itemStack.setCount(0);
                 }
-            }
-            else if (itemStack.getItemDamage() == 3)
-            {
-                if (gear3 == null)
-                {
+            } else if (itemStack.getItemDamage() == 3) {
+                if (gear3 == null) {
                     stats.getExtendedInventory().setInventorySlotContents(9, itemStack.copy());
                     itemStack.setCount(0);
                 }

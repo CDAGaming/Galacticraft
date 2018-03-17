@@ -5,8 +5,7 @@ import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.DamageSource;
 
-public interface IPlayerServer
-{
+public interface IPlayerServer {
     void updateRiddenPre(EntityPlayerMP player);
 
     void updateRiddenPost(EntityPlayerMP player);

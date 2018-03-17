@@ -10,11 +10,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * Implement into entities that make a sound all the time, like rockets
  */
-public interface IEntityNoisy
-{
-	@SideOnly(Side.CLIENT)
-	ITickable getSoundUpdater();
+public interface IEntityNoisy {
+    @SideOnly(Side.CLIENT)
+    ITickable getSoundUpdater();
 
-	@SideOnly(Side.CLIENT)
-	ISound setSoundUpdater(EntityPlayerSP player);
+    @SideOnly(Side.CLIENT)
+    ISound setSoundUpdater(EntityPlayerSP player);
 }

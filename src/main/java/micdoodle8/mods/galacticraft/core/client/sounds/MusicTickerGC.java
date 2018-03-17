@@ -7,32 +7,25 @@ import net.minecraft.client.audio.MusicTicker;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.client.FMLClientHandler;
 
-public class MusicTickerGC extends MusicTicker
-{
-    public MusicTickerGC(Minecraft mc)
-    {
+public class MusicTickerGC extends MusicTicker {
+    public MusicTickerGC(Minecraft mc) {
         super(mc);
     }
 
     @Override
-    public void update()
-    {
+    public void update() {
         MusicTicker.MusicType musictype = this.mc.getAmbientMusicType();
-        if (FMLClientHandler.instance().getWorldClient() != null && FMLClientHandler.instance().getWorldClient().provider instanceof IGalacticraftWorldProvider)
-        {
+        if (FMLClientHandler.instance().getWorldClient() != null && FMLClientHandler.instance().getWorldClient().provider instanceof IGalacticraftWorldProvider) {
             musictype = ClientProxyCore.MUSIC_TYPE_MARS;
         }
 
-        if (this.currentMusic != null)
-        {
-            if (!musictype.getMusicLocation().getSoundName().equals(this.currentMusic.getSoundLocation()))
-            {
+        if (this.currentMusic != null) {
+            if (!musictype.getMusicLocation().getSoundName().equals(this.currentMusic.getSoundLocation())) {
                 this.mc.getSoundHandler().stopSound(this.currentMusic);
                 this.timeUntilNextMusic = MathHelper.getInt(this.rand, 0, musictype.getMinDelay() / 2);
             }
 
-            if (!this.mc.getSoundHandler().isSoundPlaying(this.currentMusic))
-            {
+            if (!this.mc.getSoundHandler().isSoundPlaying(this.currentMusic)) {
                 this.currentMusic = null;
                 this.timeUntilNextMusic = Math.min(MathHelper.getInt(this.rand, musictype.getMinDelay(), musictype.getMaxDelay()), this.timeUntilNextMusic);
             }
@@ -40,8 +33,7 @@ public class MusicTickerGC extends MusicTicker
 
         this.timeUntilNextMusic = Math.min(this.timeUntilNextMusic, musictype.getMaxDelay());
 
-        if (this.currentMusic == null && this.timeUntilNextMusic-- <= 0)
-        {
+        if (this.currentMusic == null && this.timeUntilNextMusic-- <= 0) {
             this.playMusic(musictype);
         }
     }

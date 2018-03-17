@@ -4,17 +4,12 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.ObjectArrays;
 import com.google.common.collect.Ordering;
-
 import micdoodle8.mods.galacticraft.core.blocks.*;
 import micdoodle8.mods.galacticraft.core.blocks.BlockBasicMoon.EnumBlockBasicMoon;
 import micdoodle8.mods.galacticraft.core.blocks.BlockSpaceGlass.GlassFrame;
 import micdoodle8.mods.galacticraft.core.blocks.BlockSpaceGlass.GlassType;
 import micdoodle8.mods.galacticraft.core.items.*;
-import micdoodle8.mods.galacticraft.core.util.CompatibilityManager;
-import micdoodle8.mods.galacticraft.core.util.EnumSortCategoryBlock;
-import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
-import micdoodle8.mods.galacticraft.core.util.GCLog;
-import micdoodle8.mods.galacticraft.core.util.StackSorted;
+import micdoodle8.mods.galacticraft.core.util.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -28,14 +23,10 @@ import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.registries.IForgeRegistry;
 
 import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-public class GCBlocks
-{
+public class GCBlocks {
+    public static final Material machine = new Material(MapColor.IRON);
     public static Block breatheableAir;
     public static Block brightAir;
     public static Block brightBreatheableAir;
@@ -102,18 +93,15 @@ public class GCBlocks
     public static Block concealedDetector;
     public static Block platform;
     public static Block emergencyBox;
-
-    public static final Material machine = new Material(MapColor.IRON);
-
     public static ArrayList<Block> hiddenBlocks = new ArrayList<Block>();
     public static ArrayList<Block> otherModTorchesLit = new ArrayList<Block>();
     public static ArrayList<Block> otherModTorchesUnlit = new ArrayList<Block>();
 
     public static Map<EnumSortCategoryBlock, List<StackSorted>> sortMapBlocks = Maps.newHashMap();
     public static HashMap<Block, Block> itemChanges = new HashMap<>(4, 1.0F);
+    public static boolean registeringSorted = false;
 
-    public static void initBlocks()
-    {
+    public static void initBlocks() {
         GCBlocks.breatheableAir = new BlockBreathableAir("breatheable_air");
         GCBlocks.brightAir = new BlockBrightAir("bright_air");
         GCBlocks.brightBreatheableAir = new BlockBrightBreathableAir("bright_breathable_air");
@@ -195,9 +183,8 @@ public class GCBlocks
         GCBlocks.registerBlocks();
         GCBlocks.setHarvestLevels();
     }
-    
-    public static void oreDictRegistrations()
-    {
+
+    public static void oreDictRegistrations() {
         OreDictionary.registerOre("oreCopper", new ItemStack(GCBlocks.basicBlock, 1, 5));
         OreDictionary.registerOre("oreCopper", new ItemStack(GCBlocks.blockMoon, 1, 0));
         OreDictionary.registerOre("oreTin", new ItemStack(GCBlocks.basicBlock, 1, 6));
@@ -217,20 +204,15 @@ public class GCBlocks
         OreDictionary.registerOre("turfMoon", new ItemStack(GCBlocks.blockMoon, 1, EnumBlockBasicMoon.MOON_TURF.getMeta()));
     }
 
-    public static void finalizeSort()
-    {
+    public static void finalizeSort() {
         List<StackSorted> itemOrderListBlocks = Lists.newArrayList();
-        for (EnumSortCategoryBlock type : EnumSortCategoryBlock.values())
-        {
+        for (EnumSortCategoryBlock type : EnumSortCategoryBlock.values()) {
             if (!GalacticraftCore.isPlanetsLoaded && type == EnumSortCategoryBlock.EGG)
                 continue;
             List<StackSorted> stackSorteds = sortMapBlocks.get(type);
-            if (stackSorteds != null)
-            {
+            if (stackSorteds != null) {
                 itemOrderListBlocks.addAll(stackSorteds);
-            }
-            else
-            {
+            } else {
                 System.out.println("ERROR: null sort stack: " + type.toString());
             }
         }
@@ -238,32 +220,25 @@ public class GCBlocks
         GalacticraftCore.galacticraftBlocksTab.setTabSorter(tabSorterBlocks);
     }
 
-    private static void setHarvestLevel(Block block, String toolClass, int level, int meta)
-    {
+    private static void setHarvestLevel(Block block, String toolClass, int level, int meta) {
         block.setHarvestLevel(toolClass, level, block.getStateFromMeta(meta));
     }
 
-    public static void doOtherModsTorches(IForgeRegistry<Block> registry)
-    {
+    public static void doOtherModsTorches(IForgeRegistry<Block> registry) {
         BlockUnlitTorch torch;
         BlockUnlitTorch torchLit;
 
-        if (CompatibilityManager.isTConstructLoaded)
-        {
+        if (CompatibilityManager.isTConstructLoaded) {
             Block modTorch = null;
-            try
-            {
+            try {
                 //tconstruct.world.TinkerWorld.stoneTorch
                 Class clazz = Class.forName("slimeknights.tconstruct.gadgets.TinkerGadgets");
                 modTorch = (Block) clazz.getDeclaredField("stoneTorch").get(null);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            if (modTorch != null)
-            {
+            if (modTorch != null) {
                 torch = new BlockUnlitTorch(false, "unlit_torch_stone");
                 torchLit = new BlockUnlitTorch(true, "unlit_torch_stone_lit");
                 GCBlocks.hiddenBlocks.add(torch);
@@ -280,24 +255,21 @@ public class GCBlocks
         }
     }
 
-    public static void registerFuel()
-    {
+    public static void registerFuel() {
         GCBlocks.fuel = new BlockFluidGC(GCFluids.fluidFuel, "fuel");
         ((BlockFluidGC) GCBlocks.fuel).setQuantaPerBlock(3);
         GCBlocks.fuel.setUnlocalizedName("fuel");
         GCBlocks.registerBlock(GCBlocks.fuel, ItemBlockGC.class);
     }
 
-    public static void registerOil()
-    {
+    public static void registerOil() {
         GCBlocks.crudeOil = new BlockFluidGC(GCFluids.fluidOil, "oil");
         ((BlockFluidGC) GCBlocks.crudeOil).setQuantaPerBlock(3);
         GCBlocks.crudeOil.setUnlocalizedName("crude_oil_still");
         GCBlocks.registerBlock(GCBlocks.crudeOil, ItemBlockGC.class);
     }
 
-    public static void setHarvestLevels()
-    {
+    public static void setHarvestLevels() {
         setHarvestLevel(GCBlocks.basicBlock, "pickaxe", 1, 5); //Copper ore
         setHarvestLevel(GCBlocks.basicBlock, "pickaxe", 1, 6); //Tin ore
         setHarvestLevel(GCBlocks.basicBlock, "pickaxe", 1, 7); //Aluminium ore
@@ -343,66 +315,50 @@ public class GCBlocks
         setHarvestLevel(GCBlocks.blockMoon, "pickaxe", 3, 14); //Moon dungeon brick (actually unharvestable)
     }
 
-    public static void registerBlock(Block block, Class<? extends ItemBlock> itemClass, Object... itemCtorArgs)
-    {
+    public static void registerBlock(Block block, Class<? extends ItemBlock> itemClass, Object... itemCtorArgs) {
         String name = block.getUnlocalizedName().substring(5);
-        if (block.getRegistryName() == null)
-        {
+        if (block.getRegistryName() == null) {
             block.setRegistryName(name);
         }
         GCCoreUtil.registerGalacticraftBlock(name, block);
 
-        if (itemClass != null)
-        {
+        if (itemClass != null) {
             ItemBlock item = null;
             Class<?>[] ctorArgClasses = new Class<?>[itemCtorArgs.length + 1];
             ctorArgClasses[0] = Block.class;
-            for (int idx = 1; idx < ctorArgClasses.length; idx++)
-            {
+            for (int idx = 1; idx < ctorArgClasses.length; idx++) {
                 ctorArgClasses[idx] = itemCtorArgs[idx - 1].getClass();
             }
 
-            try
-            {
+            try {
                 Constructor<? extends ItemBlock> constructor = itemClass.getConstructor(ctorArgClasses);
                 item = constructor.newInstance(ObjectArrays.concat(block, itemCtorArgs));
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            if (item != null)
-            {
+            if (item != null) {
                 GCCoreUtil.registerGalacticraftItem(name, item);
-                if (item.getRegistryName() == null)
-                {
+                if (item.getRegistryName() == null) {
                     item.setRegistryName(name);
                 }
             }
         }
     }
-    
-    public static void registerBlocks(IForgeRegistry<Block> registry)
-    {
-        for (Block block : GalacticraftCore.blocksList)
-        {
+
+    public static void registerBlocks(IForgeRegistry<Block> registry) {
+        for (Block block : GalacticraftCore.blocksList) {
             registry.register(block);
         }
-        
+
         //Complete registration of various types of torches
         BlockUnlitTorch.register((BlockUnlitTorch) GCBlocks.unlitTorch, (BlockUnlitTorch) GCBlocks.unlitTorchLit, Blocks.TORCH);
     }
 
-    public static boolean registeringSorted = false;
-
-    public static void registerSorted(Block block)
-    {
-        if (block instanceof ISortableBlock)
-        {
+    public static void registerSorted(Block block) {
+        if (block instanceof ISortableBlock) {
             Item item = Item.getItemFromBlock(block);
-            if (item == Items.AIR)
-            {
+            if (item == Items.AIR) {
                 return;
             }
             ISortableBlock sortableBlock = (ISortableBlock) block;
@@ -410,28 +366,22 @@ public class GCBlocks
             registeringSorted = true;
             block.getSubBlocks(null, blocks);
             registeringSorted = false;
-            if (blocks.isEmpty())
-            {
+            if (blocks.isEmpty()) {
                 blocks.add(new ItemStack(block));
             }
-            for (ItemStack stack : blocks)
-            {
+            for (ItemStack stack : blocks) {
                 EnumSortCategoryBlock categoryBlock = sortableBlock.getCategory(stack.getItemDamage());
-                if (!sortMapBlocks.containsKey(categoryBlock))
-                {
+                if (!sortMapBlocks.containsKey(categoryBlock)) {
                     sortMapBlocks.put(categoryBlock, new ArrayList<>());
                 }
                 sortMapBlocks.get(categoryBlock).add(new StackSorted(stack.getItem(), stack.getItemDamage()));
             }
-        }
-        else if (block.getCreativeTabToDisplayOn() == GalacticraftCore.galacticraftBlocksTab)
-        {
+        } else if (block.getCreativeTabToDisplayOn() == GalacticraftCore.galacticraftBlocksTab) {
             throw new RuntimeException(block.getClass() + " must inherit " + ISortableBlock.class.getSimpleName() + "!");
         }
     }
 
-    public static void registerBlocks()
-    {
+    public static void registerBlocks() {
         registerBlock(GCBlocks.landingPad, ItemBlockLandingPad.class);
         registerBlock(GCBlocks.landingPadFull, ItemBlockGC.class);
         registerBlock(GCBlocks.unlitTorch, ItemBlockGC.class);

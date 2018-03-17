@@ -11,27 +11,24 @@ import micdoodle8.mods.galacticraft.core.network.PacketSimple.EnumSimplePacket;
 import micdoodle8.mods.galacticraft.core.util.GCCoreUtil;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GuiSchematicInput extends GuiPositionedContainer implements ISchematicResultPage
-{
+public class GuiSchematicInput extends GuiPositionedContainer implements ISchematicResultPage {
     private static final ResourceLocation schematicInputTexture = new ResourceLocation(Constants.ASSET_PREFIX, "textures/gui/schematicpage.png");
 
     private int pageIndex;
 
-    public GuiSchematicInput(InventoryPlayer par1InventoryPlayer, BlockPos pos)
-    {
+    public GuiSchematicInput(InventoryPlayer par1InventoryPlayer, BlockPos pos) {
         super(new ContainerSchematic(par1InventoryPlayer, pos), pos);
     }
 
     @Override
-    public void initGui()
-    {
+    public void initGui() {
         super.initGui();
         List<String> schematicSlotDesc = new ArrayList<String>();
         GuiButton nextButton;
@@ -47,35 +44,30 @@ public class GuiSchematicInput extends GuiPositionedContainer implements ISchema
     }
 
     @Override
-    protected void actionPerformed(GuiButton par1GuiButton)
-    {
-        if (par1GuiButton.enabled)
-        {
-            switch (par1GuiButton.id)
-            {
-            case 0:
-                SchematicRegistry.flipToLastPage(this, this.pageIndex);
-                break;
-            case 1:
-                SchematicRegistry.flipToNextPage(this, this.pageIndex);
-                break;
-            case 2:
-                GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_UNLOCK_NEW_SCHEMATIC, GCCoreUtil.getDimensionID(mc.world), new Object[] {}));
-                break;
+    protected void actionPerformed(GuiButton par1GuiButton) {
+        if (par1GuiButton.enabled) {
+            switch (par1GuiButton.id) {
+                case 0:
+                    SchematicRegistry.flipToLastPage(this, this.pageIndex);
+                    break;
+                case 1:
+                    SchematicRegistry.flipToNextPage(this, this.pageIndex);
+                    break;
+                case 2:
+                    GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_UNLOCK_NEW_SCHEMATIC, GCCoreUtil.getDimensionID(mc.world), new Object[]{}));
+                    break;
             }
         }
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int par1, int par2)
-    {
+    protected void drawGuiContainerForegroundLayer(int par1, int par2) {
         this.fontRenderer.drawString(GCCoreUtil.translate("gui.message.addnewsch.name"), 7, -22, 4210752);
         this.fontRenderer.drawString(GCCoreUtil.translate("container.inventory"), 8, 56, 4210752);
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3)
-    {
+    protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3) {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.mc.renderEngine.bindTexture(GuiSchematicInput.schematicInputTexture);
         final int var5 = (this.width - this.xSize) / 2;
@@ -84,8 +76,7 @@ public class GuiSchematicInput extends GuiPositionedContainer implements ISchema
     }
 
     @Override
-    public void setPageIndex(int index)
-    {
+    public void setPageIndex(int index) {
         this.pageIndex = index;
     }
 }

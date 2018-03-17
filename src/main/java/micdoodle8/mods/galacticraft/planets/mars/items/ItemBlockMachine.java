@@ -21,39 +21,30 @@ import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemBlockMachine extends ItemBlockDesc
-{
-    public ItemBlockMachine(Block block)
-    {
+public class ItemBlockMachine extends ItemBlockDesc {
+    public ItemBlockMachine(Block block) {
         super(block);
         this.setMaxDamage(0);
         this.setHasSubtypes(true);
     }
 
     @Override
-    public int getMetadata(int damage)
-    {
+    public int getMetadata(int damage) {
         return damage;
     }
 
     @Override
-    public boolean placeBlockAt(ItemStack itemStack, EntityPlayer player, World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, IBlockState state)
-    {
+    public boolean placeBlockAt(ItemStack itemStack, EntityPlayer player, World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, IBlockState state) {
         int metaAt = itemStack.getItemDamage();
 
         //If it is a Cryogenic Chamber, check the space
-        if (metaAt == BlockMachineMars.CRYOGENIC_CHAMBER_METADATA)
-        {
-            for (int y = 0; y < 3; y++)
-            {
+        if (metaAt == BlockMachineMars.CRYOGENIC_CHAMBER_METADATA) {
+            for (int y = 0; y < 3; y++) {
                 IBlockState stateAt = world.getBlockState(pos.add(0, y, 0));
 
-                if (this.getBlock() == MarsBlocks.machine)
-                {
-                    if (!stateAt.getMaterial().isReplaceable())
-                    {
-                        if (world.isRemote)
-                        {
+                if (this.getBlock() == MarsBlocks.machine) {
+                    if (!stateAt.getMaterial().isReplaceable()) {
+                        if (world.isRemote) {
                             FMLClientHandler.instance().getClient().ingameGUI.setOverlayMessage(new TextComponentString(GCCoreUtil.translate("gui.warning.noroom")).setStyle(new Style().setColor(TextFormatting.RED)).getFormattedText(), false);
                         }
                         return false;
@@ -65,34 +56,22 @@ public class ItemBlockMachine extends ItemBlockDesc
     }
 
     @Override
-    public String getUnlocalizedName(ItemStack itemstack)
-    {
+    public String getUnlocalizedName(ItemStack itemstack) {
         int index = 0;
         int typenum = itemstack.getItemDamage() & 12;
 
-        if (this.getBlock() == MarsBlocks.machine)
-        {
-            if (typenum == BlockMachineMars.LAUNCH_CONTROLLER_METADATA)
-            {
+        if (this.getBlock() == MarsBlocks.machine) {
+            if (typenum == BlockMachineMars.LAUNCH_CONTROLLER_METADATA) {
                 index = 2;
-            }
-            else if (typenum == BlockMachineMars.CRYOGENIC_CHAMBER_METADATA)
-            {
+            } else if (typenum == BlockMachineMars.CRYOGENIC_CHAMBER_METADATA) {
                 index = 1;
             }
-        }
-        else if (this.getBlock() == MarsBlocks.machineT2)
-        {
-            if (typenum == BlockMachineMarsT2.GAS_LIQUEFIER_META)
-            {
+        } else if (this.getBlock() == MarsBlocks.machineT2) {
+            if (typenum == BlockMachineMarsT2.GAS_LIQUEFIER_META) {
                 return "tile.mars_machine.4";
-            }
-            else if (typenum == BlockMachineMarsT2.METHANE_SYNTHESIZER_META)
-            {
+            } else if (typenum == BlockMachineMarsT2.METHANE_SYNTHESIZER_META) {
                 return "tile.mars_machine.5";
-            }
-            else if (typenum == BlockMachineMarsT2.ELECTROLYZER_META)
-            {
+            } else if (typenum == BlockMachineMarsT2.ELECTROLYZER_META) {
                 return "tile.mars_machine.6";
             }
         }
@@ -102,14 +81,12 @@ public class ItemBlockMachine extends ItemBlockDesc
 
     @Override
     @SideOnly(Side.CLIENT)
-    public EnumRarity getRarity(ItemStack par1ItemStack)
-    {
+    public EnumRarity getRarity(ItemStack par1ItemStack) {
         return ClientProxyCore.galacticraftItem;
     }
 
     @Override
-    public String getUnlocalizedName()
-    {
+    public String getUnlocalizedName() {
         return this.getBlock().getUnlocalizedName() + ".0";
     }
 }

@@ -7,35 +7,29 @@ import net.minecraft.world.gen.structure.StructureBoundingBox;
 
 import java.util.Random;
 
-public class BasePlate extends SizedPiece
-{
-    public BasePlate()
-    {
+public class BasePlate extends SizedPiece {
+    public BasePlate() {
     }
 
-    public BasePlate(BaseConfiguration configuration, int blockPosX, int yPos, int blockPosZ, int sizeX, int sizeZ, EnumFacing dir)
-    {
+    public BasePlate(BaseConfiguration configuration, int blockPosX, int yPos, int blockPosZ, int sizeX, int sizeZ, EnumFacing dir) {
         super(configuration, sizeX, 1, sizeZ, dir);
         this.setCoordBaseMode(dir);
         this.boundingBox = new StructureBoundingBox(blockPosX, yPos, blockPosZ, blockPosX + this.sizeX, yPos, blockPosZ + this.sizeZ);
     }
 
     @Override
-    public boolean addComponentParts(World worldIn, Random random, StructureBoundingBox boundingBox)
-    {
+    public boolean addComponentParts(World worldIn, Random random, StructureBoundingBox boundingBox) {
         IBlockState blockWall = this.configuration.getWallBlock();
         boolean axisEW = getDirection().getAxis() == EnumFacing.Axis.X;
         int maxX = axisEW ? this.sizeZ : this.sizeX;
         int maxZ = axisEW ? this.sizeX : this.sizeZ;
-        for (int xx = 0; xx <= maxX; xx++)
-        {
-            for (int zz = 0; zz <= maxZ; zz++)
-            {
+        for (int xx = 0; xx <= maxX; xx++) {
+            for (int zz = 0; zz <= maxZ; zz++) {
                 this.setBlockState(worldIn, blockWall, xx, 0, zz, boundingBox);
             }
         }
 
         return true;
     }
-    
+
 }

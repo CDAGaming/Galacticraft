@@ -9,12 +9,10 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class ContainerEnergyStorageModule extends Container
-{
+public class ContainerEnergyStorageModule extends Container {
     private TileEntityEnergyStorageModule tileEntity;
 
-    public ContainerEnergyStorageModule(InventoryPlayer par1InventoryPlayer, TileEntityEnergyStorageModule batteryBox)
-    {
+    public ContainerEnergyStorageModule(InventoryPlayer par1InventoryPlayer, TileEntityEnergyStorageModule batteryBox) {
         this.tileEntity = batteryBox;
         // Top slot for battery output
         this.addSlotToContainer(new SlotSpecific(batteryBox, 0, 33, 24, IItemElectric.class));
@@ -22,16 +20,13 @@ public class ContainerEnergyStorageModule extends Container
         this.addSlotToContainer(new SlotSpecific(batteryBox, 1, 33, 48, IItemElectric.class));
         int var3;
 
-        for (var3 = 0; var3 < 3; ++var3)
-        {
-            for (int var4 = 0; var4 < 9; ++var4)
-            {
+        for (var3 = 0; var3 < 3; ++var3) {
+            for (int var4 = 0; var4 < 9; ++var4) {
                 this.addSlotToContainer(new Slot(par1InventoryPlayer, var4 + var3 * 9 + 9, 8 + var4 * 18, 84 + var3 * 18));
             }
         }
 
-        for (var3 = 0; var3 < 9; ++var3)
-        {
+        for (var3 = 0; var3 < 9; ++var3) {
             this.addSlotToContainer(new Slot(par1InventoryPlayer, var3, 8 + var3 * 18, 142));
         }
 
@@ -39,15 +34,13 @@ public class ContainerEnergyStorageModule extends Container
     }
 
     @Override
-    public void onContainerClosed(EntityPlayer entityplayer)
-    {
+    public void onContainerClosed(EntityPlayer entityplayer) {
         super.onContainerClosed(entityplayer);
         this.tileEntity.playersUsing.remove(entityplayer);
     }
 
     @Override
-    public boolean canInteractWith(EntityPlayer par1EntityPlayer)
-    {
+    public boolean canInteractWith(EntityPlayer par1EntityPlayer) {
         return this.tileEntity.isUsableByPlayer(par1EntityPlayer);
     }
 
@@ -56,70 +49,48 @@ public class ContainerEnergyStorageModule extends Container
      * clicking.
      */
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int slotID)
-    {
+    public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int slotID) {
         ItemStack returnStack = ItemStack.EMPTY;
         Slot slot = this.inventorySlots.get(slotID);
         final int b = this.inventorySlots.size();
 
-        if (slot != null && slot.getHasStack())
-        {
+        if (slot != null && slot.getHasStack()) {
             ItemStack itemStack = slot.getStack();
             returnStack = itemStack.copy();
 
-            if (slotID != 0 && slotID != 1)
-            {
-                if (EnergyUtil.isElectricItem(itemStack.getItem()))
-                {
-                    if (EnergyUtil.isChargedElectricItem(itemStack))
-                    {
-                        if (!this.mergeItemStack(itemStack, 1, 2, false))
-                        {
-                            if (EnergyUtil.isFillableElectricItem(itemStack) && !this.mergeItemStack(itemStack, 0, 1, false))
-                            {
+            if (slotID != 0 && slotID != 1) {
+                if (EnergyUtil.isElectricItem(itemStack.getItem())) {
+                    if (EnergyUtil.isChargedElectricItem(itemStack)) {
+                        if (!this.mergeItemStack(itemStack, 1, 2, false)) {
+                            if (EnergyUtil.isFillableElectricItem(itemStack) && !this.mergeItemStack(itemStack, 0, 1, false)) {
                                 return ItemStack.EMPTY;
                             }
                         }
-                    }
-                    else
-                    {
-                        if (!this.mergeItemStack(itemStack, 0, 1, false))
-                        {
+                    } else {
+                        if (!this.mergeItemStack(itemStack, 0, 1, false)) {
                             return ItemStack.EMPTY;
                         }
                     }
-                }
-                else
-                {
-                    if (slotID < b - 9)
-                    {
-                        if (!this.mergeItemStack(itemStack, b - 9, b, false))
-                        {
+                } else {
+                    if (slotID < b - 9) {
+                        if (!this.mergeItemStack(itemStack, b - 9, b, false)) {
                             return ItemStack.EMPTY;
                         }
-                    }
-                    else if (!this.mergeItemStack(itemStack, b - 36, b - 9, false))
-                    {
+                    } else if (!this.mergeItemStack(itemStack, b - 36, b - 9, false)) {
                         return ItemStack.EMPTY;
                     }
                 }
-            }
-            else if (!this.mergeItemStack(itemStack, 2, 38, false))
-            {
+            } else if (!this.mergeItemStack(itemStack, 2, 38, false)) {
                 return ItemStack.EMPTY;
             }
 
-            if (itemStack.getCount() == 0)
-            {
+            if (itemStack.getCount() == 0) {
                 slot.putStack(ItemStack.EMPTY);
-            }
-            else
-            {
+            } else {
                 slot.onSlotChanged();
             }
 
-            if (itemStack.getCount() == returnStack.getCount())
-            {
+            if (itemStack.getCount() == returnStack.getCount()) {
                 return ItemStack.EMPTY;
             }
 

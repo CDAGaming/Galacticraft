@@ -36,12 +36,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Random;
 
-public class BlockShortRangeTelepad extends BlockTileGC implements IShiftDescription, ISortableBlock
-{
+public class BlockShortRangeTelepad extends BlockTileGC implements IShiftDescription, ISortableBlock {
     protected static final AxisAlignedBB AABB_TELEPAD = new AxisAlignedBB(0.0F, 0.0F, 0.0F, 1.0F, 0.45F, 1.0F);
 
-    protected BlockShortRangeTelepad(String assetName)
-    {
+    protected BlockShortRangeTelepad(String assetName) {
         super(Material.IRON);
         this.blockHardness = 3.0F;
         this.setUnlocalizedName(assetName);
@@ -50,44 +48,37 @@ public class BlockShortRangeTelepad extends BlockTileGC implements IShiftDescrip
 
     @SideOnly(Side.CLIENT)
     @Override
-    public CreativeTabs getCreativeTabToDisplayOn()
-    {
+    public CreativeTabs getCreativeTabToDisplayOn() {
         return GalacticraftCore.galacticraftBlocksTab;
     }
 
     @Override
-    public EnumBlockRenderType getRenderType(IBlockState state)
-    {
+    public EnumBlockRenderType getRenderType(IBlockState state) {
         return EnumBlockRenderType.INVISIBLE;
     }
 
     @Override
-    public boolean isOpaqueCube(IBlockState state)
-    {
+    public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
 
     @Override
-    public boolean isFullCube(IBlockState state)
-    {
+    public boolean isFullCube(IBlockState state) {
         return false;
     }
 
     @Override
-    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face)
-    {
+    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
         return BlockFaceShape.UNDEFINED;
     }
 
     @Override
-    public TileEntity createNewTileEntity(World world, int meta)
-    {
+    public TileEntity createNewTileEntity(World world, int meta) {
         return new TileEntityShortRangeTelepad();
     }
 
     @Override
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
-    {
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
         return AABB_TELEPAD;
     }
 
@@ -105,26 +96,20 @@ public class BlockShortRangeTelepad extends BlockTileGC implements IShiftDescrip
 //    }
 
     @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
-    {
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
         super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
 
         TileEntity tile = worldIn.getTileEntity(pos);
 
         boolean validSpot = true;
 
-        for (int x = -1; x <= 1; x++)
-        {
-            for (int y = 0; y < 3; y += 2)
-            {
-                for (int z = -1; z <= 1; z++)
-                {
-                    if (!(x == 0 && y == 0 && z == 0))
-                    {
+        for (int x = -1; x <= 1; x++) {
+            for (int y = 0; y < 3; y += 2) {
+                for (int z = -1; z <= 1; z++) {
+                    if (!(x == 0 && y == 0 && z == 0)) {
                         IBlockState stateAt = worldIn.getBlockState(pos.add(x, y, z));
 
-                        if (!stateAt.getMaterial().isReplaceable())
-                        {
+                        if (!stateAt.getMaterial().isReplaceable()) {
                             validSpot = false;
                         }
                     }
@@ -132,14 +117,11 @@ public class BlockShortRangeTelepad extends BlockTileGC implements IShiftDescrip
             }
         }
 
-        if (!validSpot)
-        {
+        if (!validSpot) {
             worldIn.setBlockToAir(pos);
 
-            if (placer instanceof EntityPlayer)
-            {
-                if (!worldIn.isRemote)
-                {
+            if (placer instanceof EntityPlayer) {
+                if (!worldIn.isRemote) {
                     ((EntityPlayer) placer).sendMessage(new TextComponentString(EnumColor.RED + GCCoreUtil.translate("gui.warning.noroom")));
                 }
                 ((EntityPlayer) placer).inventory.addItemStackToInventory(new ItemStack(Item.getItemFromBlock(this), 1, 0));
@@ -148,36 +130,28 @@ public class BlockShortRangeTelepad extends BlockTileGC implements IShiftDescrip
             return;
         }
 
-        if (tile instanceof TileEntityShortRangeTelepad)
-        {
+        if (tile instanceof TileEntityShortRangeTelepad) {
             ((TileEntityShortRangeTelepad) tile).onCreate(worldIn, pos);
             ((TileEntityShortRangeTelepad) tile).setOwner(PlayerUtil.getName(((EntityPlayer) placer)));
         }
     }
 
     @Override
-    public boolean onMachineActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
-    {
+    public boolean onMachineActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
         return ((IMultiBlock) worldIn.getTileEntity(pos)).onActivated(playerIn);
     }
 
     @Override
-    public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
-    {
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
         final TileEntity tileAt = worldIn.getTileEntity(pos);
 
         int fakeBlockCount = 0;
 
-        for (int x = -1; x <= 1; x++)
-        {
-            for (int y = 0; y < 3; y += 2)
-            {
-                for (int z = -1; z <= 1; z++)
-                {
-                    if (!(x == 0 && y == 0 && z == 0))
-                    {
-                        if (worldIn.getBlockState(pos.add(x, y, z)).getBlock() == AsteroidBlocks.fakeTelepad)
-                        {
+        for (int x = -1; x <= 1; x++) {
+            for (int y = 0; y < 3; y += 2) {
+                for (int z = -1; z <= 1; z++) {
+                    if (!(x == 0 && y == 0 && z == 0)) {
+                        if (worldIn.getBlockState(pos.add(x, y, z)).getBlock() == AsteroidBlocks.fakeTelepad) {
                             fakeBlockCount++;
                         }
                     }
@@ -185,10 +159,8 @@ public class BlockShortRangeTelepad extends BlockTileGC implements IShiftDescrip
             }
         }
 
-        if (tileAt instanceof TileEntityShortRangeTelepad)
-        {
-            if (fakeBlockCount > 0)
-            {
+        if (tileAt instanceof TileEntityShortRangeTelepad) {
+            if (fakeBlockCount > 0) {
                 ((TileEntityShortRangeTelepad) tileAt).onDestroy(tileAt);
             }
             ShortRangeTelepadHandler.removeShortRangeTeleporter((TileEntityShortRangeTelepad) tileAt);
@@ -199,12 +171,10 @@ public class BlockShortRangeTelepad extends BlockTileGC implements IShiftDescrip
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand)
-    {
+    public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand) {
         final TileEntity tileAt = worldIn.getTileEntity(pos);
 
-        if (tileAt instanceof TileEntityShortRangeTelepad)
-        {
+        if (tileAt instanceof TileEntityShortRangeTelepad) {
             TileEntityShortRangeTelepad telepad = (TileEntityShortRangeTelepad) tileAt;
             float teleportTimeScaled = Math.min(1.0F, telepad.teleportTime / (float) TileEntityShortRangeTelepad.MAX_TELEPORT_TIME);
             float f;
@@ -212,10 +182,8 @@ public class BlockShortRangeTelepad extends BlockTileGC implements IShiftDescrip
             float g;
             float b;
 
-            for (int i = 0; i < 6; i++)
-            {
-                for (int j = 0; j < 4; j++)
-                {
+            for (int i = 0; i < 6; i++) {
+                for (int j = 0; j < 4; j++) {
                     f = rand.nextFloat() * 0.6F + 0.4F;
                     r = f * 0.3F;
                     g = f * (0.3F + (teleportTimeScaled * 0.7F));
@@ -236,20 +204,17 @@ public class BlockShortRangeTelepad extends BlockTileGC implements IShiftDescrip
     }
 
     @Override
-    public String getShiftDescription(int meta)
-    {
+    public String getShiftDescription(int meta) {
         return GCCoreUtil.translate(this.getUnlocalizedName() + ".description");
     }
 
     @Override
-    public boolean showDescription(int meta)
-    {
+    public boolean showDescription(int meta) {
         return true;
     }
 
     @Override
-    public EnumSortCategoryBlock getCategory(int meta)
-    {
+    public EnumSortCategoryBlock getCategory(int meta) {
         return EnumSortCategoryBlock.MACHINE;
     }
 }
