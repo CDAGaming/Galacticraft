@@ -21,16 +21,16 @@ public class OldAPIChecker {
 	static {
 		ImmutableSet.Builder<String> builder = ImmutableSet.builder();
 
-		builder.add("cofh.redstoneflux.api.EnergyStorage");
-		builder.add("cofh.redstoneflux.api.IEnergyConnection");
-		builder.add("cofh.redstoneflux.api.IEnergyContainerItem");
-		builder.add("cofh.redstoneflux.api.IEnergyHandler");
-		builder.add("cofh.redstoneflux.api.IEnergyProvider");
-		builder.add("cofh.redstoneflux.api.IEnergyReceiver");
-		builder.add("cofh.redstoneflux.api.IEnergyStorage");
-		builder.add("cofh.redstoneflux.api.IEnergyTransport");
-		builder.add("cofh.redstoneflux.api.ItemEnergyContainer");
-		builder.add("cofh.redstoneflux.api.TileEnergyHandler");
+		builder.add("cofh.api.energy.EnergyStorage");
+		builder.add("cofh.api.energy.IEnergyConnection");
+		builder.add("cofh.api.energy.IEnergyContainerItem");
+		builder.add("cofh.api.energy.IEnergyHandler");
+		builder.add("cofh.api.energy.IEnergyProvider");
+		builder.add("cofh.api.energy.IEnergyReceiver");
+		builder.add("cofh.api.energy.IEnergyStorage");
+		builder.add("cofh.api.energy.IEnergyTransport");
+		builder.add("cofh.api.energy.ItemEnergyContainer");
+		builder.add("cofh.api.energy.TileEnergyHandler");
 
 		oldAPIClasses = builder.build();
 	}
